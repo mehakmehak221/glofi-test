@@ -1,9 +1,20 @@
-import Image from "next/image";
+import Navbar from "./components/Navbar/Navbar";
+import HeroSection from "./components/HeroSection/HeroSection";
+import WorkingInstructionsSection from "./components/WorkingInstructionsSection/WorkingInstructionsSection";
+import PremiumPropertySection from "./components/PremiumPropertySection/PremiumPropertySection";
+import GlobalScaleSection from "./components/GlobalScaleSection/GlobalScaleSection";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <h1>Glofi</h1>
-    </div>
+    <>
+      <Navbar />
+      <main>
+        <HeroSection />
+        <WorkingInstructionsSection />
+        <PremiumPropertySection />
+        <GlobalScaleSection />
+        {/* Further sections will be added here */}
+      </main>
+    </>
   );
 }
