@@ -7,7 +7,7 @@ export default function GlobalScaleSection() {
     return (
         <section className="bg-[#000403] py-24 md:py-32 w-full flex justify-center">
             <div className="global-scale-section-wrapper">
-                <div className="flex flex-col justify-center text-left max-w-[500px] z-10 pl-[120px]">
+                <div className="flex flex-col justify-center text-left max-w-[500px] z-10 px-6 lg:pl-[120px] lg:pr-0">
                     <span className="text-global-scale-label mb-[16px]">
                         GLOBAL SCALE
                     </span>

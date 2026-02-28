@@ -19,15 +19,15 @@ export default function HeroSection() {
 
             <div className="relative z-10 w-full px-6 flex flex-col items-center justify-center text-center">
                 <h1 className="flex flex-col items-center justify-center m-0 p-0">
-                    <span className="text-hero-cyan whitespace-nowrap">
+                    <span className="text-hero-cyan">
                         OWN PREMIUM REAL ESTATE,
                     </span>
-                    <span className="text-hero-white whitespace-nowrap mt-2">
+                    <span className="text-hero-white mt-2">
                         FRACTION BY FRACTION..
                     </span>
                 </h1>
 
-                <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-12">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-12 w-full">
                     <Link
                         href="#explore"
                         className="btn-explore"
