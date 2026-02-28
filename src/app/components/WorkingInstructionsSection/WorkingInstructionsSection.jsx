@@ -24,7 +24,6 @@ export default function WorkingInstructionsSection() {
     return (
         <section className="hiw-section-wrapper">
             <div className="flex flex-col items-center w-full">
-                {/* Section Header */}
                 <div className="flex flex-col items-center text-center justify-center mb-16 md:mb-[60px]">
                     <div className="how-it-works-pill mb-6">
                         How It Works
@@ -35,7 +34,6 @@ export default function WorkingInstructionsSection() {
                     </h2>
                 </div>
 
-                {/* Steps Grid */}
                 <div className="flex flex-col lg:flex-row items-center justify-center gap-6 w-full max-w-[1200px]">
                     {STEPS.map((step, index) => (
                         <div

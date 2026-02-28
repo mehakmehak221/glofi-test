@@ -22,7 +22,6 @@ export default function PremiumPropertySection() {
     return (
         <section className="premium-section-wrapper">
             <div className="w-full max-w-[1440px] px-6 mx-auto">
-                {/* Section Header */}
                 <div className="mb-12">
                     <h2 className="premium-title">
                         Premium Properties. Structured Access.
@@ -32,7 +31,6 @@ export default function PremiumPropertySection() {
                     </p>
                 </div>
 
-                {/* Carousel List Section Container */}
                 <div className="premium-list-section">
                     {PROPERTIES.map((prop) => {
                         const IconComponent = prop.Component;

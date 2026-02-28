@@ -16,14 +16,11 @@ export default function Navbar() {
 
     return (
         <header className="navbar">
-            {/* Desktop bar */}
             <div className="navbar__inner">
-                {/* Logo / Brand */}
                 <Link href="/" className="navbar__logo">
                     <span className="navbar__logo-text text-real-estate">Real Estate</span>
                 </Link>
 
-                {/* Center nav links */}
                 <nav aria-label="Main navigation">
                     <ul className="navbar__nav">
                         {NAV_LINKS.map((link) => (
@@ -36,7 +33,6 @@ export default function Navbar() {
                     </ul>
                 </nav>
 
-                {/* Right-hand actions */}
                 <div className="navbar__actions">
                     <Link href="#get-glofi" className="btn-get-glofi text-get-glofi">
                         Get GloFi
@@ -54,7 +50,6 @@ export default function Navbar() {
                     </button>
                 </div>
 
-                {/* Hamburger (≤ 900 px) */}
                 <button
                     className="navbar__hamburger"
                     aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
@@ -67,7 +62,6 @@ export default function Navbar() {
                 </button>
             </div>
 
-            {/* Mobile drawer */}
             <div
                 className={`navbar__mobile-menu${mobileOpen ? ' is-open' : ''}`}
                 aria-hidden={!mobileOpen}
