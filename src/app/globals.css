@@ -1,13 +1,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-/* =============================================
-   GLOFI LANDING PAGE — GLOBAL DESIGN SYSTEM
-   ============================================= */
+@theme {
+  --color-primary-0: #CCFFF5;
+  --color-primary-50: #ACFFEF;
+  --color-primary-100: #78FFE4;
+  --color-primary-200: #00F4C4;
+  --color-primary-300: #00DAAF;
+  --color-primary-500: #009376;
+  --color-primary-700: #006652;
+  --color-primary-900: #003D31;
+  --color-primary-925: #021411;
 
-/* ---------- CSS Custom Properties ---------- */
-:root {
-  /* Brand Colors */
+  --color-gray-0: #FFFFFF;
+  --color-gray-50: #F5F5F5;
+  --color-gray-100: #D5D7DA;
+  --color-gray-300: #A4A7AE;
+  --color-gray-500: #767676;
+  --color-gray-700: #4C4C4C;
+  --color-gray-900: #050505;
+
+  --color-error-500: #F04438;
+  --color-error-400: #FCDAD7;
+
+  --color-warning-500: #F79009;
+  --color-warning-400: #FDE9CE;
+
+  --color-success-500: #12B76A;
+  --color-success-400: #D0F1E1;
+
+  --font-sans: "Outfit", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-background: var(--color-gray-0);
+  --color-foreground: var(--color-gray-900);
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+
+  --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+
+  /* Brand Colors from Landing Page */
   --color-brand-green: #00c853;
   --color-brand-green-dark: #00a844;
   --color-brand-green-light: #e8fdf0;
@@ -27,61 +64,39 @@
   --color-text-muted: #6b7280;
   --color-text-dark: #0a0a0a;
 
-  /* Border Colors */
-  --color-border-dark: rgba(255, 255, 255, 0.08);
-  --color-border-light: rgba(0, 0, 0, 0.08);
-
   /* Typography */
   --font-poppins: 'Poppins', sans-serif;
   --font-montserrat: 'Montserrat', sans-serif;
+}
+
+:root {
+  --background: var(--color-bg-dark);
+  --foreground: var(--color-text-primary);
+  --primary: var(--color-brand-green);
+
+  /* Legacy/Landing Page specific vars if not in @theme */
   --font-primary: var(--font-montserrat);
   --font-display: var(--font-montserrat);
-
-  /* Font Sizes */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
-  --text-6xl: 3.75rem;
-
-  /* Spacing */
-  --spacing-nav: 1rem 1.5rem;
-
-  /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-nav: 0 1px 0 rgba(255, 255, 255, 0.06);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --shadow-btn: 0 4px 15px rgba(0, 200, 83, 0.4);
-
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.25s ease;
-  --transition-slow: 0.4s ease;
-
-  /* Z-index */
   --z-nav: 1000;
   --z-dropdown: 1100;
   --z-modal: 2000;
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  --color-border-dark: rgba(255, 255, 255, 0.08);
 }
 
-/* ---------- Reset & Base ---------- */
-*,
-*::before,
-*::after {
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--color-bg-dark);
+    --foreground: var(--color-text-primary);
+  }
+}
+
+* {
   box-sizing: border-box;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
 html {
@@ -91,12 +106,47 @@ html {
 }
 
 body {
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-primary);
-  background-color: var(--color-bg-dark);
-  color: var(--color-text-primary);
   line-height: 1.6;
   overflow-x: hidden;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@utility glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@utility transition-premium {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+::selection {
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-900);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 
 /* ---------- Typography - Exact Figma Specifications ---------- */
 
@@ -484,8 +534,8 @@ body {
 .text-hero-cyan {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(28px, 5vw, 64px);
-  line-height: 1.2;
+  font-size: 64px;
+  line-height: 88.59px;
   letter-spacing: 0.92px;
   text-align: center;
   vertical-align: middle;
@@ -499,8 +549,8 @@ body {
 .text-hero-white {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(28px, 5vw, 64px);
-  line-height: 1.2;
+  font-size: 64px;
+  line-height: 88.59px;
   letter-spacing: 0.92px;
   text-align: center;
   vertical-align: middle;
@@ -514,23 +564,23 @@ body {
 .text-btn-explore {
   font-family: var(--font-montserrat);
   font-weight: 400;
-  font-size: clamp(16px, 3vw, 24px);
-  line-height: 1.2;
+  font-size: 24px;
+  line-height: 16.8px;
   letter-spacing: 0.5px;
   vertical-align: middle;
   text-transform: uppercase;
   color: #050505;
+  /* Adjusted: The prompt says "background: var(--Grays-900, #050505);" which implies text color since it's inside the light button */
 }
 
 .btn-explore {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 408px;
-  height: clamp(48px, 6vw, 69px);
+  width: 408px;
+  height: 69px;
   gap: 8px;
-  padding: 12px 20px;
+  padding: 16px 24px 16px 24px;
   border-radius: 9999px;
   background: linear-gradient(355.72deg, #F5F5F5 20.82%, #8F8F8F 76.06%);
   border: none;
@@ -547,22 +597,22 @@ body {
 .text-btn-invest {
   font-family: var(--font-montserrat);
   font-weight: 400;
-  font-size: clamp(16px, 3vw, 24px);
-  line-height: 1.2;
+  font-size: 24px;
+  line-height: 16.8px;
   letter-spacing: 0.5px;
   vertical-align: middle;
   text-transform: uppercase;
   color: #FFFFFF;
+  /* Adjusted based on prompt background for text vs button */
 }
 
 .btn-invest {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 428px;
-  height: clamp(48px, 6vw, 69px);
-  padding: 12px 20px;
+  width: 428px;
+  height: 69px;
+  padding: 24px 32px 24px 32px;
   border-radius: 9999px;
   border: 2px solid #FFFFFF;
   background: #050505;
@@ -628,11 +678,12 @@ body {
 .how-it-works-title {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(28px, 4vw, 36px);
-  line-height: 1.2;
+  font-size: 36px;
+  line-height: 43.2px;
   text-align: center;
   vertical-align: middle;
   color: var(--Grays-0, #FFFFFF);
+  /* Adjusted from background to color for text */
 }
 
 .step-card-box {
@@ -660,8 +711,8 @@ body {
 .step-number-bg {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(36px, 5vw, 56px);
-  line-height: 1.2;
+  font-size: 56px;
+  line-height: 67.2px;
   vertical-align: middle;
   background: linear-gradient(180deg, #001812 0%, #007E5F 100%);
   -webkit-background-clip: text;
@@ -704,8 +755,8 @@ body {
 .premium-title {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(32px, 5vw, 48px);
-  line-height: clamp(40px, 6vw, 76.8px);
+  font-size: 48px;
+  line-height: 76.8px;
   vertical-align: middle;
   color: var(--Grays-0, #FFFFFF);
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
@@ -785,9 +836,8 @@ section,
 
 /* ---------- Global Scale Section - Exact Figma Specifications ---------- */
 .global-scale-section-wrapper {
-  width: 100%;
-  max-width: 1440px;
-  min-height: 689px;
+  width: 1440px;
+  height: 689px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -798,15 +848,6 @@ section,
   border: 1px solid var(--Primary-200, #00F4C4);
   position: relative;
   overflow: hidden;
-}
-
-@media (max-width: 1024px) {
-  .global-scale-section-wrapper {
-    flex-direction: column;
-    justify-content: center;
-    padding: 24px;
-    height: auto;
-  }
 }
 
 .text-global-scale-label {
@@ -828,11 +869,12 @@ section,
   font-family: var(--font-montserrat);
   font-weight: 600;
   font-style: normal;
-  font-size: clamp(32px, 4vw, 40px);
-  line-height: 1.15;
+  font-size: 40px;
+  line-height: 46px;
   letter-spacing: -0.2px;
   vertical-align: middle;
   color: var(--Grays-0, #FFFFFF);
+  /* The instruction said background: var(--Grays-0, #FFFFFF); but clearly this is text color */
 }
 
 .text-global-scale-desc {
@@ -848,9 +890,8 @@ section,
 }
 
 .global-scale-globe-container {
-  width: 100%;
-  max-width: 697px;
-  height: auto;
+  width: 697.008547995686px;
+  height: 688.8050537109375px;
   opacity: 1;
   position: absolute;
   right: 0;
@@ -858,604 +899,4 @@ section,
   display: flex;
   align-items: center;
   justify-content: flex-end;
-}
-
-@media (max-width: 1024px) {
-  .global-scale-globe-container {
-    opacity: 0.15;
-    position: absolute;
-    right: -20%;
-    top: 50%;
-    transform: translateY(-50%);
-    max-width: 120%;
-    z-index: 0;
-    pointer-events: none;
-  }
-}
-
-/* ---------- Property Categories Section - Exact Figma Specifications ---------- */
-.property-categories-section {
-  width: 100%;
-  max-width: 1440px;
-  min-height: 1087px;
-  height: auto;
-  margin: 0 auto;
-  background: #000C0A;
-  padding: 40px 24px;
-}
-
-.text-property-title {
-  font-family: var(--font-montserrat);
-  font-weight: 700;
-  font-style: normal;
-  font-size: clamp(32px, 5vw, 64px);
-  line-height: 1.1;
-  letter-spacing: 0%;
-  text-transform: capitalize;
-  text-align: center;
-  background: linear-gradient(180deg, #FDFCF8 8.28%, #74D9C5 95.4%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.text-property-subtitle {
-  font-family: var(--font-montserrat);
-  font-weight: 300;
-  font-style: normal;
-  font-size: 25.41px;
-  line-height: 100%;
-  letter-spacing: 1%;
-  text-align: center;
-  color: var(--Grays-300, #A4A7AE);
-}
-
-.property-grid-container {
-  width: 100%;
-  max-width: 1276px;
-  height: auto;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-}
-
-.property-frame-commercial {
-  width: 100%;
-  max-width: 754px;
-  height: auto;
-}
-
-.property-outer-box-commercial {
-  width: 100%;
-  max-width: 754px;
-  min-height: 48px;
-  gap: 10px;
-  padding: 8px 24px;
-  background: linear-gradient(180deg, #001812 0%, #007E5F 100%);
-}
-
-.property-frame-premium {
-  width: 100%;
-  max-width: 477px;
-  height: auto;
-}
-
-.property-outer-box-premium {
-  width: 100%;
-  max-width: 477px;
-  min-height: 48px;
-  gap: 10px;
-  padding: 8px 24px;
-  background: linear-gradient(180deg, #001812 0%, #007E5F 100%);
-}
-
-.property-frame-retail {
-  width: 100%;
-  max-width: 477px;
-  height: auto;
-}
-
-.property-outer-box-retail {
-  width: 100%;
-  max-width: 477px;
-  min-height: 41px;
-  gap: 10px;
-  padding: 8px 24px;
-  background: linear-gradient(180deg, #001812 0%, #007E5F 100%);
-}
-
-.property-frame-industrial {
-  width: 100%;
-  max-width: 477px;
-  height: auto;
-}
-
-.property-outer-box-industrial {
-  width: 100%;
-  max-width: 477px;
-  min-height: 41px;
-  gap: 10px;
-  padding: 8px 24px;
-  background: linear-gradient(180deg, #001812 0%, #007E5F 100%);
-}
-
-.property-frame-luxury {
-  width: 100%;
-  max-width: 266px;
-  height: auto;
-}
-
-.property-outer-box-luxury {
-  width: 100%;
-  max-width: 266px;
-  min-height: 41px;
-  gap: 10px;
-  padding: 8px 24px;
-  background: linear-gradient(180deg, #001812 0%, #007E5F 100%);
-}
-
-.text-property-category {
-  font-family: var(--font-montserrat);
-  font-weight: 500;
-  font-style: normal;
-  font-size: 16.22px;
-  line-height: 22.71px;
-  letter-spacing: 0%;
-  vertical-align: middle;
-  text-transform: uppercase;
-  color: var(--Grays-0, #FFFFFF);
-}
-
-
-/* ---------- Investment Section - Exact Figma Specifications ---------- */
-.investment-section-wrapper {
-  width: 100%;
-  max-width: 1440px;
-  min-height: 1098px;
-  height: auto;
-  margin: 0 auto;
-  padding: 80px 24px 48px 24px;
-  position: relative;
-}
-
-@media (min-width: 1024px) {
-  .investment-section-wrapper {
-    padding: 80px 120px 48px 120px;
-  }
-}
-
-.btn-inside-platform {
-  width: 188px;
-  height: 42px;
-  padding: 8px 16px;
-  border-radius: 50px;
-  background: var(--Grays-900, #050505);
-  border: 1px solid var(--Primary-50, #ACFFEF);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.text-inside-platform {
-  font-family: var(--font-montserrat);
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0%;
-  text-align: center;
-  vertical-align: middle;
-  color: var(--Primary-50, #ACFFEF);
-}
-
-.text-investment-title {
-  font-family: var(--font-montserrat);
-  font-weight: 700;
-  font-style: normal;
-  font-size: clamp(28px, 4vw, 36px);
-  line-height: 1.2;
-  letter-spacing: 0%;
-  text-align: center;
-  vertical-align: middle;
-  color: var(--Grays-0, #FFFFFF);
-}
-
-.investment-grid {
-  width: 100%;
-  max-width: 1200px;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  margin-top: 60px;
-}
-
-.investment-grid-row {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-@media (min-width: 1024px) {
-  .investment-grid-row {
-    flex-direction: row;
-  }
-}
-
-.investment-box-1,
-.investment-box-2 {
-  width: 100%;
-  height: auto;
-  min-height: 281px;
-  padding: 24px;
-  border: 2px solid var(--Primary-300, #00DAAF);
-  background: #00000070;
-  box-shadow: 5px 10px 40px 0px #00FFCD33;
-  backdrop-filter: blur(5px);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.investment-box-3,
-.investment-box-4 {
-  width: 100%;
-  height: auto;
-  min-height: 275px;
-  padding: 24px;
-  border: 2px solid var(--Primary-300, #00DAAF);
-  background: #00000070;
-  box-shadow: 5px 10px 40px 0px #00FFCD33;
-  backdrop-filter: blur(5px);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.text-investment-box-title {
-  font-family: var(--font-montserrat);
-  font-weight: 700;
-  font-style: normal;
-  font-size: clamp(20px, 3vw, 24px);
-  line-height: 1.2;
-  letter-spacing: 0%;
-  vertical-align: middle;
-  color: var(--Grays-50, #F5F5F5);
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-.text-investment-box-desc {
-  font-family: var(--font-montserrat);
-  font-weight: 400;
-  font-style: normal;
-  font-size: clamp(14px, 2vw, 16px);
-  line-height: 1.5;
-  letter-spacing: 0%;
-  vertical-align: middle;
-  color: var(--Grays-0, #FFFFFF);
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-.box-icon-container {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ---------- Join New Generation Section - Exact Figma Specifications ---------- */
-.join-new-gen-wrapper {
-  width: 100%;
-  max-width: 1440px;
-  min-height: 636px;
-  background: #000000;
-  margin: 0 auto;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 24px;
-}
-
-.join-new-gen-inner {
-  width: 100%;
-  max-width: 1203px;
-  min-height: 454px;
-  margin-top: 91px;
-  border-width: 1px;
-  background: #000000;
-  border: 1px solid #181E37;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding: 40px 24px;
-}
-
-/* Simulate the inner glow using radial gradient or box-shadow. Based on the picture there's a strong green bottom/central glow. */
-.join-new-gen-glow {
-  position: absolute;
-  bottom: 0;
-  width: 80%;
-  height: 200px;
-  background: radial-gradient(ellipse at bottom, rgba(0, 244, 196, 0.25) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.text-join-title {
-  font-family: var(--font-montserrat);
-  font-weight: 700;
-  font-style: normal;
-  font-size: clamp(32px, 5vw, 48px);
-  line-height: 100%;
-  letter-spacing: 1%;
-  text-align: center;
-  background: linear-gradient(180deg, #FDFCF8 8.28%, #74D9C5 95.4%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 24px;
-}
-
-.text-join-subtitle {
-  width: 100%;
-  max-width: 684px;
-  font-family: var(--font-instrument-sans);
-  font-weight: 600;
-  font-style: normal;
-  font-size: clamp(18px, 3vw, 24px);
-  line-height: 153%;
-  letter-spacing: 3%;
-  text-align: center;
-  color: #D1D1D2;
-  margin-bottom: 40px;
-}
-
-.btn-get-started-now {
-  width: 232px;
-  height: 65px;
-  border-radius: 40px;
-  background: var(--Primary-200, #00F4C4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.text-get-started-now {
-  font-family: var(--font-montserrat);
-  font-weight: 600;
-  font-style: normal;
-  font-size: 20px;
-  line-height: 116%;
-  letter-spacing: 1%;
-  text-align: center;
-  color: #030303;
-}
-
-/* ---------- GloFi Copyright Section - Exact Figma Specifications ---------- */
-.copyright-section-wrapper {
-  width: 100%;
-  max-width: 1440px;
-  min-height: 245px;
-  padding: 40px 24px;
-  background: rgba(0, 0, 0, 0.75);
-  /* #000000BF */
-  backdrop-filter: blur(5px);
-  border-top: 1px solid #181E37;
-  /* Implied border from the dark theme separation */
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-}
-
-@media (min-width: 1024px) {
-  .copyright-section-wrapper {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 71px 120px;
-  }
-}
-
-.copyright-left {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 16px;
-}
-
-@media (min-width: 1024px) {
-  .copyright-left {
-    flex-direction: row;
-    gap: 28px;
-  }
-}
-
-.copyright-text {
-  font-family: var(--font-montserrat);
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0%;
-  vertical-align: middle;
-  color: #FFFFFF;
-}
-
-.copyright-right {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 16px;
-}
-
-@media (min-width: 1024px) {
-  .copyright-right {
-    flex-direction: row;
-    gap: 28px;
-  }
-}
-
-.copyright-right-links {
-  display: flex;
-  gap: 28px;
-}
-
-.copyright-link {
-  font-family: var(--font-montserrat);
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0%;
-  vertical-align: middle;
-  color: #FFFFFF;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.copyright-link:hover {
-  opacity: 0.8;
-}
-
-.copyright-social-icons {
-  display: flex;
-  gap: 28px;
-}
-
-.copyright-social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.copyright-social-icon:hover {
-  opacity: 0.8;
-}
-
-/* ---------- Cookie Section - Exact Figma Specifications ---------- */
-.cookie-section-wrapper {
-  width: 100%;
-  max-width: 1440px;
-  min-height: 88px;
-  padding: 24px;
-  background: rgba(20, 20, 20, 0.95);
-  /* #141414F2 */
-  border-top: 1px solid #00FFCD;
-  backdrop-filter: blur(10px);
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .cookie-section-wrapper {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 24px 120px;
-    text-align: left;
-  }
-}
-
-.cookie-text {
-  font-family: var(--font-montserrat);
-  font-weight: 400;
-  font-style: normal;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0%;
-  vertical-align: middle;
-  color: #F5F5F5;
-}
-
-.cookie-link {
-  font-family: var(--font-montserrat);
-  font-weight: 500;
-  font-style: normal;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0%;
-  text-align: center;
-  vertical-align: middle;
-  text-decoration: underline;
-  text-decoration-style: solid;
-  color: #00FFCD;
-  margin-left: 4px;
-}
-
-.cookie-actions {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-
-.btn-cookie-reject {
-  height: 39px;
-  min-width: 80px;
-  padding: 8px 16.45px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  /* #FFFFFF4D */
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.btn-cookie-reject:hover {
-  opacity: 0.8;
-}
-
-.text-cookie-reject {
-  font-family: var(--font-montserrat);
-  font-weight: 500;
-  font-style: normal;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0%;
-  text-align: center;
-  vertical-align: middle;
-  color: #AAAAAA;
-}
-
-.btn-cookie-accept {
-  height: 39px;
-  min-width: 80px;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: 1px solid #00FFCD;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.btn-cookie-accept:hover {
-  opacity: 0.8;
-}
-
-.text-cookie-accept {
-  font-family: var(--font-montserrat);
-  font-weight: 500;
-  font-style: normal;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0%;
-  text-align: center;
-  vertical-align: middle;
-  color: #00FFCD;
 }
