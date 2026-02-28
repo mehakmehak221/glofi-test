@@ -6,7 +6,6 @@ import Image from 'next/image';
 export default function HeroSection() {
     return (
         <section className="relative hero-section-wrapper flex flex-col items-center justify-center overflow-hidden">
-            {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <Image
                     src="/hero-bg.png"
@@ -18,7 +17,6 @@ export default function HeroSection() {
                 <div className="absolute inset-0 hero-gradient-overlay" />
             </div>
 
-            {/* Content */}
             <div className="relative z-10 w-full px-6 flex flex-col items-center justify-center text-center">
                 <h1 className="flex flex-col items-center justify-center m-0 p-0">
                     <span className="text-hero-cyan whitespace-nowrap">
@@ -46,7 +44,6 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            {/* Subtle Bottom Glow Decor */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-[#00ffd5]/40 to-transparent" />
         </section>
     );

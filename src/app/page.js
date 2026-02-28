@@ -13,7 +13,6 @@ export default function Home() {
         <WorkingInstructionsSection />
         <PremiumPropertySection />
         <GlobalScaleSection />
-        {/* Further sections will be added here */}
       </main>
     </>
   );
