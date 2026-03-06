@@ -523,9 +523,9 @@ h6 {
 .hero-section-wrapper {
   width: 100%;
   max-width: 1440px;
-  min-height: 900px;
-  padding-top: 120px;
-  padding-bottom: 48px;
+  min-height: 540px;
+  padding-top: 72px;
+  padding-bottom: 29px;
   margin: 0 auto;
   background: rgba(0, 255, 205, 0.04);
   /* #00FFCD0A */
