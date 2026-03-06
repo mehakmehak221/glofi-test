@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { TopRightArrowIcon } from '../SvgIcons';
+import { TopRightArrowIcon } from '../../VectorImages';
 
 export default function JoinNewGenerationSection() {
     return (

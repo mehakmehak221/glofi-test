@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { HomeIcon, LegalIcon, EarningPassiveIcon, LiquidityIcon } from '../SvgIcons';
+import { HomeIcon, LegalIcon, EarningPassiveIcon, LiquidityIcon } from '../../VectorImages';
 
 export default function InvestmentSection() {
     return (

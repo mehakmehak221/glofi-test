@@ -9,7 +9,7 @@ import {
     FbIcon,
     LinkedinIcon,
     YouTubeIcon
-} from '../SvgIcons';
+} from '../../VectorImages';
 
 // Reuse the Navbar logo component styling equivalent
 const GlofiLogo = () => (

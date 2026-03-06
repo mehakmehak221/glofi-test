@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { GlobalScaleGlobeImage } from '../SvgIcons';
+import { GlobalScaleGlobeImage } from '../../VectorImages';
 
 export default function GlobalScaleSection() {
     return (

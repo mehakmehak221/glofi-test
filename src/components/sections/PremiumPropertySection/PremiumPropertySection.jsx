@@ -7,7 +7,7 @@ import {
     RetailImage,
     FlatBuildingImage,
     RealEstateImage
-} from '../SvgIcons';
+} from '../../VectorImages';
 
 const PROPERTIES = [
     { id: 1, Component: BanglowImage },

@@ -7,7 +7,7 @@ import {
     RetailImage,
     IndustryImage,
     FarmHouseImage
-} from '../SvgIcons';
+} from '../../VectorImages';
 
 export default function PropertyInvestmentCategoriesSection() {
     return (
