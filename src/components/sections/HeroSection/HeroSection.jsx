@@ -27,7 +27,7 @@ export default function HeroSection() {
                     </span>
                 </h1>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 w-full max-w-[900px]">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 w-full max-w-[500px]">
                     <Link
                         href="#explore"
                         className="btn-explore"
