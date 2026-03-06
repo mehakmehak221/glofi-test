@@ -1,18 +1,19 @@
 'use client';
 
 import React from 'react';
-import { GlobalScaleGlobeImage } from '../SvgIcons';
+import { GlobalScaleGlobeImage } from '../../VectorImages';
 
 export default function GlobalScaleSection() {
     return (
-        <section className="bg-[#000403] py-24 md:py-32 w-full flex justify-center">
+        <section className="bg-[#000403] py-20 lg:py-32 w-full flex justify-center overflow-hidden">
             <div className="global-scale-section-wrapper">
-                <div className="flex flex-col justify-center text-left max-w-[500px] z-10 pl-[120px]">
-                    <span className="text-global-scale-label mb-[16px]">
+                {/* Text Content — left side */}
+                <div className="flex flex-col justify-center text-left w-full max-w-[500px] z-10 pl-6 lg:pl-[120px] pr-6 lg:pr-0 self-center">
+                    <span className="text-global-scale-label mb-4">
                         GLOBAL SCALE
                     </span>
 
-                    <h2 className="text-global-scale-title mb-[20px]">
+                    <h2 className="text-global-scale-title mb-5">
                         A Smarter Way to<br />Own Real Estate
                     </h2>
 
@@ -23,6 +24,7 @@ export default function GlobalScaleSection() {
                     </p>
                 </div>
 
+                {/* Globe Image — right side */}
                 <div className="global-scale-globe-container">
                     <GlobalScaleGlobeImage className="w-full h-full" />
                 </div>

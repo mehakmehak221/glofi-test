@@ -33,7 +33,10 @@ export default function Navbar() {
                     </ul>
                 </nav>
 
-                <div className="navbar__actions">
+                <div className="navbar__actions text-nav-link">
+                    <Link href="/sign-in" className="navbar__nav-link text-nav-link">
+                        Sign In
+                    </Link>
                     <Link href="#get-glofi" className="btn-get-glofi text-get-glofi">
                         Get GloFi
                     </Link>
@@ -78,6 +81,13 @@ export default function Navbar() {
                 ))}
 
                 <div className="navbar__mobile-actions">
+                    <Link
+                        href="/sign-in"
+                        className="navbar__mobile-link text-nav-link"
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        Sign In
+                    </Link>
                     <Link href="#get-glofi" className="btn-get-glofi text-get-glofi">
                         Get GloFi
                     </Link>
