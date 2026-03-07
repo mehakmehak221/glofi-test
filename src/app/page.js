@@ -22,6 +22,10 @@ export default function Home() {
         <InvestmentSection />
         <JoinNewGenerationSection />
         <GlofiCopyrightSection />
+
+        <div className="h-[88px]">
+
+        </div>
         <CookieSection />
       </main>
     </>

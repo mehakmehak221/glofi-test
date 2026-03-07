@@ -523,21 +523,25 @@ h6 {
 .hero-section-wrapper {
   width: 100%;
   max-width: 1440px;
-  min-height: 540px;
-  padding-top: 72px;
-  padding-bottom: 29px;
+  height: 550px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;
+  padding-bottom: 80px;
   margin: 0 auto;
   background: rgba(0, 255, 205, 0.04);
-  /* #00FFCD0A */
 }
 
 .text-hero-cyan {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(2rem, 6vw, 4rem);
-  line-height: 1.15;
-  letter-spacing: 0.92px;
+  font-size: clamp(2.5rem, 8vw, 42px);
+  line-height: 1;
+  letter-spacing: 0.01px;
   text-align: center;
+  gap: 10px;
   vertical-align: middle;
   text-transform: uppercase;
   background: linear-gradient(163.66deg, #00FFCD 28.72%, #00997B 73.06%);
@@ -549,10 +553,12 @@ h6 {
 .text-hero-white {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(2rem, 6vw, 4rem);
-  line-height: 1.15;
-  letter-spacing: 0.92px;
+  font-size: clamp(2.5rem, 8vw, 42px);
+  line-height: 1.1;
+  letter-spacing: 0.01px;
   text-align: center;
+  gap: 10px;
+  margin-top: 20px;
   vertical-align: middle;
   text-transform: uppercase;
   background: linear-gradient(355.72deg, #F5F5F5 20.82%, #8F8F8F 76.06%);
@@ -563,10 +569,10 @@ h6 {
 
 .text-btn-explore {
   font-family: var(--font-montserrat);
-  font-weight: 400;
-  font-size: clamp(14px, 2.5vw, 22px);
-  line-height: 1.2;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  font-size: clamp(12px, 2.5vw, 14px);
+  line-height: 1;
+  letter-spacing: 0.2px;
   vertical-align: middle;
   text-transform: uppercase;
   color: #050505;
@@ -577,8 +583,8 @@ h6 {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 408px;
-  height: clamp(52px, 6vw, 69px);
+  max-width: 320px;
+  height: 60px;
   gap: 8px;
   padding: 12px 24px;
   border-radius: 9999px;
@@ -587,17 +593,18 @@ h6 {
   cursor: pointer;
   opacity: 1;
   text-decoration: none;
-  transition: transform var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .btn-explore:hover {
-  transform: scale(1.02);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
 }
 
 .text-btn-invest {
   font-family: var(--font-montserrat);
-  font-weight: 400;
-  font-size: clamp(14px, 2.5vw, 22px);
+  font-weight: 600;
+  font-size: clamp(14px, 2.5vw, 18px);
   line-height: 1.2;
   letter-spacing: 0.5px;
   vertical-align: middle;
@@ -610,8 +617,8 @@ h6 {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 428px;
-  height: clamp(52px, 6vw, 69px);
+  max-width: 320px;
+  height: 60px;
   padding: 12px 32px;
   border-radius: 9999px;
   border: 2px solid #FFFFFF;
@@ -619,12 +626,13 @@ h6 {
   cursor: pointer;
   opacity: 1;
   text-decoration: none;
-  transition: transform var(--transition-fast), background-color var(--transition-fast);
+  transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .btn-invest:hover {
   background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.02);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
 }
 
 .hero-gradient-overlay {
@@ -680,6 +688,7 @@ h6 {
   font-weight: 700;
   font-size: 36px;
   line-height: 43.2px;
+  margin-top: 20px;
   text-align: center;
   vertical-align: middle;
   color: var(--Grays-0, #FFFFFF);
@@ -688,10 +697,10 @@ h6 {
 
 .step-card-box {
   width: 100%;
-  max-width: 373.33px;
+  max-width: 323.33px;
   /* Approximated from 373.3299865722656px for safe rendering */
-  min-height: 240px;
-  padding: 32px;
+  min-height: 200px;
+  padding: 24px;
   background: var(--Grays-900, #050505);
   border: 2px solid #74D9C5;
   box-shadow: 5px 10px 40px 0px rgba(0, 255, 205, 0.2);
@@ -705,14 +714,14 @@ h6 {
 }
 
 .step-card-box:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
 .step-number-bg {
   font-family: var(--font-montserrat);
   font-weight: 700;
   font-size: 56px;
-  line-height: 67.2px;
+  line-height: 47.2px;
   vertical-align: middle;
   background: linear-gradient(180deg, #001812 0%, #007E5F 100%);
   -webkit-background-clip: text;
@@ -748,18 +757,23 @@ h6 {
 .premium-section-wrapper {
   background: #000000;
   width: 100%;
-  padding-top: 80px;
-  padding-bottom: 80px;
+  padding-top: 100px;
+  padding-bottom: 100px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-left: 24px;
+  padding-left: 0;
   padding-right: 0;
 }
 
+.premium-header-container {
+  padding-left: 24px;
+  width: 100%;
+}
+
 @media (min-width: 1024px) {
-  .premium-section-wrapper {
+  .premium-header-container {
     padding-left: 120px;
   }
 }
@@ -767,30 +781,29 @@ h6 {
 .premium-title {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2rem, 4vw, 42px);
   line-height: 1.2;
-  color: var(--Grays-0, #FFFFFF);
-  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-  margin-bottom: 8px;
+  color: #FFFFFF;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
 }
 
 .premium-subtitle {
   font-family: var(--font-montserrat);
   font-weight: 400;
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: 18px;
   line-height: 1.5;
-  color: var(--Grays-100, #D5D7DA);
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+  color: #8F8F8F;
+  letter-spacing: 0.2px;
 }
 
 .premium-list-section {
   width: 100%;
   max-width: 1440px;
-  height: 407px;
-  /* Specified exactly */
-  margin: 0 auto;
+  height: 500px;
+  margin-top: 60px;
   display: flex;
-  gap: 24px;
+  gap: 20px;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -804,17 +817,15 @@ h6 {
 }
 
 .premium-card-exact {
-  width: 374px;
-  height: 375px;
+  width: 320px;
+  height: 440px;
   border-radius: 24px;
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
-  /* Prevents squishing in flex container */
-  background: #111;
-  /* Fallback */
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
@@ -871,8 +882,9 @@ section,
   font-family: var(--font-montserrat);
   font-weight: 500;
   font-style: normal;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 28px;
+  padding-left: 120px;
   letter-spacing: 0.2px;
   vertical-align: middle;
   text-transform: uppercase;
@@ -887,6 +899,8 @@ section,
   font-weight: 600;
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   line-height: 1.2;
+  padding-top: 20px;
+  padding-left: 120px;
   letter-spacing: -0.2px;
   color: var(--Grays-0, #FFFFFF);
 }
@@ -894,6 +908,9 @@ section,
 .text-global-scale-desc {
   font-family: var(--font-montserrat);
   font-weight: 400;
+  padding-left: 120px;
+  letter-spacing: -0.2px;
+  padding-top: 20px;
   font-size: clamp(1rem, 1.5vw, 1.125rem);
   line-height: 1.6;
   letter-spacing: 0.3px;
@@ -901,16 +918,17 @@ section,
 }
 
 .global-scale-globe-container {
-  width: 100%;
-  max-width: 697px;
+  width: 80%;
+  max-width: 497px;
   height: auto;
   opacity: 1;
   position: absolute;
-  right: 0;
+  right: -50px;
   top: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  pointer-events: none;
 }
 
 @media (max-width: 1024px) {
@@ -949,23 +967,23 @@ section,
 .text-property-title {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-size: clamp(2rem, 5vw, 48px);
   line-height: 1.1;
   text-transform: capitalize;
-  text-align: center;
+  text-align: start;
   background: linear-gradient(180deg, #FDFCF8 8.28%, #74D9C5 95.4%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background-clip: left;
   margin-bottom: 16px;
 }
 
 .text-property-subtitle {
   font-family: var(--font-montserrat);
   font-weight: 300;
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, 2vw, 24px);
   line-height: 1.5;
-  text-align: center;
+  text-align: left;
   color: var(--color-gray-300);
   margin-bottom: 48px;
 }
@@ -1003,10 +1021,11 @@ section,
 .text-property-category {
   font-family: var(--font-montserrat);
   font-weight: 500;
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-size: clamp(0.75rem, 1.25vw, 14px);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #FFFFFF;
+  white-space: nowrap;
 }
 
 /* ---------- Investment Section ---------- */
@@ -1054,9 +1073,9 @@ section,
   font-weight: 700;
   font-size: clamp(1.75rem, 4vw, 2.25rem);
   line-height: 1.2;
+  margin-top: 32px;
   text-align: center;
   color: #FFFFFF;
-  margin-top: 16px;
 }
 
 .investment-grid {
@@ -1135,7 +1154,7 @@ section,
 
 @media (min-width: 1024px) {
   .join-new-gen-wrapper {
-    padding: 80px 120px;
+    padding: 40px 80px;
   }
 }
 

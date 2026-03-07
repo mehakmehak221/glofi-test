@@ -33,8 +33,9 @@ export default function WorkingInstructionsSection() {
                         Get GloFi-Ready In Just 3 Steps
                     </h2>
                 </div>
+                <div className="h-[40px]"></div>
 
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-6 w-full max-w-[1200px]">
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-6 w-full max-w-[800px]">
                     {STEPS.map((step, index) => (
                         <div
                             key={index}
