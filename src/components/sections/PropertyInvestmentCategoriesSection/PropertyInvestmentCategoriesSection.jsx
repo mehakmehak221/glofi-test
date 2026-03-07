@@ -70,7 +70,7 @@ export default function PropertyInvestmentCategoriesSection() {
                     </div>
 
                     {/* Luxury Properties */}
-                    <div className="flex flex-col lg:w-[22%] flex-shrink-0">
+                    <div className="flex flex-col lg:w-[20.8%] flex-shrink-0">
                         <div className="w-full aspect-[266/268] overflow-hidden">
                             <FarmHouseImage className="w-full h-full object-cover" />
                         </div>
