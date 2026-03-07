@@ -26,14 +26,14 @@ export default function SignInPage() {
                 href="/"
                 className="inline-flex items-center gap-1.5 text-[#767676] hover:text-white text-sm transition-colors mb-8 group"
             >
-                <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform" />
+                <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
                 Back to home
             </Link>
 
 
             <div className="mb-8">
-                <h2 className="text-white font-bold text-3xl tracking-tight mb-1.5">Welcome back</h2>
-                <p className="text-[#767676] text-sm">Sign in to your dashboard</p>
+                <h2 className="text-white font-bold text-3xl mb-1.5 font-montserrat">Welcome back</h2>
+                <p className="text-[#FFFFFF4D] text-sm font-montserrat">Sign in to your dashboard</p>
             </div>
 
             <div className="mb-6">
@@ -41,7 +41,7 @@ export default function SignInPage() {
             </div>
 
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 font-montserrat">
 
                 <div className="relative">
                     <input
@@ -50,7 +50,7 @@ export default function SignInPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email address"
                         required
-                        className="w-full rounded-xl px-4 py-3.5 text-sm text-white placeholder-[#4c4c4c] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 focus:ring-2 focus:ring-[#00FFCD]/15 transition-all duration-200"
+                        className="w-full rounded-xl px-4 py-3.5 text-sm text-white placeholder-[#FFFFFF33] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 focus:ring-2 focus:ring-[#00FFCD]/15 transition-all duration-200"
                     />
                 </div>
 
@@ -62,12 +62,12 @@ export default function SignInPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                         required
-                        className="w-full rounded-xl px-4 py-3.5 pr-12 text-sm text-white placeholder-[#4c4c4c] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 focus:ring-2 focus:ring-[#00FFCD]/15 transition-all duration-200"
+                        className="w-full rounded-xl px-4 py-3.5 pr-12 text-sm text-white placeholder-[#FFFFFF33] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 focus:ring-2 focus:ring-[#00FFCD]/15 transition-all duration-200"
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#4c4c4c] hover:text-[#767676] transition-colors"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#FFFFFF33] hover:text-[#767676] transition-colors"
                     >
                         {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
                     </button>
@@ -77,7 +77,7 @@ export default function SignInPage() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="mt-2 w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#00FFCD] text-black font-bold text-sm hover:bg-[#00e0b8] active:scale-[0.98] transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="mt-2 w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#00F4C4] text-black font-bold text-sm hover:bg-[#00e0b8] active:scale-[0.98] transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed font-montserrat"
                 >
                     {loading ? (
                         <LoadingSpinner />
@@ -90,9 +90,9 @@ export default function SignInPage() {
                 </button>
             </form>
 
-            <p className="text-center text-sm text-[#767676] mt-8">
+            <p className="text-center text-sm text-[#767676] mt-8 font-montserrat">
                 New here?{" "}
-                <Link href="/sign-up" className="text-[#00FFCD] font-semibold hover:text-[#00FFCD]/70 transition-colors">
+                <Link href="/sign-up" className="text-[#00DAAFB2] font-medium hover:text-[#00DAAFB2]/70 transition-colors font-montserrat">
                     Create account
                 </Link>
             </p>
