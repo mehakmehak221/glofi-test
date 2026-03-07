@@ -696,10 +696,9 @@ h6 {
 }
 
 .step-card-box {
+  flex: 1;
   width: 100%;
-  max-width: 323.33px;
-  /* Approximated from 373.3299865722656px for safe rendering */
-  min-height: 200px;
+  min-height: 280px;
   padding: 24px;
   background: var(--Grays-900, #050505);
   border: 2px solid #74D9C5;
