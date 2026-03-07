@@ -20,7 +20,7 @@ const PROPERTIES = [
 export default function PremiumPropertySection() {
     return (
         <section className="premium-section-wrapper">
-            <div className="mb-10">
+            <div className="premium-header-container mb-10">
                 <h2 className="premium-title">
                     Premium Properties. Structured Access.
                 </h2>

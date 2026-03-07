@@ -22,12 +22,13 @@ export default function HeroSection() {
                     <span className="text-hero-cyan">
                         OWN PREMIUM REAL ESTATE,
                     </span>
-                    <span className="text-hero-white mt-2">
+                    <span className="text-hero-white">
                         FRACTION BY FRACTION..
                     </span>
                 </h1>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 w-full max-w-[500px]">
+                <div className='h-[50px]'> </div>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12 w-full max-w-[700px]">
                     <Link
                         href="#explore"
                         className="btn-explore"
