@@ -265,6 +265,14 @@ export const LogoIcon = ({ className = "w-8 h-8" }) => (
     </svg>
 );
 
+export const LogoIconPng = ({ className = "w-34 h-62" }) => (
+    <img 
+        src="/GloFi.png" 
+        alt="GloFi Logo" 
+        className={`${className} object-contain`}
+    />
+);
+
 export const LoadingSpinner = ({ className = "h-4 w-4" }) => (
     <svg className={`animate-spin ${className}`} viewBox="0 0 24 24" fill="none">
         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />

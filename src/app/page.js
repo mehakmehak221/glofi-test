@@ -27,6 +27,7 @@ export default function Home() {
 
         </div>
         <CookieSection />
+        <div className="h-[28px]" />
       </main>
     </>
   );
