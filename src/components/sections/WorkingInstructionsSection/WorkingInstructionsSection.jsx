@@ -35,7 +35,7 @@ export default function WorkingInstructionsSection() {
                 </div>
                 <div className="h-[40px]"></div>
 
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-6 w-full max-w-[800px]">
+                <div className="flex flex-col lg:flex-row items-stretch justify-center gap-6 w-full max-w-[1100px]">
                     {STEPS.map((step, index) => (
                         <div
                             key={index}
