@@ -22,37 +22,39 @@ const STEPS = [
 
 export default function WorkingInstructionsSection() {
     return (
-        <section className="hiw-section-wrapper">
-            <div className="flex flex-col items-center w-full">
-                <div className="flex flex-col items-center text-center justify-center mb-16 md:mb-[60px]">
-                    <div className="how-it-works-pill mb-6">
-                        How It Works
+        <section className="w-full flex justify-center bg-black">
+            <div className="hiw-section-wrapper w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-16 sm:py-20 lg:py-24 xl:py-32 2xl:py-40">
+                <div className="flex flex-col items-center w-full">
+                    <div className="flex flex-col items-center text-center justify-center mb-12 sm:mb-16 lg:mb-20">
+                        <div className="how-it-works-pill mb-6 px-5 py-2 bg-[#050505] border border-[#00F4C4] rounded-full text-[#00F4C4] text-xs sm:text-sm lg:text-base">
+                            How It Works
+                        </div>
+
+                        <h2 className="how-it-works-title text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-white">
+                            Get GloFi-Ready In Just 3 Steps
+                        </h2>
                     </div>
 
-                    <h2 className="how-it-works-title">
-                        Get GloFi-Ready In Just 3 Steps
-                    </h2>
-                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 w-full">
+                        {STEPS.map((step, index) => (
+                            <div
+                                key={index}
+                                className="step-card-box bg-[#050505] border-2 border-[#00F4C4] p-6 sm:p-8 rounded-lg backdrop-blur-sm transition-transform hover:translate-y-[-2px] min-h-[280px] flex flex-col justify-between"
+                            >
+                                <span className="step-number-bg text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-b from-[#001812] to-[#007E5F] bg-clip-text text-transparent mb-4">
+                                    {step.number}
+                                </span>
 
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-6 w-full max-w-[1200px]">
-                    {STEPS.map((step, index) => (
-                        <div
-                            key={index}
-                            className="step-card-box"
-                        >
-                            <span className="step-number-bg">
-                                {step.number}
-                            </span>
+                                <h3 className="step-title-text text-base sm:text-lg lg:text-xl font-bold text-[#F5F5F5] mb-3 uppercase tracking-wider">
+                                    {step.title}
+                                </h3>
 
-                            <h3 className="step-title-text">
-                                {step.title}
-                            </h3>
-
-                            <p className="step-desc-text">
-                                {step.description}
-                            </p>
-                        </div>
-                    ))}
+                                <p className="step-desc-text text-xs sm:text-sm lg:text-base text-[#D5D7DA] leading-relaxed">
+                                    {step.description}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>
