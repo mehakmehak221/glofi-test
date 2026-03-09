@@ -140,7 +140,6 @@ export default function TransactionsPage() {
                 </div>
             </motion.div>
 
-            {/* Mobile Cards */}
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -151,7 +150,7 @@ export default function TransactionsPage() {
                     <motion.div
                         key={tx.id}
                         variants={rowVariants}
-                        className="bg-[#111111] border border-white/[0.06] rounded-xl p-4"
+                        className="bg-[#0D1411] border border-white/[0.06] rounded-xl p-4"
                     >
                         <div className="flex items-center justify-between mb-3">
                             <span className={`inline-flex px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${tx.typeColor}`}>
