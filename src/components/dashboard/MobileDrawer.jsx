@@ -48,7 +48,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
         <AnimatePresence>
             {isOpen && (
                 <>
-                    {/* Backdrop */}
+                   
                     <motion.div
                         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
                         variants={backdropVariants}
@@ -58,7 +58,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                         onClick={onClose}
                     />
 
-                    {/* Drawer */}
+                   
                     <motion.div
                         className="fixed top-0 right-0 bottom-0 w-[280px] bg-[#0d0d0d] border-l border-white/[0.06] z-50 flex flex-col lg:hidden"
                         variants={drawerVariants}
@@ -75,6 +75,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                                     <span className="text-[10px] text-[#767676] uppercase tracking-wider">Investor</span>
                                 </div>
                             </div>
+                            
                             <button
                                 onClick={onClose}
                                 className="p-2 rounded-lg text-[#767676] hover:text-white hover:bg-white/5 transition-colors bg-transparent border-0 cursor-pointer"
@@ -86,6 +87,14 @@ export default function MobileDrawer({ isOpen, onClose }) {
 
                         {/* Nav Items */}
                         <nav className="flex-1 px-4 py-5 flex flex-col gap-1">
+                              <motion.div
+                className="px-4 pt-5 pb-2 overflow-hidden"
+                
+            >
+                <span className="text-[10px] font-normal text-[#00F4C4] tracking-[0.15em] uppercase border border-[#00DAAF33]/30 font-montserrat bg-[#00DAAF0D] rounded-full px-3 py-1 inline-block">
+                    Investor Panel
+                </span>
+            </motion.div>
                             {NAV_ITEMS.map((item, i) => {
                                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
                                 return (

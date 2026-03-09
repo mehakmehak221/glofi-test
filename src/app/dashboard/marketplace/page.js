@@ -1,103 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPinIcon } from "@/components/VectorImages";
-
-const CATEGORIES = [
-    "All",
-    "Dubai Skyscrapers",
-    "Land Parcels",
-    "Commercial Real Estate",
-    "Residential",
-];
-
-const PROPERTIES = [
-    {
-        id: 1,
-        name: "Burj Vista Tower",
-        location: "Downtown Dubai, UAE",
-        category: "Dubai Skyscrapers",
-        image: "/assets/img_ext_0.jpeg",
-        valuation: "$250.0M",
-        perFraction: "$25K",
-        yield: "12.5%",
-        available: "3,240",
-        funded: 68,
-        risk: "MEDIUM",
-        riskColor: "bg-yellow-500/80",
-    },
-    {
-        id: 2,
-        name: "Marina Business Hub",
-        location: "Dubai Marina, UAE",
-        category: "Commercial Real Estate",
-        image: "/assets/img_ext_2.png",
-        valuation: "$180.0M",
-        perFraction: "$23K",
-        yield: "9.8%",
-        available: "5,600",
-        funded: 30,
-        risk: "LOW",
-        riskColor: "bg-green-500/80",
-    },
-    {
-        id: 3,
-        name: "Palm Jumeirah Villa Estate",
-        location: "Palm Jumeirah, Dubai",
-        category: "Residential",
-        image: "/assets/img_2.jpeg",
-        valuation: "$95.0M",
-        perFraction: "$19K",
-        yield: "15.2%",
-        available: "1,200",
-        funded: 76,
-        risk: "LOW",
-        riskColor: "bg-green-500/80",
-    },
-    {
-        id: 4,
-        name: "Desert Oasis Resort",
-        location: "Al Ain, UAE",
-        category: "Land Parcels",
-        image: "/assets/img_3.jpeg",
-        valuation: "$120.0M",
-        perFraction: "$15K",
-        yield: "11.3%",
-        available: "4,100",
-        funded: 45,
-        risk: "HIGH",
-        riskColor: "bg-red-500/80",
-    },
-    {
-        id: 5,
-        name: "DIFC Innovation Tower",
-        location: "DIFC, Dubai",
-        category: "Dubai Skyscrapers",
-        image: "/assets/img_1.jpeg",
-        valuation: "$320.0M",
-        perFraction: "$30K",
-        yield: "8.5%",
-        available: "2,800",
-        funded: 55,
-        risk: "MEDIUM",
-        riskColor: "bg-yellow-500/80",
-    },
-    {
-        id: 6,
-        name: "Waterfront Residences",
-        location: "JBR, Dubai",
-        category: "Residential",
-        image: "/assets/img_ext_1.jpeg",
-        valuation: "$75.0M",
-        perFraction: "$12K",
-        yield: "14.1%",
-        available: "6,200",
-        funded: 22,
-        risk: "LOW",
-        riskColor: "bg-green-500/80",
-    },
-];
+import { CATEGORIES, PROPERTIES } from "@/data/propertyData";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -119,51 +27,65 @@ const cardVariants = {
 
 export default function MarketplacePage() {
     const [activeCategory, setActiveCategory] = useState("All");
+    const router = useRouter();
 
     const filtered =
         activeCategory === "All"
             ? PROPERTIES
             : PROPERTIES.filter((p) => p.category === activeCategory);
 
+    const handleCardClick = (id) => {
+        router.push(`/dashboard/marketplace/${id}`);
+    };
+
     return (
-        <div className="p-4 sm:p-6 lg:p-8">
-            {/* Hero Section */}
+        <div className="p-4 sm:p-6 lg:p-8 bg-[#0A0F0D]">
+
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="mb-8"
+                className="mb-6 sm:mb-8 p-4 sm:p-6 lg:p-8"
+                style={{
+                    borderRadius: '24px',
+                    border: '0.667px solid rgba(0, 218, 175, 0.10)',
+                    background: 'linear-gradient(180deg, #001812 0%, #0A0F0D 50%, #031D18 100%)',
+                }}
             >
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+                <h1
+                    className="text-xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2"
+                    style={{
+                        background: 'linear-gradient(180deg, #FDFCF8 8.28%, #74D9C5 95.4%)',
+                        backgroundClip: 'text',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                    }}
+                >
                     Discover Premium Assets
                 </h1>
-                <p className="text-sm sm:text-base text-[#767676] max-w-xl">
+                <p
+                    className="text-xs sm:text-base lg:text-lg max-w-xl font-montserrat text-gray-300 font-normal tracking-tight"
+                >
                     Institutional-grade real estate. Digitally simplified. Invest fractionally starting from $15,000.
                 </p>
+
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-4 sm:mt-5">
+                    {CATEGORIES.map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setActiveCategory(cat)}
+                            className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer border ${activeCategory === cat
+                                ? "bg-[#00FFCD] text-black border-[#00FFCD]"
+                                : "bg-[#FFFFFF0A] text-text-secondary border-white/10"
+                                }`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
             </motion.div>
 
-            {/* Category Tabs */}
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.4 }}
-                className="flex flex-wrap gap-2 mb-8"
-            >
-                {CATEGORIES.map((cat) => (
-                    <button
-                        key={cat}
-                        onClick={() => setActiveCategory(cat)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer border ${activeCategory === cat
-                                ? "bg-[#00FFCD] text-black border-[#00FFCD] shadow-[0_0_15px_rgba(0,255,205,0.3)]"
-                                : "bg-transparent text-[#a0a0a0] border-white/10 hover:border-white/30 hover:text-white"
-                            }`}
-                    >
-                        {cat}
-                    </button>
-                ))}
-            </motion.div>
 
-            {/* Property Grid */}
             <AnimatePresence mode="wait">
                 <motion.div
                     key={activeCategory}
@@ -178,29 +100,32 @@ export default function MarketplacePage() {
                             key={property.id}
                             variants={cardVariants}
                             layout
-                            className="bg-[#111111] border border-white/[0.06] rounded-2xl overflow-hidden hover:border-[#00FFCD]/20 transition-colors duration-300 group"
+                            onClick={() => handleCardClick(property.id)}
+                            className="bg-[#0D1411] border border-[#FFFFFF0A] rounded-[16px] overflow-hidden hover:border-[#00FFCD]/20 transition-colors duration-300 group cursor-pointer"
                         >
-                            {/* Image */}
+
                             <div className="relative h-48 overflow-hidden">
-                                <img
+                                <Image
                                     src={property.image}
                                     alt={property.name}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #050505 0%, rgba(0, 0, 0, 0.00) 50%, rgba(0, 0, 0, 0.00) 100%)' }} />
 
-                                {/* Category Badge */}
+
                                 <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-[#0a0a0a]/80 text-[#a0a0a0] border border-white/10 backdrop-blur-sm">
                                     {property.category}
                                 </span>
 
-                                {/* Risk Badge */}
-                                <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-white ${property.riskColor} backdrop-blur-sm`}>
+
+                                <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-md text-[10px] font-normal uppercase tracking-wider ${property.riskTextColor} ${property.riskColor}`}>
                                     {property.risk}
                                 </span>
                             </div>
 
-                            {/* Content */}
+
                             <div className="p-5">
                                 <h3 className="text-lg font-bold text-white mb-1">{property.name}</h3>
                                 <div className="flex items-center gap-1.5 text-[#767676] text-xs mb-4">
@@ -208,7 +133,6 @@ export default function MarketplacePage() {
                                     {property.location}
                                 </div>
 
-                                {/* Stats Grid */}
                                 <div className="grid grid-cols-2 gap-3 mb-4">
                                     <div>
                                         <p className="text-[10px] uppercase tracking-wider text-[#767676] mb-0.5">Valuation</p>
@@ -228,7 +152,7 @@ export default function MarketplacePage() {
                                     </div>
                                 </div>
 
-                                {/* Progress Bar */}
+
                                 <div className="mb-4">
                                     <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                                         <motion.div
@@ -241,10 +165,14 @@ export default function MarketplacePage() {
                                     <p className="text-[10px] text-[#767676] mt-1">{property.funded}% funded</p>
                                 </div>
 
-                                {/* CTA */}
+
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCardClick(property.id);
+                                    }}
                                     className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00FFCD] to-[#009976] text-black font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-[0_0_20px_rgba(0,255,205,0.3)]"
                                 >
                                     Invest Now

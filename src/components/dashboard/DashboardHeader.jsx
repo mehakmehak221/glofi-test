@@ -10,13 +10,13 @@ export default function DashboardHeader() {
             <SearchBar placeholder="Search..." className="w-full max-w-md" />
 
             <div className="flex items-center gap-4 ml-4">
-                {/* Notification Bell */}
+            
                 <button className="relative p-2 rounded-lg text-[#767676] hover:text-white hover:bg-white/5 transition-colors cursor-pointer bg-transparent border-0">
                     <BellIcon className="w-5 h-5" />
                     <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#00FFCD] rounded-full" />
                 </button>
 
-                {/* User Profile */}
+              
                 <div className="flex items-center gap-3 pl-3 border-l border-white/[0.06]">
                     <Avatar name="Ishan" size="sm" />
                     <div className="flex flex-col">

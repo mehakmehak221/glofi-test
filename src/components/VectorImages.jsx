@@ -299,33 +299,45 @@ export const ArrowRightIcon = ({ className = "w-4 h-4" }) => (
     </svg>
 );
 
-// ─── Dashboard Icons ───
+
 export const MarketplaceIcon = ({ className = "w-5 h-5" }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
+    <svg className={className} width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#clip0_80_1178)">
+            <path d="M1.5 5.25L4.8075 1.9425C4.94704 1.80212 5.11299 1.69075 5.29577 1.61481C5.47856 1.53886 5.67457 1.49984 5.8725 1.5H12.1275C12.3254 1.49984 12.5214 1.53886 12.7042 1.61481C12.887 1.69075 13.053 1.80212 13.1925 1.9425L16.5 5.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M3 9V15C3 15.3978 3.15804 15.7794 3.43934 16.0607C3.72064 16.342 4.10218 16.5 4.5 16.5H13.5C13.8978 16.5 14.2794 16.342 14.5607 16.0607C14.842 15.7794 15 15.3978 15 15V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M11.25 16.5V13.5C11.25 13.1022 11.092 12.7206 10.8107 12.4393C10.5294 12.158 10.1478 12 9.75 12H8.25C7.85218 12 7.47064 12.158 7.18934 12.4393C6.90804 12.7206 6.75 13.1022 6.75 13.5V16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M1.5 5.25H16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M16.5 5.25V7.5C16.5 7.89782 16.342 8.27936 16.0607 8.56066C15.7794 8.84196 15.3978 9 15 9C14.5618 8.97588 14.1433 8.81006 13.8075 8.5275C13.718 8.46283 13.6104 8.42802 13.5 8.42802C13.3896 8.42802 13.282 8.46283 13.1925 8.5275C12.8567 8.81006 12.4382 8.97588 12 9C11.5618 8.97588 11.1433 8.81006 10.8075 8.5275C10.718 8.46283 10.6104 8.42802 10.5 8.42802C10.3896 8.42802 10.282 8.46283 10.1925 8.5275C9.8567 8.81006 9.4382 8.97588 9 9C8.5618 8.97588 8.1433 8.81006 7.8075 8.5275C7.71801 8.46283 7.61041 8.42802 7.5 8.42802C7.38959 8.42802 7.28199 8.46283 7.1925 8.5275C6.8567 8.81006 6.4382 8.97588 6 9C5.5618 8.97588 5.1433 8.81006 4.8075 8.5275C4.71801 8.46283 4.61041 8.42802 4.5 8.42802C4.38959 8.42802 4.28199 8.46283 4.1925 8.5275C3.8567 8.81006 3.4382 8.97588 3 9C2.60218 9 2.22064 8.84196 1.93934 8.56066C1.65804 8.27936 1.5 7.89782 1.5 7.5V5.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+        <defs>
+            <clipPath id="clip0_80_1178">
+                <rect width="18" height="18" fill="white" />
+            </clipPath>
+        </defs>
     </svg>
 );
 
 export const PortfolioIcon = ({ className = "w-5 h-5" }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-        <line x1="12" y1="22.08" x2="12" y2="12" />
+    <svg className={className} width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16.5 5.25L10.125 11.625L6.375 7.875L1.5 12.75" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 5.25H16.5V9.75" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
 export const TransactionsIcon = ({ className = "w-5 h-5" }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23" />
-        <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+    <svg className={className} width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.25 1.5H4.5C4.10218 1.5 3.72064 1.65804 3.43934 1.93934C3.15804 2.22064 3 2.60218 3 3V15C3 15.3978 3.15804 15.7794 3.43934 16.0607C3.72064 16.342 4.10218 16.5 4.5 16.5H13.5C13.8978 16.5 14.2794 16.342 14.5607 16.0607C14.842 15.7794 15 15.3978 15 15V5.25L11.25 1.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M10.5 1.5V4.5C10.5 4.89782 10.658 5.27936 10.9393 5.56066C11.2206 5.84196 11.6022 6 12 6H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M7.5 6.75H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 9.75H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 12.75H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
 export const AccountIcon = ({ className = "w-5 h-5" }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
+    <svg className={className} width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.16451 1.5H8.83451C8.43669 1.5 8.05516 1.65804 7.77385 1.93934C7.49255 2.22064 7.33451 2.60218 7.33451 3V3.135C7.33424 3.39804 7.26481 3.65639 7.13317 3.88413C7.00153 4.11186 6.81232 4.30098 6.58451 4.4325L6.26201 4.62C6.03398 4.75165 5.77532 4.82096 5.51201 4.82096C5.24871 4.82096 4.99004 4.75165 4.76201 4.62L4.64951 4.56C4.30531 4.36145 3.89639 4.30758 3.51251 4.41023C3.12864 4.51288 2.80118 4.76365 2.60201 5.1075L2.43701 5.3925C2.23846 5.7367 2.1846 6.14562 2.28724 6.5295C2.38989 6.91338 2.64066 7.24084 2.98451 7.44L3.09701 7.515C3.32372 7.64588 3.51223 7.83382 3.6438 8.06012C3.77537 8.28643 3.84543 8.54323 3.84701 8.805V9.1875C3.84806 9.45182 3.77925 9.71171 3.64755 9.94088C3.51584 10.17 3.32592 10.3603 3.09701 10.4925L2.98451 10.56C2.64066 10.7592 2.38989 11.0866 2.28724 11.4705C2.1846 11.8544 2.23846 12.2633 2.43701 12.6075L2.60201 12.8925C2.80118 13.2363 3.12864 13.4871 3.51251 13.5898C3.89639 13.6924 4.30531 13.6386 4.64951 13.44L4.76201 13.38C4.99004 13.2483 5.24871 13.179 5.51201 13.179C5.77532 13.179 6.03398 13.2483 6.26201 13.38L6.58451 13.5675C6.81232 13.699 7.00153 13.8881 7.13317 14.1159C7.26481 14.3436 7.33424 14.602 7.33451 14.865V15C7.33451 15.3978 7.49255 15.7794 7.77385 16.0607C8.05516 16.342 8.43669 16.5 8.83451 16.5H9.16451C9.56234 16.5 9.94387 16.342 10.2252 16.0607C10.5065 15.7794 10.6645 15.3978 10.6645 15V14.865C10.6648 14.602 10.7342 14.3436 10.8659 14.1159C10.9975 13.8881 11.1867 13.699 11.4145 13.5675L11.737 13.38C11.965 13.2483 12.2237 13.179 12.487 13.179C12.7503 13.179 13.009 13.2483 13.237 13.38L13.3495 13.44C13.6937 13.6386 14.1026 13.6924 14.4865 13.5898C14.8704 13.4871 15.1979 13.2363 15.397 12.8925L15.562 12.6C15.7606 12.2558 15.8144 11.8469 15.7118 11.463C15.6091 11.0791 15.3584 10.7517 15.0145 10.5525L14.902 10.4925C14.6731 10.3603 14.4832 10.17 14.3515 9.94088C14.2198 9.71171 14.151 9.45182 14.152 9.1875V8.8125C14.151 8.54818 14.2198 8.28829 14.3515 8.05912C14.4832 7.82995 14.6731 7.63966 14.902 7.5075L15.0145 7.44C15.3584 7.24084 15.6091 6.91338 15.7118 6.5295C15.8144 6.14562 15.7606 5.7367 15.562 5.3925L15.397 5.1075C15.1979 4.76365 14.8704 4.51288 14.4865 4.41023C14.1026 4.30758 13.6937 4.36145 13.3495 4.56L13.237 4.62C13.009 4.75165 12.7503 4.82096 12.487 4.82096C12.2237 4.82096 11.965 4.75165 11.737 4.62L11.4145 4.4325C11.1867 4.30098 10.9975 4.11186 10.8659 3.88413C10.7342 3.65639 10.6648 3.39804 10.6645 3.135V3C10.6645 2.60218 10.5065 2.22064 10.2252 1.93934C9.94387 1.65804 9.56234 1.5 9.16451 1.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 11.25C10.2426 11.25 11.25 10.2426 11.25 9C11.25 7.75736 10.2426 6.75 9 6.75C7.75736 6.75 6.75 7.75736 6.75 9C6.75 10.2426 7.75736 11.25 9 11.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import NavItem from "./NavItem";
 import {
-    LogoIcon,
     MarketplaceIcon,
     PortfolioIcon,
     TransactionsIcon,
@@ -28,39 +29,42 @@ export default function Sidebar() {
 
     return (
         <motion.aside
-            className="hidden lg:flex flex-col h-screen sticky top-0 bg-[#0a0a0a] border-r border-white/[0.06] z-40 overflow-hidden"
-            animate={{ width: collapsed ? 80 : 250 }}
+            className="hidden lg:flex flex-col h-screen sticky top-0 bg-bg-dark border-r border-[#FFFFFF0A] z-40 overflow-hidden overflow-x-hidden"
+            animate={{ width: collapsed ? 80 : 220 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-            {/* Logo */}
-            <div className="flex items-center gap-2.5 px-4 py-5 border-b border-white/[0.06]">
-                <Link href="/dashboard/marketplace" className="flex items-center gap-2.5 no-underline">
-                    <LogoIcon className="w-8 h-8 flex-shrink-0" />
-                    <motion.div
-                        className="flex flex-col overflow-hidden whitespace-nowrap"
+
+            <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[#FFFFFF0A]">
+                <Link href="/dashboard/marketplace" className="flex items-center gap-3 no-underline">
+                    <Image
+                        src="/assets/logo.png"
+                        alt="GloFi Logo"
+                        width={120}
+                        height={40}
+                        className="h-7 w-auto flex-shrink-0 object-contain"
+                    />
+                    <motion.span
+                        className="font-montserrat text-[10px] font-normal text-gray-300 uppercase tracking-[1.5px] leading-[15px] whitespace-nowrap overflow-hidden"
                         animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
                         transition={{ duration: 0.2 }}
                     >
-                        <span className="text-base font-bold bg-gradient-to-r from-[#00FFCD] to-[#009976] bg-clip-text text-transparent leading-tight">
-                            GloFi
-                        </span>
-                        <span className="text-[10px] text-[#767676] tracking-widest uppercase">Real Estate</span>
-                    </motion.div>
+                        Real Estate
+                    </motion.span>
                 </Link>
             </div>
 
-            {/* Investor Panel Label */}
+
             <motion.div
                 className="px-4 pt-5 pb-2 overflow-hidden"
-                animate={{ opacity: collapsed ? 0 : 1, height: collapsed ? 0 : "auto" }}
+                animate={{ opacity: collapsed ? 0 : 1 }}
                 transition={{ duration: 0.2 }}
             >
-                <span className="text-[10px] font-semibold text-[#00FFCD] tracking-[0.15em] uppercase border border-[#00FFCD]/30 rounded-full px-3 py-1 inline-block">
+                <span className="text-[10px] font-normal text-[#00F4C4] tracking-[0.15em] uppercase border border-[#00DAAF33]/30 font-montserrat bg-[#00DAAF0D] rounded-full px-3 py-1 inline-block">
                     Investor Panel
                 </span>
             </motion.div>
 
-            {/* Navigation */}
+
             <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
                 {NAV_ITEMS.map((item) => (
                     <NavItem
@@ -74,9 +78,9 @@ export default function Sidebar() {
                 ))}
             </nav>
 
-            {/* Bottom Section */}
-            <div className="px-3 pb-4 border-t border-white/[0.06] pt-3 flex flex-col gap-2">
-                {/* Collapse Toggle */}
+
+            <div className="px-3 pb-4 border-t border-[#FFFFFF0A] pt-3 flex flex-col gap-2">
+
                 <motion.button
                     onClick={() => setCollapsed(!collapsed)}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#767676] hover:text-white hover:bg-white/5 transition-colors cursor-pointer w-full border-0 bg-transparent"
@@ -98,7 +102,7 @@ export default function Sidebar() {
                     </motion.span>
                 </motion.button>
 
-                {/* Sign Out */}
+
                 <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#767676] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent group">
                     <span className="flex-shrink-0 ml-0.5">
                         <SignOutIcon className="w-5 h-5" />

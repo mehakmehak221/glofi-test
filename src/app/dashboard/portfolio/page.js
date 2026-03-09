@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { TrendingUpIcon, DollarIcon, CubeIcon, DownloadIcon } from "@/components/VectorImages";
 
@@ -52,8 +53,8 @@ const itemVariants = {
 
 export default function PortfolioPage() {
     return (
-        <div className="p-4 sm:p-6 lg:p-8">
-            {/* Page Title */}
+        <div className="p-4 sm:p-6 lg:p-8 bg-[#0A0F0D]">
+          
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -62,7 +63,7 @@ export default function PortfolioPage() {
                 Portfolio
             </motion.h1>
 
-            {/* Stats Grid */}
+           
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -92,7 +93,7 @@ export default function PortfolioPage() {
                 ))}
             </motion.div>
 
-            {/* Assets List */}
+          
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -106,16 +107,18 @@ export default function PortfolioPage() {
                         className="bg-[#111111] border border-white/[0.06] rounded-xl p-4 sm:p-5 hover:border-[#00FFCD]/20 transition-colors duration-300"
                     >
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                            {/* Image */}
-                            <div className="w-full sm:w-32 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                                <img
+                            
+                            <div className="w-full sm:w-32 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
+                                <Image
                                     src={asset.image}
                                     alt={asset.name}
-                                    className="w-full h-full object-cover"
+                                    fill
+                                    sizes="(max-width: 640px) 100vw, 128px"
+                                    className="object-cover"
                                 />
                             </div>
 
-                            {/* Info */}
+                            
                             <div className="flex-1 w-full">
                                 <h3 className="text-lg font-bold text-white mb-3">{asset.name}</h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -138,7 +141,7 @@ export default function PortfolioPage() {
                                 </div>
                             </div>
 
-                            {/* Actions */}
+                         
                             <div className="flex items-center gap-2 sm:flex-col w-full sm:w-auto">
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}

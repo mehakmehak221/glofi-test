@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LogoIcon, SearchIcon, MenuIcon } from "@/components/VectorImages";
+import Image from "next/image";
+
+import { SearchIcon, MenuIcon } from "@/components/VectorImages";
 import MobileDrawer from "./MobileDrawer";
 
 export default function MobileTopbar() {
@@ -11,18 +13,23 @@ export default function MobileTopbar() {
 
     return (
         <>
-            <header className="flex lg:hidden items-center justify-between px-4 py-3 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-white/[0.06] sticky top-0 z-40">
-                {/* Logo */}
-                <Link href="/dashboard/marketplace" className="flex items-center gap-2 no-underline">
-                    <LogoIcon className="w-7 h-7" />
-                    <div className="flex flex-col">
-                        <span className="text-sm font-bold bg-gradient-to-r from-[#00FFCD] to-[#009976] bg-clip-text text-transparent leading-tight">
-                            GloFi
+            <header className="flex lg:hidden items-center justify-between px-4 py-3  backdrop-blur-md border-b border-white/[0.06] sticky top-0 z-40">
+
+                <Link href="/dashboard/marketplace" className="flex items-center gap-3 no-underline">
+                    <Image
+                        src="/assets/logo.png"
+                        alt="GloFi Logo"
+                        width={80}
+                        height={24}
+                        className="object-contain"
+                    />
+                    {!searchOpen && (
+                        <span className="font-montserrat text-[10px] font-normal text-gray-300 uppercase tracking-[1.5px] leading-[15px]">
+                            Real Estate
                         </span>
-                    </div>
+                    )}
                 </Link>
 
-                {/* Search + Hamburger */}
                 <div className="flex items-center gap-2">
                     {searchOpen ? (
                         <div className="relative animate-fade-in">
