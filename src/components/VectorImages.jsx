@@ -394,18 +394,40 @@ export const DownloadIcon = ({ className = "w-4 h-4" }) => (
 );
 
 export const TrendingUpIcon = ({ className = "w-4 h-4" }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-        <polyline points="17 6 23 6 23 12" />
-    </svg>
+   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+  <path d="M14.6663 4.66675L8.99967 10.3334L5.66634 7.00008L1.33301 11.3334" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M10.667 4.66675H14.667V8.66675" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
 );
 
 export const DollarIcon = ({ className = "w-4 h-4" }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23" />
-        <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
-    </svg>
+   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+  <path d="M8 1.33325V14.6666" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M11.3333 3.33325H6.33333C5.71449 3.33325 5.121 3.57908 4.68342 4.01667C4.24583 4.45425 4 5.04775 4 5.66659C4 6.28542 4.24583 6.87892 4.68342 7.3165C5.121 7.75409 5.71449 7.99992 6.33333 7.99992H9.66667C10.2855 7.99992 10.879 8.24575 11.3166 8.68334C11.7542 9.12092 12 9.71441 12 10.3333C12 10.9521 11.7542 11.5456 11.3166 11.9832C10.879 12.4208 10.2855 12.6666 9.66667 12.6666H4" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
 );
+export const TopArrow = ({ className = "w-4 h-4" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+  <path d="M4.66699 4.66675H11.3337V11.3334" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M4.66699 11.3334L11.3337 4.66675" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+);
+export const Asset = ({ className = "w-4 h-4" }) => (
+   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+  <path d="M12.0003 1.33325H4.00033C3.26395 1.33325 2.66699 1.93021 2.66699 2.66659V13.3333C2.66699 14.0696 3.26395 14.6666 4.00033 14.6666H12.0003C12.7367 14.6666 13.3337 14.0696 13.3337 13.3333V2.66659C13.3337 1.93021 12.7367 1.33325 12.0003 1.33325Z" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M6 14.6667V12H10V14.6667" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M5.33301 4H5.33967" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M10.667 4H10.6737" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M8 4H8.00667" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M8 6.66675H8.00667" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M8 9.33325H8.00667" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M10.667 6.66675H10.6737" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M10.667 9.33325H10.6737" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M5.33301 6.66675H5.33967" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M5.33301 9.33325H5.33967" stroke="#00F4C4" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+);
+
 
 export const CubeIcon = ({ className = "w-4 h-4" }) => (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

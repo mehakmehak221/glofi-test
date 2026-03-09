@@ -83,8 +83,8 @@ const rowVariants = {
 
 export default function TransactionsPage() {
     return (
-        <div className="p-4 sm:p-6 lg:p-8">
-            {/* Page Title */}
+        <div className="p-4 sm:p-6 lg:p-8 bg-[#0A0F0D] min-h-screen">
+           
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -93,12 +93,12 @@ export default function TransactionsPage() {
                 Transactions
             </motion.h1>
 
-            {/* Desktop Table */}
+          
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="hidden md:block bg-[#111111] border border-white/[0.06] rounded-xl overflow-hidden"
+                className="hidden md:block bg-[#0D1411] border border-white/[0.06] rounded-xl overflow-hidden"
             >
                 <div className="overflow-x-auto">
                     <table className="w-full">
@@ -121,7 +121,7 @@ export default function TransactionsPage() {
                                 >
                                     <td className="px-5 py-4 text-sm text-[#a0a0a0]">{tx.date}</td>
                                     <td className="px-5 py-4">
-                                        <span className={`inline-flex px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${tx.typeColor}`}>
+                                        <span className={`inline-flex px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider  ${tx.typeColor}`}>
                                             {tx.type}
                                         </span>
                                     </td>
@@ -129,7 +129,7 @@ export default function TransactionsPage() {
                                     <td className="px-5 py-4 text-sm text-white font-semibold">{tx.amount}</td>
                                     <td className="px-5 py-4 text-sm text-[#a0a0a0]">{tx.method}</td>
                                     <td className="px-5 py-4">
-                                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${tx.statusColor}`}>
+                                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider  ${tx.statusColor}`}>
                                             {tx.status === "COMPLETED" ? "✓" : "◎"} {tx.status}
                                         </span>
                                     </td>
