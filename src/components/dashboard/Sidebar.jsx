@@ -29,7 +29,7 @@ export default function Sidebar() {
 
     return (
         <motion.aside
-            className="hidden lg:flex flex-col h-screen sticky top-0 bg-bg-dark border-r border-[#FFFFFF0A] z-40 overflow-hidden overflow-x-hidden"
+            className="hidden lg:flex flex-col h-screen sticky top-0 bg-bg-dark border-r border-[#FFFFFF0A] z-40 overflow-hidden"
             animate={{ width: collapsed ? 80 : 220 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
@@ -65,7 +65,7 @@ export default function Sidebar() {
             </motion.div>
 
 
-            <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
+            <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto overflow-x-hidden">
                 {NAV_ITEMS.map((item) => (
                     <NavItem
                         key={item.href}
