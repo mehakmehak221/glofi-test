@@ -35,7 +35,7 @@ export default function MarketplacePage() {
             : PROPERTIES.filter((p) => p.category === activeCategory);
 
     const handleCardClick = (id) => {
-        router.push(`/dashboard/marketplace/${id}`);
+        router.push(`/dashboard/investor/marketplace/${id}`);
     };
 
     return (

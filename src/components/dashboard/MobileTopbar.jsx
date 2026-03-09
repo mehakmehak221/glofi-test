@@ -15,7 +15,7 @@ export default function MobileTopbar() {
         <>
             <header className="flex lg:hidden items-center justify-between px-4 py-3  backdrop-blur-md border-b border-white/[0.06] sticky top-0 z-40">
 
-                <Link href="/dashboard/marketplace" className="flex items-center gap-3 no-underline">
+                <Link href="/dashboard/investor/marketplace" className="flex items-center gap-3 no-underline">
                     <Image
                         src="/assets/logo.png"
                         alt="GloFi Logo"

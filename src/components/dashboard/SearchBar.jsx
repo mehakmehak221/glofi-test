@@ -13,7 +13,7 @@ export default function SearchBar({ placeholder = "Search...", value, onChange, 
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                className="w-full rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-[#4c4c4c] bg-[#1a1a1a] border border-white/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:border-[#00FFCD]/60 focus:ring-[#00FFCD]/20"
+                className="w-full rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-[#4c4c4c] bg-[#FFFFFF08] border border-white/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:border-[#00FFCD]/60 focus:ring-[#00FFCD]/20"
             />
         </div>
     );

@@ -17,10 +17,10 @@ import {
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
-    { href: "/dashboard/marketplace", icon: MarketplaceIcon, label: "Marketplace" },
-    { href: "/dashboard/portfolio", icon: PortfolioIcon, label: "Portfolio" },
-    { href: "/dashboard/transactions", icon: TransactionsIcon, label: "Transactions" },
-    { href: "/dashboard/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/investor/marketplace", icon: MarketplaceIcon, label: "Marketplace" },
+    { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
+    { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
+    { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
 ];
 
 export default function Sidebar() {
@@ -35,7 +35,7 @@ export default function Sidebar() {
         >
 
             <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[#FFFFFF0A]">
-                <Link href="/dashboard/marketplace" className="flex items-center gap-3 no-underline">
+                <Link href="/dashboard/investor/marketplace" className="flex items-center gap-3 no-underline">
                     <Image
                         src="/assets/logo.png"
                         alt="GloFi Logo"

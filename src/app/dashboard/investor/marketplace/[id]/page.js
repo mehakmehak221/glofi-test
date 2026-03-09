@@ -83,7 +83,7 @@ export default function PropertyDetailPage() {
                 className="mb-5"
             >
                 <Link
-                    href="/dashboard/marketplace"
+                    href="/dashboard/investor/marketplace"
                     className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors no-underline"
                 >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
