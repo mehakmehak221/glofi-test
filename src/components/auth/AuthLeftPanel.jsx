@@ -16,25 +16,26 @@ export default function AuthLeftPanel() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/95 via-transparent to-[#050505]/40" />
       </div>
       
-      {/* Content Layer with explicit padding */}
+      
       <div className="relative z-10 flex flex-col justify-between w-full h-full px-16 xl:px-24 py-16 xl:py-20">
         
         <div>
-          <div className="flex items-center gap-3">
-            <img src="/assets/logo.png" alt="GloFi Logo" className="h-7 w-auto" />
-            <span className="text-[#a0a0a0] text-[10px] font-bold tracking-[0.2em] uppercase">
+          <div className="flex items-baseline gap-3">
+            <img src="/assets/logo.png" alt="GloFi Logo" className="h-7 w-auto translate-y-[2px]" />
+            <span className="text-[#FFFFFF40] text-[11px] font-medium tracking-[0.25em] uppercase font-montserrat">
               Real Estate
             </span>
           </div>
         </div>
 
         <div>
-          <h1 className="text-white font-bold text-5xl xl:text-6xl leading-[1.1] tracking-tight mb-6">
-            Own Premium<br />
-            <span className="text-[#00FFCD]">Real Estate,<br />
+          <h1 className="font-bold text-4xl xl:text-5xl leading-[1.1] tracking-tight mb-6 font-montserrat">
+            <span className="text-auth-gradient">Own</span>{" "}
+            <span className="text-auth-gradient">Premium</span><br />
+            <span className="text-auth-gradient">Real Estate,<br />
             Fraction by Fraction</span>
           </h1>
-          <p className="text-[#a0a0a0]/80 text-lg leading-relaxed max-w-md font-medium">
+          <p className="text-[#FFFFFF66] text-lg leading-relaxed max-w-md font-medium font-montserrat">
             Institutional-grade properties, digitally simplified. Invest, manage, and grow all in one platform.
           </p>
         </div>
@@ -47,8 +48,8 @@ export default function AuthLeftPanel() {
               { value: "14.2%", label: "AVG YIELD" },
             ].map((s) => (
               <div key={s.label}>
-                <p className="text-white font-bold text-xl tracking-tight leading-none mb-2">{s.value}</p>
-                <p className="text-[#a0a0a0]/60 text-[10px] font-bold tracking-[0.1em]">{s.label}</p>
+                <p className="text-[#FFFFFFE5] font-bold text-xl tracking-tight leading-none mb-2">{s.value}</p>
+                <p className="text-[#FFFFFF40] text-[10px] font-bold tracking-[0.1em]">{s.label}</p>
               </div>
             ))}
           </div>

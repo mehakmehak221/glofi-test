@@ -34,8 +34,9 @@ export default function Navbar() {
                     </ul>
                 </nav>
 
-                <div className="navbar__actions text-nav-link hidden lg:flex items-center gap-2 lg:gap-4 flex-shrink-0">
-                    <Link href="#get-glofi" className="btn-get-glofi text-get-glofi inline-flex items-center justify-center w-20 sm:w-24 lg:w-28 h-8 sm:h-10 lg:h-12 px-3 sm:px-4 lg:px-6 bg-gradient-to-r from-[#00FFCD] to-[#00997B] text-black rounded-full text-xs sm:text-sm lg:text-base font-semibold no-underline transition-transform hover:translate-y-[-1px] hover:shadow-lg whitespace-nowrap">
+                <div className="navbar__actions text-nav-link">
+                  
+                    <Link href="/sign-in" className="btn-get-glofi text-get-glofi">
                         Get GloFi
                     </Link>
 
