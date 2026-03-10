@@ -342,6 +342,8 @@ export const SparkleIcon = ({ className = "w-4 h-4" }) => (
                 <rect width="16" height="16" fill="white" />
             </clipPath>
         </defs>
+    </svg>
+);
 
 export const MarketplaceIcon = ({ className = "w-5 h-5" }) => (
     <svg className={className} width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
