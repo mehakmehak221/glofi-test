@@ -15,6 +15,7 @@ export default function SignInPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
+        localStorage.setItem("userType", userType);
 
         setTimeout(() => setLoading(false), 1500);
     };

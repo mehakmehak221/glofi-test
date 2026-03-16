@@ -1,5 +1,19 @@
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
-    redirect("/dashboard/investor/marketplace");
+    const router = useRouter();
+
+    useEffect(() => {
+        const userType = localStorage.getItem("userType");
+        if (userType === "Partner") {
+            router.replace("/dashboard/partner/overview");
+        } else {
+            router.replace("/dashboard/investor/marketplace");
+        }
+    }, [router]);
+
+    return null;
 }
