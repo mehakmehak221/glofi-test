@@ -9,6 +9,7 @@ import {
     RealEstateImage
 } from '../../VectorImages';
 
+
 const PROPERTIES = [
     { id: 1, Component: BanglowImage },
     { id: 2, Component: SkyCraperImage },

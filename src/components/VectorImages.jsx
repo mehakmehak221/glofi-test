@@ -1,3 +1,135 @@
+export const RealEstateImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="2560" height="1707" viewBox="0 0 2560 1707" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="2560" height="1707" fill="url(#pattern0_14_1777)" />
+        <defs>
+            <pattern id="pattern0_14_1777" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1777" transform="scale(0.000390625 0.000585823)" />
+            </pattern>
+            <image id="image0_14_1777" width="2560" height="1707" preserveAspectRatio="none" xlinkHref="/assets/img_0.jpeg" />
+        </defs>
+    </svg>
+);
+
+export const SkyCraperImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="1200" height="627" viewBox="0 0 1200 627" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="1200" height="627" fill="url(#pattern0_14_1781)" />
+        <defs>
+            <pattern id="pattern0_14_1781" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1781" transform="scale(0.000833333 0.0015949)" />
+            </pattern>
+            <image id="image0_14_1781" width="1200" height="627" preserveAspectRatio="none" xlinkHref="/assets/img_1.jpeg" />
+        </defs>
+    </svg>
+);
+
+export const BanglowImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="1792" height="1191" viewBox="0 0 1792 1191" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="1792" height="1191" fill="url(#pattern0_14_1783)" />
+        <defs>
+            <pattern id="pattern0_14_1783" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1783" transform="matrix(0.000558036 0 0 0.000839631 0 -0.880772)" />
+            </pattern>
+            <image id="image0_14_1783" width="1792" height="2240" preserveAspectRatio="none" xlinkHref="/assets/img_ext_1.jpeg" />
+        </defs>
+    </svg>
+);
+
+export const FlatBuildingImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="1082" height="609" viewBox="0 0 1082 609" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="1082" height="609" fill="url(#pattern0_14_1790)" />
+        <defs>
+            <pattern id="pattern0_14_1790" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1790" transform="scale(0.000924214 0.00164204)" />
+            </pattern>
+            <image id="image0_14_1790" width="1082" height="609" preserveAspectRatio="none" xlinkHref="/assets/img_ext_2.png" />
+        </defs>
+    </svg>
+);
+
+export const RetailImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="606" height="400" viewBox="0 0 606 400" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="606" height="400" fill="url(#pattern0_14_1792)" />
+        <defs>
+            <pattern id="pattern0_14_1792" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1792" transform="scale(0.00165017 0.0025)" />
+            </pattern>
+            <image id="image0_14_1792" width="606" height="400" preserveAspectRatio="none" xlinkHref="/assets/img_ext_3.png" />
+        </defs>
+    </svg>
+);
+
+export const HotelImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="2000" height="1342" viewBox="0 0 2000 1342" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="2000" height="1342" fill="url(#pattern0_14_1787)" />
+        <defs>
+            <pattern id="pattern0_14_1787" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1787" transform="scale(0.0005 0.000745156)" />
+            </pattern>
+            <image id="image0_14_1787" width="2000" height="1342" preserveAspectRatio="none" xlinkHref="/assets/img_2.jpeg" />
+        </defs>
+    </svg>
+);
+
+export const FarmHouseImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="800" height="600" fill="url(#pattern0_14_1794)" />
+        <defs>
+            <pattern id="pattern0_14_1794" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1794" transform="scale(0.00125 0.00166667)" />
+            </pattern>
+            <image id="image0_14_1794" width="800" height="600" preserveAspectRatio="none" xlinkHref="/assets/img_3.jpeg" />
+        </defs>
+    </svg>
+);
+
+export const IndustryImage = ({ className = "w-full h-auto" }) => (
+    <svg width="477" height="268" viewBox="0 0 477 268" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="477" height="268" fill="url(#pattern0_10_301)" />
+        <defs>
+            <pattern id="pattern0_10_301" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_10_301" transform="matrix(0.000949648 0 0 0.00203704 -0.107775 -0.233333)" />
+            </pattern>
+            <image id="image0_10_301" width="1280" height="720" preserveAspectRatio="none" xlinkHref="/assets/img_ext_5.png" />
+        </defs>
+    </svg>
+);
+
+export const GlobalScaleGlobeImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="697" height="689" viewBox="0 0 697 689" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="704.608" height="688.805" transform="matrix(0.989214 -0.000788738 0 1 0 0.375244)" fill="url(#pattern0_10_279)" />
+        <defs>
+            <pattern id="pattern0_10_279" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_10_279" transform="matrix(0.00143482 0 0 0.00145179 -1.05751 -0.256594)" />
+            </pattern>
+            <image id="image0_10_279" width="1440" height="886" preserveAspectRatio="none" xlinkHref="/assets/img_4.png" />
+        </defs>
+    </svg>
+);
+
+export const IndoSpaceImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="640" height="360" viewBox="0 0 640 360" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="640" height="360" fill="url(#pattern0_14_1793)" />
+        <defs>
+            <pattern id="pattern0_14_1793" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1793" transform="scale(0.0015625 0.00277778)" />
+            </pattern>
+            <image id="image0_14_1793" width="640" height="360" preserveAspectRatio="none" xlinkHref="/assets/img_ext_4.jpeg" />
+        </defs>
+    </svg>
+);
+
+export const NewYorkImage = ({ className = "w-full h-auto" }) => (
+    <svg className={className} preserveAspectRatio="xMidYMid slice" width="2364" height="2364" viewBox="0 0 2364 2364" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+        <rect width="2364" height="2364" fill="url(#pattern0_14_1780)" />
+        <defs>
+            <pattern id="pattern0_14_1780" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlinkHref="#image0_14_1780" transform="scale(0.000423012)" />
+            </pattern>
+            <image id="image0_14_1780" width="2364" height="2364" preserveAspectRatio="none" xlinkHref="/assets/img_ext_0.jpeg" />
+        </defs>
+    </svg>
+);
+
 export const GlobeIcon = ({ className = "w-6 h-6" }) => (
     <svg className={className} preserveAspectRatio="xMidYMid slice" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 14H14V1.94311e-05H0V14Z" fill="white" />
@@ -582,3 +714,4 @@ export const PendingIcon = ({ className = "w-4 h-4" }) => (
 </defs>
 </svg>
 );
+
