@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckIcon, LoadingSpinner, LockIcon, BackArrowIcon, SellerIcon, DocumentIcon, DueDiligenceIcon, TrendingUpIcon, PropertyIcon, ClockIcon } from "@/components/VectorImages";
+import { CheckIcon, LoadingSpinner, LockIcon, BackArrowIcon, SellerIcon, DocumentIcon, DueDiligenceIcon, TrendingUpIcon, PropertyIcon, ClockIcon, VerifiedIcon } from "@/components/VectorImages";
 
 
 const PAYMENTS = [
@@ -58,14 +58,14 @@ export default function PaymentModal({ isOpen, onClose, asset }) {
                 >
                     <div className="absolute inset-0" onClick={onClose} />
                     <motion.div
-                        className="relative w-full max-w-md bg-[#0D1411] border border-[#FFFFFF0A] rounded-[32px] overflow-hidden"
+                        className="relative w-[95%] sm:w-full max-w-[520px] max-h-[90vh] overflow-y-auto bg-[#0D1411] border border-[#FFFFFF0A] rounded-2xl sm:rounded-[32px] mx-auto custom-scrollbar"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                     >
                        
-                        <div className="p-8">
+                        <div className="p-5 sm:p-8">
                             {step === 1 && (
                                 <StepSelection 
                                     asset={asset} 
@@ -106,7 +106,7 @@ function StepSelection({ asset, onSelect, onClose }) {
 
             <div className="bg-[#FFFFFF05] rounded-md p-3 flex justify-between items-center mb-6 border border-white/5">
                 <span className="text-lg text-[#767676]">Total Amount</span>
-                <span className="text-lg font-bold">${asset.currentValue}</span>
+                <span className="text-lg font-bold">{asset.currentValue}</span>
             </div>
 
             <div className="space-y-3">
@@ -116,17 +116,17 @@ function StepSelection({ asset, onSelect, onClose }) {
                         onClick={() => onSelect(method)}
                         className="w-full group flex items-center justify-between p-4 bg-[#FFFFFF05]  rounded-md hover:border-[#00FFCD33] transition-all text-left"
                     >
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-[#00FFCD10] flex items-center justify-center">
+                        <div className="flex items-center gap-3 sm:gap-4 flex-1 overflow-hidden pr-2">
+                            <div className="w-10 h-10 rounded-xl bg-[#00FFCD10] flex-shrink-0 flex items-center justify-center">
                                 <PaymentIcon type={method.id} />
                             </div>
-                            <div>
-                                <h3 className="text-sm font-bold text-white group-hover:text-[#00FFCD] transition-colors">{method.label}</h3>
-                                <p className="text-sm text-[#FFFFFF40] font-Montserrat">{method.desc}</p>
+                            <div className="min-w-0 flex-1">
+                                <h3 className="text-sm font-bold text-white group-hover:text-[#00FFCD] transition-colors truncate">{method.label}</h3>
+                                <p className="text-xs sm:text-sm text-[#FFFFFF40] font-Montserrat truncate">{method.desc}</p>
                             </div>
                         </div>
-                        <div className="flex flex-ro items-center gap-3">
-                            <span className="text-[11px] text-[#00DAAF] font-medium font-Montserrat">{method.fee}</span>
+                        <div className="flex flex-row items-center gap-2 sm:gap-3 flex-shrink-0">
+                            <span className="text-[10px] sm:text-[11px] text-[#00DAAF] font-medium font-Montserrat">{method.fee}</span>
                             <span className="text-[#444] group-hover:text-white transition-colors">→</span>
                         </div>
                     </button>
@@ -163,8 +163,8 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                         />
                     </div>
 
-                    <div className="flex flex-col items-center justify-center p-8 bg-[#FFFFFF05] rounded-3xl border border-white/5">
-                        <div className="w-32 h-32 bg-white/5 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="flex flex-col items-center justify-center p-6 sm:p-8 bg-[#FFFFFF05] rounded-3xl border border-white/5">
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white/5 rounded-2xl flex items-center justify-center mb-4">
                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M23.3333 10H13.3333C11.4924 10 10 11.4924 10 13.3333V23.3333C10 25.1743 11.4924 26.6667 13.3333 26.6667H23.3333C25.1743 26.6667 26.6667 25.1743 26.6667 23.3333V13.3333C26.6667 11.4924 25.1743 10 23.3333 10Z" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
 <path d="M66.6673 10H56.6673C54.8264 10 53.334 11.4924 53.334 13.3333V23.3333C53.334 25.1743 54.8264 26.6667 56.6673 26.6667H66.6673C68.5083 26.6667 70.0007 25.1743 70.0007 23.3333V13.3333C70.0007 11.4924 68.5083 10 66.6673 10Z" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
@@ -190,42 +190,42 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                 <div className="space-y-5">
                     <div>
                         <label className="text-[10px] text-[#444] uppercase tracking-wider font-bold mb-2 block">Card Number</label>
-                        <input type="text" placeholder="1234 5678 9012 3456" className="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 px-4 text-sm focus:outline-none focus:border-[#00FFCD33]" />
+                        <input type="text" placeholder="1234 5678 9012 3456" className="w-full bg-[#FFFFFF05] rounded-md py-3.5 px-4 text-sm focus:outline-none focus:border-[#00FFCD33]" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="text-[10px] text-[#444] uppercase tracking-wider font-bold mb-2 block">Expiry</label>
-                            <input type="text" placeholder="MM/YY" className="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 px-4 text-sm focus:outline-none focus:border-[#00FFCD33]" />
+                            <input type="text" placeholder="MM/YY" className="w-full bg-[#FFFFFF05] rounded-md py-3.5 px-4 text-sm focus:outline-none focus:border-[#00FFCD33]" />
                         </div>
                         <div>
                             <label className="text-[10px] text-[#444] uppercase tracking-wider font-bold mb-2 block">CVV</label>
-                            <input type="text" placeholder="123" className="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 px-4 text-sm focus:outline-none focus:border-[#00FFCD33]" />
+                            <input type="text" placeholder="123" className="w-full bg-[#FFFFFF05] rounded-md py-3.5 px-4 text-sm focus:outline-none focus:border-[#00FFCD33]" />
                         </div>
                     </div>
                     <div>
                         <label className="text-[10px] text-[#444] uppercase tracking-wider font-bold mb-2 block">Cardholder Name</label>
-                        <input type="text" placeholder="JOHN DOE" className="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 px-4 text-sm focus:outline-none focus:border-[#00FFCD33]" />
+                        <input type="text" placeholder="JOHN DOE" className="w-full bg-[#FFFFFF05] rounded-md py-3.5 px-4 text-sm focus:outline-none focus:border-[#00FFCD33]" />
                     </div>
                 </div>
             )}
 
             {method.id === 'escrow' && (
                 <div className="space-y-6">
-                    <div className="bg-[#00FFCD10] border border-[#00FFCD1A] rounded-2xl p-5 flex gap-4">
-                        <div className="w-10 h-10 rounded-full border border-[#00DAAF33] flex items-center justify-center flex-shrink-0">
-                            <span className="text-[#00DAAF]"><verifiedIcon className="w-5 h-5" /></span>
+                    <div className="bg-[#FFFFFF05] rounded-md p-5 flex gap-4">
+                        <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+                            <span className="text-[#00DAAF]"><VerifiedIcon className="w-5 h-5" /></span>
                         </div>
                         <div>
-                            <h3 className="text-sm font-bold text-white mb-1">GloFi Secure Escrow</h3>
-                            <p className="text-[10px] text-[#767676]">Licensed & Regulated</p>
+                            <h3 className="text-sm font-bold text-[#FFFFFFB2] mb-1">GloFi Secure Escrow</h3>
+                            <p className="text-[10px] text-[#FFFFFF40]">Licensed & Regulated</p>
                         </div>
                     </div>
-                    <p className="text-xs text-[#767676] leading-relaxed">
+                    <p className="text-xs text-[#FFFFFF40] leading-relaxed">
                         Funds held in escrow until property verification, legal review, and seller approval complete.
                     </p>
                     <div>
                         <label className="text-[10px] text-[#444] uppercase tracking-wider font-bold mb-2 block">Escrow Provider</label>
-                        <div className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-sm text-white/40">Default Provider</div>
+                        <div className="w-full bg-[#FFFFFF05] rounded-md py-3 px-4 text-sm text-white/40">Default Provider</div>
                     </div>
                 </div>
             )}
@@ -234,7 +234,7 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                 <div className="space-y-6">
                     <div>
                         <label className="text-[10px] text-[#444] uppercase tracking-wider font-bold mb-3 block">Cryptocurrency</label>
-                        <div className="grid grid-cols-4 gap-2 bg-black/20 p-1 rounded-2xl border border-white/5">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-black/20 p-1 rounded-2xl border border-white/5">
                             {cryptos.map(crypto => (
                                 <button
                                     key={crypto}
@@ -251,15 +251,15 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                         </div>
                     </div>
 
-                    <div className="bg-black/20 rounded-3xl border border-white/5 overflow-hidden">
+                    <div className="bg-[#FFFFFF05] rounded-md overflow-hidden">
                         <div className="p-5 space-y-3">
-                            <label className="text-[10px] text-[#444] uppercase tracking-wider font-bold block">Send to Wallet Address</label>
+                            <label className="text-[10px] text-[#FFFFFF40] uppercase tracking-wider font-bold block">Send to Wallet Address</label>
                             <div className="relative group">
                                 <input 
                                     readOnly
                                     type="text" 
                                     value="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb" 
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3.5 pl-4 pr-12 text-[10px] font-mono text-white/80 focus:outline-none"
+                                    className="w-full bg-[#FFFFFF05] rounded-md py-3.5 pl-4 pr-10 sm:pr-12 text-[9px] sm:text-[10px] font-mono text-white/80 focus:outline-none truncate"
                                 />
                                 <button className="absolute right-3 top-1/2 -translate-y-1/2 text-[#00FFCD] hover:text-[#00e6b8] transition-colors">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -271,22 +271,23 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                 </div>
             )}
 
-            <div className="mt-8 space-y-3 bg-[#FFFFFF05] p-5 rounded-md">
-                <div className="flex justify-between text-sm">
+            <div className="mt-8 space-y-3 bg-[#FFFFFF05] p-4 sm:p-5 rounded-md">
+                <div className="flex justify-between text-xs sm:text-sm">
                     <span className="font-Montserrat text-[#FFFFFF40]">Amount</span>
-                    <span className="font-Montserrat text-[#FFFFFF40]">${asset.currentValue}</span>
+                    <span className="font-Montserrat text-[#FFFFFF40]">{asset.currentValue}</span>
                 </div>
-                <div className="flex justify-between text-sm font-bold border-t border-white/5 pt-3">
+                <div className="flex justify-between text-xs sm:text-sm font-bold border-t border-white/5 pt-3">
                     <span className="text-[#FFFFFF99]">Total to Pay</span>
-                    <span className="text-[#FFFFFF99]">${asset.currentValue}</span>
+                    <span className="text-[#FFFFFF99]">{asset.currentValue}</span>
                 </div>
-                <button 
-                    onClick={onConfirm}
-                    className="w-full py-4 rounded-2xl bg-[#00FFCD] text-black text-sm font-bold hover:bg-[#00e6b8] transition-colors mt-4"
-                >
-                    Confirm Payment
-                </button>
             </div>
+
+            <button 
+                onClick={onConfirm}
+                className="w-full py-2 sm:py-3 rounded-xl sm:rounded-md bg-[#00FFCD] text-black text-xs sm:text-sm font-bold hover:bg-[#00e6b8] transition-colors mt-4"
+            >
+                Confirm Payment
+            </button>
         </>
     );
 }
@@ -310,33 +311,67 @@ function StepProcessing() {
 
 function StepStatus() {
     return (
-        <div className="flex flex-col items-center gap-8">
-            <div className="text-center">
-                <div className="w-16 h-16 rounded-2xl bg-[#00DAAF10] flex items-center justify-center mb-6 mx-auto">
-                   <ClockIcon className="w-8 h-8 text-[#00DAAF]" />
+        <div className="flex flex-col items-center gap-8 font-Montserrat w-full">
+            <div className="text-center w-full">
+                <div className="w-[72px] h-[72px] rounded-2xl bg-[#FFB9000A] flex items-center justify-center mb-6 mx-auto">
+                   <ClockIcon className="w-8 h-8 text-[#FFB900]" />
                 </div>
-                <h2 className="text-xl font-bold mb-2">Awaiting Approval</h2>
-                <p className="text-xs text-[#767676] font-Montserrat">Payment received • Processing transaction</p>
+                <h2 className="text-2xl font-bold mb-2 text-white">Awaiting Approval</h2>
+                <p className="text-sm text-[#767676]">Payment received • Processing transaction</p>
             </div>
 
             <div className="w-full space-y-4">
-                <div className="p-4 bg-black/40 rounded-2xl border border-white/5 flex justify-between items-center mb-6">
-                    <div>
-                        <p className="text-[10px] text-[#444] mb-1">Transaction ID</p>
-                        <p className="text-xs font-mono text-white">TX-8902467</p>
+                <div className="p-5 sm:p-6 bg-[#FFFFFF03] rounded-2xl flex justify-between items-start">
+                    <div className="space-y-3">
+                        <p className="text-[13px] text-[#767676]">Transaction ID</p>
+                        <p className="text-[14px] sm:text-[15px] font-mono text-[#FFFFFFB2]">TX-MMOZWAGT</p>
                     </div>
-                    <button className="text-[10px] text-[#00FFCD] font-bold">Copy</button>
+                    <button className="text-[13px] text-[#00DAAF] font-medium flex items-center gap-1.5 mt-0.5 hover:text-[#00FFCD] transition-colors">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Copy
+                    </button>
                 </div>
 
-                <div className="space-y-3">
-                    <StatusItem icon={<SellerIcon className="text-[#00DAAF]" />} label="Seller Approval" status="In progress..." active />
-                    <StatusItem icon={<DocumentIcon className="text-[#00DAAF]" />} label="Document Verification" status="Pending" />
-                    <StatusItem icon={<DueDiligenceIcon className="text-[#00DAAF]" />} label="Due Diligence" status="Pending" />
+                <div className="p-5 sm:p-6 bg-[#FFFFFF03] rounded-2xl flex items-center gap-5">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#FFB9000D] flex items-center justify-center flex-shrink-0">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFB900" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </div>
+                    <div className="space-y-1">
+                        <h3 className="text-[15px] sm:text-[16px] font-medium text-[#FFFFFFB2]">Seller Approval</h3>
+                        <p className="text-[13px] sm:text-[14px] text-[#767676]">In progress...</p>
+                    </div>
+                </div>
+
+                <div className="p-5 sm:p-6 bg-[#FFFFFF03] rounded-md flex items-center gap-5">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#FFFFFF05] flex items-center justify-center flex-shrink-0">
+                        <DocumentIcon className="w-6 h-6 text-[#FFFFFF4D]" />
+                    </div>
+                    <div className="space-y-1">
+                        <h3 className="text-[15px] sm:text-[16px] font-medium text-[#FFFFFFB2]">Document Verification</h3>
+                        <p className="text-[13px] sm:text-[14px] text-[#767676]">Pending</p>
+                    </div>
+                </div>
+
+                <div className="p-5 sm:p-6 bg-[#FFFFFF03] rounded-2xl flex items-center gap-5">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-md bg-[#FFFFFF05] flex items-center justify-center flex-shrink-0">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF4D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <div className="space-y-1">
+                        <h3 className="text-[15px] sm:text-[16px] font-medium text-[#FFFFFFB2]">Due Diligence</h3>
+                        <p className="text-[13px] sm:text-[14px] text-[#767676]">Pending</p>
+                    </div>
                 </div>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-[10px] text-[#444] italic">
-                <ClockIcon className="w-3.5 h-3.5" /> 
+            <div className="flex items-start gap-4 text-[13px] text-[#767676] w-full px-2 mt-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+                    <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
                 <span>This process typically takes 24-48 hours. You'll receive email updates at each stage.</span>
             </div>
         </div>
@@ -344,77 +379,78 @@ function StepStatus() {
 }
 
 function StatusItem({ icon, label, status, active }) {
-    return (
-        <div className={`p-4 rounded-2xl border ${active ? 'bg-[#FFFFFF08] border-white/10' : 'border-transparent opacity-40'}`}>
-            <div className="flex items-center gap-4">
-                <div className="text-lg">{icon}</div>
-                <div>
-                    <h3 className="text-xs font-bold text-white">{label}</h3>
-                    <p className="text-[10px] text-[#00FFCD]">{status}</p>
-                </div>
-            </div>
-        </div>
-    );
+    return null;
 }
 
 function StepEscrowStatus({ asset }) {
     return (
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col items-center gap-6 sm:gap-8 font-Montserrat">
             <div className="text-center">
-                <div className="w-16 h-16 rounded-3xl bg-[#00FFCD10] flex items-center justify-center mb-6 mx-auto">
-                    <span className="text-3xl"><verifiedIcon className="w-5 h-5" /></span>
+                <div className="w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-[14px] sm:rounded-2xl bg-[#00000033] sm:bg-[#00FFCD08] flex items-center justify-center mb-4 sm:mb-6 mx-auto">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00DAAF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 sm:w-8 sm:h-8">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
                 </div>
-                <h2 className="text-2xl font-bold mb-2">Funds in Escrow</h2>
-                <p className="text-xs text-[#767676]">Securely held until verification complete</p>
+                <h2 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2 text-white">Funds in Escrow</h2>
+                <p className="text-xs sm:text-sm text-[#767676]">Securely held until verification complete</p>
             </div>
 
-            <div className="w-full space-y-4">
-                <div className="p-6 bg-black/40 rounded-3xl border border-white/5 space-y-4">
-                    <div className="flex justify-between text-xs">
-                        <span className="text-[#444]">Escrow ID</span>
-                        <span className="text-white font-mono">ESC-MMOZMMIV</span>
+            <div className="w-full space-y-3 sm:space-y-4">
+                <div className="p-4 sm:p-6 bg-[#FFFFFF03] rounded-2xl space-y-3 sm:space-y-5">
+                    <div className="flex justify-between text-[11px] sm:text-[13px]">
+                        <span className="text-[#767676]">Escrow ID</span>
+                        <span className="text-[#FFFFFFB2] font-mono">ESC-MMOZZMIV</span>
                     </div>
-                    <div className="flex justify-between text-xs">
-                        <span className="text-[#444]">Transaction ID</span>
-                        <span className="text-white font-mono">TX-MMOZMMIV</span>
+                    <div className="flex justify-between text-[11px] sm:text-[13px]">
+                        <span className="text-[#767676]">Transaction ID</span>
+                        <span className="text-[#FFFFFFB2] font-mono">TX-MMOZZMIV</span>
                     </div>
-                    <div className="flex justify-between text-sm pt-2 border-t border-white/5">
-                        <span className="text-[#444]">Escrow Amount</span>
-                        <span className="text-[#00FFCD] font-bold">${asset.currentValue}</span>
+                    <div className="flex justify-between text-[13px] sm:text-[15px] pt-3 sm:pt-5 border-t border-white/5">
+                        <span className="text-[#767676]">Escrow Amount</span>
+                        <span className="text-[#00DAAF] font-bold">{asset.currentValue}</span>
                     </div>
                 </div>
 
-                <div className="p-6 bg-black/20 rounded-3xl border border-white/5 space-y-6">
-                    <div className="flex justify-between items-center bg-[#FFFFFF05] p-3 rounded-xl border border-white/5">
-                        <span className="text-xs font-bold text-[#767676]">Verification Progress</span>
+                <div className="p-4 sm:p-6 bg-[#FFFFFF03] rounded-2xl space-y-4 sm:space-y-6">
+                    <div className="flex justify-between items-center">
+                        <span className="text-[13px] sm:text-base font-medium text-[#FFFFFFB2]">Verification Progress</span>
                     </div>
-                    <div className="space-y-4 pl-2">
+                    <div className="space-y-3 sm:space-y-4">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs text-[#767676]">Seller Approval</span>
-                            <span className="text-[#00DAAF]">✓</span>
+                            <span className="text-[12px] sm:text-[13px] text-[#767676]">Seller Approval</span>
+                            <CheckIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00DAAF]" />
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-xs text-[#767676]">Document Upload</span>
-                            <span className="text-[#00DAAF]">✓</span>
+                            <span className="text-[12px] sm:text-[13px] text-[#767676]">Document Upload</span>
+                            <CheckIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00DAAF]" />
                         </div>
-                        <div className="flex items-center justify-between opacity-50">
-                            <span className="text-xs text-[#767676]">Legal Review</span>
-                            <ClockIcon className="w-3.5 h-3.5 text-white" />
+                        <div className="flex items-center justify-between">
+                            <span className="text-[12px] sm:text-[13px] text-[#767676]">Legal Review</span>
+                            <ClockIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFFFFF4D]" />
                         </div>
-                        <div className="flex items-center justify-between opacity-50">
-                            <span className="text-xs text-[#767676]">Due Diligence</span>
-                            <ClockIcon className="w-3.5 h-3.5 text-white" />
+                        <div className="flex items-center justify-between">
+                            <span className="text-[12px] sm:text-[13px] text-[#767676]">Due Diligence</span>
+                            <ClockIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFFFFF4D]" />
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-[10px] text-[#00DAAF80] italic">
-                <span className="text-[#00DAAF]"><verifiedIcon className="w-5 h-5" /></span>
-                <span>Escrow funds will be released automatically once: property documents verified, legal due diligence complete, and seller approves transaction.</span>
+            <div className="flex items-start gap-3 sm:gap-4 text-[11px] sm:text-[13px] w-full px-1 sm:px-2 mt-1 sm:mt-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00DAAF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5 sm:w-5 sm:h-5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <div className="text-[#767676] space-y-2.5 sm:space-y-3 w-full">
+                    <p>Escrow funds will be released automatically once:</p>
+                    <div className="space-y-1.5 sm:space-y-2 pl-2">
+                        <p>Property documents verified</p>
+                        <p>Legal due diligence complete</p>
+                        <p>Seller approves transaction</p>
+                    </div>
+                </div>
             </div>
 
-            <button className="w-full py-4 rounded-2xl bg-[#FFFFFF08] text-[#767676] text-sm font-bold border border-white/5 cursor-default">
+            <button className="w-full py-3.5 sm:py-4 mt-1 sm:mt-2 rounded-xl bg-[#FFFFFF05] text-[#767676] text-xs sm:text-sm font-medium cursor-not-allowed transition-colors hover:bg-[#FFFFFF08]">
                 Pending Verification
             </button>
         </div>
@@ -471,8 +507,8 @@ function StepSuccess({ asset, method, onClose }) {
                 </div>
             </div>
 
-            <div className="flex gap-4 w-full">
-                <button className="flex-1 py-3.5 rounded-md bg-[#FFFFFF08] text-white text-xs font-bold  flex items-center justify-center gap-2">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
+                <button className="flex-1 py-3.5 rounded-md bg-[#FFFFFF08] text-white text-xs font-bold flex items-center justify-center gap-2">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                     Receipt
                 </button>

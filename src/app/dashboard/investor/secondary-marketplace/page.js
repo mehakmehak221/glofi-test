@@ -15,7 +15,7 @@ const STATS = [
 
 const MARKETPLACE_ASSETS = [
     {
-        
+
         id: 1,
         name: "Burj Vista Tower",
         image: "/assets/marketplace/Burj.png",
@@ -153,6 +153,7 @@ export default function SecondaryMarketplacePage() {
                                 </div>
                             </div>
                             <div className="mb-1">
+
                                 <span className="text-3xl sm:text-4xl font-bold">{stat.value}</span>
                             </div>
                             <div className="flex items-center gap-1.5 mt-2">
@@ -264,15 +265,15 @@ function MarketplaceCard({ asset, onBuy }) {
                 <h3 className="text-lg font-bold mb-6 font-Montserrat leading-snug group-hover:text-[#00FFCD] transition-colors line-clamp-2 min-h-[3.5rem]">{asset.name}</h3>
 
                 <div className="grid grid-cols-2 gap-3 mb-8">
-                    <div className="bg-[#050B08] rounded-3xl p-5 flex flex-col justify-between min-h-[90px] ring-1 ring-white/5">
+                    <div className="bg-[#FFFFFF05] rounded-lg p-5 flex flex-col justify-between min-h-[90px] ring-1 ring-white/5">
                         <p className="text-[10px] text-[#444] uppercase tracking-widest font-bold">Fractions</p>
                         <p className="text-base font-bold text-white font-Montserrat">{asset.fractions}</p>
                     </div>
-                    <div className="bg-[#050B08] rounded-3xl p-5 flex flex-col justify-between min-h-[90px] ring-1 ring-white/5">
+                    <div className="bg-[#FFFFFF05] rounded-lg p-5 flex flex-col justify-between min-h-[90px] ring-1 ring-white/5">
                         <p className="text-[10px] text-[#444] uppercase tracking-widest font-bold">Price</p>
                         <p className="text-base font-bold text-white font-Montserrat">{asset.price}</p>
                     </div>
-                    <div className="col-span-2 bg-[#00F4C40D] rounded-3xl p-6 flex flex-col justify-between min-h-[110px] ring-1 ring-[#00FFCD1A]">
+                    <div className="col-span-2 bg-[#00F4C40D] rounded-lg p-6 flex flex-col justify-between min-h-[110px] ring-1 ring-[#00FFCD1A]">
                         <p className="text-[10px] text-[#A4A7AE] uppercase tracking-widest font-bold opacity-70">Current Value</p>
                         <p className="text-xl font-black text-[#00FFCD] font-Montserrat">{asset.currentValue}</p>
                     </div>
@@ -281,16 +282,16 @@ function MarketplaceCard({ asset, onBuy }) {
                 <div className="mt-auto space-y-4">
                     <button
                         onClick={onBuy}
-                        className="w-full py-4 rounded-xl bg-[#00F4C4] text-black text-sm font-black uppercase tracking-wider hover:bg-[#00e6b8] hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-[0_4px_20px_rgba(0,255,205,0.2)]"
+                        className="w-full py-4 rounded-md bg-[#00F4C4] text-black text-sm font-black uppercase tracking-wider hover:bg-[#00e6b8] hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-[0_4px_20px_rgba(0,255,205,0.2)]"
                     >
                         Buy Fractions
                     </button>
                     <div className="grid grid-cols-2 gap-3">
-                        <button className="flex items-center justify-center gap-2 py-4 rounded-xl bg-[#FFFFFF0A] text-xs font-bold text-white hover:bg-[#FFFFFF1A] transition-all">
+                        <button className="flex items-center justify-center gap-2 py-4 rounded-md bg-[#FFFFFF0A] text-xs font-bold text-white hover:bg-[#FFFFFF1A] transition-all">
                             <EyeOpenIcon className="w-4 h-4 opacity-70" />
                             <span>View</span>
                         </button>
-                        <button className="flex items-center justify-center gap-2 py-4 rounded-xl bg-[#FFFFFF0A] text-xs font-bold text-white hover:bg-[#FFFFFF1A] transition-all">
+                        <button className="flex items-center justify-center gap-2 py-4 rounded-md bg-[#FFFFFF0A] text-xs font-bold text-white hover:bg-[#FFFFFF1A] transition-all">
                             <DownloadIcon className="w-4 h-4 opacity-70" />
                             <span>Info</span>
                         </button>
