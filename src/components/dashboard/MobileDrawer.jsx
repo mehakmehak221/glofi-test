@@ -12,6 +12,10 @@ import {
     AccountIcon,
     SignOutIcon,
     SecondaryMarketplaceIcon,
+    OverviewIcon,
+    PropertyIcon,
+    LeadsIcon,
+    FinancialIcon
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
@@ -20,6 +24,13 @@ const NAV_ITEMS = [
     { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
     { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
     { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
+];
+
+const PARTNER_NAV_ITEMS = [
+    { href: "/dashboard/partner/overview", icon: OverviewIcon, label: "Overview" },
+    { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
+    { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
+    { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
 ];
 
 const drawerVariants = {
@@ -45,6 +56,8 @@ const itemVariants = {
 
 export default function MobileDrawer({ isOpen, onClose }) {
     const pathname = usePathname();
+    const isPartner = pathname.startsWith("/dashboard/partner");
+    const activeNavItems = isPartner ? PARTNER_NAV_ITEMS : NAV_ITEMS;
 
     return (
         <AnimatePresence>
@@ -74,7 +87,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                                 <Avatar name="Ishan" size="md" />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-semibold text-white">Ishan</span>
-                                    <span className="text-[10px] text-[#767676] uppercase tracking-wider">Investor</span>
+                                    <span className="text-[10px] text-[#767676] uppercase tracking-wider">{isPartner ? "Partner" : "Investor"}</span>
                                 </div>
                             </div>
 
@@ -94,10 +107,10 @@ export default function MobileDrawer({ isOpen, onClose }) {
 
                             >
                                 <span className="text-[10px] font-normal text-[#00F4C4] tracking-[0.15em] uppercase border border-[#00DAAF33]/30 font-montserrat bg-[#00DAAF0D] rounded-full px-3 py-1 inline-block">
-                                    Investor Panel
+                                    {isPartner ? "Partner Panel" : "Investor Panel"}
                                 </span>
                             </motion.div>
-                            {NAV_ITEMS.map((item, i) => {
+                            {activeNavItems.map((item, i) => {
                                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
                                 return (
                                     <motion.div

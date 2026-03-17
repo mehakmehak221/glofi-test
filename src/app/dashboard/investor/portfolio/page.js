@@ -156,16 +156,16 @@ function AssetCard({ asset, onResale }) {
     return (
         <motion.div
             variants={itemVariants}
-            className={`bg-[#0D1411] border ${asset.isResale ? 'border-[#00FFCD1A]' : 'border-[#FFFFFF0A]'} rounded-2xl p-4 sm:p-6 hover:border-[#00FFCD33] transition-all duration-300 relative group`}
+            className={`bg-[#0D1411] border ${asset.isResale ? 'border-[#00FFCD1A]' : 'border-[#FFFFFF0A]'} rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-[#00FFCD33] transition-all duration-300 relative group`}
         >
-            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-5 lg:gap-8">
 
-                <div className="w-full sm:w-64 lg:w-[240px] h-48 sm:h-40 lg:h-[135px] rounded-xl overflow-hidden flex-shrink-0 relative">
+                <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-xl overflow-hidden flex-shrink-0 relative">
                     <Image
                         src={asset.image}
                         alt={asset.name}
                         fill
-                        sizes="(max-width: 640px) 100vw, 240px"
+                        sizes="(max-width: 640px) 100vw, 280px"
                         className="object-cover"
                     />
                     {asset.isResale && (
@@ -176,56 +176,49 @@ function AssetCard({ asset, onResale }) {
                 </div>
 
                 <div className="flex-1 w-full flex flex-col justify-center">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                        <div>
-                            <h3 className="text-lg sm:text-xl font-bold text-white mb-1.5">{asset.name}</h3>
-                            <div className="flex flex-wrap items-center gap-8">
+                    <div className="flex flex-col sm:flex-row sm:items-start lg:items-center justify-between gap-4 mb-5 lg:mb-4">
+                        <div className="flex-1 w-full flex flex-col gap-4 sm:gap-2">
+                            <div className="flex flex-row items-center justify-between sm:justify-start gap-4">
+                                <h3 className="text-lg sm:text-xl font-bold text-white">{asset.name}</h3>
+                                {asset.isResale && (
+                                    <div className="sm:hidden px-3 py-1.5 rounded-full bg-[#00FFCD1A] border border-[#00FFCD33] flex items-center shrink-0">
+                                        <span className="text-[9px] text-[#00F4C4] font-bold uppercase tracking-wider">{asset.fractions} Listed</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-4 sm:gap-6 lg:gap-8 w-full">
                                 <div>
                                     <p className="text-[10px] uppercase tracking-wider text-[#767676] mb-1 font-bold">Fractions</p>
-                                    <p className="text-sm font-bold text-white">{asset.fractions}/{totalFractions}</p>
+                                    <p className="text-xs sm:text-sm font-bold text-white">{asset.fractions}/{totalFractions}</p>
                                 </div>
-                                <div className="hidden sm:block">
+                                <div className="block">
                                     <p className="text-[10px] uppercase tracking-wider text-[#767676] mb-1 font-bold">Invested</p>
-                                    <p className="text-sm font-bold text-white">{asset.invested}</p>
+                                    <p className="text-xs sm:text-sm font-bold text-white">{asset.invested}</p>
                                 </div>
-                                <div className="hidden sm:block">
+                                <div className="block">
                                     <p className="text-[10px] uppercase tracking-wider text-[#767676] mb-1 font-bold">Value</p>
-                                    <p className="text-sm font-bold text-[#00FFCD]">{asset.value}</p>
+                                    <p className="text-xs sm:text-sm font-bold text-[#00FFCD]">{asset.value}</p>
                                 </div>
-                                <div className="hidden sm:block">
+                                <div className="block">
                                     <p className="text-[10px] uppercase tracking-wider text-[#767676] mb-1 font-bold">ROI</p>
-                                    <p className="text-sm font-bold text-[#00FFCD]">{asset.roi}</p>
+                                    <p className="text-xs sm:text-sm font-bold text-[#00FFCD]">{asset.roi}</p>
                                 </div>
                             </div>
                         </div>
 
                         {asset.isResale && (
-                            <div className="px-3 py-1.5 rounded-full bg-[#00FFCD1A] border border-[#00FFCD33] flex items-center self-start sm:self-center">
+                            <div className="hidden sm:flex px-3 py-1.5 rounded-full bg-[#00FFCD1A] border border-[#00FFCD33] items-center shrink-0 self-start lg:self-center">
                                 <span className="text-[10px] text-[#00F4C4] font-bold uppercase tracking-wider">{asset.fractions} Listed for Resale</span>
                             </div>
                         )}
-                    </div>
-
-                    <div className="flex sm:hidden grid grid-cols-3 gap-4 mb-5">
-                        <div>
-                            <p className="text-[10px] uppercase tracking-wider text-[#767676] mb-1 font-bold">Invested</p>
-                            <p className="text-xs font-bold text-white">{asset.invested}</p>
-                        </div>
-                        <div>
-                            <p className="text-[10px] uppercase tracking-wider text-[#767676] mb-1 font-bold">Value</p>
-                            <p className="text-xs font-bold text-[#00FFCD]">{asset.value}</p>
-                        </div>
-                        <div>
-                            <p className="text-[10px] uppercase tracking-wider text-[#767676] mb-1 font-bold">ROI</p>
-                            <p className="text-xs font-bold text-[#00FFCD]">{asset.roi}</p>
-                        </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FFFFFF0A] text-[#00FFCD] text-[11px] font-bold border border-transparent hover:border-[#00FFCD33] transition-all cursor-pointer group/btn"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[#FFFFFF0A] text-[#00FFCD] text-[11px] font-bold border border-transparent hover:border-[#00FFCD33] transition-all cursor-pointer group/btn"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 12 12" fill="none" className="transition-transform group-hover/btn:scale-110">
                                 <g clipPath="url(#clip0_80_1082)">
@@ -239,7 +232,7 @@ function AssetCard({ asset, onResale }) {
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FFFFFF0A] text-[#767676] text-[11px] font-bold hover:text-white transition-all border border-transparent hover:border-white/10 cursor-pointer"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[#FFFFFF0A] text-[#767676] text-[11px] font-bold hover:text-white transition-all border border-transparent hover:border-white/10 cursor-pointer"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 12 12" fill="none">
                                 <path d="M10.5 7.5V9.5C10.5 9.76522 10.3946 10.0196 10.2071 10.2071C10.0196 10.3946 9.76522 10.5 9.5 10.5H2.5C2.23478 10.5 1.98043 10.3946 1.79289 10.2071C1.60536 10.0196 1.5 9.76522 1.5 9.5V7.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
@@ -253,7 +246,7 @@ function AssetCard({ asset, onResale }) {
                                 onClick={onResale}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#00FFCD1A] text-[#00FFCD] text-[11px] font-bold border border-[#00FFCD33] cursor-pointer hover:bg-[#00FFCD2A] transition-all"
+                                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[#00FFCD1A] text-[#00FFCD] text-[11px] font-bold border border-[#00FFCD33] cursor-pointer hover:bg-[#00FFCD2A] transition-all"
                             >
                                 <ResaleIcon className="w-4 h-4" />
                                 Resell

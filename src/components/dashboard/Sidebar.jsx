@@ -32,7 +32,7 @@ export default function Sidebar() {
     return (
         <motion.aside
             className="hidden lg:flex flex-col h-screen sticky top-0 bg-bg-dark border-r border-[#FFFFFF0A] z-40 overflow-hidden"
-            animate={{ width: collapsed ? 80 : 220 }}
+            animate={{ width: collapsed ? 80 : 250 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
 

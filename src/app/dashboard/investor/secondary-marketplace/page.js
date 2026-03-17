@@ -235,7 +235,7 @@ function MarketplaceCard({ asset, onBuy }) {
     return (
         <motion.div
             variants={itemVariants}
-            className="group bg-[#0D1411] border border-[#FFFFFF0A] rounded-[40px] overflow-hidden flex flex-col hover:border-[#00FFCD33] hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-all duration-500"
+            className="group bg-[#0D1411] border border-[#FFFFFF0A] rounded-md overflow-hidden flex flex-col hover:border-[#00FFCD33] hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-all duration-500"
         >
 
             <div className="relative h-56 sm:h-48 lg:h-52 xl:h-48 overflow-hidden">
@@ -247,6 +247,7 @@ function MarketplaceCard({ asset, onBuy }) {
                 />
                 <div className="absolute top-4 right-4">
                     <div className="px-3 py-1.5 rounded-full bg-[#00FFCD]/90 backdrop-blur-md text-black text-[11px] font-bold flex items-center gap-1 shadow-lg ring-1 ring-white/20">
+                        <TrendingUpIcon className="w-3.5 h-3.5" />
                         {asset.change}
                     </div>
                 </div>
@@ -261,8 +262,8 @@ function MarketplaceCard({ asset, onBuy }) {
             </div>
 
 
-            <div className="p-7 sm:p-6 lg:p-7 flex flex-col flex-1">
-                <h3 className="text-lg font-bold mb-6 font-Montserrat leading-snug group-hover:text-[#00FFCD] transition-colors line-clamp-2 min-h-[3.5rem]">{asset.name}</h3>
+            <div className="p-7 sm:p-5 lg:p-5 flex flex-col flex-1">
+                <h3 className="text-lg font-bold mb-6 font-Montserrat leading-snug group-hover:text-[#00FFCD] transition-colors line-clamp-2 min-h-[2rem]">{asset.name}</h3>
 
                 <div className="grid grid-cols-2 gap-3 mb-8">
                     <div className="bg-[#FFFFFF05] rounded-lg p-5 flex flex-col justify-between min-h-[90px] ring-1 ring-white/5">
