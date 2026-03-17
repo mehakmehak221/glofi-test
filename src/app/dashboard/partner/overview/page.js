@@ -8,7 +8,7 @@ import {
     FinancialIcon,
     TrendingUpIcon,
     PhoneIcon,
-    ProperyIcon,
+    PropertyIcon,
 } from "@/components/VectorImages";
 
 
@@ -17,7 +17,7 @@ const STAT_CARDS = [
         label: "LISTINGS",
         value: "8",
         delta: "+2 this month",
-        icon: ProperyIcon,
+        icon: PropertyIcon,
     },
     {
         label: "ACTIVE LEADS",

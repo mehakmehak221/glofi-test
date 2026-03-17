@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import NavItem from "./NavItem";
 import {
     OverviewIcon,
-    ProperyIcon,
+    PropertyIcon,
     LeadsIcon,
     FinancialIcon,
     CollapseIcon,
@@ -18,7 +18,7 @@ import {
 
 const NAV_ITEMS = [
     { href: "/dashboard/partner/overview", icon: OverviewIcon, label: "Overview" },
-    { href: "/dashboard/partner/properties", icon: ProperyIcon, label: "Properties" },
+    { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
     { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
 ];

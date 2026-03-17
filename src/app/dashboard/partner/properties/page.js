@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import {
     MapPinIcon,
-    ProperyIcon,
+    PropertyIcon,
 } from "@/components/VectorImages";
 import NewListingForm from "@/components/dashboard/NewListingForm";
 
@@ -97,7 +97,7 @@ function PropertyCard({ property, index }) {
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 160px, 160px"
                     />
                 ) : (
-                    <ProperyIcon className="w-8 h-8 text-[#00DAAF33]" />
+                    <PropertyIcon className="w-8 h-8 text-[#00DAAF33]" />
                 )}
             </div>
 
@@ -155,7 +155,7 @@ export default function PartnerPropertiesPage() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                     >
-                       
+
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
@@ -181,7 +181,7 @@ export default function PartnerPropertiesPage() {
                             </motion.button>
                         </div>
 
-                      
+
                         <div className="flex flex-col gap-4 lg:gap-5">
                             {PROPERTIES.map((prop, i) => (
                                 <PropertyCard key={prop.id} property={prop} index={i} />
