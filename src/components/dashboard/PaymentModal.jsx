@@ -472,13 +472,13 @@ function StepSuccess({ asset, method, onClose }) {
             </div>
 
             <div className="flex gap-4 w-full">
-                <button className="flex-1 py-3.5 rounded-2xl bg-[#FFFFFF08] text-white text-xs font-bold border border-white/10 flex items-center justify-center gap-2">
+                <button className="flex-1 py-3.5 rounded-md bg-[#FFFFFF08] text-white text-xs font-bold  flex items-center justify-center gap-2">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                     Receipt
                 </button>
                 <button 
                     onClick={onClose}
-                    className="flex-1 py-3.5 rounded-2xl bg-[#00FFCD] text-black text-xs font-bold hover:bg-[#00e6b8] transition-colors"
+                    className="flex-1 py-3.5 rounded-md bg-[#00FFCD] text-black text-xs font-bold hover:bg-[#00e6b8] transition-colors"
                 >
                     View Portfolio
                 </button>

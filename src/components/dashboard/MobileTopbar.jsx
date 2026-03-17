@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import { SearchIcon, MenuIcon } from "@/components/VectorImages";
+import { SearchIcon, MenuIcon, BellIcon } from "@/components/VectorImages";
 import MobileDrawer from "./MobileDrawer";
 
 export default function MobileTopbar() {
@@ -13,7 +13,7 @@ export default function MobileTopbar() {
 
     return (
         <>
-            <header className="flex lg:hidden items-center justify-between px-4 py-3  backdrop-blur-md border-b border-white/[0.06] sticky top-0 z-40">
+            <header className="flex lg:hidden items-center justify-between px-4 py-3 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/[0.06] sticky top-0 z-40">
 
                 <Link href="/dashboard/investor/marketplace" className="flex items-center gap-3 no-underline">
                     <Image
@@ -50,6 +50,14 @@ export default function MobileTopbar() {
                             <SearchIcon className="w-5 h-5" />
                         </button>
                     )}
+
+                    <button
+                        className="relative p-2 rounded-lg text-[#767676] hover:text-white hover:bg-white/5 transition-colors bg-transparent border-0 cursor-pointer"
+                        aria-label="Notifications"
+                    >
+                        <BellIcon className="w-5 h-5" />
+                        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#00FFCD] rounded-full" />
+                    </button>
 
                     <button
                         onClick={() => setDrawerOpen(true)}

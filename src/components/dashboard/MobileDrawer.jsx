@@ -11,10 +11,12 @@ import {
     TransactionsIcon,
     AccountIcon,
     SignOutIcon,
+    SecondaryMarketplaceIcon,
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
     { href: "/dashboard/investor/marketplace", icon: MarketplaceIcon, label: "Marketplace" },
+    { href: "/dashboard/investor/secondary-marketplace", icon: SecondaryMarketplaceIcon, label: "Secondary Marketplace" },
     { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
     { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
     { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
