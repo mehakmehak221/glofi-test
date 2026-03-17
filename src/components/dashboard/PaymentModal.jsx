@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckIcon, LoadingSpinner, LockIcon, BackArrowIcon, SellerIcon, DocumentIcon, DueDiligenceIcon, TrendingUpIcon, PropertyIcon } from "@/components/VectorImages";
+import { CheckIcon, LoadingSpinner, LockIcon, BackArrowIcon, SellerIcon, DocumentIcon, DueDiligenceIcon, TrendingUpIcon, PropertyIcon, ClockIcon } from "@/components/VectorImages";
+
 
 const PAYMENTS = [
     { id: 'upi', label: 'UPI', desc: 'Instant payment via UPI', fee: '0% fee', color: '#00FFCD' },
@@ -24,7 +25,7 @@ const modalVariants = {
 };
 
 export default function PaymentModal({ isOpen, onClose, asset }) {
-    const [step, setStep] = useState(1); // 1: Select, 2: Details, 3: Processing, 4: Status, 5: Success, 6: EscrowStatus
+    const [step, setStep] = useState(1); 
     const [selectedMethod, setSelectedMethod] = useState(null);
 
     useEffect(() => {
@@ -34,7 +35,7 @@ export default function PaymentModal({ isOpen, onClose, asset }) {
     if (!isOpen || !asset) return null;
 
     const handleConfirmPayment = () => {
-        setStep(3); // Start processing
+        setStep(3); 
         
         if (selectedMethod?.id === 'escrow') {
             setTimeout(() => setStep(6), 2000); 
@@ -63,7 +64,7 @@ export default function PaymentModal({ isOpen, onClose, asset }) {
                         animate="visible"
                         exit="exit"
                     >
-                        {/* Modal Content Based on Step */}
+                       
                         <div className="p-8">
                             {step === 1 && (
                                 <StepSelection 
@@ -125,16 +126,17 @@ function StepSelection({ asset, onSelect, onClose }) {
                             </div>
                         </div>
                         <div className="flex flex-ro items-center gap-3">
-                            <span className="text-[11px] text-[#00DAAF99] font-medium font-Montserrat">{method.fee}</span>
+                            <span className="text-[11px] text-[#00DAAF] font-medium font-Montserrat">{method.fee}</span>
                             <span className="text-[#444] group-hover:text-white transition-colors">→</span>
                         </div>
                     </button>
                 ))}
             </div>
 
-            <p className="text-[12px] text-[#444] text-center mt-8 font-Montserrat">
-               <LockIcon className="w-4 h-4 text-[#444]" /> All payments are secured with bank-level encryption. Your financial information is never stored.
-            </p>
+            <div className="flex items-center justify-center gap-2 text-[12px] text-[#444] mt-8 font-Montserrat">
+               <LockIcon className="w-4 h-4 text-[#444]" /> 
+               <span>All payments are secured with bank-level encryption. Your financial information is never stored.</span>
+            </div>
         </>
     );
 }
@@ -210,8 +212,8 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
             {method.id === 'escrow' && (
                 <div className="space-y-6">
                     <div className="bg-[#00FFCD10] border border-[#00FFCD1A] rounded-2xl p-5 flex gap-4">
-                        <div className="w-10 h-10 rounded-full border border-[#00FFCD33] flex items-center justify-center flex-shrink-0">
-                            <span className="text-[#00FFCD]">🛡️</span>
+                        <div className="w-10 h-10 rounded-full border border-[#00DAAF33] flex items-center justify-center flex-shrink-0">
+                            <span className="text-[#00DAAF]"><verifiedIcon className="w-5 h-5" /></span>
                         </div>
                         <div>
                             <h3 className="text-sm font-bold text-white mb-1">GloFi Secure Escrow</h3>
@@ -310,12 +312,8 @@ function StepStatus() {
     return (
         <div className="flex flex-col items-center gap-8">
             <div className="text-center">
-                <div className="w-16 h-16 rounded-2xl bg-[#FE9A0010] flex items-center justify-center mb-6 mx-auto">
-                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#FFB900" strokeOpacity="0.7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M12 6V12L16 14" stroke="#FFB900" strokeOpacity="0.7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
-
+                <div className="w-16 h-16 rounded-2xl bg-[#00DAAF10] flex items-center justify-center mb-6 mx-auto">
+                   <ClockIcon className="w-8 h-8 text-[#00DAAF]" />
                 </div>
                 <h2 className="text-xl font-bold mb-2">Awaiting Approval</h2>
                 <p className="text-xs text-[#767676] font-Montserrat">Payment received • Processing transaction</p>
@@ -331,15 +329,16 @@ function StepStatus() {
                 </div>
 
                 <div className="space-y-3">
-                    <StatusItem icon=<SellerIcon/> label="Seller Approval" status="In progress..." active />
-                    <StatusItem icon=<DocumentIcon/> label="Document Verification" status="Pending" />
-                    <StatusItem icon=<DueDiligenceIcon/> label="Due Diligence" status="Pending" />
+                    <StatusItem icon={<SellerIcon className="text-[#00DAAF]" />} label="Seller Approval" status="In progress..." active />
+                    <StatusItem icon={<DocumentIcon className="text-[#00DAAF]" />} label="Document Verification" status="Pending" />
+                    <StatusItem icon={<DueDiligenceIcon className="text-[#00DAAF]" />} label="Due Diligence" status="Pending" />
                 </div>
             </div>
 
-            <p className="text-[10px] text-[#444] text-center italic">
-                🕒 This process typically takes 24-48 hours. You'll receive email updates at each stage.
-            </p>
+            <div className="flex items-center justify-center gap-2 text-[10px] text-[#444] italic">
+                <ClockIcon className="w-3.5 h-3.5" /> 
+                <span>This process typically takes 24-48 hours. You'll receive email updates at each stage.</span>
+            </div>
         </div>
     );
 }
@@ -363,7 +362,7 @@ function StepEscrowStatus({ asset }) {
         <div className="flex flex-col items-center gap-8">
             <div className="text-center">
                 <div className="w-16 h-16 rounded-3xl bg-[#00FFCD10] flex items-center justify-center mb-6 mx-auto">
-                    <span className="text-3xl">🛡️</span>
+                    <span className="text-3xl"><verifiedIcon className="w-5 h-5" /></span>
                 </div>
                 <h2 className="text-2xl font-bold mb-2">Funds in Escrow</h2>
                 <p className="text-xs text-[#767676]">Securely held until verification complete</p>
@@ -392,29 +391,27 @@ function StepEscrowStatus({ asset }) {
                     <div className="space-y-4 pl-2">
                         <div className="flex items-center justify-between">
                             <span className="text-xs text-[#767676]">Seller Approval</span>
-                            <span className="text-[#00FFCD]">✓</span>
+                            <span className="text-[#00DAAF]">✓</span>
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-xs text-[#767676]">Document Upload</span>
-                            <span className="text-[#00FFCD]">✓</span>
+                            <span className="text-[#00DAAF]">✓</span>
                         </div>
                         <div className="flex items-center justify-between opacity-50">
                             <span className="text-xs text-[#767676]">Legal Review</span>
-                            <span className="text-white">🕒</span>
+                            <ClockIcon className="w-3.5 h-3.5 text-white" />
                         </div>
                         <div className="flex items-center justify-between opacity-50">
                             <span className="text-xs text-[#767676]">Due Diligence</span>
-                            <span className="text-white">🕒</span>
+                            <ClockIcon className="w-3.5 h-3.5 text-white" />
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="w-full p-4 bg-[#FE9A000A] border border-[#FE9A001A] rounded-2xl flex gap-3">
-                <span className="text-[#FE9A00]">🛡️</span>
-                <p className="text-[10px] text-[#FE9A0080] leading-relaxed">
-                    Escrow funds will be released automatically once: property documents verified, legal due diligence complete, and seller approves transaction.
-                </p>
+            <div className="flex items-center justify-center gap-2 text-[10px] text-[#00DAAF80] italic">
+                <span className="text-[#00DAAF]"><verifiedIcon className="w-5 h-5" /></span>
+                <span>Escrow funds will be released automatically once: property documents verified, legal due diligence complete, and seller approves transaction.</span>
             </div>
 
             <button className="w-full py-4 rounded-2xl bg-[#FFFFFF08] text-[#767676] text-sm font-bold border border-white/5 cursor-default">
@@ -460,15 +457,15 @@ function StepSuccess({ asset, method, onClose }) {
                 <h4 className="text-sm font-semibold text-[#767676]">Whats Next?</h4>
                 <div className="space-y-4">
                     <div className="flex gap-4">
-                        <span className="text-[#00FFCD]"><DocumentIcon /></span>
+                        <span className="text-[#00DAAF]"><DocumentIcon className="w-5 h-5" /></span>
                         <p className="text-[10px] text-[#FFFFFF66]">Ownership certificates will be issued within 24 hours</p>
                     </div>
                     <div className="flex gap-4">
-                        <span className="text-[#00FFCD]"><TrendingUpIcon /></span>
+                        <span className="text-[#00DAAF]"><TrendingUpIcon className="w-5 h-5" /></span>
                         <p className="text-[10px] text-[#FFFFFF66]">Track your portfolio and earnings in the dashboard</p>
                     </div>
                     <div className="flex gap-4">
-                        <span className="text-[#00FFCD]"><PropertyIcon /></span>
+                        <span className="text-[#00DAAF]"><PropertyIcon className="w-5 h-5" /></span>
                         <p className="text-[10px] text-[#FFFFFF66]">Quarterly yield payments start next period</p>
                     </div>
                 </div>
@@ -494,27 +491,27 @@ function PaymentIcon({ type }) {
     switch (type) {
         case 'upi':
             return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M14.166 1.66663H5.83268C4.91221 1.66663 4.16602 2.41282 4.16602 3.33329V16.6666C4.16602 17.5871 4.91221 18.3333 5.83268 18.3333H14.166C15.0865 18.3333 15.8327 17.5871 15.8327 16.6666V3.33329C15.8327 2.41282 15.0865 1.66663 14.166 1.66663Z" stroke="#00DAAF" strokeOpacity="0.7" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M10 15H10.0083" stroke="#00DAAF" strokeOpacity="0.7" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M14.166 1.66663H5.83268C4.91221 1.66663 4.16602 2.41282 4.16602 3.33329V16.6666C4.16602 17.5871 4.91221 18.3333 5.83268 18.3333H14.166C15.0865 18.3333 15.8327 17.5871 15.8327 16.6666V3.33329C15.8327 2.41282 15.0865 1.66663 14.166 1.66663Z" stroke="#00DAAF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M10 15H10.0083" stroke="#00DAAF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>;
 
         case 'debit':
         case 'credit':
             return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16.666 4.16663H3.33268C2.41221 4.16663 1.66602 4.91282 1.66602 5.83329V14.1666C1.66602 15.0871 2.41221 15.8333 3.33268 15.8333H16.666C17.5865 15.8333 18.3327 15.0871 18.3327 14.1666V5.83329C18.3327 4.91282 17.5865 4.16663 16.666 4.16663Z" stroke="#00DAAF" strokeOpacity="0.7" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M1.66602 8.33337H18.3327" stroke="#00DAAF" strokeOpacity="0.7" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M16.666 4.16663H3.33268C2.41221 4.16663 1.66602 4.91282 1.66602 5.83329V14.1666C1.66602 15.0871 2.41221 15.8333 3.33268 15.8333H16.666C17.5865 15.8333 18.3327 15.0871 18.3327 14.1666V5.83329C18.3327 4.91282 17.5865 4.16663 16.666 4.16663Z" stroke="#00DAAF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M1.66602 8.33337H18.3327" stroke="#00DAAF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 ;
         case 'escrow':
             return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16.666 4.16663H3.33268C2.41221 4.16663 1.66602 4.91282 1.66602 5.83329V14.1666C1.66602 15.0871 2.41221 15.8333 3.33268 15.8333H16.666C17.5865 15.8333 18.3327 15.0871 18.3327 14.1666V5.83329C18.3327 4.91282 17.5865 4.16663 16.666 4.16663Z" stroke="#00DAAF" strokeOpacity="0.7" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M1.66602 8.33337H18.3327" stroke="#00DAAF" strokeOpacity="0.7" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M16.666 4.16663H3.33268C2.41221 4.16663 1.66602 4.91282 1.66602 5.83329V14.1666C1.66602 15.0871 2.41221 15.8333 3.33268 15.8333H16.666C17.5865 15.8333 18.3327 15.0871 18.3327 14.1666V5.83329C18.3327 4.91282 17.5865 4.16663 16.666 4.16663Z" stroke="#00DAAF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M1.66602 8.33337H18.3327" stroke="#00DAAF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 ;
         case 'crypto':
             return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.8333 5.83333V3.33333C15.8333 3.11232 15.7455 2.90036 15.5893 2.74408C15.433 2.5878 15.221 2.5 15 2.5H4.16667C3.72464 2.5 3.30072 2.67559 2.98816 2.98816C2.67559 3.30072 2.5 3.72464 2.5 4.16667C2.5 4.60869 2.67559 5.03262 2.98816 5.34518C3.30072 5.65774 3.72464 5.83333 4.16667 5.83333H16.6667C16.8877 5.83333 17.0996 5.92113 17.2559 6.07741C17.4122 6.23369 17.5 6.44565 17.5 6.66667V10M17.5 10H15C14.558 10 14.134 10.1756 13.8215 10.4882C13.5089 10.8007 13.3333 11.2246 13.3333 11.6667C13.3333 12.1087 13.5089 12.5326 13.8215 12.8452C14.134 13.1577 14.558 13.3333 15 13.3333H17.5C17.721 13.3333 17.933 13.2455 18.0893 13.0893C18.2455 12.933 18.3333 12.721 18.3333 12.5V10.8333C18.3333 10.6123 18.2455 10.4004 18.0893 10.2441C17.933 10.0878 17.721 10 17.5 10Z" stroke="#00DAAF" strokeOpacity="0.7" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M2.5 4.16669V15.8334C2.5 16.2754 2.67559 16.6993 2.98816 17.0119C3.30072 17.3244 3.72464 17.5 4.16667 17.5H16.6667C16.8877 17.5 17.0996 17.4122 17.2559 17.2559C17.4122 17.0997 17.5 16.8877 17.5 16.6667V13.3334" stroke="#00DAAF" strokeOpacity="0.7" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M15.8333 5.83333V3.33333C15.8333 3.11232 15.7455 2.90036 15.5893 2.74408C15.433 2.5878 15.221 2.5 15 2.5H4.16667C3.72464 2.5 3.30072 2.67559 2.98816 2.98816C2.67559 3.30072 2.5 3.72464 2.5 4.16667C2.5 4.60869 2.67559 5.03262 2.98816 5.34518C3.30072 5.65774 3.72464 5.83333 4.16667 5.83333H16.6667C16.8877 5.83333 17.0996 5.92113 17.2559 6.07741C17.4122 6.23369 17.5 6.44565 17.5 6.66667V10M17.5 10H15C14.558 10 14.134 10.1756 13.8215 10.4882C13.5089 10.8007 13.3333 11.2246 13.3333 11.6667C13.3333 12.1087 13.5089 12.5326 13.8215 12.8452C14.134 13.1577 14.558 13.3333 15 13.3333H17.5C17.721 13.3333 17.933 13.2455 18.0893 13.0893C18.2455 12.933 18.3333 12.721 18.3333 12.5V10.8333C18.3333 10.6123 18.2455 10.4004 18.0893 10.2441C17.933 10.0878 17.721 10 17.5 10Z" stroke="#00DAAF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M2.5 4.16669V15.8334C2.5 16.2754 2.67559 16.6993 2.98816 17.0119C3.30072 17.3244 3.72464 17.5 4.16667 17.5H16.6667C16.8877 17.5 17.0996 17.4122 17.2559 17.2559C17.4122 17.0997 17.5 16.8877 17.5 16.6667V13.3334" stroke="#00DAAF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 ;
         default:
