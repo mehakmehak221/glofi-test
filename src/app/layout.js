@@ -20,6 +20,9 @@ const poppins = Poppins({
 export const metadata = {
   title: "Glofi Real Estate — Global Finance Platform",
   description: "Glofi – the global real estate and finance platform connecting investors worldwide.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }) {

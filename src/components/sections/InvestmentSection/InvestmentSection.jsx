@@ -5,13 +5,23 @@ import { HomeIcon, LegalIcon, EarningPassiveIcon, LiquidityIcon } from '../../Ve
 
 export default function InvestmentSection() {
     return (
-        <section className="flex flex-col items-center w-full">
-            <div className="investment-section-wrapper w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <section className="flex flex-col items-center w-full relative overflow-hidden">
+            
+            <div 
+                className="absolute inset-0 z-0 pointer-events-none opacity-40 lg:opacity-60"
+                style={{
+                    backgroundImage: "url('/potential-bg.png')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                }}
+            />
+            <div className="investment-section-wrapper w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 z-10 relative">
                 <div className="w-full mx-auto flex flex-col items-center">
 
                     {/* Top Button */}
                     <div className="btn-inside-platform mb-6 sm:mb-8">
-                        <span className="text-inside-platform text-xs sm:text-sm lg:text-base">Inside the Platform</span>
+                        <span className="text-inside-platform text-xs sm:text-sm lg:text-base rounded-full border border-[#ACFFEF] px-4 py-2 text-[#ACFFEF]">Inside the Platform</span>
                     </div>
 
                     {/* Title */}

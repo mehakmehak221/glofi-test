@@ -5,7 +5,7 @@ import { TopRightArrowIcon, JoinNewGenBgGlow } from '../../VectorImages';
 
 export default function JoinNewGenerationSection() {
     return (
-        <section className="w-full flex justify-center py-12 sm:py-16 lg:py-20 xl:py-24 2xl:py-32">
+        <section className="w-full flex justify-center py-12 sm:py-16 lg:py-20 xl:py-24 2xl:py-32 bg-black">
             <div className="join-new-gen-wrapper w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
                 <div className="join-new-gen-inner w-full p-6 sm:p-8 lg:p-12 xl:p-16 relative overflow-hidden">
                     <JoinNewGenBgGlow className="absolute bottom-0 left-0 w-full h-full opacity-60 pointer-events-none" />
