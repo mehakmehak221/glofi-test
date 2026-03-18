@@ -15,7 +15,7 @@ export default function HeroSection() {
                         className="object-cover"
                         priority
                     />
-                    <div className="absolute inset-0 hero-gradient-overlay bg-black/80" />
+                    <div className="absolute inset-0 hero-gradient-overlay bg-black/20" />
                 </div>
 
                 <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 flex flex-col items-center justify-center text-center py-12 sm:py-16 lg:py-20 xl:py-28">
