@@ -80,14 +80,14 @@ export default function Navbar() {
                 ))}
 
                 <div className="navbar__mobile-actions flex flex-col sm:flex-row items-center gap-4 mt-4 pt-4 border-t border-white/10">
-                    <Link
+                    {/* <Link
                         href="/sign-in"
                         className="navbar__mobile-link text-nav-link block py-2 px-4 text-base text-[var(--color-text-secondary)] no-underline rounded transition-colors hover:text-white"
                         onClick={() => setMobileOpen(false)}
                     >
                         Sign In
-                    </Link>
-                    <Link href="#get-glofi" className="btn-get-glofi text-get-glofi inline-flex items-center justify-center w-full sm:w-24 h-10 px-4 bg-[var(--color-gradient-glofi)] text-black rounded-full text-sm font-semibold no-underline transition-transform hover:translate-y-[-1px] hover:shadow-lg whitespace-nowrap">
+                    </Link> */}
+                    <Link href="/sign-in" className="btn-get-glofi text-get-glofi inline-flex items-center justify-center w-full sm:w-24 h-10 px-4 bg-[var(--color-gradient-glofi)] text-black rounded-full text-sm font-semibold no-underline transition-transform hover:translate-y-[-1px] hover:shadow-lg whitespace-nowrap">
                         Get GloFi
                     </Link>
                     <button
