@@ -29,7 +29,7 @@ export default function SignUpPage() {
 
             <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 text-[#767676] hover:text-white text-xs transition-colors mb-8 group"
+                className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-xs transition-colors mb-8 group"
             >
                 <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform w-3.5 h-3.5" />
                 Back to home
@@ -37,7 +37,7 @@ export default function SignUpPage() {
 
             <div className="mb-8">
                 <h2 className="text-white font-semibold text-[32px] tracking-tight mb-2 font-montserrat">Create account</h2>
-                <p className="text-[#767676] text-md font-montserrat">Join the next generation of property investors</p>
+                <p className="text-[var(--color-text-secondary)] text-md font-montserrat">Join the next generation of property investors</p>
             </div>
 
 
@@ -49,11 +49,11 @@ export default function SignUpPage() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <input
                     type="text" value={form.name} onChange={set("name")} placeholder="Full name" required
-                    className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[#FFFFFF33] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 transition-all font-medium font-montserrat"
+                    className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
                 />
                 <input
                     type="email" value={form.email} onChange={set("email")} placeholder="Email address" required
-                    className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[#FFFFFF33] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 transition-all font-medium font-montserrat"
+                    className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
                 />
 
                 <div className="relative">
@@ -64,12 +64,12 @@ export default function SignUpPage() {
                         placeholder="Password"
                         required
                         minLength={8}
-                        className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[#FFFFFF33] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 transition-all font-medium pr-12"
+                        className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-muted)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium pr-12"
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#FFFFFF33] hover:text-[#767676] transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
                     >
                         {showPassword ? <EyeOpenIcon className="w-5 h-5" /> : <EyeClosedIcon className="w-5 h-5" />}
                     </button>
@@ -78,7 +78,7 @@ export default function SignUpPage() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="mt-4 w-full flex items-center justify-center gap-2 py-4 rounded-full bg-[#00FFCD] text-black font-bold text-sm hover:bg-[#00e0b8] active:scale-[0.98] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed font-montserrat"
+                    className="mt-4 w-full flex items-center justify-center gap-2 py-4 rounded-full bg-[var(--color-primary-100)] text-black font-bold text-sm hover:bg-[var(--color-primary-300)] active:scale-[0.98] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed font-montserrat"
                 >
                     {loading ? (
                         <LoadingSpinner />
@@ -91,9 +91,9 @@ export default function SignUpPage() {
                 </button>
             </form>
 
-            <p className="text-center text-sm text-[#FFFFFF33] mt-10 font-montserrat">
+            <p className="text-center text-sm text-[var(--color-text-muted)] mt-10 font-montserrat">
                 Have an account?{" "}
-                <Link href="/sign-in" className="text-[#00DAAFB2] font-semibold hover:text-[#00FFCD]/70 transition-colors">
+                <Link href="/sign-in" className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors">
                     Sign in
                 </Link>
             </p>

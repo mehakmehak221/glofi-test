@@ -3,7 +3,7 @@
 
 export default function UserTypeToggle({ options = ["Investor", "Partner"], value, onChange }) {
   return (
-    <div className="flex bg-[#1a1a1a] border border-white/8 rounded-xl p-1 gap-1">
+    <div className="flex bg-[var(--color-bg-dark-alt)] border border-[var(--color-border-subtle)] rounded-xl p-1 gap-1">
       {options.map((opt) => {
         const active = value === opt;
         return (
@@ -14,8 +14,8 @@ export default function UserTypeToggle({ options = ["Investor", "Partner"], valu
             className={[
               "flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all duration-200",
               active
-                ? "bg-[#061d18] text-[#00FFCD] shadow-sm"
-                : "text-[#767676] hover:text-white",
+                ? "bg-[var(--color-primary-300-alpha-10)] text-[var(--color-primary-300)] shadow-sm"
+                : "text-[var(--color-text-secondary)] hover:text-white",
             ].join(" ")}
           >
             {opt}

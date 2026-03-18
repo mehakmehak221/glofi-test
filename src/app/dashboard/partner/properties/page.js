@@ -85,9 +85,9 @@ function PropertyCard({ property, index }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
-            className="bg-[#111111] rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:border-[#00DAAF22] border border-transparent transition-all"
+            className="bg-[var(--color-bg-nav)] rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:border-[var(--color-primary-300)]/10 border border-transparent transition-all"
         >
-            <div className="w-full md:w-32 lg:w-40 h-24 lg:h-28 bg-[#1a1a1a] rounded-xl flex-shrink-0 flex items-center justify-center border border-[#FFFFFF0A] overflow-hidden relative">
+            <div className="w-full md:w-32 lg:w-40 h-24 lg:h-28 bg-[var(--color-bg-card)] rounded-xl flex-shrink-0 flex items-center justify-center border border-[var(--color-border-subtle)] overflow-hidden relative">
                 {property.img ? (
                     <Image
                         src={property.img}
@@ -97,14 +97,14 @@ function PropertyCard({ property, index }) {
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 160px, 160px"
                     />
                 ) : (
-                    <PropertyIcon className="w-8 h-8 text-[#00DAAF33]" />
+                    <PropertyIcon className="w-8 h-8 text-[var(--color-primary-300)]/20" />
                 )}
             </div>
 
             <div className="flex-1 w-full">
                 <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-[#FFFFFFCC] font-montserrat">{property.name}</h3>
-                    <p className="text-xs text-[#FFFFFF33] font-montserrat mt-1 flex items-center gap-1">
+                    <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.name}</h3>
+                    <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1 flex items-center gap-1">
                         <MapPinIcon className="w-3 h-3" />
                         {property.location}
                     </p>
@@ -112,27 +112,27 @@ function PropertyCard({ property, index }) {
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-2">
                     <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[#FFFFFF40] font-montserrat font-medium">Valuation</span>
-                        <span className="text-sm font-semibold text-[#FFFFFF99] font-montserrat">{property.valuation}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Valuation</span>
+                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">{property.valuation}</span>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[#FFFFFF40] font-montserrat font-medium">Sold</span>
-                        <span className="text-sm font-semibold text-[#FFFFFF99] font-montserrat">{property.sold}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Sold</span>
+                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">{property.sold}</span>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[#FFFFFF40] font-montserrat font-medium">Yield</span>
-                        <span className="text-sm font-bold text-[#FFFFFF99] font-montserrat">{property.yield}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Yield</span>
+                        <span className="text-sm font-bold text-[var(--color-text-secondary)] font-montserrat">{property.yield}</span>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[#FFFFFF40] font-montserrat font-medium">Investors</span>
-                        <span className="text-sm font-semibold text-[#FFFFFF99] font-montserrat">{property.investors}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Investors</span>
+                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">{property.investors}</span>
                     </div>
                 </div>
             </div>
 
             <div className="absolute top-4 right-4 lg:top-5 lg:right-6">
-                <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] text-[#00DAAF99] font-montserrat uppercase bg-[#00DAAF0F] rounded-full px-2.5 py-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#00DAAF] animate-pulse" />
+                <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] text-[var(--color-primary-300)]/60 font-montserrat uppercase bg-[var(--color-primary-300)]/5 rounded-full px-2.5 py-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-pulse" />
                     {property.status}
                 </span>
             </div>
@@ -174,7 +174,7 @@ export default function PartnerPropertiesPage() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => setIsAddingNew(true)}
-                                className="flex items-center gap-2 bg-[#00DAAF14] hover:bg-[#00DAAF1A] text-[#00DAAFCC] px-4 py-2 rounded-lg text-sm font-medium font-montserrat transition-all"
+                                className="flex items-center gap-2 bg-[var(--color-primary-300)]/10 hover:bg-[var(--color-primary-300)]/20 text-[var(--color-primary-300)]/80 px-4 py-2 rounded-lg text-sm font-medium font-montserrat transition-all"
                             >
                                 <span className="text-lg leading-none">+</span>
                                 New Listing

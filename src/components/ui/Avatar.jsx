@@ -9,11 +9,11 @@ export default function Avatar({ src, name = "", size = "md", online = false, cl
       {src ? (
         <img src={src} alt={name} className={`${sizes[size] ?? sizes.md} rounded-full object-cover border border-white/10`} />
       ) : (
-        <div className={`${sizes[size] ?? sizes.md} rounded-full flex items-center justify-center font-semibold text-black bg-gradient-to-br from-[#00FFCD] to-[#009976]`}>
+        <div className={`${sizes[size] ?? sizes.md} rounded-full flex items-center justify-center font-semibold text-black bg-[var(--color-gradient-glofi)]`}>
           {initials || "?"}
         </div>
       )}
-      {online && <span className={`absolute ${badgeSizes[size] ?? badgeSizes.md} bg-green-400 border-2 border-[#0a0a0a] rounded-full`} />}
+      {online && <span className={`absolute ${badgeSizes[size] ?? badgeSizes.md} bg-green-400 border-2 border-[var(--color-bg-dark)] rounded-full`} />}
     </div>
   );
 }

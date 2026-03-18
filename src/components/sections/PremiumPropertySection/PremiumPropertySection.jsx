@@ -40,7 +40,7 @@ export default function PremiumPropertySection() {
                                 key={prop.id}
                                 className="premium-card-exact group flex-shrink-0 w-56 sm:w-64 md:w-72 lg:w-80 xl:w-[320px] 2xl:w-[360px]"
                             >
-                                <div className="premium-card-exact__inner bg-[#1A1A1A] w-full h-full flex items-center justify-center rounded-2xl overflow-hidden">
+                                <div className="premium-card-exact__inner bg-[var(--color-bg-card)] w-full h-full flex items-center justify-center rounded-2xl overflow-hidden">
                                     <IconComponent className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                                 </div>
                             </div>

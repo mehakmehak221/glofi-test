@@ -12,7 +12,7 @@ import {
 
 export default function GlofiCopyrightSection() {
     return (
-        <section className="w-full bg-[#000000] border-t border-[#181E37]">
+        <section className="w-full bg-[var(--color-bg-dark)] border-t border-[var(--color-border-subtle)]">
                 <div className="w-full max-w-[1440px] mx-auto px-20 sm:px-24 lg:px-30 xl:px-36 2xl:px-40 py-6 sm:py-20 lg:py-22">
 
                 {/* Desktop & Tablet: single row layout */}
@@ -31,16 +31,16 @@ export default function GlofiCopyrightSection() {
                         </Link>
 
                         {/* Vertical Divider */}
-                        <div className="w-px h-10 sm:h-12 bg-white/20 flex-shrink-0 hidden sm:block" />
+                        <div className="w-px h-10 sm:h-12 bg-[var(--color-border-muted)] flex-shrink-0 hidden sm:block" />
 
                         {/* Copyright text */}
-                        <span className="text-xs sm:text-sm lg:text-base text-white/50 whitespace-nowrap hidden sm:block">
+                        <span className="text-xs sm:text-sm lg:text-base text-[var(--color-text-muted)] whitespace-nowrap hidden sm:block">
                             Copyright © 2026 GloFi Real Estate
                         </span>
                     </div>
 
                     {/* Center: Copyright on mobile */}
-                    <span className="text-xs text-white/50 text-center sm:hidden">
+                    <span className="text-xs text-[var(--color-text-muted)] text-center sm:hidden">
                         Copyright © 2026 GloFi Real Estate
                     </span>
 
@@ -48,32 +48,32 @@ export default function GlofiCopyrightSection() {
                     <div className="flex items-center gap-5 sm:gap-6 lg:gap-8 flex-shrink-0">
                         {/* Nav Links */}
                         <div className="flex items-center gap-4 sm:gap-5 lg:gap-6">
-                            <Link href="#terms" className="text-xs sm:text-sm lg:text-base text-white/60 hover:text-white transition-colors duration-200 whitespace-nowrap">
+                            <Link href="#terms" className="text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors duration-200 whitespace-nowrap">
                                 Terms
                             </Link>
-                            <Link href="#privacy" className="text-xs sm:text-sm lg:text-base text-white/60 hover:text-white transition-colors duration-200 whitespace-nowrap">
+                            <Link href="#privacy" className="text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors duration-200 whitespace-nowrap">
                                 Privacy
                             </Link>
-                            <Link href="#cookies" className="text-xs sm:text-sm lg:text-base text-white/60 hover:text-white transition-colors duration-200 whitespace-nowrap">
+                            <Link href="#cookies" className="text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors duration-200 whitespace-nowrap">
                                 Cookies
                             </Link>
                         </div>
 
                         {/* Social Icons */}
                         <div className="flex items-center gap-1 sm:gap-2 lg:gap-3">
-                            <Link href="#instagram" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-white/10">
+                            <Link href="#instagram" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-[var(--color-bg-surface-elevated)]">
                                 <InstagramIcon className="w-5 h-5 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
                             </Link>
-                            <Link href="#x" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-white/10">
+                            <Link href="#x" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-[var(--color-bg-surface-elevated)]">
                                 <XIcon className="w-5 h-5 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
                             </Link>
-                            <Link href="#facebook" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-white/10">
+                            <Link href="#facebook" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-[var(--color-bg-surface-elevated)]">
                                 <FbIcon className="w-5 h-5 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
                             </Link>
-                            <Link href="#linkedin" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-white/10">
+                            <Link href="#linkedin" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-[var(--color-bg-surface-elevated)]">
                                 <LinkedinIcon className="w-5 h-5 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
                             </Link>
-                            <Link href="#youtube" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-white/10">
+                            <Link href="#youtube" className="opacity-60 hover:opacity-100 transition-opacity p-1.5 rounded hover:bg-[var(--color-bg-surface-elevated)]">
                                 <YouTubeIcon className="w-5 h-5 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
                             </Link>
                         </div>

@@ -17,13 +17,13 @@ export default function Button({
 
   const variants = {
     primary:
-      "bg-[#00C853] border-[#00C853] text-black hover:bg-[#00a844] hover:border-[#00a844]",
+      "bg-[var(--color-primary-300)] border-[var(--color-primary-300)] text-black hover:bg-[var(--color-primary-500)] hover:border-[var(--color-primary-500)]",
     gradient:
-      "bg-gradient-to-r from-[#00FFCD] to-[#009976] border-transparent text-black hover:opacity-90",
+      "bg-[var(--color-gradient-glofi)] border-transparent text-black hover:opacity-90",
     secondary:
       "bg-transparent border-white/20 text-white hover:border-white/50 hover:bg-white/5",
     ghost:
-      "bg-transparent border-transparent text-[#a0a0a0] hover:text-white hover:bg-white/5",
+      "bg-transparent border-transparent text-[var(--color-text-secondary)] hover:text-white hover:bg-white/5",
     danger:
       "bg-red-600/10 border-red-600/40 text-red-400 hover:bg-red-600/20",
   };

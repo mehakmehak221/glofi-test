@@ -65,7 +65,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                 <>
 
                     <motion.div
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
+                        className="fixed inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm z-50 lg:hidden"
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"
@@ -75,25 +75,25 @@ export default function MobileDrawer({ isOpen, onClose }) {
 
 
                     <motion.div
-                        className="fixed top-0 right-0 bottom-0 w-[280px] bg-[#0d0d0d] border-l border-white/[0.06] z-50 flex flex-col lg:hidden"
+                        className="fixed top-0 right-0 bottom-0 w-[280px] bg-[var(--color-bg-dark)] border-l border-[var(--color-border-subtle)] z-50 flex flex-col lg:hidden"
                         variants={drawerVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-border-subtle)]">
                             <div className="flex items-center gap-3">
                                 <Avatar name="Ishan" size="md" />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-semibold text-white">Ishan</span>
-                                    <span className="text-[10px] text-[#767676] uppercase tracking-wider">{isPartner ? "Partner" : "Investor"}</span>
+                                    <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wider">{isPartner ? "Partner" : "Investor"}</span>
                                 </div>
                             </div>
 
                             <button
                                 onClick={onClose}
-                                className="p-2 rounded-lg text-[#767676] hover:text-white hover:bg-white/5 transition-colors bg-transparent border-0 cursor-pointer"
+                                className="p-2 rounded-lg text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-surface-subtle)] transition-colors bg-transparent border-0 cursor-pointer"
                                 aria-label="Close menu"
                             >
                                 <CloseIcon className="w-5 h-5" />
@@ -106,7 +106,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                                 className="px-4 pt-5 pb-2 overflow-hidden"
 
                             >
-                                <span className="text-[10px] font-normal text-[#00F4C4] tracking-[0.15em] uppercase border border-[#00DAAF33]/30 font-montserrat bg-[#00DAAF0D] rounded-full px-3 py-1 inline-block">
+                                <span className="text-[10px] font-normal text-[var(--color-primary-200)] tracking-[0.15em] uppercase border border-[var(--color-primary-300)]/30 font-montserrat bg-[var(--color-primary-300)]/5 rounded-full px-3 py-1 inline-block">
                                     {isPartner ? "Partner Panel" : "Investor Panel"}
                                 </span>
                             </motion.div>
@@ -124,8 +124,8 @@ export default function MobileDrawer({ isOpen, onClose }) {
                                             href={item.href}
                                             onClick={onClose}
                                             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors no-underline ${isActive
-                                                ? "bg-[#00FFCD]/10 text-[#00FFCD]"
-                                                : "text-[#a0a0a0] hover:text-white hover:bg-white/5"
+                                                ? "bg-[var(--color-primary-100)]/10 text-[var(--color-primary-100)]"
+                                                : "text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-surface-subtle)]"
                                                 }`}
                                         >
                                             <item.icon className="w-5 h-5" />
@@ -137,14 +137,14 @@ export default function MobileDrawer({ isOpen, onClose }) {
                         </nav>
 
                         {/* Footer */}
-                        <div className="px-4 pb-6 pt-3 border-t border-white/[0.06]">
+                        <div className="px-4 pb-6 pt-3 border-t border-[var(--color-border-subtle)]">
                             <motion.div
                                 custom={NAV_ITEMS.length}
                                 variants={itemVariants}
                                 initial="hidden"
                                 animate="visible"
                             >
-                                <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#767676] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent">
+                                <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent">
                                     <SignOutIcon className="w-5 h-5" />
                                     <span className="text-sm font-medium">Sign Out</span>
                                 </button>

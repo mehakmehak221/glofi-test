@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function HeroSection() {
     return (
-        <section className="w-full flex justify-center bg-black">
+        <section className="w-full flex justify-center bg-[var(--color-bg-dark)]">
             <div className="relative hero-section-wrapper flex flex-col items-center justify-center overflow-hidden w-full">
                 <div className="absolute inset-0 z-0">
                     <Image

@@ -40,10 +40,10 @@ const STAT_CARDS = [
 ];
 
 const HOT_LEADS = [
-    { name: "Ahmed Al Rashid", property: "Burj Vista Tower", initials: "A", color: "#FB2C3614", textColor: "#FF646799" },
-    { name: "Sarah Chen", property: "Marina Walk Residences", initials: "S", color: "#FE9A0014", textColor: "#FFB90099" },
-    { name: "Raj Patel", property: "Dubai South Development Land", initials: "R", color: "#FB2C3614", textColor: "#FF646799" },
-    { name: "Fatima Al Mansoori", property: "Marina Business Hub", initials: "F", color: "#FE9A0014", textColor: "#FFB90099" },
+    { name: "Ahmed Al Rashid", property: "Burj Vista Tower", initials: "A", color: "var(--color-accent-red-alpha-10)", textColor: "var(--color-accent-red)" },
+    { name: "Sarah Chen", property: "Marina Walk Residences", initials: "S", color: "var(--color-accent-orange-alpha-10)", textColor: "var(--color-accent-orange)" },
+    { name: "Raj Patel", property: "Dubai South Development Land", initials: "R", color: "var(--color-accent-red-alpha-10)", textColor: "var(--color-accent-red)" },
+    { name: "Fatima Al Mansoori", property: "Marina Business Hub", initials: "F", color: "var(--color-accent-orange-alpha-10)", textColor: "var(--color-accent-orange)" },
 ];
 
 const AI_STATS = [
@@ -69,13 +69,13 @@ function StatCard({ label, value, delta, icon: Icon, index }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: index * 0.07 }}
-            className="bg-[#111111] rounded-xl p-5 flex flex-col gap-3 hover:border-[#00DAAF22] transition-colors"
+            className="bg-[var(--color-bg-nav)] rounded-xl p-5 flex flex-col gap-3 hover:border-[var(--color-primary-300)]/10 transition-colors"
         >
             <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold tracking-[0.15em] text-[#767676] font-montserrat uppercase">
+                <span className="text-[10px] font-semibold tracking-[0.15em] text-[var(--color-text-muted)] font-montserrat uppercase">
                     {label}
                 </span>
-                <span className="text-[#00DAAF] opacity-80 bg-[#00DAAF12] rounded-full p-2">
+                <span className="text-[var(--color-primary-300)] opacity-80 bg-[var(--color-primary-300)]/10 rounded-full p-2">
                     <Icon className="w-5 h-5" />
                 </span>
             </div>
@@ -84,7 +84,7 @@ function StatCard({ label, value, delta, icon: Icon, index }) {
                 {value}
             </p>
 
-            <div className="flex items-center gap-1.5 text-[#00DAAF99] text-xs font-medium font-montserrat">
+            <div className="flex items-center gap-1.5 text-[var(--color-primary-300)]/60 text-xs font-medium font-montserrat">
                 <TrendingUpIcon className="w-3.5 h-3.5" />
                 <span>{delta}</span>
             </div>
@@ -98,7 +98,7 @@ function LeadRow({ lead, index }) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: 0.2 + index * 0.06 }}
-            className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-[#FFFFFF05] transition-colors group"
+            className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-[var(--color-bg-surface-subtle)] transition-colors group"
         >
             <div className="flex items-center gap-3">
                 <div
@@ -108,16 +108,16 @@ function LeadRow({ lead, index }) {
                     {lead.initials}
                 </div>
                 <div>
-                    <p className="text-sm font-semibold text-[#FFFFFF99] font-montserrat leading-tight">{lead.name}</p>
-                    <p className="text-[11px] text-[#FFFFFF33] font-montserrat mt-0.5">{lead.property}</p>
+                    <p className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat leading-tight">{lead.name}</p>
+                    <p className="text-[11px] text-[var(--color-text-muted)] font-montserrat mt-0.5">{lead.property}</p>
                 </div>
             </div>
             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="w-7 h-7 rounded-md bg-white/5 flex items-center justify-center hover:bg-[#00DAAF]/10 transition-colors">
-                    <PhoneIcon className="w-3.5 h-3.5 text-[#00DAAF]" />
+                <button className="w-7 h-7 rounded-md bg-[var(--color-bg-surface-subtle)] flex items-center justify-center hover:bg-[var(--color-primary-300)]/10 transition-colors">
+                    <PhoneIcon className="w-3.5 h-3.5 text-[var(--color-primary-300)]" />
                 </button>
-                <button className="w-7 h-7 rounded-md bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
-                    <svg className="w-3.5 h-3.5 text-[#767676]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <button className="w-7 h-7 rounded-md bg-[var(--color-bg-surface-subtle)] flex items-center justify-center hover:bg-[var(--color-bg-surface-subtle)]/10 transition-colors">
+                    <svg className="w-3.5 h-3.5 text-[var(--color-text-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
                     </svg>
                 </button>
@@ -135,7 +135,7 @@ function ListingBar({ listing, index }) {
             className="flex items-center gap-3"
         >
 
-            <div className="w-10 h-10 rounded-lg bg-[#00DAAF0F]  flex-shrink-0 overflow-hidden flex items-center justify-center relative">
+            <div className="w-10 h-10 rounded-lg bg-[var(--color-primary-300)]/10  flex-shrink-0 overflow-hidden flex items-center justify-center relative">
                 {listing.img ? (
                     <Image
                         src={listing.img}
@@ -145,7 +145,7 @@ function ListingBar({ listing, index }) {
                         sizes="40px"
                     />
                 ) : (
-                    <svg className="w-5 h-5 text-[#00DAAF99]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <svg className="w-5 h-5 text-[var(--color-primary-300)]/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                         <rect x="2" y="7" width="20" height="15" rx="1" />
                         <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
                     </svg>
@@ -155,16 +155,16 @@ function ListingBar({ listing, index }) {
             <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1.5">
                     <p className="text-sm text-white font-montserrat font-medium truncate pr-2">{listing.name}</p>
-                    <span className="text-[#00DAAF] text-sm font-bold font-montserrat flex-shrink-0">{listing.pct}%</span>
+                    <span className="text-[var(--color-primary-300)] text-sm font-bold font-montserrat flex-shrink-0">{listing.pct}%</span>
                 </div>
-                <div className="h-[3px] w-full bg-[#FFFFFF08] rounded-full overflow-hidden">
+                <div className="h-[3px] w-full bg-[var(--color-border-subtle)] rounded-full overflow-hidden">
                     <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${listing.pct}%` }}
                         transition={{ duration: 0.7, delay: 0.4 + index * 0.06, ease: "easeOut" }}
                         className="h-full rounded-full"
                         style={{
-                            background: "linear-gradient(90deg, #00DAAF, #00FFCD)",
+                            background: "var(--color-gradient-glofi)",
                         }}
                     />
                 </div>
@@ -188,7 +188,7 @@ export default function PartnerOverviewPage() {
                 <h1 className="text-xl lg:text-2xl font-semibold text-white font-montserrat">
                     Overview
                 </h1>
-                <p className="text-sm  font-montserrat mt-1 text-[#FFFFFF40]">Partner command center</p>
+                <p className="text-sm  font-montserrat mt-1 text-[var(--color-text-muted)]">Partner command center</p>
             </motion.div>
 
 
@@ -206,9 +206,9 @@ export default function PartnerOverviewPage() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.15 }}
-                    className="bg-[#111111] rounded-xl p-5"
+                    className="bg-[var(--color-bg-nav)] rounded-xl p-5"
                 >
-                    <h2 className="text-sm font-semibold text-[#FFFFFF99] font-montserrat mb-4">Hot Leads</h2>
+                    <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-4">Hot Leads</h2>
                     <div className="flex flex-col gap-1">
                         {HOT_LEADS.map((lead, i) => (
                             <LeadRow key={lead.name} lead={lead} index={i} />
@@ -221,12 +221,12 @@ export default function PartnerOverviewPage() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.2 }}
-                    className="bg-[#111111]  rounded-xl p-5"
+                    className="bg-[var(--color-bg-nav)]  rounded-xl p-5"
                 >
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-sm font-semibold text-[#FFFFFF99] font-montserrat">AI Agent</h2>
-                        <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.12em] text-[#00DAAF99] font-montserrat uppercase bg-[#00DAAF0D] rounded-full px-2.5 py-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#00DAAF] animate-pulse" />
+                        <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">AI Agent</h2>
+                        <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.12em] text-[var(--color-primary-300)]/60 font-montserrat uppercase bg-[var(--color-primary-300)]/5 rounded-full px-2.5 py-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-pulse" />
                             ACTIVE
                         </span>
                     </div>
@@ -240,10 +240,10 @@ export default function PartnerOverviewPage() {
                                 transition={{ duration: 0.3, delay: 0.25 + i * 0.06 }}
                                 className="flex items-center justify-between"
                             >
-                                <span className="text-sm text-[#FFFFFF40] font-montserrat">{stat.label}</span>
+                                <span className="text-sm text-[var(--color-text-muted)] font-montserrat">{stat.label}</span>
                                 <div className="flex items-center gap-2">
                                     <span className="text-sm font-semibold text-white font-montserrat">{stat.value}</span>
-                                    <span className="text-[11px] text-[#00DAAF66] font-montserrat">{stat.delta}</span>
+                                    <span className="text-[11px] text-[var(--color-primary-300)]/40 font-montserrat">{stat.delta}</span>
                                 </div>
                             </motion.div>
                         ))}
@@ -256,9 +256,9 @@ export default function PartnerOverviewPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.25 }}
-                className="bg-[#111111]  rounded-xl p-5"
+                className="bg-[var(--color-bg-nav)]  rounded-xl p-5"
             >
-                <h2 className="text-sm font-semibold text-[#FFFFFF99] font-montserrat mb-6">Listing Performance</h2>
+                <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-6">Listing Performance</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
                     {LISTINGS.map((listing, i) => (
                         <ListingBar key={listing.name} listing={listing} index={i} />

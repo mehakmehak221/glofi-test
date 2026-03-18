@@ -8,8 +8,8 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
         <Link href={href} onClick={onClick} className="block">
             <motion.div
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors duration-200 group relative ${isActive
-                        ? "bg-[#00FFCD]/10 text-[#00FFCD]"
-                        : "text-[#a0a0a0] hover:text-white hover:bg-white/5"
+                        ? "bg-[var(--color-primary-100)]/10 text-[var(--color-primary-100)]"
+                        : "text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-surface-subtle)]"
                     }`}
                 whileHover={{ x: collapsed ? 0 : 4 }}
                 whileTap={{ scale: 0.97 }}
@@ -18,7 +18,7 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
                 {isActive && (
                     <motion.div
                         layoutId="activeNavIndicator"
-                        className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-r-full bg-[#00FFCD]"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-r-full bg-[var(--color-primary-100)]"
                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
                 )}
@@ -39,7 +39,7 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
                 </motion.span>
 
                 {collapsed && (
-                    <div className="absolute left-full ml-3 px-2.5 py-1 rounded-md bg-[#1a1a1a] border border-white/10 text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 shadow-lg">
+                    <div className="absolute left-full ml-3 px-2.5 py-1 rounded-md bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 shadow-lg">
                         {label}
                     </div>
                 )}

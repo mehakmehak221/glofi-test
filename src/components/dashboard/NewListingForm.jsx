@@ -9,12 +9,12 @@ import { BusinessPropertyIcon, UploadIcon } from "../VectorImages";
 const CATEGORIES = ["Skyscraper", "Land", "Commercial", "Residential"];
 
 const UploadArea = ({ label }) => (
-    <div className="flex-1 min-w-[200px] aspect-[3/2] rounded-xl border border-[#FFFFFF1A] bg-[#111111] flex flex-col items-center justify-center p-4 hover:border-[#00DAAF33] transition-colors cursor-pointer group">
-        <div className="w-10 h-10 rounded-full  flex items-center justify-center mb-3 group-hover:bg-[#00DAAF0D] transition-colors">
+    <div className="flex-1 min-w-[200px] aspect-[3/2] rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-nav)] flex flex-col items-center justify-center p-4 hover:border-[var(--color-primary-300)]/20 transition-colors cursor-pointer group">
+        <div className="w-10 h-10 rounded-full  flex items-center justify-center mb-3 group-hover:bg-[var(--color-primary-300)]/10 transition-colors">
         <UploadIcon/>
 
         </div>
-        <span className="text-[11px] font-medium text-[#FFFFFF40] text-center uppercase tracking-wider font-montserrat">
+        <span className="text-[11px] font-medium text-[var(--color-text-muted)] text-center uppercase tracking-wider font-montserrat">
             {label}
         </span>
     </div>
@@ -37,7 +37,7 @@ export default function NewListingForm({ onBack }) {
                 </h1>
                 <button
                     onClick={onBack}
-                    className="flex items-center gap-2 bg-[#00DAAF0D] hover:bg-[#00DAAF1A] text-[#00DAAF] px-4 py-2 rounded-lg text-sm font-medium font-montserrat transition-all"
+                    className="flex items-center gap-2 bg-[var(--color-primary-300)]/5 hover:bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] px-4 py-2 rounded-lg text-sm font-medium font-montserrat transition-all"
                 >
                     Back to List
                 </button>
@@ -45,21 +45,21 @@ export default function NewListingForm({ onBack }) {
 
 
           
-            <div className="bg-[#FFFFFF05] border border-[#FFFFFF0A] rounded-3xl p-6 lg:p-10">
+            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-3xl p-6 lg:p-10">
                
-                <div className="flex items-center justify-center gap-12 mb-10 border-b border-[#FFFFFF05] pb-4">
+                <div className="flex items-center justify-center gap-12 mb-10 border-b border-[var(--color-border-subtle)] pb-4">
                     {CATEGORIES.map((cat) => (
                         <button
                             key={cat}
                             onClick={() => setActiveCat(cat)}
-                            className={`text-sm font-medium font-montserrat transition-colors relative pb-4 ${activeCat === cat ? "text-white" : "text-[#FFFFFF22] hover:text-[#FFFFFF40]"
+                            className={`text-sm font-medium font-montserrat transition-colors relative pb-4 ${activeCat === cat ? "text-white" : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
                                 }`}
                         >
                             {cat}
                             {activeCat === cat && (
                                 <motion.div
                                     layoutId="activeCat"
-                                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00DAAF]"
+                                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-primary-300)]"
                                 />
                             )}
                         </button>
@@ -69,51 +69,51 @@ export default function NewListingForm({ onBack }) {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[#FFFFFF40] tracking-widest uppercase font-montserrat">Title</label>
+                        <label className="text-[10px] font-semibold text-[var(--color-text-muted)]/50 tracking-widest uppercase font-montserrat">Title</label>
                         <input
                             type="text"
                             placeholder="..."
-                            className="bg-[#111111] border border-[#FFFFFF0A] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[#00DAAF33] transition-colors placeholder:text-[#FFFFFF10] font-montserrat"
+                            className="bg-[var(--color-bg-nav)] border border-[var(--color-border-subtle)] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[var(--color-primary-300)]/20 transition-colors placeholder:text-[var(--color-text-muted)]/20 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[#FFFFFF40] tracking-widest uppercase font-montserrat">Location</label>
+                        <label className="text-[10px] font-semibold text-[var(--color-text-muted)]/50 tracking-widest uppercase font-montserrat">Location</label>
                         <input
                             type="text"
                             placeholder="..."
-                            className="bg-[#111111] border border-[#FFFFFF0A] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[#00DAAF33] transition-colors placeholder:text-[#FFFFFF10] font-montserrat"
+                            className="bg-[var(--color-bg-nav)] border border-[var(--color-border-subtle)] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[var(--color-primary-300)]/20 transition-colors placeholder:text-[var(--color-text-muted)]/20 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[#FFFFFF40] tracking-widest uppercase font-montserrat">Valuation ($)</label>
+                        <label className="text-[10px] font-semibold text-[var(--color-text-muted)]/50 tracking-widest uppercase font-montserrat">Valuation ($)</label>
                         <input
                             type="text"
                             placeholder="..."
-                            className="bg-[#111111] border border-[#FFFFFF0A] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[#00DAAF33] transition-colors placeholder:text-[#FFFFFF10] font-montserrat"
+                            className="bg-[var(--color-bg-nav)] border border-[var(--color-border-subtle)] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[var(--color-primary-300)]/20 transition-colors placeholder:text-[var(--color-text-muted)]/20 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[#FFFFFF40] tracking-widest uppercase font-montserrat">Total Fractions</label>
+                        <label className="text-[10px] font-semibold text-[var(--color-text-muted)]/50 tracking-widest uppercase font-montserrat">Total Fractions</label>
                         <input
                             type="text"
                             placeholder="..."
-                            className="bg-[#111111] border border-[#FFFFFF0A] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[#00DAAF33] transition-colors placeholder:text-[#FFFFFF10] font-montserrat"
+                            className="bg-[var(--color-bg-nav)] border border-[var(--color-border-subtle)] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[var(--color-primary-300)]/20 transition-colors placeholder:text-[var(--color-text-muted)]/20 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-1">
-                        <label className="text-[10px] font-semibold text-[#FFFFFF40] tracking-widest uppercase font-montserrat">Annual Yield (%)</label>
+                        <label className="text-[10px] font-semibold text-[var(--color-text-muted)]/50 tracking-widest uppercase font-montserrat">Annual Yield (%)</label>
                         <input
                             type="text"
                             placeholder="..."
-                            className="bg-[#111111] border border-[#FFFFFF0A] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[#00DAAF33] transition-colors placeholder:text-[#FFFFFF10] font-montserrat md:max-w-[calc(50%-16px)]"
+                            className="bg-[var(--color-bg-nav)] border border-[var(--color-border-subtle)] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[var(--color-primary-300)]/20 transition-colors placeholder:text-[var(--color-text-muted)] font-montserrat md:max-w-[calc(50%-16px)]"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-2">
-                        <label className="text-[10px] font-semibold text-[#FFFFFF40] tracking-widest uppercase font-montserrat">Description</label>
+                        <label className="text-[10px] font-semibold text-[var(--color-text-muted)] tracking-widest uppercase font-montserrat">Description</label>
                         <textarea
                             rows={5}
                             placeholder="..."
-                            className="bg-[#111111] border border-[#FFFFFF0A] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[#00DAAF33] transition-colors placeholder:text-[#FFFFFF10] font-montserrat resize-none"
+                            className="bg-[var(--color-bg-nav)] border border-[var(--color-border-subtle)] rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[var(--color-primary-300)]/20 transition-colors placeholder:text-[var(--color-text-muted)] font-montserrat resize-none"
                         />
                     </div>
                 </div>
@@ -127,11 +127,11 @@ export default function NewListingForm({ onBack }) {
                 </div>
 
                 
-                <div className="bg-[#FE9A000A] border border-[#FE9A001A] rounded-xl p-4 mb-8 flex items-center gap-3">
+                <div className="bg-[var(--color-accent-orange)]/5 border border-[var(--color-accent-orange)]/10 rounded-xl p-4 mb-8 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full  flex items-center justify-center flex-shrink-0">
-                    <BusinessPropertyIcon className="w-4 h-4 text-[#FE9A00]" />
+                    <BusinessPropertyIcon className="w-4 h-4 text-[var(--color-accent-orange)]" />
                     </div>
-                    <p className="text-base text-[#FFB90080] font-montserrat font-medium ">
+                    <p className="text-base text-[var(--color-accent-orange)]/50 font-montserrat font-medium ">
                      Business verification (KYB) required before listing properties. Company info, documents & bank setup.
                     </p>
                 </div>
@@ -140,7 +140,7 @@ export default function NewListingForm({ onBack }) {
                 <motion.button
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="bg-[#00DAAF] text-[#050505] font-bold text-sm px-8 py-3.5 rounded-2xl hover:bg-[#00c59e] transition-colors font-montserrat"
+                    className="bg-[var(--color-primary-300)] text-black font-bold text-sm px-8 py-3.5 rounded-2xl hover:bg-[var(--color-primary-100)] transition-colors font-montserrat"
                 >
                     Verify & Submit
                 </motion.button>

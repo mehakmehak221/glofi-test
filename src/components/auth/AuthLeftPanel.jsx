@@ -3,7 +3,7 @@
 
 export default function AuthLeftPanel() {
   return (
-    <div className="auth-left-panel relative hidden lg:flex h-full overflow-hidden bg-[#050505]">
+    <div className="auth-left-panel relative hidden lg:flex h-full overflow-hidden bg-[var(--color-bg-dark-alt)]">
      
       <div className="absolute inset-0 z-0">
         <div
@@ -12,8 +12,8 @@ export default function AuthLeftPanel() {
             backgroundImage: `url('/images/left-bg.png')`,
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#050505]/80 via-[#050505]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/95 via-transparent to-[#050505]/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-bg-dark-alt)]/80 via-[var(--color-bg-dark-alt)]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-dark-alt)]/95 via-transparent to-[var(--color-bg-dark-alt)]/40" />
       </div>
       
       
@@ -22,7 +22,7 @@ export default function AuthLeftPanel() {
         <div>
           <div className="flex items-baseline gap-3">
             <img src="/assets/logo.png" alt="GloFi Logo" className="h-7 w-auto translate-y-[2px]" />
-            <span className="text-[#FFFFFF40] text-[11px] font-medium tracking-[0.25em] uppercase font-montserrat">
+            <span className="text-[var(--color-text-muted)] text-[11px] font-medium tracking-[0.25em] uppercase font-montserrat">
               Real Estate
             </span>
           </div>
@@ -35,7 +35,7 @@ export default function AuthLeftPanel() {
             <span className="text-auth-gradient">Real Estate,<br />
             Fraction by Fraction</span>
           </h1>
-          <p className="text-[#FFFFFF66] text-lg leading-relaxed max-w-md font-medium font-montserrat">
+          <p className="text-[var(--color-text-secondary)] text-lg leading-relaxed max-w-md font-medium font-montserrat">
             Institutional-grade properties, digitally simplified. Invest, manage, and grow all in one platform.
           </p>
         </div>
@@ -48,8 +48,8 @@ export default function AuthLeftPanel() {
               { value: "14.2%", label: "AVG YIELD" },
             ].map((s) => (
               <div key={s.label}>
-                <p className="text-[#FFFFFFE5] font-bold text-xl tracking-tight leading-none mb-2">{s.value}</p>
-                <p className="text-[#FFFFFF40] text-[10px] font-bold tracking-[0.1em]">{s.label}</p>
+                <p className="text-white font-bold text-xl tracking-tight leading-none mb-2">{s.value}</p>
+                <p className="text-[var(--color-text-muted)] text-[10px] font-bold tracking-[0.1em]">{s.label}</p>
               </div>
             ))}
           </div>

@@ -29,7 +29,7 @@ export default function PropertyInvestmentCategoriesSection() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 w-full">
                         {/* Commercial Offices - wide card */}
                         <div className="flex flex-col xl:col-span-1 min-w-0">
-                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-gray-800 overflow-hidden bg-gray-900">
+                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-[var(--color-border-subtle)] overflow-hidden bg-[var(--color-bg-surface-subtle)]">
                                 <HotelImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-commercial mt-3 sm:mt-4">
@@ -39,7 +39,7 @@ export default function PropertyInvestmentCategoriesSection() {
 
                         {/* Premium Residential */}
                         <div className="flex flex-col xl:col-span-1 min-w-0">
-                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-gray-800 overflow-hidden bg-gray-900">
+                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-[var(--color-border-subtle)] overflow-hidden bg-[var(--color-bg-surface-subtle)]">
                                 <FlatBuildingImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-premium mt-3 sm:mt-4">
@@ -52,7 +52,7 @@ export default function PropertyInvestmentCategoriesSection() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 w-full">
                         {/* Retail & Mixed-Use */}
                         <div className="flex flex-col min-w-0">
-                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-gray-800 overflow-hidden bg-gray-900">
+                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-[var(--color-border-subtle)] overflow-hidden bg-[var(--color-bg-surface-subtle)]">
                                 <RetailImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-retail mt-3 sm:mt-4">
@@ -62,7 +62,7 @@ export default function PropertyInvestmentCategoriesSection() {
 
                         {/* Industrial & Logistics */}
                         <div className="flex flex-col min-w-0">
-                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-gray-800 overflow-hidden bg-gray-900">
+                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-[var(--color-border-subtle)] overflow-hidden bg-[var(--color-bg-surface-subtle)]">
                                 <IndustryImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-industrial mt-3 sm:mt-4">
@@ -72,7 +72,7 @@ export default function PropertyInvestmentCategoriesSection() {
 
                         {/* Luxury Properties */}
                         <div className="flex flex-col xl:col-span-1">
-                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-gray-800 overflow-hidden bg-gray-900">
+                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-2xl border border-[var(--color-border-subtle)] overflow-hidden bg-[var(--color-bg-surface-subtle)]">
                                 <FarmHouseImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-luxury mt-3 sm:mt-4">

@@ -12,22 +12,22 @@ import {
 const TABS = ["Commissions", "Payouts", "AI Plans"];
 
 const STATS = [
-    { label: "TOTAL EARNED", value: "$126,450", color: "#00DAAF1A" },
-    { label: "PENDING PAYOUT", value: "$18,200", color: "#FFFFFF05" },
-    { label: "THIS MONTH", value: "$28,750", color: "#00DAAF0A" },
+    { label: "TOTAL EARNED", value: "$126,450", color: "var(--color-primary-300-alpha-10)" },
+    { label: "PENDING PAYOUT", value: "$18,200", color: "var(--color-bg-surface-subtle)" },
+    { label: "THIS MONTH", value: "$28,750", color: "var(--color-primary-300-alpha-10)" },
 ];
 
 const COMMISSIONS = [
-    { name: "Burj Vista Tower", detail: "Sale · Feb 10", amount: "$12,500", status: "Paid", color: "#00DAAF" },
-    { name: "Marina Walk", detail: "Referral · Feb 8", amount: "$3,200", status: "Paid", color: "#00DAAF" },
-    { name: "Palm Villa", detail: "Sale · Feb 5", amount: "$8,750", status: "Pending", color: "#FE9A00" },
-    { name: "DIFC Tower", detail: "Sale · Jan 28", amount: "$15,800", status: "Paid", color: "#00DAAF" },
+    { name: "Burj Vista Tower", detail: "Sale · Feb 10", amount: "$12,500", status: "Paid", color: "var(--color-primary-300)" },
+    { name: "Marina Walk", detail: "Referral · Feb 8", amount: "$3,200", status: "Paid", color: "var(--color-primary-300)" },
+    { name: "Palm Villa", detail: "Sale · Feb 5", amount: "$8,750", status: "Pending", color: "var(--color-status-warning)" },
+    { name: "DIFC Tower", detail: "Sale · Jan 28", amount: "$15,800", status: "Paid", color: "var(--color-primary-300)" },
 ];
 
 const PAYOUTS = [
-    { name: "Burj Vista Tower", detail: "Feb 10 · Bank Transfer", amount: "$125,000", status: "Completed", color: "#00DAAF" },
-    { name: "Marina Walk", detail: "Feb 5 · Bank Transfer", amount: "$89,400", status: "Completed", color: "#00DAAF" },
-    { name: "Palm Villa", detail: "Feb 28 · Bank Transfer", amount: "$67,200", status: "Scheduled", color: "#FE9A00" },
+    { name: "Burj Vista Tower", detail: "Feb 10 · Bank Transfer", amount: "$125,000", status: "Completed", color: "var(--color-primary-300)" },
+    { name: "Marina Walk", detail: "Feb 5 · Bank Transfer", amount: "$89,400", status: "Completed", color: "var(--color-primary-300)" },
+    { name: "Palm Villa", detail: "Feb 28 · Bank Transfer", amount: "$67,200", status: "Scheduled", color: "var(--color-status-warning)" },
 ];
 
 const PLANS = [
@@ -72,14 +72,14 @@ export default function FinancePage() {
                     Finance
                 </h1>
 
-                <div className="flex bg-[#111] p-1 rounded-full border border-white/5 self-start md:self-auto">
+                <div className="flex bg-[var(--color-bg-surface-subtle)] p-1 rounded-full border border-[var(--color-border-subtle)] self-start md:self-auto">
                     {TABS.map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`px-6 py-2 rounded-md text-xs font-semibold font-montserrat transition-all ${activeTab === tab
-                                ? "bg-from-[#00DAAF0F] to-[#00DAAF1A] text-[#00DAAF] shadow-sm"
-                                : "text-[#767676] hover:text-white"
+                                ? "bg-[var(--color-primary-300)]/5 text-[var(--color-primary-300)] shadow-sm"
+                                : "text-[var(--color-text-muted)] hover:text-white"
                                 }`}
                         >
                             {tab}
@@ -96,13 +96,13 @@ export default function FinancePage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="rounded-md p-6 bg-from-[#00DAAF0F] to-[#007E5F0F] hover:border-[#00DAAF1A] transition-colors"
+                        className="rounded-md p-6 bg-[var(--color-primary-300)]/10 hover:border-[var(--color-primary-300)]/10 transition-colors"
                         style={{ backgroundColor: stat.color }}
                     >
-                        <p className="text-[10px] font-bold tracking-widest text-[#FFFFFF33] font-montserrat mb-4">
+                        <p className="text-[10px] font-bold tracking-widest text-[var(--color-text-muted)] font-montserrat mb-4">
                             {stat.label}
                         </p>
-                        <p className="text-3xl font-semibold text-[#FFFFFFD9] font-montserrat tracking-tight">
+                        <p className="text-3xl font-semibold text-[var(--color-text-primary)] font-montserrat tracking-tight">
                             {stat.value}
                         </p>
                     </motion.div>
@@ -117,11 +117,11 @@ export default function FinancePage() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="rounded-md bg-[#FFFFFF05] p-5"
+                    className="rounded-md bg-[var(--color-bg-surface-subtle)] p-5"
                 >
                     {activeTab === "Commissions" && (
                         <div>
-                            <h2 className="text-sm font-semibold text-[#FFFFFF99] font-montserrat mb-6">Commission History</h2>
+                            <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-6">Commission History</h2>
                             <div className="space-y-3">
                                 {COMMISSIONS.map((item, i) => (
                                     <motion.div
@@ -129,14 +129,14 @@ export default function FinancePage() {
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="bg-[#FFFFFF05] p-5 rounded-md flex items-center justify-between border border-white/5 hover:border-[#00DAAF33] transition-colors group"
+                                        className="bg-[var(--color-bg-surface-subtle)] p-5 rounded-md flex items-center justify-between border border-[var(--color-border-subtle)] hover:border-[var(--color-primary-300)]/20 transition-colors group"
                                     >
                                         <div>
-                                            <h3 className="text-sm font-semibold text-white font-montserrat group-hover:text-[#00DAAF] transition-colors">{item.name}</h3>
-                                            <p className="text-xs text-[#767676] font-montserrat mt-1">{item.detail}</p>
+                                            <h3 className="text-sm font-semibold text-white font-montserrat group-hover:text-[var(--color-primary-300)] transition-colors">{item.name}</h3>
+                                            <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1">{item.detail}</p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-sm font-bold text-[#00DAAFB2] font-montserrat">{item.amount}</p>
+                                            <p className="text-sm font-bold text-[var(--color-status-success)]/70 font-montserrat">{item.amount}</p>
                                             <p className={`text-[10px] font-bold font-montserrat mt-1 uppercase tracking-tighter`} style={{ color: item.color + '99' }}>
                                                 {item.status}
                                             </p>
@@ -149,7 +149,7 @@ export default function FinancePage() {
 
                     {activeTab === "Payouts" && (
                         <div>
-                            <h2 className="text-sm font-semibold text-[#FFFFFF99] font-montserrat mb-6">Payout History</h2>
+                            <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-6">Payout History</h2>
                             <div className="space-y-3">
                                 {PAYOUTS.map((item, i) => (
                                     <motion.div
@@ -157,14 +157,14 @@ export default function FinancePage() {
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="bg-[#FFFFFF05] p-5 rounded-md flex items-center justify-between border border-white/5 hover:border-[#00DAAF33] transition-colors group"
+                                        className="bg-[var(--color-bg-surface-subtle)] p-5 rounded-md flex items-center justify-between border border-[var(--color-border-subtle)] hover:border-[var(--color-primary-300)]/20 transition-colors group"
                                     >
                                         <div>
-                                            <h3 className="text-sm font-semibold text-white font-montserrat group-hover:text-[#00DAAF] transition-colors">{item.name}</h3>
-                                            <p className="text-xs text-[#767676] font-montserrat mt-1">{item.detail}</p>
+                                            <h3 className="text-sm font-semibold text-white font-montserrat group-hover:text-[var(--color-primary-300)] transition-colors">{item.name}</h3>
+                                            <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1">{item.detail}</p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-sm font-bold text-[#00DAAFB2] font-montserrat">{item.amount}</p>
+                                            <p className="text-sm font-bold text-[var(--color-primary-300)]/70 font-montserrat">{item.amount}</p>
                                             <p className={`text-[10px] font-bold font-montserrat mt-1 uppercase tracking-tighter`} style={{ color: item.color + '99' }}>
                                                 {item.status}
                                             </p>
@@ -182,30 +182,30 @@ export default function FinancePage() {
                                     key={plan.name}
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    whileHover={{ scale: 1.02, borderColor: '#00DAAF66', backgroundColor: '#FFFFFF0D' }}
+                                    whileHover={{ scale: 1.02, borderColor: 'var(--color-primary-300-alpha-30)', backgroundColor: 'var(--color-bg-surface-elevated)' }}
                                     transition={{ delay: i * 0.1 }}
-                                    className={`bg-[#FFFFFF08] p-7 rounded-3xl border ${plan.popular ? 'border-[#00DAAF33]' : 'border-[#FFFFFF08]'} flex flex-col items-start relative overflow-hidden cursor-pointer transition-colors duration-300`}
+                                    className={`bg-[var(--color-bg-surface-subtle)] p-7 rounded-3xl border ${plan.popular ? 'border-[var(--color-primary-300)]/20' : 'border-[var(--color-border-subtle)]'} flex flex-col items-start relative overflow-hidden cursor-pointer transition-colors duration-300`}
                                 >
                                     {plan.popular && (
-                                        <div className="absolute top-4 right-4 bg-[#00DAAF1A] text-[#00DAAFB2] text-[9px] font-bold px-2.5 py-1 rounded-full border border-[#00DAAF33]">
+                                        <div className="absolute top-4 right-4 bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)]/70 text-[9px] font-bold px-2.5 py-1 rounded-full border border-[var(--color-primary-300)]/20">
                                             POPULAR
                                         </div>
                                     )}
-                                    <h3 className="text-sm font-semibold text-[#FFFFFFB2] font-montserrat mb-2 uppercase tracking-wide">{plan.name}</h3>
+                                    <h3 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-2 uppercase tracking-wide">{plan.name}</h3>
                                     <p className="text-2xl font-bold text-white font-montserrat mb-8">{plan.price}</p>
 
                                     <ul className="space-y-4 mb-10 w-full">
                                         {plan.features.map((feature, fidx) => (
-                                            <li key={fidx} className="flex items-center gap-3 text-[11px] text-[#FFFFFFB2] font-montserrat">
-                                                <CheckIcon className="w-3.5 h-3.5 text-[#FFFFFF4D]" />
+                                            <li key={fidx} className="flex items-center gap-3 text-[11px] text-[var(--color-text-secondary)] font-montserrat">
+                                                <CheckIcon className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
                                                 {feature}
                                             </li>
                                         ))}
                                     </ul>
 
                                     <button className={`w-full py-3.5 rounded-2xl text-[11px] font-bold font-montserrat transition-all ${plan.popular
-                                        ? 'bg-[#00DAAFB2] text-black hover:bg-[#00FFCD] shadow-[0_0_20px_#00DAAF1A]'
-                                        : 'bg-[#FFFFFF08] text-[#FFFFFFB2] hover:bg-[#FFFFFF0D] border border-transparent hover:border-[#FFFFFF1A]'
+                                        ? 'bg-[var(--color-primary-300)]/70 text-black hover:bg-[var(--color-primary-100)] shadow-[var(--shadow-glow-primary)]'
+                                        : 'bg-[var(--color-bg-surface-subtle)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-surface-elevated)] border border-transparent hover:border-[var(--color-border-subtle)]'
                                         }`}>
                                         {plan.button}
                                     </button>

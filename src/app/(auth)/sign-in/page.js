@@ -25,7 +25,7 @@ export default function SignInPage() {
 
             <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 text-[#767676] hover:text-white text-sm transition-colors mb-8 group"
+                className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group"
             >
                 <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
                 Back to home
@@ -34,7 +34,7 @@ export default function SignInPage() {
 
             <div className="mb-8">
                 <h2 className="text-white font-bold text-3xl mb-1.5 font-montserrat">Welcome back</h2>
-                <p className="text-[#FFFFFF4D] text-sm font-montserrat">Sign in to your dashboard</p>
+                <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">Sign in to your dashboard</p>
             </div>
 
             <div className="mb-6">
@@ -51,7 +51,7 @@ export default function SignInPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email address"
                         required
-                        className="w-full rounded-xl px-4 py-3.5 text-sm text-white placeholder-[#FFFFFF33] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 focus:ring-2 focus:ring-[#00FFCD]/15 transition-all duration-200"
+                        className="w-full rounded-xl px-4 py-3.5 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 focus:ring-2 focus:ring-[var(--color-primary-100)]/15 transition-all duration-200"
                     />
                 </div>
 
@@ -63,12 +63,12 @@ export default function SignInPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                         required
-                        className="w-full rounded-xl px-4 py-3.5 pr-12 text-sm text-white placeholder-[#FFFFFF33] bg-[#1a1a1a] border border-white/8 focus:outline-none focus:border-[#00FFCD]/60 focus:ring-2 focus:ring-[#00FFCD]/15 transition-all duration-200"
+                        className="w-full rounded-xl px-4 py-3.5 pr-12 text-sm text-white placeholder-white/20 bg-[var(--color-bg-card)] border border-white/5 focus:outline-none focus:border-[var(--color-primary-100)]/60 focus:ring-2 focus:ring-[var(--color-primary-100)]/15 transition-all duration-200"
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#FFFFFF33] hover:text-[#767676] transition-colors"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
                     >
                         {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
                     </button>
@@ -78,7 +78,7 @@ export default function SignInPage() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="mt-2 w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#00F4C4] text-black font-bold text-sm hover:bg-[#00e0b8] active:scale-[0.98] transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed font-montserrat"
+                    className="mt-2 w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[var(--color-primary-200)] text-black font-bold text-sm hover:bg-[var(--color-primary-300)] active:scale-[0.98] transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed font-montserrat"
                 >
                     {loading ? (
                         <LoadingSpinner />
@@ -91,9 +91,9 @@ export default function SignInPage() {
                 </button>
             </form>
 
-            <p className="text-center text-sm text-[#767676] mt-8 font-montserrat">
+            <p className="text-center text-sm text-[var(--color-text-secondary)] mt-8 font-montserrat">
                 New here?{" "}
-                <Link href="/sign-up" className="text-[#00DAAFB2] font-medium hover:text-[#00DAAFB2]/70 transition-colors font-montserrat">
+                <Link href="/sign-up" className="text-[var(--color-primary-300)] font-medium hover:text-[var(--color-primary-100)] transition-colors font-montserrat">
                     Create account
                 </Link>
             </p>
