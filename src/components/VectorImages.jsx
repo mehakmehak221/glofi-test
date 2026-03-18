@@ -718,14 +718,43 @@ export const PendingIcon = ({ className = "w-4 h-4" }) => (
 
 
 export const VerifiedIcon = ({ className = "w-4 h-4" }) => (
-<svg className={className} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_386_3433)">
-<path d="M16.6673 10.8333C16.6673 15 13.7507 17.0833 10.284 18.2917C10.1025 18.3532 9.90527 18.3502 9.72565 18.2833C6.25065 17.0833 3.33398 15 3.33398 10.8333V5C3.33398 4.77899 3.42178 4.56703 3.57806 4.41075C3.73434 4.25447 3.9463 4.16667 4.16732 4.16667C5.83398 4.16667 7.91732 3.16667 9.36732 1.9C9.54386 1.74917 9.76845 1.66629 10.0007 1.66629C10.2329 1.66629 10.4574 1.74917 10.634 1.9C12.0923 3.175 14.1673 4.16667 15.834 4.16667C16.055 4.16667 16.267 4.25447 16.4232 4.41075C16.5795 4.56703 16.6673 4.77899 16.6673 5V10.8333Z" stroke="var(--color-primary-300)" strokeOpacity="var(--opacity-muted)" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_386_3433">
-<rect width="20" height="20" fill="white"/>
-</clipPath>
-</defs>
-</svg>
+    <svg className={className} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#clip0_386_343) -- NOT CORRECT, using original clip path">
+            <path d="M16.6673 10.8333C16.6673 15 13.7507 17.0833 10.284 18.2917C10.1025 18.3532 9.90527 18.3502 9.72565 18.2833C6.25065 17.0833 3.33398 15 3.33398 10.8333V5C3.33398 4.77899 3.42178 4.56703 3.57806 4.41075C3.73434 4.25447 3.9463 4.16667 4.16732 4.16667C5.83398 4.16667 7.91732 3.16667 9.36732 1.9C9.54386 1.74917 9.76845 1.66629 10.0007 1.66629C10.2329 1.66629 10.4574 1.74917 10.634 1.9C12.0923 3.175 14.1673 4.16667 15.834 4.16667C16.055 4.16667 16.267 4.25447 16.4232 4.41075C16.5795 4.56703 16.6673 4.77899 16.6673 5V10.8333Z" stroke="var(--color-primary-300)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+        <defs>
+            <clipPath id="clip0_386_3433">
+                <rect width="20" height="20" fill="white" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+export const JoinNewGenBgGlow = ({ className = "w-full h-full" }) => (
+    <svg 
+        className={className} 
+        width="1109" 
+        height="447" 
+        viewBox="0 0 1109 447" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMax slice"
+    >
+        <g filter="url(#filter0_join_new_gen)">
+            <ellipse cx="104.5" cy="12.5" rx="104.5" ry="12.5" transform="matrix(-1 0 0 1 659 446)" fill="#01261E" />
+        </g>
+        <defs>
+            <filter id="filter0_join_new_gen" x="0" y="0" width="1109" height="925" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                <feMorphology radius="200" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_join" />
+                <feOffset dy="4" />
+                <feGaussianBlur stdDeviation="125" />
+                <feComposite in2="hardAlpha" operator="out" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.027451 0 0 0 0 0.25098 0 0 0 0 0.172745 0 0 0 1 0" />
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_join" />
+                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_join" result="shape" />
+            </filter>
+        </defs>
+    </svg>
 );

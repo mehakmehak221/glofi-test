@@ -24,14 +24,14 @@ const STEPS = [
 export default function WorkingInstructionsSection() {
     return (
         <section className="w-full flex justify-center bg-[var(--color-bg-dark)]">
-            <div className="hiw-section-wrapper w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-16 sm:py-20 lg:py-24 xl:py-32 2xl:py-40">
+            <div className="hiw-section-wrapper w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-16 sm:py-20 lg:py-24 xl:py-32 2xl:py-40">
                 <div className="flex flex-col items-center w-full">
                     <div className="flex flex-col items-center text-center justify-center mb-12 sm:mb-16 lg:mb-20">
-                        <div className="how-it-works-pill mb-6 px-5 py-2 bg-[var(--color-bg-dark)] border border-[var(--color-primary-200)] rounded-full text-[var(--color-primary-200)] text-sm sm:text-base">
+                        <div className="how-it-works-pill mb-6 px-2 py-2 bg-[var(--color-bg-dark)] border border-[var(--color-primary-200)] rounded-full text-[var(--color-primary-200)] text-sm sm:text-base">
                             How It Works
                         </div>
 
-                        <h2 className="how-it-works-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white">
+                        <h2 className="how-it-works-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white font-Montserrat">
                             Get GloFi-Ready In Just 3 Steps
                         </h2>
                     </div>

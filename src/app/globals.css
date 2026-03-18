@@ -211,6 +211,19 @@
     animation: fadeIn 0.25s ease-out both;
   }
 
+  /* Scroll-triggered animation helpers */
+  .anim-fade-up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .anim-fade-up.anim-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+
 
   .auth-left-panel {
     width: 100%;
@@ -732,7 +745,8 @@
     padding-bottom: 48px;
     padding-left: 120px;
     background: linear-gradient(180deg, #030A08 0%, #031D18 100%);
-    border: 1px solid var(--color-primary-200);
+    border-bottom: 1px solid var(--color-primary-200);
+    border-top: 1px solid var(--color-primary-200);
   }
 
   @media (max-width: 1024px) {
@@ -822,10 +836,8 @@
   /* ---------- Premium Properties Section - Exact Figma Specifications ---------- */
   .premium-section-wrapper {
     background: black;
-    width: 100%;
-    padding-top: 80px;
-    padding-bottom: 80px;
     overflow: hidden;
+
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -835,7 +847,7 @@
 
   @media (min-width: 1024px) {
     .premium-section-wrapper {
-      padding-left: 120px;
+      padding-left: 80px;
     }
   }
 
@@ -860,7 +872,6 @@
 
   .premium-list-section {
     width: 100%;
-    max-width: 1440px;
     height: 407px;
     margin: 0 auto;
     display: flex;
@@ -873,7 +884,7 @@
 
   .premium-list-section::-webkit-scrollbar {
     display: none;
-    /* Chrome, Safari and Opera */
+
   }
 
   .premium-card-exact {
@@ -883,16 +894,13 @@
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
-    background: var(--color-bg-nav);
-    border: 1px solid var(--color-border-subtle);
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
     cursor: pointer;
   }
 
   .premium-card-exact:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 30px var(--color-primary-300-alpha-30);
-    border-color: var(--color-primary-100);
+
   }
 
   .premium-card-exact__inner {
@@ -901,6 +909,7 @@
     height: 100%;
     display: flex;
     align-items: center;
+
     justify-content: center;
   }
 
@@ -916,13 +925,14 @@
   .global-scale-section-wrapper {
     width: 100%;
     max-width: 1440px;
-    min-height: 400px;
+    min-height: 480px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--color-primary-925);
-    border: 1px solid var(--color-primary-200);
+    background: var(--color-bg-dark);
+    border-top: 1px solid var(--color-primary-200);
+    border-bottom: 1px solid var(--color-primary-200);
     position: relative;
     overflow: hidden;
   }
@@ -972,26 +982,26 @@
   .global-scale-globe-container {
     width: 100%;
     max-width: 697px;
-    height: auto;
-    opacity: 1;
+    height: 100%;
+    opacity: 0.8;
     position: absolute;
     right: 0;
     top: 0;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    z-index: 1;
+    pointer-events: none;
   }
 
   @media (max-width: 1024px) {
     .global-scale-globe-container {
-      opacity: 0.12;
-      position: absolute;
-      right: -10%;
+      opacity: 0.15;
+      right: -20%;
       top: 50%;
       transform: translateY(-50%);
-      max-width: 90%;
-      z-index: 0;
-      pointer-events: none;
+      max-width: 120%;
+      justify-content: center;
     }
   }
 
@@ -1018,10 +1028,10 @@
   .text-property-title {
     font-family: var(--font-montserrat);
     font-weight: 700;
-    font-size: clamp(2rem, 5vw, 4rem);
+    font-size: 40px;
     line-height: 1.1;
     text-transform: capitalize;
-    text-align: center;
+    text-align: left;
     background: var(--color-gradient-text-hero);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1034,7 +1044,7 @@
     font-weight: 300;
     font-size: clamp(1rem, 2vw, 1.5rem);
     line-height: 1.5;
-    text-align: center;
+    text-align: left;
     color: var(--color-gray-300);
     margin-bottom: 48px;
   }
@@ -1065,13 +1075,19 @@
     min-height: 44px;
     display: flex;
     align-items: center;
-    padding: 8px 20px;
-    background: var(--color-gradient-step);
+    padding: 12px 24px;
+    background: linear-gradient(180deg, #004D40 0%, #00251A 100%);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-top: -8px;
+    /* Slight overlap to join with image */
+    position: relative;
+    z-index: 5;
   }
 
   .text-property-category {
     font-family: var(--font-montserrat);
-    font-weight: 500;
+    font-weight: 600;
     font-size: clamp(0.875rem, 1.5vw, 1rem);
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -1161,10 +1177,10 @@
     box-shadow: 5px 10px 40px 0px var(--color-primary-300-alpha-30);
     backdrop-filter: blur(5px);
     display: flex;
+    border-radius: 24px;
     flex-direction: column;
     justify-content: space-between;
     gap: 20px;
-    border-radius: 4px;
   }
 
   .text-investment-box-title {
@@ -1210,17 +1226,17 @@
   .join-new-gen-inner {
     width: 100%;
     max-width: 1203px;
-    min-height: 454px;
-    background: var(--color-gray-900);
-    border: 1px solid var(--color-border-dark);
+    min-height: 480px;
+    background: #040E0C;
+    border: 1px solid rgba(0, 244, 196, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding: 48px 24px;
-    border-radius: 8px;
+    padding: 60px 24px;
+    border-radius: 20px;
   }
 
   @media (min-width: 768px) {
@@ -1229,15 +1245,9 @@
     }
   }
 
+  
   .join-new-gen-glow {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70%;
-    height: 220px;
-    background: radial-gradient(ellipse at bottom, var(--color-primary-300-alpha-30) 0%, transparent 70%);
-    pointer-events: none;
+    display: none; /* Replaced by JoinNewGenBgGlow SVG */
   }
 
   .text-join-title {
@@ -1270,18 +1280,20 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 16px 32px;
-    border-radius: 40px;
-    background: var(--color-primary-200);
+    gap: 12px;
+    padding: 16px 40px;
+    border-radius: 100px;
+    background: var(--color-gradient-glofi);
+    color: #000;
+    font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
   }
 
   .btn-get-started-now:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px var(--color-primary-300-alpha-30);
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 244, 196, 0.3);
   }
 
   .text-get-started-now {

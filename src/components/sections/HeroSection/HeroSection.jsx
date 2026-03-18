@@ -15,15 +15,15 @@ export default function HeroSection() {
                         className="object-cover"
                         priority
                     />
-                    <div className="absolute inset-0 hero-gradient-overlay" />
+                    <div className="absolute inset-0 hero-gradient-overlay bg-black/80" />
                 </div>
 
                 <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 flex flex-col items-center justify-center text-center py-12 sm:py-16 lg:py-20 xl:py-28">
                     <h1 className="flex flex-col items-center justify-center m-0 p-0">
-                        <span className="text-hero-cyan">
+                        <span className="text-hero-cyan font-Montserrat">
                             OWN PREMIUM REAL ESTATE,
                         </span>
-                        <span className="text-hero-white">
+                        <span className="text-hero-white font-Montserrat">
                             FRACTION BY FRACTION..
                         </span>
                     </h1>
@@ -33,14 +33,14 @@ export default function HeroSection() {
                             href="#explore"
                             className="btn-explore w-full sm:w-auto"
                         >
-                            <span className="text-btn-explore text-xs sm:text-sm md:text-base">EXPLORE PROPERTIES</span>
+                            <span className="text-btn-explore text-xs sm:text-sm md:text-base font-Montserrat">EXPLORE PROPERTIES</span>
                         </Link>
 
                         <Link
                             href="#invest"
-                            className="btn-invest w-full sm:w-auto"
+                            className="btn-invest w-full sm:w-auto "
                         >
-                            <span className="text-btn-invest text-xs sm:text-sm md:text-base">START INVESTING</span>
+                            <span className="text-btn-invest text-xs sm:text-sm md:text-base font-Montserrat hover:text-white">START INVESTING</span>
                         </Link>
                     </div>
                 </div>

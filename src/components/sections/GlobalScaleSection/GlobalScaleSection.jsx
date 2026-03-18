@@ -5,7 +5,7 @@ import { GlobalScaleGlobeImage } from '../../VectorImages';
 
 export default function GlobalScaleSection() {
     return (
-        <section className="bg-[var(--color-bg-dark)] py-12 sm:py-16 lg:py-20 xl:py-24 2xl:py-32 w-full flex justify-center overflow-hidden">
+        <section className="bg-[#021411] w-full flex justify-center overflow-hidden">
             <div className="global-scale-section-wrapper w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative">
                 {/* Text Content — left side */}
                 <div className="flex flex-col justify-center text-left w-full lg:max-w-2xl xl:max-w-3xl z-10 relative">

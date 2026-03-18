@@ -5,7 +5,7 @@ import { HomeIcon, LegalIcon, EarningPassiveIcon, LiquidityIcon } from '../../Ve
 
 export default function InvestmentSection() {
     return (
-        <section className="bg-transparent flex flex-col items-center w-full">
+        <section className="flex flex-col items-center w-full">
             <div className="investment-section-wrapper w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
                 <div className="w-full mx-auto flex flex-col items-center">
 
