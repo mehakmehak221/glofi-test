@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner, ArrowRightIcon } from "@/components/VectorImages";
 
 export default function SignInPage() {
+    const router = useRouter();
     const [userType, setUserType] = useState("Investor");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -17,11 +20,23 @@ export default function SignInPage() {
         setLoading(true);
         localStorage.setItem("userType", userType);
 
-        setTimeout(() => setLoading(false), 1500);
+        setTimeout(() => {
+            setLoading(false);
+            if (userType === "Partner") {
+                router.push("/dashboard/partner");
+            } else {
+                router.push("/dashboard");
+            }
+        }, 1500);
     };
 
     return (
-        <div className="flex flex-col">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex flex-col"
+        >
 
             <Link
                 href="/"
@@ -51,7 +66,7 @@ export default function SignInPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email address"
                         required
-                        className="w-full rounded-xl px-4 py-3.5 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 focus:ring-2 focus:ring-[var(--color-primary-100)]/15 transition-all duration-200"
+                        className="w-full rounded-2xl px-4 py-3.5 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 focus:ring-2 focus:ring-[var(--color-primary-100)]/15 transition-all duration-200"
                     />
                 </div>
 
@@ -63,7 +78,7 @@ export default function SignInPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                         required
-                        className="w-full rounded-xl px-4 py-3.5 pr-12 text-sm text-white placeholder-white/20 bg-[var(--color-bg-card)] border border-white/5 focus:outline-none focus:border-[var(--color-primary-100)]/60 focus:ring-2 focus:ring-[var(--color-primary-100)]/15 transition-all duration-200"
+                        className="w-full rounded-2xl px-4 py-3.5 pr-12 text-sm text-white placeholder-white/20 bg-[var(--color-bg-card)] border border-white/5 focus:outline-none focus:border-[var(--color-primary-100)]/60 focus:ring-2 focus:ring-[var(--color-primary-100)]/15 transition-all duration-200"
                     />
                     <button
                         type="button"
@@ -97,6 +112,6 @@ export default function SignInPage() {
                     Create account
                 </Link>
             </p>
-        </div>
+        </motion.div>
     );
 }

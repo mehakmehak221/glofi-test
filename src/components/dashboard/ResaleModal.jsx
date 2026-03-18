@@ -39,7 +39,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative w-full max-w-lg bg-[var(--color-bg-dark-alt)] border border-[var(--color-border-muted)] rounded-[24px] overflow-hidden shadow-2xl max-h-[90vh] flex flex-col"
+                        className="relative w-full max-w-lg bg-[var(--color-bg-dark-alt)] border border-[var(--color-border-muted)] rounded-[24px] overflow-hidden shadow-lg max-h-[90vh] flex flex-col"
                     >
                     <div className="p-4 sm:p-6 border-b border-[var(--color-border-subtle)] flex-shrink-0">
                         <div className="flex items-center justify-between mb-2">
@@ -105,7 +105,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                         {step > 1 && (
                             <button 
                                 onClick={prevStep}
-                                className="w-full sm:flex-1 py-3 rounded-xl bg-[var(--color-bg-surface-subtle)] text-white font-semibold text-sm hover:bg-[var(--color-bg-surface-elevated)] transition-colors border-0 cursor-pointer"
+                                className="w-full sm:flex-1 py-3 rounded-lg bg-[var(--color-bg-surface-subtle)] text-white font-semibold text-sm hover:bg-[var(--color-bg-surface-elevated)] transition-colors border-0 cursor-pointer"
                             >
                                 Back
                             </button>
@@ -113,7 +113,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                         <button 
                             disabled={step === 4 && !formData.agreed}
                             onClick={step === 4 ? onClose : nextStep}
-                            className={`w-full sm:flex-1 py-3 rounded-xl font-semibold text-sm transition-all border-0 cursor-pointer ${
+                            className={`w-full sm:flex-1 py-3 rounded-lg font-semibold text-sm transition-all border-0 cursor-pointer ${
                                 step === 4 && !formData.agreed 
                                     ? "bg-[var(--color-bg-surface-elevated)] text-[var(--color-text-muted)] cursor-not-allowed" 
                                     : "bg-gradient-to-r from-[var(--color-primary-300)] to-[var(--color-primary-500)] text-black hover:shadow-[0_0_20px_rgba(0,255,205,0.3)]"
@@ -136,7 +136,7 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4 sm:space-y-6"
         >
-            <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div className="w-full sm:w-20 h-32 sm:h-20 rounded-lg overflow-hidden relative flex-shrink-0">
                     <Image src={asset.image} alt={asset.name} fill className="object-cover" />
                 </div>
@@ -165,12 +165,12 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
                             type="number"
                             value={formData.fractionsToSell}
                             onChange={(e) => setFormData({...formData, fractionsToSell: e.target.value})}
-                            className="w-full bg-[var(--color-bg-dark)] border border-[var(--color-border-muted)] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[var(--color-primary-300)]/50 transition-colors"
+                            className="w-full bg-[var(--color-bg-dark)] border border-[var(--color-border-muted)] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-primary-300)]/50 transition-colors"
                         />
                     </div>
                     <div className="flex-1">
                         <label className="text-[10px] uppercase text-[var(--color-text-muted)] mb-1.5 block">You'll Keep</label>
-                        <div className="w-full bg-[var(--color-bg-dark)]/50 border border-[var(--color-border-subtle)] rounded-xl px-4 py-3 text-[var(--color-text-muted)]">
+                        <div className="w-full bg-[var(--color-bg-dark)]/50 border border-[var(--color-border-subtle)] rounded-lg px-4 py-3 text-[var(--color-text-muted)]">
                             {totalOwned - formData.fractionsToSell}
                         </div>
                     </div>
@@ -203,13 +203,13 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4 sm:space-y-6"
         >
-            <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-2xl p-4">
+            <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-lg p-4">
                 <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-2">You're selling</p>
                 <p className="text-sm font-bold text-white">{formData.fractionsToSell} fractions of {asset.name}</p>
             </div>
 
             <div className="space-y-4 sm:space-y-5">
-                <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-2xl p-4 sm:p-5">
+                <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-lg p-4 sm:p-5">
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Current Market Value per Fraction</p>
                     <p className="text-xl sm:text-2xl font-bold text-white">$28,760</p>
                 </div>
@@ -222,7 +222,7 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
                             type="number"
                             value={formData.pricePerFraction}
                             onChange={(e) => setFormData({...formData, pricePerFraction: e.target.value})}
-                            className="w-full bg-linear-to-r from-[var(--color-primary-300)]/10 to-[var(--color-primary-200)]/5 border border-[var(--color-primary-300)]/20 rounded-2xl pl-10 pr-4 py-3 sm:py-4 text-white font-medium focus:outline-none focus:border-[var(--color-primary-300)]/50 transition-colors"
+                            className="w-full bg-linear-to-r from-[var(--color-primary-300)]/10 to-[var(--color-primary-200)]/5 border border-[var(--color-primary-300)]/20 rounded-lg pl-10 pr-4 py-3 sm:py-4 text-white font-medium focus:outline-none focus:border-[var(--color-primary-300)]/50 transition-colors"
                         />
                     </div>
                 </div>
@@ -236,7 +236,7 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
                               
 
                             }}
-                            className={`py-2 sm:py-3 rounded-xl text-[10px] sm:text-xs font-medium transition-all cursor-pointer border ${
+                            className={`py-2 sm:py-3 rounded-lg text-[10px] sm:text-xs font-medium transition-all cursor-pointer border ${
                                 label === "Market Value" 
                                     ? "bg-[var(--color-primary-300)]/10 border-[var(--color-primary-300)]/40 text-[var(--color-primary-300)]" 
                                     : "bg-[var(--color-bg-surface-subtle)] border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-surface-elevated)]"
@@ -265,7 +265,7 @@ function StepThree({ formData, setFormData, totalPrice }) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4 sm:space-y-6"
         >
-            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-2xl p-4 flex justify-between items-center min-h-[72px]">
+            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex justify-between items-center min-h-[72px]">
                 <div>
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Selling</p>
                     <p className="text-sm sm:text-base font-bold text-white">{formData.fractionsToSell} fractions</p>
@@ -285,7 +285,7 @@ function StepThree({ formData, setFormData, totalPrice }) {
                             type="number"
                             value={formData.minPurchase}
                             onChange={(e) => setFormData({...formData, minPurchase: e.target.value})}
-                            className="w-full bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-xl px-4 py-3 sm:py-4 text-white font-medium focus:outline-none focus:border-[var(--color-primary-300)]/30 transition-colors"
+                            className="w-full bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg px-4 py-3 sm:py-4 text-white font-medium focus:outline-none focus:border-[var(--color-primary-300)]/30 transition-colors"
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] text-sm">fractions</div>
                     </div>
@@ -298,7 +298,7 @@ function StepThree({ formData, setFormData, totalPrice }) {
                             placeholder="Any additional information for potential buyers..."
                             value={formData.notes}
                             onChange={(e) => setFormData({...formData, notes: e.target.value.slice(0, 500)})}
-                            className="w-full bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-xl px-4 py-3 sm:py-4 text-white focus:outline-none focus:border-[var(--color-primary-300)]/30 h-28 sm:h-36 resize-none placeholder:text-[var(--color-text-muted)]"
+                            className="w-full bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg px-4 py-3 sm:py-4 text-white focus:outline-none focus:border-[var(--color-primary-300)]/30 h-28 sm:h-36 resize-none placeholder:text-[var(--color-text-muted)]"
                         />
                         <div className="text-[10px] text-[var(--color-text-muted)] mt-2">{formData.notes.length}/500 characters</div>
                     </div>
@@ -332,7 +332,7 @@ function StepFour({ asset, formData, setFormData }) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4 sm:space-y-6"
         >
-            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-2xl p-4 sm:p-6 space-y-4">
+            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg p-4 sm:p-6 space-y-4">
                 <h4 className="text-sm font-bold text-white mb-2 sm:mb-4">Review Your Listing</h4>
                 <div className="space-y-3 sm:space-y-4">
                     {items.map((item, i) => (
@@ -344,7 +344,7 @@ function StepFour({ asset, formData, setFormData }) {
                 </div>
             </div>
 
-            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-2xl p-4 sm:p-6 space-y-4">
+            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg p-4 sm:p-6 space-y-4">
                 <h4 className="text-sm font-bold text-white mb-2 sm:mb-4">Terms & Conditions</h4>
                 <div className="space-y-2 sm:space-y-3">
                     {terms.map((term, i) => (

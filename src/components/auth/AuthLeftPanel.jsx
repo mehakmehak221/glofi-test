@@ -29,13 +29,12 @@ export default function AuthLeftPanel() {
         </div>
 
         <div>
-          <h1 className="font-bold text-4xl xl:text-5xl leading-[1.1] tracking-tight mb-6 font-montserrat">
-            <span className="text-auth-gradient">Own</span>{" "}
-            <span className="text-auth-gradient">Premium</span><br />
-            <span className="text-auth-gradient">Real Estate,<br />
-            Fraction by Fraction</span>
+          <h1 className="text-auth-gradient font-bold text-4xl xl:text-5xl leading-[1.1] tracking-tight mb-6 font-montserrat">
+            Own Premium<br />
+            Real Estate,<br />
+            Fraction by Fraction
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-lg leading-relaxed max-w-md font-medium font-montserrat">
+          <p className="text-[var(--color-text-secondary)] text-md leading-relaxed max-w-md font-medium font-montserrat">
             Institutional-grade properties, digitally simplified. Invest, manage, and grow all in one platform.
           </p>
         </div>

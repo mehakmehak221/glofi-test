@@ -269,8 +269,8 @@ export const LogoIconPng = ({ className = "w-34 h-62" }) => (
     />
 );
 
-export const LoadingSpinner = ({ className = "h-4 w-4" }) => (
- <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const LoadingSpinner = ({ className = "h-5 w-5" }) => (
+ <svg className={`animate-spin ${className}`} width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clipPath="url(#clip0_386_1508)">
 <path d="M13.6945 28.1869C11.3441 26.6935 9.68309 24.3276 9.07702 21.6095C8.47096 18.8915 8.96945 16.0441 10.4628 13.6936C12.0463 11.2219 14.524 9.45803 17.3778 8.77081L21.0173 7.95929" stroke="var(--color-primary-300)" strokeOpacity="0.8" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
 <path d="M16.0931 4.83108L21.0167 7.9593L17.8885 12.8829" stroke="var(--color-primary-300)" strokeOpacity="0.8" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
@@ -561,10 +561,10 @@ export const BusinessPropertyIcon = ({ className = "w-4 h-4" }) => (
 );
 
 export const UploadIcon =  ({ className = "w-4 h-4" }) => (
-<svg className={className} width="16" height="16" viewBox="0 0 16 16"  fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5" stroke="white" strokeOpacity="0.15" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M14.1673 6.66667L10.0007 2.5L5.83398 6.66667" stroke="white" strokeOpacity="0.15" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M10 2.5V12.5" stroke="white" strokeOpacity="0.15" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<svg className={className} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5" stroke="white" stroke-opacity="0.15" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M14.1673 6.66667L10.0007 2.5L5.83398 6.66667" stroke="white" stroke-opacity="0.15" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M10 2.5V12.5" stroke="white" stroke-opacity="0.15" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 );
 

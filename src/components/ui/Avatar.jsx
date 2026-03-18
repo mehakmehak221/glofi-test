@@ -9,7 +9,10 @@ export default function Avatar({ src, name = "", size = "md", online = false, cl
       {src ? (
         <img src={src} alt={name} className={`${sizes[size] ?? sizes.md} rounded-full object-cover border border-white/10`} />
       ) : (
-        <div className={`${sizes[size] ?? sizes.md} rounded-full flex items-center justify-center font-semibold text-black bg-[var(--color-gradient-glofi)]`}>
+        <div
+          className={`${sizes[size] ?? sizes.md} rounded-full flex items-center justify-center font-semibold text-black`}
+          style={{ background: "var(--color-gradient-glofi)" }}
+        >
           {initials || "?"}
         </div>
       )}

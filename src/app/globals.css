@@ -59,6 +59,7 @@
 
   --color-bg-dark: #0a0a0a;
   --color-bg-dark-alt: #050505;
+
   --color-bg-nav: #111111;
   --color-bg-card: #1a1a1a;
   --color-bg-card-alt: #0D1411;
@@ -1262,6 +1263,13 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 20px;
+  }
+
+  .text-auth-gradient {
+    background: var(--color-gradient-text-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .text-join-subtitle {

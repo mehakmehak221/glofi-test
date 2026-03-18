@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import { ChevronLeftIcon, CheckIcon, LoadingSpinner, ArrowRightIcon, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
 
@@ -25,7 +26,12 @@ export default function SignUpPage() {
     };
 
     return (
-        <div className="flex flex-col">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex flex-col"
+        >
 
             <Link
                 href="/"
@@ -49,11 +55,11 @@ export default function SignUpPage() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <input
                     type="text" value={form.name} onChange={set("name")} placeholder="Full name" required
-                    className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
+                    className="w-full rounded-2xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
                 />
                 <input
                     type="email" value={form.email} onChange={set("email")} placeholder="Email address" required
-                    className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
+                    className="w-full rounded-2xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
                 />
 
                 <div className="relative">
@@ -64,7 +70,7 @@ export default function SignUpPage() {
                         placeholder="Password"
                         required
                         minLength={8}
-                        className="w-full rounded-xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-muted)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium pr-12"
+                        className="w-full rounded-2xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-muted)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium pr-12"
                     />
                     <button
                         type="button"
@@ -97,6 +103,6 @@ export default function SignUpPage() {
                     Sign in
                 </Link>
             </p>
-        </div>
+        </motion.div>
     );
 }

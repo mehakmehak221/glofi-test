@@ -96,22 +96,23 @@ export default function OnboardingPage() {
 
                     <form onSubmit={handleNext} className="w-full space-y-6">
                         <div className="flex gap-2">
-                            <div className="w-20 h-[60px] rounded-xl bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] flex items-center justify-center cursor-pointer hover:border-[var(--color-border-muted)] transition-colors">
+                            <div className="w-24 h-[60px] rounded-2xl bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] flex items-center justify-center gap-2 cursor-pointer hover:border-[var(--color-border-muted)] transition-colors px-3">
 
-                                <svg className="w-3 h-3 text-[var(--color-text-muted)] ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <span className="text-white font-medium">+1</span>
+                                <svg className="w-3 h-3 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
                             <div className="flex-1">
                                 <input
                                     type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone number" required
-                                    className="w-full h-[60px] rounded-xl px-6 bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] text-white placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary-300)]/40 transition-all font-medium text-base"
+                                    className="w-full h-[60px] rounded-2xl px-6 bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] text-white placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary-300)]/40 transition-all font-medium text-base"
                                 />
                             </div>
                         </div>
                         <button
                             type="submit" disabled={loading || !phone}
-                            className="w-full h-[60px] rounded-xl bg-[var(--color-primary-300)] text-black font-semibold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50 shadow-[0_8px_20px_var(--color-primary-300-alpha-15)]"
+                            className="w-full h-[60px] rounded-full bg-[var(--color-primary-300)] text-black font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50 shadow-[0_8px_20px_var(--color-primary-300-alpha-15)]"
                         >
                             {loading ? <LoadingSpinner /> : <>Send Code <ArrowRightIcon /></>}
                         </button>
@@ -206,13 +207,13 @@ export default function OnboardingPage() {
                         <div className="flex gap-4 pt-4">
                             <button
                                 type="button" onClick={handleBack}
-                                className="w-[60px] h-[50px] rounded-lg bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] flex items-center justify-center text-[var(--color-text-muted)] hover:text-white hover:border-[var(--color-border-muted)] transition-all font-Montserrat"
+                                className="w-[60px] h-[50px] rounded-2xl bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] flex items-center justify-center text-[var(--color-text-muted)] hover:text-white hover:border-[var(--color-border-muted)] transition-all font-Montserrat"
                             >
                                 <BackArrowIcon className="w-5 h-5" />
                             </button>
                             <button
                                 type="submit" disabled={loading}
-                                className="flex-1 h-[50px] rounded-lg bg-[var(--color-primary-300)] text-black font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-[0_8px_20px_var(--color-primary-300-alpha-15)] font-Montserrat"
+                                className="flex-1 h-[50px] rounded-full bg-[var(--color-primary-300)] text-black font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-[0_8px_20px_var(--color-primary-300-alpha-15)] font-Montserrat"
                             >
                                 Complete Setup <SparkleIcon />
                             </button>
