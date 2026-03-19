@@ -2,8 +2,9 @@
 
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { BusinessPropertyIcon, UploadIcon } from "../VectorImages";
+import KYBModal from "./KYBModal";
 
 
 const CATEGORIES = ["Skyscraper", "Land", "Commercial", "Residential"];
@@ -22,8 +23,10 @@ const UploadArea = ({ label }) => (
 
 export default function NewListingForm({ onBack }) {
     const [activeCat, setActiveCat] = useState("Skyscraper");
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
+        <>
         <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -140,11 +143,18 @@ export default function NewListingForm({ onBack }) {
                 <motion.button
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
+                    onClick={() => setIsModalOpen(true)}
                     className="bg-[var(--color-primary-300)] text-black font-bold text-sm px-8 py-3.5 rounded-2xl hover:bg-[var(--color-primary-100)] transition-colors font-montserrat"
                 >
                     Verify & Submit
                 </motion.button>
             </div>
         </motion.div>
+        
+        <KYBModal 
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)} 
+        />
+        </>
     );
 }
