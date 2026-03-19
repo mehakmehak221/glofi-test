@@ -6,28 +6,39 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner, ArrowRightIcon } from "@/components/VectorImages";
+import { useLoginMutation } from "@/store/api/authApi";
 
 export default function SignInPage() {
     const router = useRouter();
-    const [userType, setUserType] = useState("Investor");
+    const [userType, setUserType] = useState("INVESTOR");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
-    const handleSubmit = (e) => {
+    const [login, { isLoading }] = useLoginMutation();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        localStorage.setItem("userType", userType);
+        setErrorMsg("");
+        try {
+            const result = await login({
+                email,
+                password,
+                role: userType.toUpperCase(),
+            }).unwrap();
 
-        setTimeout(() => {
-            setLoading(false);
-            if (userType === "Partner") {
+            localStorage.setItem("userType", result.role);
+
+            if (result.role === "PARTNER") {
                 router.push("/dashboard/partner");
             } else {
                 router.push("/dashboard");
             }
-        }, 1500);
+        } catch (err) {
+            console.error("Failed to login:", err);
+            setErrorMsg(err?.data?.message || err?.message || "Invalid credentials. Please try again.");
+        }
     };
 
     return (
@@ -50,6 +61,15 @@ export default function SignInPage() {
             <div className="mb-8">
                 <h2 className="text-white font-bold text-3xl mb-1.5 font-montserrat">Welcome back</h2>
                 <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">Sign in to your dashboard</p>
+                {errorMsg && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-medium"
+                    >
+                        {errorMsg}
+                    </motion.div>
+                )}
             </div>
 
             <div className="mb-6">
@@ -63,7 +83,7 @@ export default function SignInPage() {
                     <input
                         type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => { setEmail(e.target.value); setErrorMsg(""); }}
                         placeholder="Email address"
                         required
                         className="w-full rounded-2xl px-4 py-3.5 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 focus:ring-2 focus:ring-[var(--color-primary-100)]/15 transition-all duration-200"
@@ -75,7 +95,7 @@ export default function SignInPage() {
                     <input
                         type={showPassword ? "text" : "password"}
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); }}
                         placeholder="Password"
                         required
                         className="w-full rounded-2xl px-4 py-3.5 pr-12 text-sm text-white placeholder-white/20 bg-[var(--color-bg-card)] border border-white/5 focus:outline-none focus:border-[var(--color-primary-100)]/60 focus:ring-2 focus:ring-[var(--color-primary-100)]/15 transition-all duration-200"
@@ -92,10 +112,10 @@ export default function SignInPage() {
 
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={isLoading}
                     className="mt-2 w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[var(--color-primary-200)] text-black font-bold text-sm hover:bg-[var(--color-primary-300)] active:scale-[0.98] transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed font-montserrat"
                 >
-                    {loading ? (
+                    {isLoading ? (
                         <LoadingSpinner />
                     ) : (
                         <>

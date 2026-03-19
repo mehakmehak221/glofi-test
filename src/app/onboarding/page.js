@@ -3,14 +3,18 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PhoneIcon, ProfileIcon, ArrowRightIcon, LoadingSpinner, CheckIcon, SparkleIcon, ChevronLeftIcon, BackArrowIcon } from "@/components/VectorImages";
+import { useSetupProfileMutation } from "@/store/api/authApi";
 
 export default function OnboardingPage() {
     const router = useRouter();
     const [step, setStep] = useState(1);
     const [phone, setPhone] = useState("");
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-    const [profile, setProfile] = useState({ name: "", dob: "", nationality: "United States", address: "" });
+    const [profile, setProfile] = useState({ fullName: "", dateOfBirth: "", nationality: "United States", residentialAddress: "" });
     const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+
+    const [setupProfile, { isLoading: isSettingUp }] = useSetupProfileMutation();
 
     const otpRefs = useRef([]);
 
@@ -43,6 +47,23 @@ export default function OnboardingPage() {
 
     const handleBack = () => {
         setStep(step - 1);
+    };
+
+    const handleProfileSubmit = async (e) => {
+        e.preventDefault();
+        setErrorMsg("");
+        try {
+            await setupProfile({
+                fullName: profile.fullName,
+                dateOfBirth: profile.dateOfBirth,
+                nationality: profile.nationality,
+                residentialAddress: profile.residentialAddress
+            }).unwrap();
+            router.push("/dashboard");
+        } catch (err) {
+            console.error("Failed to setup profile:", err);
+            setErrorMsg(err?.data?.message || err?.message || "Failed to setup profile. Please try again.");
+        }
     };
 
     return (
@@ -160,14 +181,23 @@ export default function OnboardingPage() {
             {step === 3 && (
                 <div className="w-full max-w-sm flex flex-col items-start animate-fade-in text-start">
                     <h1 className="text-white font-bold text-3xl tracking-tight mb-3 font-Montserrat">Set up your profile</h1>
-                    <p className="text-[var(--color-text-muted)] text-md leading-relaxed mb-10 font-Montserrat">
+                    <p className="text-[var(--color-text-muted)] text-md leading-relaxed mb-2 font-Montserrat">
                         Tell us a bit about yourself
                     </p>
+                    {errorMsg && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="w-full mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-medium"
+                        >
+                            {errorMsg}
+                        </motion.div>
+                    )}
 
-                    <form onSubmit={() => router.push("/dashboard")} className="w-full space-y-5 text-left">
+                    <form onSubmit={handleProfileSubmit} className="w-full space-y-5 text-left">
                         <input
                             type="text" placeholder="Full legal name" required
-                            value={profile.name} onChange={e => setProfile({ ...profile, name: e.target.value })}
+                            value={profile.fullName} onChange={e => { setProfile({ ...profile, fullName: e.target.value }); setErrorMsg(""); }}
                             className="w-full h-[50px] rounded-lg px-6 bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] text-white placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary-300)]/40 transition-all font-medium font-Montserrat"
                         />
 
@@ -176,7 +206,7 @@ export default function OnboardingPage() {
                                 <label className="text-[10px] font-bold text-[var(--color-text-muted)]/50 tracking-widest uppercase font-Montserrat ml-1">Date of Birth</label>
                                 <input
                                     type="date" required
-                                    value={profile.dob} onChange={e => setProfile({ ...profile, dob: e.target.value })}
+                                    value={profile.dateOfBirth} onChange={e => { setProfile({ ...profile, dateOfBirth: e.target.value }); setErrorMsg(""); }}
                                     className="w-full h-[50px] rounded-lg px-6 bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary-300)]/40 transition-all font-medium custom-calendar-picker"
                                 />
                             </div>
@@ -185,11 +215,12 @@ export default function OnboardingPage() {
                                 <div className="relative">
                                     <select
                                         className="w-full h-[50px] rounded-lg px-6 bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary-300)]/40 appearance-none transition-all font-medium font-Montserrat"
-                                        value={profile.nationality} onChange={e => setProfile({ ...profile, nationality: e.target.value })}
+                                        value={profile.nationality} onChange={e => { setProfile({ ...profile, nationality: e.target.value }); setErrorMsg(""); }}
                                     >
                                         <option>United States</option>
                                         <option>Canada</option>
                                         <option>United Kingdom</option>
+                                        <option>Indian</option>
                                     </select>
                                     <svg className="w-4 h-4 text-[var(--color-text-muted)]/50 absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
@@ -200,7 +231,7 @@ export default function OnboardingPage() {
 
                         <input
                             type="text" placeholder="Residential address" required
-                            value={profile.address} onChange={e => setProfile({ ...profile, address: e.target.value })}
+                            value={profile.residentialAddress} onChange={e => { setProfile({ ...profile, residentialAddress: e.target.value }); setErrorMsg(""); }}
                             className="w-full h-[50px] rounded-lg px-6 bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] text-white placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary-300)]/40 transition-all font-medium font-Montserrat"
                         />
 
@@ -212,10 +243,10 @@ export default function OnboardingPage() {
                                 <BackArrowIcon className="w-5 h-5" />
                             </button>
                             <button
-                                type="submit" disabled={loading}
+                                type="submit" disabled={isSettingUp}
                                 className="flex-1 h-[50px] rounded-full bg-[var(--color-primary-300)] text-black font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-[0_8px_20px_var(--color-primary-300-alpha-15)] font-Montserrat"
                             >
-                                Complete Setup <SparkleIcon />
+                                {isSettingUp ? <LoadingSpinner /> : <>Complete Setup <SparkleIcon /></>}
                             </button>
                         </div>
                     </form>

@@ -4,9 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import NavItem from "./NavItem";
+import { useLogoutMutation } from "@/store/api/authApi";
+
 import {
     OverviewIcon,
     PropertyIcon,
@@ -26,6 +28,18 @@ const NAV_ITEMS = [
 export default function PartnerSidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
+    const [logout] = useLogoutMutation();
+
+    const handleLogout = async () => {
+        try {
+            await logout().unwrap();
+            localStorage.removeItem("userType");
+            router.push("/sign-in");
+        } catch (err) {
+            console.error("Failed to logout:", err);
+        }
+    };
 
     return (
         <motion.aside
@@ -103,7 +117,10 @@ export default function PartnerSidebar() {
                 </motion.button>
 
 
-                <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent group">
+                <button 
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent group"
+                >
                     <span className="flex-shrink-0 ml-0.5">
                         <SignOutIcon className="w-5 h-5" />
                     </span>

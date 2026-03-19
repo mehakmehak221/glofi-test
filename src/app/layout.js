@@ -1,7 +1,6 @@
 import { Montserrat, Poppins } from "next/font/google";
 import "./globals.css";
-
-
+import { StoreProvider } from "@/store/StoreProvider";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -29,7 +28,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${montserrat.variable} antialiased`}>
-        {children}
+        <StoreProvider>
+          {children}
+        </StoreProvider>
       </body>
     </html>
   );

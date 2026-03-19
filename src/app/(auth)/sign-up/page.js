@@ -5,24 +5,40 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
-import { ChevronLeftIcon, CheckIcon, LoadingSpinner, ArrowRightIcon, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
+import { ChevronLeftIcon, LoadingSpinner, ArrowRightIcon, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
+import { useRegisterMutation } from "@/store/api/authApi";
 
 export default function SignUpPage() {
     const router = useRouter();
-    const [userType, setUserType] = useState("Investor");
-    const [form, setForm] = useState({ name: "", email: "", password: "" });
+    const [userType, setUserType] = useState("INVESTOR");
+    const [form, setForm] = useState({ name: "", email: "", password: "", referredByCode: "" });
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
-    const set = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
+    const [register, { isLoading }] = useRegisterMutation();
 
-    const handleSubmit = (e) => {
+    const set = (k) => (e) => {
+        setForm((p) => ({ ...p, [k]: e.target.value }));
+        setErrorMsg("");
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
+        setErrorMsg("");
+        try {
+            await register({
+                fullName: form.name,
+                email: form.email,
+                password: form.password,
+                role: userType.toUpperCase(),
+                referredByCode: form.referredByCode || undefined
+            }).unwrap();
+
             router.push("/onboarding");
-        }, 1200);
+        } catch (err) {
+            console.error("Failed to register:", err);
+            setErrorMsg(err?.data?.message || err?.message || "Something went wrong. Please try again.");
+        }
     };
 
     return (
@@ -44,6 +60,15 @@ export default function SignUpPage() {
             <div className="mb-8">
                 <h2 className="text-white font-semibold text-[32px] tracking-tight mb-2 font-montserrat">Create account</h2>
                 <p className="text-[var(--color-text-secondary)] text-md font-montserrat">Join the next generation of property investors</p>
+                {errorMsg && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-medium"
+                    >
+                        {errorMsg}
+                    </motion.div>
+                )}
             </div>
 
 
@@ -81,12 +106,17 @@ export default function SignUpPage() {
                     </button>
                 </div>
 
+                <input
+                    type="text" value={form.referredByCode} onChange={set("referredByCode")} placeholder="Referral Code (Optional)"
+                    className="w-full rounded-2xl px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
+                />
+
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={isLoading}
                     className="mt-4 w-full flex items-center justify-center gap-2 py-4 rounded-full bg-[var(--color-primary-100)] text-black font-bold text-sm hover:bg-[var(--color-primary-300)] active:scale-[0.98] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed font-montserrat"
                 >
-                    {loading ? (
+                    {isLoading ? (
                         <LoadingSpinner />
                     ) : (
                         <>
