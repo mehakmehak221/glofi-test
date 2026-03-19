@@ -173,7 +173,7 @@ export default function MarketplacePage() {
                                         e.stopPropagation();
                                         handleCardClick(property.id);
                                     }}
-                                    className="w-full py-3 rounded-xl bg-[var(--color-gradient-glofi)] text-black font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-[var(--shadow-glow-primary)]"
+                                    className="w-full py-3 rounded-xl bg-[var(--color-primary-100)] text-black font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-[var(--shadow-glow-primary)]"
                                 >
                                     Invest Now
                                 </motion.button>

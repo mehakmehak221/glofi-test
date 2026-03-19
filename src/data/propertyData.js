@@ -69,7 +69,7 @@ export const PROPERTIES = [
         name: "Desert Oasis Resort",
         location: "Al Ain, UAE",
         category: "Land Parcels",
-        image: "/assets/img_3.jpg",
+        image: "/assets/img_3.jpeg",
         valuation: "$120.0M",
         perFraction: "$15K",
         perFractionNum: 15000,
