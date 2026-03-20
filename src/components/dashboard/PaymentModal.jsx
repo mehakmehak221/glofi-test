@@ -58,7 +58,7 @@ export default function PaymentModal({ isOpen, onClose, asset }) {
                 >
                     <div className="absolute inset-0" onClick={onClose} />
                     <motion.div
-                        className="relative w-[95%] sm:w-full max-w-[520px] max-h-[90vh] overflow-y-auto bg-[var(--color-bg-dark)] border border-[var(--color-border-subtle)] rounded-2xl sm:rounded-[32px] mx-auto custom-scrollbar"
+                        className="relative w-[95%] sm:w-full max-w-[520px] max-h-[90vh] overflow-y-auto bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[2rem] mx-auto custom-scrollbar shadow-2xl"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -98,36 +98,40 @@ function StepSelection({ asset, onSelect, onClose }) {
         <>
             <div className="flex justify-between items-start mb-6">
                 <div>
-                    <h2 className="text-lg font-semibold mb-1 font-Montserrat">Select Payment Method</h2>
-                    <p className="text-md font-Montserrat text-[var(--color-text-muted)]">{asset.name}</p>
+                    <h2 className="text-xl font-bold mb-1 text-[var(--header-text)]">Select Payment Method</h2>
+                    <p className="text-sm font-medium text-[var(--color-text-muted)]">{asset.name}</p>
                 </div>
-                <button onClick={onClose} className="text-[var(--color-text-secondary)] hover:text-white transition-colors">✕</button>
+                <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-[var(--header-text)] transition-colors bg-transparent border-0 cursor-pointer p-1">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
 
-            <div className="bg-[var(--color-bg-surface-subtle)] rounded-md p-3 flex justify-between items-center mb-6 border border-[var(--color-border-subtle)]">
-                <span className="text-lg text-[var(--color-text-secondary)]">Total Amount</span>
-                <span className="text-lg font-bold">{asset.currentValue}</span>
+            <div className="bg-[var(--background)] rounded-2xl p-5 flex justify-between items-center mb-8 border border-[var(--sidebar-border)] shadow-sm">
+                <span className="text-sm font-bold text-[var(--color-text-muted)] uppercase tracking-wider">Total Amount</span>
+                <span className="text-2xl font-black text-[var(--header-text)]">{asset.currentValue}</span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
                 {PAYMENTS.map((method) => (
                     <button
                         key={method.id}
                         onClick={() => onSelect(method)}
-                        className="w-full group flex items-center justify-between p-4 bg-[var(--color-bg-surface-subtle)]  rounded-md hover:border-[var(--color-primary-300-alpha-30)] transition-all text-left"
+                        className="w-full group flex items-center justify-between p-5 bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl hover:border-[var(--sidebar-active-text)]/30 hover:shadow-lg transition-all text-left cursor-pointer"
                     >
-                        <div className="flex items-center gap-3 sm:gap-4 flex-1 overflow-hidden pr-2">
-                            <div className="w-10 h-10 rounded-xl bg-[var(--color-primary-300-alpha-10)] flex-shrink-0 flex items-center justify-center">
+                        <div className="flex items-center gap-4 flex-1 overflow-hidden pr-2">
+                            <div className="w-12 h-12 rounded-xl bg-[var(--badge-bg)] flex-shrink-0 flex items-center justify-center text-[var(--sidebar-active-text)]">
                                 <PaymentIcon type={method.id} />
                             </div>
                             <div className="min-w-0 flex-1">
-                                <h3 className="text-sm font-bold text-white group-hover:text-[var(--color-primary-300)] transition-colors truncate">{method.label}</h3>
-                                <p className="text-xs sm:text-sm text-[var(--color-text-muted)] font-Montserrat truncate">{method.desc}</p>
+                                <h3 className="text-base font-bold text-[var(--header-text)] group-hover:text-[var(--sidebar-active-text)] transition-colors truncate">{method.label}</h3>
+                                <p className="text-xs text-[var(--color-text-muted)] font-medium truncate">{method.desc}</p>
                             </div>
                         </div>
-                        <div className="flex flex-row items-center gap-2 sm:gap-3 flex-shrink-0">
-                            <span className="text-[10px] sm:text-[11px] text-[var(--color-primary-300)] font-medium font-Montserrat">{method.fee}</span>
-                            <span className="text-[var(--color-text-muted)] group-hover:text-white transition-colors">→</span>
+                        <div className="flex flex-row items-center gap-4 flex-shrink-0">
+                            <span className="text-xs text-[var(--sidebar-active-text)] font-bold">{method.fee}</span>
+                            <span className="text-[var(--color-text-muted)] group-hover:text-[var(--header-text)] transition-colors font-bold text-lg">→</span>
                         </div>
                     </button>
                 ))}
@@ -147,85 +151,74 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
 
     return (
         <>
-            <button onClick={onBack} className="text-xs text-[var(--color-text-secondary)] hover:text-white transition-colors mb-6 flex items-center gap-2">
-               <BackArrowIcon className="w-4 h-4 text-[var(--color-text-muted)]" />Back
+            <button onClick={onBack} className="text-xs font-bold text-[var(--color-text-muted)] hover:text-[var(--header-text)] transition-colors mb-6 flex items-center gap-2 bg-transparent border-0 cursor-pointer">
+               <BackArrowIcon className="w-4 h-4" />Back
             </button>
-            <h2 className="text-xl font-bold mb-6">{method.label} Payment Details</h2>
+            <h2 className="text-2xl font-bold mb-8 text-[var(--header-text)]">{method.label} Details</h2>
 
             {method.id === 'upi' && (
                 <div className="space-y-6">
                     <div>
-                        <label className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wider font-medium font-Montserrat mb-2 block">UPI ID</label>
+                        <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">UPI ID</label>
                         <input 
                             type="text" 
                             defaultValue="ishant@upi" 
-                            className="w-full bg-[var(--color-bg-surface-subtle)] rounded-md py-3 px-4 text-sm focus:outline-none focus:border-[var(--color-primary-300)]/20 text-[var(--color-text-muted)]"
+                            className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30"
                         />
                     </div>
 
-                    <div className="flex flex-col items-center justify-center p-6 sm:p-8 bg-[var(--color-bg-surface-subtle)] rounded-3xl border border-[var(--color-border-subtle)]">
-                        <div className="w-24 h-24 sm:w-32 sm:h-32 bg-[var(--color-bg-surface-subtle)] rounded-2xl flex items-center justify-center mb-4">
-                           <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M23.3333 10H13.3333C11.4924 10 10 11.4924 10 13.3333V23.3333C10 25.1743 11.4924 26.6667 13.3333 26.6667H23.3333C25.1743 26.6667 26.6667 25.1743 26.6667 23.3333V13.3333C26.6667 11.4924 25.1743 10 23.3333 10Z" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M66.6673 10H56.6673C54.8264 10 53.334 11.4924 53.334 13.3333V23.3333C53.334 25.1743 54.8264 26.6667 56.6673 26.6667H66.6673C68.5083 26.6667 70.0007 25.1743 70.0007 23.3333V13.3333C70.0007 11.4924 68.5083 10 66.6673 10Z" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M23.3333 53.3334H13.3333C11.4924 53.3334 10 54.8258 10 56.6667V66.6667C10 68.5077 11.4924 70 13.3333 70H23.3333C25.1743 70 26.6667 68.5077 26.6667 66.6667V56.6667C26.6667 54.8258 25.1743 53.3334 23.3333 53.3334Z" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M70.0007 53.3334H60.0007C58.2325 53.3334 56.5368 54.0358 55.2866 55.286C54.0364 56.5362 53.334 58.2319 53.334 60V70" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M70 70V70.0333" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M40.0007 23.3334V33.3334C40.0007 35.1015 39.2983 36.7972 38.048 38.0474C36.7978 39.2977 35.1021 40 33.334 40H23.334" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M10 40H10.0333" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M40 10H40.0333" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M40 53.3334V53.3667" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M53.334 40H56.6673" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M70 40V40.0333" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M40 70V66.6666" stroke="white" strokeOpacity="0.1" strokeWidth="6.66667" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
-
+                    <div className="flex flex-col items-center justify-center p-8 bg-[var(--background)] rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm">
+                        <div className="w-32 h-32 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl flex items-center justify-center mb-5 shadow-inner">
+                           {/* Simplified Placeholder for QR */}
+                           <div className="w-24 h-24 text-[var(--header-text)]/10">
+                               <svg fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2zm-3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm3-10h2v2h-2V5zm-3 0h2v2h-2V5zm3 3h2v2h-2V8zm-3 0h2v2h-2V8z"/></svg>
+                           </div>
                         </div>
-                        <p className="text-[10px] font-Montserrat text-[var(--color-text-secondary)]">Scan QR code with your UPI app</p>
+                        <p className="text-xs font-bold text-[var(--color-text-muted)]">Scan QR code with your UPI app</p>
                     </div>
                 </div>
             )}
 
             {(method.id === 'debit' || method.id === 'credit') && (
-                <div className="space-y-5">
+                <div className="space-y-6">
                     <div>
-                        <label className="text-[10px] text-[var(--color-text-muted)]/50 uppercase tracking-wider font-bold mb-2 block">Card Number</label>
-                        <input type="text" placeholder="1234 5678 9012 3456" className="w-full bg-[var(--color-bg-surface-subtle)] rounded-md py-3.5 px-4 text-sm focus:outline-none focus:border-[var(--color-primary-300-alpha-30)]" />
+                        <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">Card Number</label>
+                        <input type="text" placeholder="1234 5678 9012 3456" className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="text-[10px] text-[var(--color-text-muted)]/50 uppercase tracking-wider font-bold mb-2 block">Expiry</label>
-                            <input type="text" placeholder="MM/YY" className="w-full bg-[var(--color-bg-surface-subtle)] rounded-md py-3.5 px-4 text-sm focus:outline-none focus:border-[var(--color-primary-300-alpha-30)]" />
+                            <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">Expiry</label>
+                            <input type="text" placeholder="MM/YY" className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
                         </div>
                         <div>
-                            <label className="text-[10px] text-[var(--color-text-muted)]/50 uppercase tracking-wider font-bold mb-2 block">CVV</label>
-                            <input type="text" placeholder="123" className="w-full bg-[var(--color-bg-surface-subtle)] rounded-md py-3.5 px-4 text-sm focus:outline-none focus:border-[var(--color-primary-300-alpha-30)]" />
+                            <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">CVV</label>
+                            <input type="text" placeholder="123" className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
                         </div>
                     </div>
                     <div>
-                        <label className="text-[10px] text-[var(--color-text-muted)]/50 uppercase tracking-wider font-bold mb-2 block">Cardholder Name</label>
-                        <input type="text" placeholder="JOHN DOE" className="w-full bg-[var(--color-bg-surface-subtle)] rounded-md py-3.5 px-4 text-sm focus:outline-none focus:border-[var(--color-primary-300-alpha-30)]" />
+                        <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">Cardholder Name</label>
+                        <input type="text" placeholder="JOHN DOE" className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
                     </div>
                 </div>
             )}
 
             {method.id === 'escrow' && (
                 <div className="space-y-6">
-                    <div className="bg-[var(--color-bg-surface-subtle)] rounded-md p-5 flex gap-4">
-                        <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
-                            <span className="text-[var(--color-primary-300)]"><VerifiedIcon className="w-5 h-5" /></span>
+                    <div className="bg-[var(--background)] rounded-2xl p-5 flex gap-4 border border-[var(--sidebar-border)] shadow-sm">
+                        <div className="w-10 h-10 rounded-full bg-[var(--badge-bg)] flex items-center justify-center flex-shrink-0">
+                            <span className="text-[var(--sidebar-active-text)]"><VerifiedIcon className="w-6 h-6" /></span>
                         </div>
                         <div>
-                            <h3 className="text-sm font-bold text-[var(--color-text-secondary)] mb-1">GloFi Secure Escrow</h3>
-                            <p className="text-[10px] text-[var(--color-text-muted)]/50">Licensed & Regulated</p>
+                            <h3 className="text-base font-bold text-[var(--header-text)] mb-1">GloFi Secure Escrow</h3>
+                            <p className="text-xs text-[var(--color-text-muted)] font-medium">Licensed & Regulated</p>
                         </div>
                     </div>
-                    <p className="text-xs text-[var(--color-text-muted)]/50 leading-relaxed">
+                    <p className="text-xs text-[var(--color-text-muted)] font-medium leading-relaxed">
                         Funds held in escrow until property verification, legal review, and seller approval complete.
                     </p>
                     <div>
-                        <label className="text-[10px] text-[var(--color-text-muted)]/50 uppercase tracking-wider font-bold mb-2 block">Escrow Provider</label>
-                        <div className="w-full bg-[var(--color-bg-surface-subtle)] rounded-md py-3 px-4 text-sm text-[var(--color-text-muted)]/50">Default Provider</div>
+                        <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">Escrow Provider</label>
+                        <div className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)]">Default Provider</div>
                     </div>
                 </div>
             )}
@@ -233,16 +226,16 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
             {method.id === 'crypto' && (
                 <div className="space-y-6">
                     <div>
-                        <label className="text-[10px] text-[var(--color-text-muted)]/50 uppercase tracking-wider font-bold mb-3 block">Cryptocurrency</label>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-[var(--color-bg-overlay)] p-1 rounded-2xl border border-[var(--color-border-subtle)]">
+                        <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-3 block">Cryptocurrency</label>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-[var(--background)] p-1.5 rounded-2xl border border-[var(--sidebar-border)]">
                             {cryptos.map(crypto => (
                                 <button
                                     key={crypto}
                                     onClick={() => setSelectedCrypto(crypto)}
-                                    className={`py-2 px-1 rounded-xl text-[10px] font-bold transition-all ${
+                                    className={`py-2 px-1 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${
                                         selectedCrypto === crypto 
-                                        ? "bg-[var(--color-primary-300-alpha-10)] text-[var(--color-primary-300)] border border-[var(--color-primary-300-alpha-30)]" 
-                                        : "text-[var(--color-text-secondary)] hover:text-white"
+                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30" 
+                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
                                     }`}
                                 >
                                     {crypto}
@@ -251,40 +244,40 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                         </div>
                     </div>
 
-                    <div className="bg-[var(--color-bg-surface-subtle)] rounded-md overflow-hidden">
-                        <div className="p-5 space-y-3">
-                            <label className="text-[10px] text-[var(--color-text-muted)]/50 uppercase tracking-wider font-bold block">Send to Wallet Address</label>
+                    <div className="bg-[var(--background)] rounded-2xl overflow-hidden border border-[var(--sidebar-border)] shadow-sm">
+                        <div className="p-5 space-y-4">
+                            <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold block">Send to Wallet Address</label>
                             <div className="relative group">
                                 <input 
                                     readOnly
                                     type="text" 
                                     value="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb" 
-                                    className="w-full bg-[var(--color-bg-surface-subtle)] rounded-md py-3.5 pl-4 pr-10 sm:pr-12 text-[9px] sm:text-[10px] font-mono text-[var(--color-text-muted)]/80 focus:outline-none truncate"
+                                    className="w-full bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl py-4 pl-5 pr-12 text-[10px] font-mono font-bold text-[var(--header-text)] focus:outline-none truncate"
                                 />
-                                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-primary-300)] hover:text-[var(--color-primary-300)]/80 transition-colors">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--sidebar-active-text)] hover:opacity-80 transition-opacity bg-transparent border-0 cursor-pointer">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                 </button>
                             </div>
-                            <p className="text-[10px] text-[var(--color-text-muted)]/50">Network fee: <span className="text-[var(--color-primary-300)]">~0.0002 {selectedCrypto}</span></p>
+                            <p className="text-[10px] text-[var(--color-text-muted)] font-bold uppercase tracking-wider">Network fee: <span className="text-[var(--sidebar-active-text)]">~0.0002 {selectedCrypto}</span></p>
                         </div>
                     </div>
                 </div>
             )}
 
-            <div className="mt-8 space-y-3 bg-[var(--color-bg-surface-subtle)] p-4 sm:p-5 rounded-md">
-                <div className="flex justify-between text-xs sm:text-sm">
-                    <span className="font-Montserrat text-[var(--color-text-muted)]/50">Amount</span>
-                    <span className="font-Montserrat text-[var(--color-text-muted)]/50">{asset.currentValue}</span>
+            <div className="mt-8 space-y-4 bg-[var(--background)] p-5 rounded-2xl border border-[var(--sidebar-border)]">
+                <div className="flex justify-between text-sm">
+                    <span className="font-bold text-[var(--color-text-muted)] uppercase tracking-wider">Amount</span>
+                    <span className="font-extrabold text-[var(--header-text)]">{asset.currentValue}</span>
                 </div>
-                <div className="flex justify-between text-xs sm:text-sm font-bold border-t border-[var(--color-border-subtle)] pt-3">
-                    <span className="text-[var(--color-text-secondary)]">Total to Pay</span>
-                    <span className="text-[var(--color-text-secondary)]">{asset.currentValue}</span>
+                <div className="flex justify-between text-base font-black border-t border-[var(--sidebar-border)] pt-4">
+                    <span className="text-[var(--header-text)]">Total to Pay</span>
+                    <span className="text-[var(--sidebar-active-text)]">{asset.currentValue}</span>
                 </div>
             </div>
 
             <button 
                 onClick={onConfirm}
-                className="w-full py-2 sm:py-3 rounded-xl sm:rounded-md bg-[var(--color-primary-300)] text-black text-xs sm:text-sm font-bold hover:bg-[var(--color-primary-300)]/80 transition-colors mt-4"
+                className="w-full py-4 mt-6 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)]"
             >
                 Confirm Payment
             </button>
@@ -294,12 +287,12 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
 
 function StepProcessing() {
     return (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--color-primary-300-alpha-10)] flex items-center justify-center mb-6">
-                <LoadingSpinner className="w-8 h-8 text-[var(--color-primary-300)]" />
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-20 h-20 rounded-[2rem] bg-[var(--badge-bg)] flex items-center justify-center mb-8 shadow-sm">
+                <LoadingSpinner className="w-10 h-10 text-[var(--sidebar-active-text)]" />
             </div>
-            <h2 className="text-xl font-bold mb-2">Processing Payment</h2>
-            <p className="text-sm text-[var(--color-text-secondary)]">Verifying your payment details...</p>
+            <h2 className="text-2xl font-bold mb-3 text-[var(--header-text)]">Processing Payment</h2>
+            <p className="text-sm font-medium text-[var(--color-text-muted)]">Verifying your payment details...</p>
             <div className="flex gap-1.5 mt-6">
                 <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-bounce" style={{ animationDelay: '0ms' }} />
                 <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -311,37 +304,37 @@ function StepProcessing() {
 
 function StepStatus() {
     return (
-        <div className="flex flex-col items-center gap-8 font-Montserrat w-full">
+        <div className="flex flex-col items-center gap-8 w-full">
             <div className="text-center w-full">
-                <div className="w-[72px] h-[72px] rounded-2xl bg-[var(--color-status-warning-bg)] flex items-center justify-center mb-6 mx-auto">
-                   <ClockIcon className="w-8 h-8 text-[var(--color-status-warning)]" />
+                <div className="w-20 h-20 rounded-[2rem] bg-[var(--color-status-warning-bg)] flex items-center justify-center mb-8 mx-auto shadow-sm">
+                   <ClockIcon className="w-10 h-10 text-[var(--color-status-warning)]" />
                 </div>
-                <h2 className="text-2xl font-bold mb-2 text-white">Awaiting Approval</h2>
-                <p className="text-sm text-[var(--color-text-secondary)]">Payment received • Processing transaction</p>
+                <h2 className="text-2xl font-bold mb-3 text-[var(--header-text)]">Awaiting Approval</h2>
+                <p className="text-sm font-medium text-[var(--color-text-muted)]">Payment received • Processing transaction</p>
             </div>
 
             <div className="w-full space-y-4">
-                <div className="p-5 sm:p-6 bg-[var(--color-bg-surface-subtle)] rounded-2xl flex justify-between items-start">
-                    <div className="space-y-3">
-                        <p className="text-[13px] text-[var(--color-text-secondary)]">Transaction ID</p>
-                        <p className="text-[14px] sm:text-[15px] font-mono text-[var(--color-text-secondary)]">TX-MMOZWAGT</p>
+                <div className="p-6 bg-[var(--background)] rounded-[2rem] flex justify-between items-center border border-[var(--sidebar-border)] shadow-sm">
+                    <div className="space-y-2">
+                        <p className="text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest">Transaction ID</p>
+                        <p className="text-sm font-mono font-bold text-[var(--header-text)]">TX-MMOZWAGT</p>
                     </div>
-                    <button className="text-[13px] text-[var(--color-primary-300)] font-medium flex items-center gap-1.5 mt-0.5 hover:text-[var(--color-primary-300)] transition-colors">
+                    <button className="text-xs font-bold text-[var(--sidebar-active-text)] flex items-center gap-2 hover:opacity-80 transition-opacity bg-[var(--sidebar-active-bg)] px-4 py-2 rounded-xl border-0 cursor-pointer">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         Copy
                     </button>
                 </div>
 
-                <div className="p-5 sm:p-6 bg-[var(--color-bg-surface-subtle)] rounded-2xl flex items-center gap-5">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--color-status-warning-bg)] flex items-center justify-center flex-shrink-0">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-status-warning)]">
+                <div className="p-6 bg-[var(--background)] rounded-[2rem] border border-[var(--sidebar-border)] flex items-center gap-5 shadow-sm">
+                    <div className="w-14 h-14 rounded-full bg-[var(--color-status-warning-bg)] flex items-center justify-center flex-shrink-0">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-status-warning)] animate-spin-slow">
                             <path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path>
                             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
                         </svg>
                     </div>
                     <div className="space-y-1">
-                        <h3 className="text-[15px] sm:text-[16px] font-medium text-[var(--color-text-secondary)]">Seller Approval</h3>
-                        <p className="text-[13px] sm:text-[14px] text-[var(--color-text-secondary)]">In progress...</p>
+                        <h3 className="text-base font-bold text-[var(--header-text)]">Seller Approval</h3>
+                        <p className="text-xs font-bold text-[var(--color-status-warning)]/80 uppercase tracking-widest">In progress...</p>
                     </div>
                 </div>
 
@@ -368,11 +361,11 @@ function StepStatus() {
                 </div>
             </div>
 
-            <div className="flex items-start gap-4 text-[13px] text-[var(--color-text-secondary)] w-full px-2 mt-2">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+            <div className="flex items-start gap-4 p-5 rounded-[2rem] bg-[var(--color-status-info-bg)] border border-[var(--color-status-info-border)] w-full">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5 text-[var(--color-status-info)]">
                     <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
-                <span>This process typically takes 24-48 hours. You'll receive email updates at each stage.</span>
+                <span className="text-[13px] font-medium text-[var(--color-status-info)]">This process typically takes 24-48 hours. You'll receive email updates at each stage.</span>
             </div>
         </div>
     );
@@ -384,53 +377,53 @@ function StatusItem({ icon, label, status, active }) {
 
 function StepEscrowStatus({ asset }) {
     return (
-        <div className="flex flex-col items-center gap-6 sm:gap-8 font-Montserrat">
+        <div className="flex flex-col items-center gap-8">
             <div className="text-center">
-                <div className="w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-[14px] sm:rounded-2xl bg-[var(--color-bg-overlay)] sm:bg-[var(--color-primary-300-alpha-10)] flex items-center justify-center mb-4 sm:mb-6 mx-auto">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--color-primary-300)]">
+                <div className="w-20 h-20 rounded-[2rem] bg-[var(--badge-bg)] flex items-center justify-center mb-6 mx-auto shadow-sm">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--sidebar-active-text)]">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold mb-1.5 sm:mb-2 text-white">Funds in Escrow</h2>
-                <p className="text-xs sm:text-sm text-[var(--color-text-secondary)]">Securely held until verification complete</p>
+                <h2 className="text-2xl font-bold mb-2 text-[var(--header-text)]">Funds in Escrow</h2>
+                <p className="text-sm font-medium text-[var(--color-text-muted)]">Securely held until verification complete</p>
             </div>
 
-            <div className="w-full space-y-3 sm:space-y-4">
-                <div className="p-4 sm:p-6 bg-[var(--color-bg-surface-subtle)] rounded-2xl space-y-3 sm:space-y-5">
-                    <div className="flex justify-between text-[11px] sm:text-[13px]">
-                        <span className="text-[var(--color-text-secondary)]">Escrow ID</span>
-                        <span className="text-[var(--color-text-primary)] font-mono">ESC-MMOZZMIV</span>
+            <div className="w-full space-y-4">
+                <div className="p-6 bg-[var(--background)] rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm space-y-4">
+                    <div className="flex justify-between text-xs font-bold">
+                        <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Escrow ID</span>
+                        <span className="text-[var(--header-text)] font-mono">ESC-MMOZZMIV</span>
                     </div>
-                    <div className="flex justify-between text-[11px] sm:text-[13px]">
-                        <span className="text-[var(--color-text-secondary)]">Transaction ID</span>
-                        <span className="text-[var(--color-text-primary)] font-mono">TX-MMOZZMIV</span>
+                    <div className="flex justify-between text-xs font-bold">
+                        <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Transaction ID</span>
+                        <span className="text-[var(--header-text)] font-mono">TX-MMOZZMIV</span>
                     </div>
-                    <div className="flex justify-between text-[13px] sm:text-[15px] pt-3 sm:pt-5 border-t border-[var(--color-border-subtle)]">
-                        <span className="text-[var(--color-text-secondary)]">Escrow Amount</span>
-                        <span className="text-[var(--color-primary-300)] font-bold">{asset.currentValue}</span>
+                    <div className="flex justify-between text-base font-black pt-4 border-t border-[var(--sidebar-border)]">
+                        <span className="text-[var(--header-text)]">Escrow Amount</span>
+                        <span className="text-[var(--sidebar-active-text)]">{asset.currentValue}</span>
                     </div>
                 </div>
 
-                <div className="p-4 sm:p-6 bg-[var(--color-bg-surface-subtle)] rounded-2xl space-y-4 sm:space-y-6">
+                <div className="p-6 bg-[var(--background)] rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm space-y-6">
                     <div className="flex justify-between items-center">
-                        <span className="text-[13px] sm:text-base font-medium text-[var(--color-text-primary)]">Verification Progress</span>
+                        <span className="text-base font-black text-[var(--header-text)] uppercase tracking-widest">Verification Progress</span>
                     </div>
-                    <div className="space-y-3 sm:space-y-4">
+                    <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <span className="text-[12px] sm:text-[13px] text-[var(--color-text-muted)]">Seller Approval</span>
-                            <CheckIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--color-primary-300)]" />
+                            <span className="text-xs font-bold text-[var(--color-text-muted)]">Seller Approval</span>
+                            <CheckIcon className="w-4 h-4 text-[var(--color-status-success)]" />
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-[12px] sm:text-[13px] text-[var(--color-text-muted)]">Document Upload</span>
-                            <CheckIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--color-primary-300)]" />
+                            <span className="text-xs font-bold text-[var(--color-text-muted)]">Document Upload</span>
+                            <CheckIcon className="w-4 h-4 text-[var(--color-status-success)]" />
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-[12px] sm:text-[13px] text-[var(--color-text-muted)]">Legal Review</span>
-                            <ClockIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--color-text-muted)]" />
+                            <span className="text-xs font-bold text-[var(--color-text-muted)]">Legal Review</span>
+                            <ClockIcon className="w-4 h-4 text-[var(--color-status-warning)] animate-pulse" />
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-[12px] sm:text-[13px] text-[var(--color-text-muted)]">Due Diligence</span>
-                            <ClockIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--color-text-muted)]" />
+                            <span className="text-xs font-bold text-[var(--color-text-muted)]">Due Diligence</span>
+                            <ClockIcon className="w-4 h-4 text-[var(--color-status-warning)]" />
                         </div>
                     </div>
                 </div>
@@ -460,61 +453,63 @@ function StepEscrowStatus({ asset }) {
 function StepSuccess({ asset, method, onClose }) {
     return (
         <div className="flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-md bg-[var(--color-primary-300-alpha-10)] flex items-center justify-center mb-6">
-                <div className="w-8 h-8 flex items-center justify-center">
-                    <CheckIcon className="w-10 h-10 text-[var(--color-primary-300)]/80" />
+            <div className="w-16 h-16 rounded-[2rem] bg-[var(--badge-bg)] flex items-center justify-center mb-8 shadow-sm">
+                <div className="w-10 h-10 flex items-center justify-center text-[var(--sidebar-active-text)]">
+                    <CheckIcon className="w-12 h-12" />
                 </div>
             </div>
-            <h2 className="text-2xl font-semibold mb-2">Investment Complete!</h2>
-            <p className="text-sm text-[var(--color-text-muted)] mb-8 font-Montserrat">1 fraction of {asset.name}</p>
+            <h2 className="text-3xl font-black mb-2 text-[var(--header-text)]">Investment Complete!</h2>
+            <p className="text-base font-bold text-[var(--color-text-muted)] mb-10">1 fraction of {asset.name}</p>
 
-            <div className="w-full space-y-4 mb-8 bg-[var(--color-bg-surface-subtle)] p-4 rounded-md">
-                <div className="flex justify-between text-xs">
-                    <span className="text-[var(--color-text-muted)]">Transaction ID</span>
-                    <span className="text-white font-mono">TX-MMOZMMIV</span>
+            <div className="w-full space-y-4 mb-10 bg-[var(--background)] p-6 rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm">
+                <div className="flex justify-between text-xs font-bold">
+                    <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Transaction ID</span>
+                    <span className="text-[var(--header-text)] font-mono">TX-MMOZMMIV</span>
                 </div>
                 {method?.id === 'escrow' && (
-                    <div className="flex justify-between text-xs">
-                        <span className="text-[var(--color-text-muted)]">Escrow ID</span>
-                        <span className="text-white font-mono">ESC-MMOZMMIV</span>
+                    <div className="flex justify-between text-xs font-bold">
+                        <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Escrow ID</span>
+                        <span className="text-[var(--header-text)] font-mono">ESC-MMOZMMIV</span>
                     </div>
                 )}
-                <div className="flex justify-between text-xs">
-                    <span className="text-[var(--color-text-muted)]">Payment Method</span>
-                    <span className="text-white">{method?.label || 'Direct'}</span>
+                <div className="flex justify-between text-xs font-bold">
+                    <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Payment Method</span>
+                    <span className="text-[var(--header-text)]">{method?.label || 'Direct'}</span>
                 </div>
-                <div className="flex justify-between text-xs">
-                    <span className="text-[var(--color-text-muted)]">Status</span>
-                    <span className="text-[var(--color-status-success)] bg-[var(--color-status-success-bg)] px-2 py-1 rounded-full font-bold font-Montserrat">✓ COMPLETED</span>
-                </div>
-            </div>
-
-            <div className="w-full p-6 bg-[var(--color-bg-surface-subtle)] rounded-md space-y-6 text-left  mb-8">
-                <h4 className="text-sm font-semibold text-[var(--color-text-muted)]">Whats Next?</h4>
-                <div className="space-y-4">
-                    <div className="flex gap-4">
-                        <span className="text-[var(--color-primary-300)]"><DocumentIcon className="w-5 h-5" /></span>
-                        <p className="text-[10px] text-[var(--color-text-muted)]">Ownership certificates will be issued within 24 hours</p>
-                    </div>
-                    <div className="flex gap-4">
-                        <span className="text-[var(--color-primary-300)]"><TrendingUpIcon className="w-5 h-5" /></span>
-                        <p className="text-[10px] text-[var(--color-text-muted)]">Track your portfolio and earnings in the dashboard</p>
-                    </div>
-                    <div className="flex gap-4">
-                        <span className="text-[var(--color-primary-300)]"><PropertyIcon className="w-5 h-5" /></span>
-                        <p className="text-[10px] text-[var(--color-text-muted)]">Quarterly yield payments start next period</p>
-                    </div>
+                <div className="flex justify-between text-xs font-black pt-4 border-t border-[var(--sidebar-border)]">
+                    <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Status</span>
+                    <span className="text-[var(--color-status-success)] bg-[var(--color-status-success-bg)] px-4 py-1.5 rounded-full ring-1 ring-[var(--color-status-success-border)]">✓ COMPLETED</span>
                 </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
-                <button className="flex-1 py-3.5 rounded-md bg-[var(--color-bg-surface-subtle)] text-white text-xs font-bold flex items-center justify-center gap-2">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <div className="w-full p-8 bg-[var(--background)] rounded-[2.5rem] border border-[var(--sidebar-border)] shadow-sm space-y-8 text-left mb-12">
+                <h4 className="text-sm font-black text-[var(--header-text)] uppercase tracking-widest">What's Next?</h4>
+                <div className="space-y-6">
+                    <div className="flex gap-5">
+                        <span className="text-[var(--sidebar-active-text)] bg-[var(--badge-bg)] p-3 rounded-2xl shadow-sm"><DocumentIcon className="w-6 h-6" /></span>
+                        <div className="space-y-1">
+                            <p className="text-sm font-bold text-[var(--header-text)]">Ownership certificates</p>
+                            <p className="text-[11px] font-medium text-[var(--color-text-muted)]">Will be issued within 24 hours</p>
+                        </div>
+                    </div>
+                    <div className="flex gap-5">
+                        <span className="text-[var(--sidebar-active-text)] bg-[var(--badge-bg)] p-3 rounded-2xl shadow-sm"><TrendingUpIcon className="w-6 h-6" /></span>
+                        <div className="space-y-1">
+                            <p className="text-sm font-bold text-[var(--header-text)]">Track portfolio</p>
+                            <p className="text-[11px] font-medium text-[var(--color-text-muted)]">View real-time earnings in the dashboard</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 w-full">
+                <button className="flex-1 py-4 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-[var(--header-text)] text-sm font-black flex items-center justify-center gap-2 hover:bg-[var(--sidebar-active-bg)] transition-all cursor-pointer">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                     Receipt
                 </button>
                 <button 
                     onClick={onClose}
-                    className="flex-1 py-3.5 rounded-md bg-[var(--color-primary-300)] text-black text-xs font-bold hover:bg-[var(--color-primary-300)]/80 transition-colors"
+                    className="flex-1 py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-sm font-black hover:opacity-90 transition-all shadow-[var(--shadow-glow-primary)] border-0 cursor-pointer"
                 >
                     View Portfolio
                 </button>

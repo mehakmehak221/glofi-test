@@ -121,21 +121,21 @@ export default function SecondaryMarketplacePage() {
     const filters = ["All Properties", "High ROI (15%+)", "Best Value"];
 
     return (
-        <div className="p-4 sm:p-6 lg:p-10 bg-[var(--color-bg-dark)] min-h-screen text-white font-sans">
+        <div className="p-4 sm:p-6 lg:p-10 bg-[var(--background)] min-h-screen text-[var(--sidebar-text)] font-sans transition-colors duration-300">
             <div className="max-w-[1400px] mx-auto">
 
-                <header className="mb-8">
-                    <h1 className="text-3xl sm:text-[40px] font-bold mb-3 font-Montserrat tracking-tight">Secondary Marketplace</h1>
-                    <p className="text-base sm:text-lg text-[var(--color-text-muted)] mb-8 font-Montserrat max-w-2xl leading-relaxed">Browse properties relisted by investors. All fractions available for immediate purchase.</p>
+                <header className="mb-10">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-3 text-[var(--header-text)] tracking-tight">Secondary Marketplace</h1>
+                    <p className="text-sm sm:text-base text-[var(--color-text-muted)] mb-8 max-w-2xl leading-relaxed font-medium">Browse property fractions relisted by investors. All assets are available for immediate purchase and transfer.</p>
 
-                    <div className="relative max-w-md w-full">
-                        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                            <SearchIcon className="w-5 h-5 text-[var(--color-text-muted)]" />
+                    <div className="relative max-w-md w-full group">
+                        <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                            <SearchIcon className="w-5 h-5 text-[var(--color-text-muted)] group-focus-within:text-[var(--sidebar-active-text)] transition-colors" />
                         </div>
                         <input
                             type="text"
                             placeholder="Search properties by name..."
-                             className="w-full bg-[var(--color-bg-card-alt)] border border-[var(--color-border-subtle)] rounded-xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-[var(--color-border-muted)] transition-all"
+                            className="w-full bg-[var(--search-bg)] border border-[var(--sidebar-border)] rounded-xl py-3.5 pl-14 pr-6 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 transition-all shadow-sm"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -143,21 +143,20 @@ export default function SecondaryMarketplacePage() {
                 </header>
 
 
-                <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
+                <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
                     {STATS.map((stat) => (
-                        <div key={stat.label} className="bg-[var(--color-bg-card-alt)] border border-[var(--color-border-subtle)] rounded-2xl p-5 sm:p-6 relative overflow-hidden group hover:border-[var(--color-border-subtle)] transition-colors">
-                            <div className="flex justify-between items-start mb-6 sm:mb-8">
-                                <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.1em] font-bold">{stat.label}</span>
-                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[var(--color-primary-100)]/10 flex items-center justify-center">
-                                    <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary-100)]" />
+                        <div key={stat.label} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-500">
+                            <div className="flex justify-between items-start mb-6">
+                                <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-bold">{stat.label}</span>
+                                <div className="w-10 h-10 rounded-xl bg-[var(--badge-bg)] flex items-center justify-center text-[var(--sidebar-active-text)] shadow-sm group-hover:scale-110 transition-transform">
+                                    <stat.icon className="w-5 h-5" />
                                 </div>
                             </div>
-                            <div className="mb-1">
-
-                                <span className="text-3xl sm:text-4xl font-bold">{stat.value}</span>
+                            <div className="mb-2">
+                                <span className="text-2xl sm:text-3xl font-bold text-[var(--header-text)]">{stat.value}</span>
                             </div>
                             <div className="flex items-center gap-1.5 mt-2">
-                                <span className="text-[11px] text-[var(--color-primary-100)] font-medium">{stat.change}</span>
+                                <span className="text-xs text-[var(--sidebar-active-text)] font-bold">{stat.change}</span>
                             </div>
                         </div>
                     ))}
@@ -165,14 +164,14 @@ export default function SecondaryMarketplacePage() {
 
 
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
-                    <div className="flex items-center gap-2 p-1 bg-[var(--color-bg-card-alt)] rounded-xl border border-[var(--color-border-subtle)] overflow-x-auto max-w-full no-scrollbar">
+                    <div className="flex items-center gap-2 p-1 bg-[var(--sidebar-bg)] rounded-xl border border-[var(--sidebar-border)] overflow-x-auto max-w-full no-scrollbar shadow-sm">
                         {filters.map((filter) => (
                             <button
                                 key={filter}
                                 onClick={() => setActiveFilter(filter)}
-                                className={`px-5 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${activeFilter === filter
-                                    ? "bg-[var(--color-primary-200)] text-black shadow-[var(--shadow-glow-primary)]"
-                                    : "text-[var(--color-text-muted)] hover:text-white"
+                                className={`px-4 py-2 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all duration-300 border-0 cursor-pointer ${activeFilter === filter
+                                    ? "bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] shadow-sm"
+                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)]"
                                     }`}
                             >
                                 {filter}
@@ -180,16 +179,16 @@ export default function SecondaryMarketplacePage() {
                         ))}
                     </div>
                     <div className="flex items-center gap-3 w-full md:w-auto">
-                        <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-3 bg-[var(--color-bg-card-alt)] border border-[var(--color-border-subtle)] rounded-xl text-xs font-bold text-[var(--color-text-muted)] hover:text-white transition-colors">
-                            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                        <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl text-[11px] font-bold text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:shadow-md transition-all border-0 cursor-pointer">
+                            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
                                 <path d="M1.5 3H14.5V4.5H1.5V3ZM4 7H12V8.5H4V7ZM6.5 11H9.5V12.5H6.5V11Z" />
                             </svg>
-                            <span className="md:hidden lg:inline">Filters</span>
+                            <span className="md:hidden lg:inline uppercase tracking-widest">Filters</span>
                         </button>
-                        <button className="flex-[2] md:flex-none flex items-center justify-between gap-4 px-6 py-3 bg-[var(--color-bg-card-alt)] border border-[var(--color-border-subtle)] rounded-xl text-xs font-bold min-w-[140px] text-[var(--color-text-muted)] hover:text-white transition-all">
-                            <span>Most Recent</span>
-                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <button className="flex-[2] md:flex-none flex items-center justify-between gap-6 px-6 py-3 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl text-[11px] font-bold min-w-[150px] text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:shadow-md transition-all border-0 cursor-pointer">
+                            <span className="uppercase tracking-widest">Most Recent</span>
+                            <svg width="8" height="5" viewBox="0 0 10 6" fill="none">
+                                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
                     </div>
@@ -215,14 +214,15 @@ export default function SecondaryMarketplacePage() {
                 />
 
 
-                <section className="bg-[var(--color-bg-card-alt)] border border-[var(--color-border-subtle)] rounded-[32px] p-8 sm:p-10 flex flex-col md:flex-row items-start gap-8">
-                    <div className="w-14 h-14 rounded-2xl bg-[var(--color-primary-200)]/10 flex items-center justify-center flex-shrink-0">
-                        <AboutIcon className="w-4 h-4 text-[var(--color-primary-200)]" />
+                <section className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-8 sm:p-10 flex flex-col md:flex-row items-center md:items-start gap-8 shadow-lg relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--sidebar-active-text)]/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
+                    <div className="w-14 h-14 rounded-2xl bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 flex items-center justify-center flex-shrink-0 shadow-md relative z-10">
+                        <AboutIcon className="w-6 h-6 text-[var(--sidebar-active-text)]" />
                     </div>
-                    <div>
-                        <h2 className="text-2xl font-bold mb-4 font-Montserrat">About Secondary Marketplace</h2>
-                        <p className="text-base text-[var(--color-text-muted)] leading-relaxed max-w-5xl font-Montserrat">
-                            The Secondary Marketplace allows investors to buy property fractions that have been relisted by other investors. All properties shown here were previously purchased from the primary marketplace and are now available for immediate transfer. Prices may vary based on current market value and seller preferences.
+                    <div className="relative z-10 text-center md:text-left">
+                        <h2 className="text-xl font-bold mb-3 text-[var(--header-text)] uppercase tracking-widest">About Secondary Marketplace</h2>
+                        <p className="text-sm font-medium text-[var(--color-text-muted)] leading-relaxed max-w-5xl">
+                            The Secondary Marketplace empowers investors to trade property fractions relisted by other community members. Whether you're looking to exit a position or acquire premium assets previously sold out, this platform provides immediate liquidity and transferability. All prices reflect current market conditions and seller valuations.
                         </p>
                     </div>
                 </section>
@@ -235,65 +235,66 @@ function MarketplaceCard({ asset, onBuy }) {
     return (
         <motion.div
             variants={itemVariants}
-            className="group bg-[var(--color-bg-card-alt)] border border-[var(--color-border-subtle)] rounded-md overflow-hidden flex flex-col hover:border-[var(--color-border-muted)] hover:shadow-[var(--shadow-glow-primary)] transition-all duration-500"
+            className="group bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden flex flex-col hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-700 h-full shadow-md"
         >
 
-            <div className="relative h-56 sm:h-48 lg:h-52 xl:h-48 overflow-hidden">
+            <div className="relative h-56 overflow-hidden">
                 <Image
                     src={asset.image}
                     alt={asset.name}
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--sidebar-bg)] via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
                 <div className="absolute top-4 right-4">
-                    <div className="px-3 py-1.5 rounded-full bg-[var(--color-primary-100)]/90 backdrop-blur-md text-black text-[11px] font-bold flex items-center gap-1 shadow-lg ring-1 ring-[var(--color-border-muted)]">
+                    <div className="px-3 py-1.5 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[10px] font-bold flex items-center gap-1.5 shadow-lg ring-1 ring-white/10 backdrop-blur-sm">
                         <TrendingUpIcon className="w-3.5 h-3.5" />
                         {asset.change}
                     </div>
                 </div>
                 <div className="absolute bottom-4 left-4">
-                    <div className="flex items-center gap-2 p-1.5 bg-[var(--color-bg-overlay)] backdrop-blur-md rounded-full pr-4 border border-[var(--color-border-subtle)] ring-1 ring-black/10">
-                        <div className="w-7 h-7 rounded-full bg-[var(--color-gradient-glofi)] flex items-center justify-center text-[10px] font-bold text-black border border-[var(--color-border-subtle)] shadow-sm">
+                    <div className="flex items-center gap-2.5 p-1 bg-[var(--sidebar-bg)]/80 backdrop-blur-xl rounded-full pr-4 border border-white/10 shadow-lg ring-1 ring-black/5 hover:bg-[var(--sidebar-bg)] transition-colors duration-300">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[var(--color-primary-300)] to-[var(--color-primary-500)] flex items-center justify-center text-[9px] font-bold text-black border border-white shadow-sm">
                             {asset.seller.charAt(0)}
                         </div>
-                        <span className="text-[11px] font-semibold text-white tracking-tight">{asset.seller}</span>
+                        <span className="text-[10px] font-bold text-[var(--header-text)] tracking-wider uppercase">{asset.seller}</span>
                     </div>
                 </div>
             </div>
 
 
-            <div className="p-7 sm:p-5 lg:p-5 flex flex-col flex-1">
-                <h3 className="text-lg font-bold mb-6 font-Montserrat leading-snug group-hover:text-[var(--color-primary-100)] transition-colors line-clamp-2 min-h-[2rem]">{asset.name}</h3>
+            <div className="p-6 flex flex-col flex-1">
+                <h3 className="text-lg font-bold mb-6 text-[var(--header-text)] leading-tight group-hover:text-[var(--sidebar-active-text)] transition-colors duration-500 min-h-[2.5rem] line-clamp-2 uppercase tracking-tight">{asset.name}</h3>
 
                 <div className="grid grid-cols-2 gap-3 mb-8">
-                    <div className="bg-[var(--color-bg-surface-subtle)] rounded-lg p-5 flex flex-col justify-between min-h-[90px] ring-1 ring-[var(--color-border-subtle)]">
-                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Fractions</p>
-                        <p className="text-base font-bold text-white font-Montserrat">{asset.fractions}</p>
+                    <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-4 flex flex-col justify-between min-h-[80px] shadow-sm hover:shadow-md transition-shadow">
+                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Fractions</p>
+                        <p className="text-base font-bold text-[var(--header-text)]">{asset.fractions}</p>
                     </div>
-                    <div className="bg-[var(--color-bg-surface-subtle)] rounded-lg p-5 flex flex-col justify-between min-h-[90px] ring-1 ring-[var(--color-border-subtle)]">
-                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Price</p>
-                        <p className="text-base font-bold text-white font-Montserrat">{asset.price}</p>
+                    <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-4 flex flex-col justify-between min-h-[80px] shadow-sm hover:shadow-md transition-shadow">
+                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Price</p>
+                        <p className="text-base font-bold text-[var(--header-text)]">{asset.price}</p>
                     </div>
-                    <div className="col-span-2 bg-[var(--color-primary-200)]/5 rounded-lg p-6 flex flex-col justify-between min-h-[110px] ring-1 ring-[var(--color-primary-100)]/10">
-                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold opacity-70">Current Value</p>
-                        <p className="text-xl font-black text-[var(--color-primary-100)] font-Montserrat">{asset.currentValue}</p>
+                    <div className="col-span-2 bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 rounded-xl p-5 flex flex-col justify-between min-h-[90px] shadow-inner">
+                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold opacity-60">Current Marketplace Value</p>
+                        <p className="text-xl font-bold text-[var(--sidebar-active-text)]">{asset.currentValue}</p>
                     </div>
                 </div>
 
-                <div className="mt-auto space-y-4">
+                <div className="mt-auto space-y-3">
                     <button
                         onClick={onBuy}
-                        className="w-full py-4 rounded-md bg-[var(--color-primary-200)] text-black text-sm font-black uppercase tracking-wider hover:bg-[var(--color-primary-100)] hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-[0_4px_20px_rgba(0,255,205,0.2)]"
+                        className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold uppercase tracking-[0.2em] shadow-sm hover:opacity-90 hover:scale-[1.01] active:scale-95 transition-all duration-500 border-0 cursor-pointer"
                     >
                         Buy Fractions
                     </button>
                     <div className="grid grid-cols-2 gap-3">
-                        <button className="flex items-center justify-center gap-2 py-4 rounded-md bg-[var(--color-bg-surface-subtle)] text-xs font-bold text-white hover:bg-[var(--color-bg-surface-elevated)] transition-all">
-                            <EyeOpenIcon className="w-4 h-4 opacity-70" />
+                        <button className="flex items-center justify-center gap-2 py-3 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-[10px] font-bold text-[var(--header-text)] uppercase tracking-widest hover:bg-[var(--sidebar-active-bg)] hover:shadow-md transition-all border-0 cursor-pointer">
+                            <EyeOpenIcon className="w-4 h-4 text-[var(--sidebar-active-text)]" />
                             <span>View</span>
                         </button>
-                        <button className="flex items-center justify-center gap-2 py-4 rounded-md bg-[var(--color-bg-surface-subtle)] text-xs font-bold text-white hover:bg-[var(--color-bg-surface-elevated)] transition-all">
-                            <DownloadIcon className="w-4 h-4 opacity-70" />
+                        <button className="flex items-center justify-center gap-2 py-3 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-[10px] font-bold text-[var(--header-text)] uppercase tracking-widest hover:bg-[var(--sidebar-active-bg)] hover:shadow-md transition-all border-0 cursor-pointer">
+                            <DownloadIcon className="w-4 h-4 text-[var(--sidebar-active-text)]" />
                             <span>Info</span>
                         </button>
                     </div>

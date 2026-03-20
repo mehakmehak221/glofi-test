@@ -39,7 +39,7 @@ export default function MarketplacePage() {
     };
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--color-bg-dark)]">
+        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)]">
 
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -48,20 +48,12 @@ export default function MarketplacePage() {
                 className="mb-6 sm:mb-8 p-4 sm:p-6 lg:p-8"
                 style={{
                     borderRadius: '24px',
-                    border: '0.667px solid var(--color-primary-300-alpha-10)',
-                    background: 'var(--color-gradient-marketplace-hero)',
+                    border: '0.667px solid var(--marketplace-card-border)',
+                    background: 'var(--marketplace-hero-bg)',
                 }}
             >
-                <h1
-                    className="text-xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2"
-                    style={{
-                        background: 'var(--color-gradient-text-hero)',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                    }}
-                >
-                    Discover Premium Assets
+                <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 marketplace-hero-title">
+                    Discover Assets
                 </h1>
                 <p
                     className="text-xs sm:text-base lg:text-lg max-w-xl font-montserrat text-[var(--color-text-muted)] font-normal tracking-tight"
@@ -75,8 +67,8 @@ export default function MarketplacePage() {
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
                             className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer border ${activeCategory === cat
-                                ? "bg-[var(--color-primary-100)] text-black border-[var(--color-primary-100)]"
-                                : "bg-[var(--color-bg-surface-subtle)] text-text-secondary border-[var(--color-border-muted)]"
+                                ? "bg-[var(--sidebar-active-text)] text-black border-[var(--sidebar-active-text)] shadow-[var(--shadow-glow-primary)]"
+                                : "bg-[var(--sidebar-bg)] text-[var(--sidebar-text)] border-[var(--sidebar-border)]"
                                 }`}
                         >
                             {cat}
@@ -101,7 +93,7 @@ export default function MarketplacePage() {
                             variants={cardVariants}
                             layout
                             onClick={() => handleCardClick(property.id)}
-                            className="bg-[var(--color-bg-card-alt)] border border-[var(--color-border-subtle)] rounded-[16px] overflow-hidden hover:border-[var(--color-primary-100)]/20 transition-colors duration-300 group cursor-pointer"
+                            className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-[20px] overflow-hidden hover:shadow-[var(--marketplace-card-shadow)] transition-all duration-300 group cursor-pointer"
                         >
 
                             <div className="relative h-48 overflow-hidden">
@@ -112,10 +104,10 @@ export default function MarketplacePage() {
                                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
-                                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #050505 0%, rgba(0, 0, 0, 0.00) 50%, rgba(0, 0, 0, 0.00) 100%)' }} />
+                                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, var(--marketplace-card-overlay-start, #050505) 0%, rgba(0, 0, 0, 0.00) 50%, rgba(0, 0, 0, 0.00) 100%)' }} />
 
 
-                                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-[var(--color-bg-dark)]/80 text-[var(--color-text-secondary)] border border-[var(--color-border-muted)] backdrop-blur-sm">
+                                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)] backdrop-blur-sm">
                                     {property.category}
                                 </span>
 
@@ -127,7 +119,7 @@ export default function MarketplacePage() {
 
 
                             <div className="p-5">
-                                <h3 className="text-lg font-bold text-white mb-1">{property.name}</h3>
+                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">{property.name}</h3>
                                 <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-xs mb-4">
                                     <MapPinIcon className="w-3.5 h-3.5" />
                                     {property.location}
@@ -135,20 +127,20 @@ export default function MarketplacePage() {
 
                                 <div className="grid grid-cols-2 gap-3 mb-4">
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Valuation</p>
-                                        <p className="text-base font-bold text-white">{property.valuation}</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--sidebar-text)] opacity-50 mb-0.5">Valuation</p>
+                                        <p className="text-base font-bold text-[var(--sidebar-text)]">{property.valuation}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Per Fraction</p>
-                                        <p className="text-base font-bold text-white">{property.perFraction}</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--sidebar-text)] opacity-50 mb-0.5">Per Fraction</p>
+                                        <p className="text-base font-bold text-[var(--sidebar-text)]">{property.perFraction}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Yield</p>
-                                        <p className="text-base font-bold text-[var(--color-primary-100)]">{property.yield}</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--sidebar-text)] opacity-50 mb-0.5">Yield</p>
+                                        <p className="text-base font-bold text-[var(--sidebar-active-text)]">{property.yield}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Available</p>
-                                        <p className="text-base font-bold text-white">{property.available}</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--sidebar-text)] opacity-50 mb-0.5">Available</p>
+                                        <p className="text-base font-bold text-[var(--sidebar-text)]">{property.available}</p>
                                     </div>
                                 </div>
 
@@ -156,27 +148,28 @@ export default function MarketplacePage() {
                                 <div className="mb-4">
                                     <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                                         <motion.div
-                                            className="h-full bg-gradient-to-r from-[#00FFCD] to-[#009976] rounded-full"
+                                            className="h-full bg-gradient-to-r from-[var(--marketplace-card-progress-fill-start)] to-[var(--marketplace-card-progress-fill-end)] rounded-full"
                                             initial={{ width: 0 }}
                                             animate={{ width: `${property.funded}%` }}
                                             transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                                         />
                                     </div>
-                                    <p className="text-[10px] text-[var(--color-text-muted)] mt-1">{property.funded}% funded</p>
+                                    <p className="text-[10px] text-[var(--marketplace-card-progress-text)] mt-1">{property.funded}% funded</p>
                                 </div>
 
-
-                                <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleCardClick(property.id);
-                                    }}
-                                    className="w-full py-3 rounded-xl bg-[var(--color-primary-100)] text-black font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-[var(--shadow-glow-primary)]"
-                                >
-                                    Invest Now
-                                </motion.button>
+                                <div className="mt-5">
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleCardClick(property.id);
+                                        }}
+                                        className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)]"
+                                    >
+                                        Invest Now
+                                    </motion.button>
+                                </div>
                             </div>
                         </motion.div>
                     ))}

@@ -1,15 +1,18 @@
 @import "tailwindcss";
 
 @theme {
+  --color-primary-0: #CCFFF5;
+  --color-primary-50: #ACFFEF;
   --color-primary-100: #78FFE4;
   --color-primary-200: #00F4C4;
   --color-primary-300: #00DAAF;
   --color-primary-400: #00BF9A;
-  --color-primary-500: #00A383;
+  --color-primary-500: #009376;
   --color-primary-600: #00876D;
-  --color-primary-700: #006B58;
+  --color-primary-700: #006652;
   --color-primary-800: #005041;
-  --color-primary-900: #00362C;
+  --color-primary-900: #003D31;
+  --color-primary-925: #021411;
 
   --color-gray-0: #FFFFFF;
   --color-gray-50: #F5F5F5;
@@ -21,10 +24,8 @@
 
   --color-error-500: #F04438;
   --color-error-400: #FCDAD7;
-
   --color-warning-500: #F79009;
   --color-warning-400: #FDE9CE;
-
   --color-success-500: #12B76A;
   --color-success-400: #D0F1E1;
 
@@ -118,6 +119,27 @@
   --foreground: var(--color-text-primary);
   --primary: var(--color-brand-green);
 
+  /* Semantic Theme Variables - DARK (Default) */
+  --header-bg: var(--color-bg-dark);
+  --header-text: var(--color-gray-0);
+  --header-border: var(--color-border-subtle);
+
+  --search-bg: var(--color-bg-surface-subtle);
+  --search-text: #FFFFFF;
+  --search-border: var(--color-border-muted);
+  --search-placeholder: var(--color-text-muted);
+
+  --sidebar-bg: var(--color-bg-dark);
+  --sidebar-border: var(--color-border-subtle);
+  --sidebar-text: var(--color-text-secondary);
+  --sidebar-text-hover: #FFFFFF;
+  --sidebar-active-text: var(--color-primary-100);
+  --sidebar-active-bg: color-mix(in srgb, var(--color-primary-100) 10%, transparent);
+
+  --badge-text: var(--color-primary-200);
+  --badge-bg: color-mix(in srgb, var(--color-primary-300) 5%, transparent);
+  --badge-border: color-mix(in srgb, var(--color-primary-300) 30%, transparent);
+
   --font-primary: var(--font-montserrat);
   --font-display: var(--font-montserrat);
   --z-nav: 1000;
@@ -126,15 +148,87 @@
   --transition-fast: 0.15s ease;
   --transition-base: 0.25s ease;
   --transition-slow: 0.4s ease;
-  --color-border-dark: var(--color-border-subtle);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--color-bg-dark);
-    --foreground: var(--color-text-primary);
-  }
+.light {
+  /* Semantic Theme Variables - LIGHT */
+  --header-bg: #FFFFFF;
+  --header-text: #1A1F1C;
+  --header-border: #E5E7EB;
+
+  --search-bg: #F9FAFB;
+  --search-text: #1A1F1C;
+  --search-border: #E5E7EB;
+  --search-placeholder: #1A1F1C4D;
+
+  --sidebar-bg: #FFFFFF;
+  --sidebar-border: #F0F0F0;
+  --sidebar-text: #6B7280;
+  --sidebar-text-hover: #1A1F1C;
+  --sidebar-active-text: #11BA96;
+  --sidebar-active-bg: #E8F7F4;
+
+  --badge-text: #11BA96;
+  --badge-bg: #E8F7F4;
+  --badge-border: #11BA9633;
+
+  --marketplace-hero-bg: #E8F7F4;
+  --marketplace-hero-text: #11BA96;
+  --marketplace-card-bg: #FFFFFF;
+  --marketplace-card-border: #F0F0F0;
+  --marketplace-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --marketplace-card-progress-fill-start: #11BA96;
+  --marketplace-card-progress-fill-end: #00DAAF;
+  --marketplace-card-progress-text: #6B7280;
+  --marketplace-card-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, transparent 40%, rgba(255, 255, 255, 0.4) 100%);
+
+  --btn-mint-bg: #E8F7F4;
+  --btn-mint-text: #11BA96;
+
+  --btn-cta-bg: #00A585;
+  --btn-cta-text: #FFFFFF;
+
+  --foreground: #1A1F1C;
+  --background: #F8FBFA;
 }
+
+.dark {
+  --header-bg: var(--color-bg-dark);
+  --header-text: var(--color-gray-0);
+  --header-border: var(--color-border-subtle);
+
+  --sidebar-bg: var(--color-bg-dark);
+  --sidebar-border: var(--color-border-subtle);
+
+  --sidebar-text: var(--color-text-secondary);
+  --sidebar-text-hover: #FFFFFF;
+  --sidebar-active-text: var(--color-primary-100);
+  --sidebar-active-bg: color-mix(in srgb, var(--color-primary-100) 10%, transparent);
+
+  --badge-text: var(--color-primary-200);
+  --badge-bg: color-mix(in srgb, var(--color-primary-300) 5%, transparent);
+  --badge-border: color-mix(in srgb, var(--color-primary-300) 30%, transparent);
+
+  --marketplace-hero-bg: var(--color-gradient-marketplace-hero);
+  --marketplace-hero-text: var(--color-gradient-text-hero);
+  --marketplace-card-bg: var(--color-bg-card-alt);
+  --marketplace-card-border: var(--color-border-subtle);
+  --marketplace-card-progress-fill-start: #00FFCD;
+  --marketplace-card-progress-fill-end: #009976;
+  --marketplace-card-progress-text: var(--color-text-muted);
+  --marketplace-card-overlay: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+
+  --btn-mint-bg: var(--color-primary-100);
+  --btn-mint-text: #000000;
+
+  --btn-cta-bg: var(--color-primary-100);
+  --btn-cta-text: #000000;
+
+  --foreground: var(--color-text-primary);
+  --background: var(--color-bg-dark);
+}
+
+/* Remove prefers-color-scheme to allow manual toggle to win */
 
 @layer base {
 
