@@ -9,7 +9,9 @@ import {
     TrendingUpIcon,
     PhoneIcon,
     PropertyIcon,
+    SparkleIcon,
 } from "@/components/VectorImages";
+import { useGetKybStatusQuery } from "@/store/api/kybApi";
 
 
 const STAT_CARDS = [
@@ -174,6 +176,52 @@ function ListingBar({ listing, index }) {
 }
 
 
+function KybStatusBanner() {
+    const { data: kybStatus, isLoading } = useGetKybStatusQuery();
+
+    if (isLoading || kybStatus?.status === 'APPROVED') return null;
+
+    const isPending = kybStatus?.status === 'PENDING';
+    const isRejected = kybStatus?.status === 'REJECTED';
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`mb-8 p-4 rounded-xl border flex items-center justify-between ${isRejected ? 'bg-red-500/10 border-red-500/20' : 'bg-[var(--color-primary-300)]/5 border-[var(--color-primary-300)]/10'
+                }`}
+        >
+            <div className="flex items-center gap-4">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isRejected ? 'bg-red-500/20 text-red-500' : 'bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)]'
+                    }`}>
+                    <SparkleIcon className="w-5 h-5" />
+                </div>
+                <div>
+                    <h3 className="text-sm font-semibold text-white font-montserrat">
+                        {isRejected ? 'KYB Rejected' : isPending ? 'KYB Verification Pending' : 'Complete your KYB'}
+                    </h3>
+                    <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-0.5">
+                        {isRejected
+                            ? 'Your business verification was rejected. Please update your details.'
+                            : isPending
+                                ? 'We are currently reviewing your business documents.'
+                                : 'To start listing properties and raising funds, please complete your business verification.'}
+                    </p>
+                </div>
+            </div>
+            {!isPending && (
+                <button 
+                    onClick={() => window.location.href = '/onboarding/kyb'}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold font-montserrat transition-all ${isRejected ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-[var(--color-primary-300)] text-black hover:opacity-90'
+                    }`}
+                >
+                    {isRejected ? 'Re-submit' : 'Complete Setup'}
+                </button>
+            )}
+        </motion.div>
+    );
+}
+
 export default function PartnerOverviewPage() {
     return (
         <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
@@ -190,6 +238,9 @@ export default function PartnerOverviewPage() {
                 </h1>
                 <p className="text-sm  font-montserrat mt-1 text-[var(--color-text-muted)]">Partner command center</p>
             </motion.div>
+
+            <KybStatusBanner />
+
 
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
