@@ -1,20 +1,14 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import {
-    BanglowImage,
-    SkyCraperImage,
-    RetailImage,
-    FlatBuildingImage,
-    RealEstateImage
-} from '../../VectorImages';
+import Image from 'next/image';
 
 const PROPERTIES = [
-    { id: 1, Component: BanglowImage },
-    { id: 2, Component: SkyCraperImage },
-    { id: 3, Component: RetailImage },
-    { id: 4, Component: RealEstateImage },
-    { id: 5, Component: FlatBuildingImage },
+    { id: 1, src: '/assets/images/BanglowImage.png', alt: 'Banglow' },
+    { id: 2, src: '/assets/images/SkyCraperImage.png', alt: 'Sky Craper' },
+    { id: 3, src: '/assets/images/RetailImage.png', alt: 'Retail' },
+    { id: 4, src: '/assets/images/RealEstateImage.png', alt: 'Real Estate' },
+    { id: 5, src: '/assets/images/FlatBuildingImage.png', alt: 'Flat Building' },
 ];
 
 export default function PremiumPropertySection() {
@@ -61,7 +55,6 @@ export default function PremiumPropertySection() {
                 <div className="premium-list-section overflow-x-auto scrollbar-hide">
                     <div className="flex gap-3 sm:gap-4 lg:gap-6 pb-4">
                         {PROPERTIES.map((prop, index) => {
-                            const IconComponent = prop.Component;
                             return (
                                 <div
                                     key={prop.id}
@@ -74,7 +67,12 @@ export default function PremiumPropertySection() {
                                         group-hover:shadow-[0_0_32px_4px_var(--color-primary-300-alpha-30)]
                                         group-hover:scale-[1.03]">
 
-                                        <IconComponent className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                        <Image
+                                            src={prop.src}
+                                            alt={prop.alt}
+                                            fill
+                                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
 
                                         {/* Shimmer sweep on hover */}
                                         <span className="pointer-events-none absolute inset-0 rounded-2xl

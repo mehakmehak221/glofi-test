@@ -10,7 +10,7 @@ const STEPS = [
     },
     {
         number: '02',
-        title: 'INVEST FRACTIONALLY',
+        title: 'INVEST FRACTIONALLY OR WHOLE',
         description: 'Purchase ownership shares at accessible investment levels.',
     },
     {

@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import {
     HotelImage,
     FlatBuildingImage,
     RetailImage,
-    IndustryImage,
-    FarmHouseImage
+    IndustryImage
 } from '../../VectorImages';
 
 export default function PropertyInvestmentCategoriesSection() {
@@ -71,9 +71,14 @@ export default function PropertyInvestmentCategoriesSection() {
                         </div>
 
                         {/* Land Parcels */}
-                        <div className="flex flex-col min-w-0 group">
-                            <div className="w-full h-48 sm:h-56 lg:h-64 rounded-t-2xl border border-[var(--color-border-subtle)] border-b-0 overflow-hidden bg-[var(--color-bg-surface-subtle)]">
-                                <FarmHouseImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <div className="relative flex flex-col min-w-0 group">
+                            <div className="relative w-full h-48 sm:h-56 lg:h-64 rounded-t-2xl border border-[var(--color-border-subtle)] border-b-0 overflow-hidden bg-[var(--color-bg-surface-subtle)]">
+                                <Image
+                                    src="/assets/farmhouseimage.jpg"
+                                    alt="Land Parcels"
+                                    fill
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
                             </div>
                             <div className="property-outer-box-luxury">
                                 <span className="text-property-category text-xs sm:text-sm lg:text-base">Land Parcels</span>

@@ -838,7 +838,6 @@
   .premium-section-wrapper {
     background: black;
     overflow: hidden;
-
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -848,7 +847,7 @@
 
   @media (min-width: 1024px) {
     .premium-section-wrapper {
-      padding-left: 80px;
+      padding-left: 10px;
     }
   }
 

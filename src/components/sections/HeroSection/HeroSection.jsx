@@ -21,7 +21,7 @@ export default function HeroSection() {
                 <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 flex flex-col items-center justify-center text-center py-12 sm:py-16 lg:py-20 xl:py-28">
                     <h1 className="flex flex-col items-center justify-center m-0 p-0">
                         <span className="text-hero-cyan font-Montserrat">
-                            OWN PREMIUM REAL ESTATE,
+                            OWN ANY REAL ESTATE,
                         </span>
                         <span className="text-hero-white font-Montserrat">
                             FRACTION BY FRACTION..

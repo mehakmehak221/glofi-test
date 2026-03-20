@@ -11,7 +11,7 @@ const STEPS = [
     },
     {
         number: '02',
-        title: 'INVEST FRACTIONALLY',
+        title: 'INVEST FRACTIONALLY OR WHOLE',
         description: 'Purchase ownership shares at accessible investment levels.',
     },
     {
@@ -46,7 +46,7 @@ export default function WorkingInstructionsSection() {
                                     {step.number}
                                 </span>
 
-                                <h3 className="step-title-text text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-gray-50)] mb-3 uppercase tracking-wider">
+                                <h3 className="step-title-text text-lg sm:text-xl lg:text-xl font-bold text-[var(--color-gray-50)] mb-3 uppercase tracking-wider">
                                     {step.title}
                                 </h3>
 
