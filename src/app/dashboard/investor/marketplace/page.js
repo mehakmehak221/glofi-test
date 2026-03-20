@@ -61,7 +61,7 @@ export default function MarketplacePage() {
                         WebkitTextFillColor: 'transparent',
                     }}
                 >
-                    Discover Premium Assets
+                    Discover Assets
                 </h1>
                 <p
                     className="text-xs sm:text-base lg:text-lg max-w-xl font-montserrat text-[var(--color-text-muted)] font-normal tracking-tight"
