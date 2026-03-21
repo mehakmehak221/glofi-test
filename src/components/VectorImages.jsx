@@ -542,22 +542,22 @@ export const LeadIcon = ({className = "w-4 h-4" }) => (
 );
 
 export const BusinessPropertyIcon = ({ className = "w-4 h-4" }) => (
-  <svg className={className} width="16" height="16" viewBox="0 0 16 16"  fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clipPath="url(#clip0_238_757)">
-<path d="M4 14.6663V2.66634C4 2.31272 4.14048 1.97358 4.39052 1.72353C4.64057 1.47348 4.97971 1.33301 5.33333 1.33301H10.6667C11.0203 1.33301 11.3594 1.47348 11.6095 1.72353C11.8595 1.97358 12 2.31272 12 2.66634V14.6663H4Z" stroke="var(--color-status-warning)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M4.00065 8H2.66732C2.3137 8 1.97456 8.14048 1.72451 8.39052C1.47446 8.64057 1.33398 8.97971 1.33398 9.33333V13.3333C1.33398 13.687 1.47446 14.0261 1.72451 14.2761C1.97456 14.5262 2.3137 14.6667 2.66732 14.6667H4.00065" stroke="var(--color-status-warning)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M12 6H13.3333C13.687 6 14.0261 6.14048 14.2761 6.39052C14.5262 6.64057 14.6667 6.97971 14.6667 7.33333V13.3333C14.6667 13.687 14.5262 14.0261 14.2761 14.2761C14.0261 14.5262 13.687 14.6667 13.3333 14.6667H12" stroke="var(--color-status-warning)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M6.66602 4H9.33268" stroke="var(--color-status-warning)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M6.66602 6.66699H9.33268" stroke="var(--color-status-warning)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M6.66602 9.33301H9.33268" stroke="var(--color-status-warning)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M6.66602 12H9.33268" stroke="var(--color-status-warning)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_238_757">
-<rect width="16" height="16" fill="white"/>
-</clipPath>
-</defs>
-</svg>
+    <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#clip0_238_757)">
+            <path d="M4 14.6663V2.66634C4 2.31272 4.14048 1.97358 4.39052 1.72353C4.64057 1.47348 4.97971 1.33301 5.33333 1.33301H10.6667C11.0203 1.33301 11.3594 1.47348 11.6095 1.72353C11.8595 1.97358 12 2.31272 12 2.66634V14.6663H4Z" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M4.00065 8H2.66732C2.3137 8 1.97456 8.14048 1.72451 8.39052C1.47446 8.64057 1.33398 8.97971 1.33398 9.33333V13.3333C1.33398 13.687 1.47446 14.0261 1.72451 14.2761C1.97456 14.5262 2.3137 14.6667 2.66732 14.6667H4.00065" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12 6H13.3333C13.687 6 14.0261 6.14048 14.2761 6.39052C14.5262 6.64057 14.6667 6.97971 14.6667 7.33333V13.3333C14.6667 13.687 14.5262 14.0261 14.2761 14.2761C14.0261 14.5262 13.687 14.6667 13.3333 14.6667H12" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.66602 4H9.33268" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.66602 6.66699H9.33268" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.66602 9.33301H9.33268" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.66602 12H9.33268" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+        <defs>
+            <clipPath id="clip0_238_757">
+                <rect width="16" height="16" fill="white" />
+            </clipPath>
+        </defs>
+    </svg>
 );
 
 export const UploadIcon =  ({ className = "w-4 h-4" }) => (

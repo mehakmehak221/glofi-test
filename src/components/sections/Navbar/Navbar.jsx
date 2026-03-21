@@ -16,7 +16,7 @@ export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
-        <header className="navbar fixed top-0 left-0 right-0 z-50 bg-[var(--color-bg-nav)] border-b border-[var(--color-border-dark)]">
+        <header className="navbar fixed top-0 left-0 right-0 z-50 bg-black border-b border-[#A4A7AE]">
             <div className="navbar__inner flex items-center justify-between h-16 lg:h-20 px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-10 max-w-7xl mx-auto">
                 <Link href="/" className="navbar__logo flex items-center text-decoration-none flex-shrink-0">
                     <img src="/GloFi.png" alt="GloFi Logo" className="h-10 sm:h-12 lg:h-[50px] xl:h-[58px] w-auto object-contain object-left" />

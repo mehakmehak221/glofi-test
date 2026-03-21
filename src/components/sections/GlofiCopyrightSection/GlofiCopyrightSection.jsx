@@ -12,7 +12,7 @@ import {
 
 export default function GlofiCopyrightSection() {
     return (
-        <section className="w-full bg-[var(--color-bg-dark)] border-t border-[var(--color-border-subtle)]">
+        <section id="support" className="w-full bg-black border-t border-[#FFFFFF40]">
                 <div className="w-full max-w-[1440px] mx-auto px-20 sm:px-24 lg:px-30 xl:px-36 2xl:px-40 py-6 sm:py-20 lg:py-22">
 
                 {/* Desktop & Tablet: single row layout */}

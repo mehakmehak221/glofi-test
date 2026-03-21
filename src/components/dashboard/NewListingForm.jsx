@@ -184,6 +184,7 @@ export default function NewListingForm({ onBack, editId }) {
     };
 
     return (
+        <>
         <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -348,5 +349,6 @@ export default function NewListingForm({ onBack, editId }) {
                 }} 
             />
         </motion.div>
+        </>
     );
 }
