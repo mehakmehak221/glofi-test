@@ -2,15 +2,16 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { PhoneIcon, ProfileIcon, ArrowRightIcon, LoadingSpinner, CheckIcon, SparkleIcon, ChevronLeftIcon, BackArrowIcon } from "@/components/VectorImages";
 import { useSetupProfileMutation } from "@/store/api/authApi";
 
 export default function OnboardingPage() {
     const router = useRouter();
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(3);
     const [phone, setPhone] = useState("");
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-    const [profile, setProfile] = useState({ fullName: "", dateOfBirth: "", nationality: "United States", residentialAddress: "" });
+    const [profile, setProfile] = useState({ fullName: "", dateOfBirth: "", nationality: "Indian", residentialAddress: "" });
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
 
@@ -81,8 +82,7 @@ export default function OnboardingPage() {
             </div>
 
 
-            <div className="flex items-center gap-3 mb-16 relative">
-
+            {/* <div className="flex items-center gap-3 mb-16 relative">
                 <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${step >= 3
                         ? "bg-[var(--color-primary-900)] text-[var(--color-primary-300)]"
@@ -105,10 +105,10 @@ export default function OnboardingPage() {
                     </div>
                     <span className="text-sm font-semibold text-white">Profile Setup</span>
                 </div>
-            </div>
+            </div> */}
 
 
-            {step === 1 && (
+            {/* {step === 1 && (
                 <div className="w-full max-w-sm flex flex-col items-start text-start animate-fade-in">
                     <h1 className="text-white font-bold text-3xl tracking-tight mb-3">Verify your phone</h1>
                     <p className="text-[var(--color-text-muted)] font-Montserrat text-md leading-relaxed mb-10">
@@ -139,10 +139,10 @@ export default function OnboardingPage() {
                         </button>
                     </form>
                 </div>
-            )}
+            )} */}
 
 
-            {step === 2 && (
+            {/* {step === 2 && (
                 <div className="w-full max-w-sm flex flex-col items-start text-start animate-fade-in">
                     <h1 className="text-white font-bold text-3xl tracking-tight mb-3">Verify your phone</h1>
                     <p className="text-white/40 font-Montserrat text-md leading-relaxed mb-10">
@@ -175,7 +175,7 @@ export default function OnboardingPage() {
                         </p>
                     </form>
                 </div>
-            )}
+            )} */}
 
 
             {step === 3 && (
@@ -236,12 +236,12 @@ export default function OnboardingPage() {
                         />
 
                         <div className="flex gap-4 pt-4">
-                            <button
+                            {/* <button
                                 type="button" onClick={handleBack}
                                 className="w-[60px] h-[50px] rounded-2xl bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] flex items-center justify-center text-[var(--color-text-muted)] hover:text-white hover:border-[var(--color-border-muted)] transition-all font-Montserrat"
                             >
                                 <BackArrowIcon className="w-5 h-5" />
-                            </button>
+                            </button> */}
                             <button
                                 type="submit" disabled={isSettingUp}
                                 className="flex-1 h-[50px] rounded-full bg-[var(--color-primary-300)] text-black font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-[0_8px_20px_var(--color-primary-300-alpha-15)] font-Montserrat"

@@ -7,10 +7,11 @@ import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner, ArrowRightIcon } from "@/components/VectorImages";
 import { useLoginMutation } from "@/store/api/authApi";
+import { setCookie } from "@/utils/cookieUtils";
 
 export default function SignInPage() {
     const router = useRouter();
-    const [userType, setUserType] = useState("INVESTOR");
+    const [userType, setUserType] = useState("Investor");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -28,13 +29,24 @@ export default function SignInPage() {
                 role: userType.toUpperCase(),
             }).unwrap();
 
-            localStorage.setItem("userType", result.role);
+            console.log('Login Result:', result);
+            const token = result.accessToken || result.token;
 
-            if (result.role === "PARTNER") {
-                router.push("/dashboard/partner");
+            if (token) {
+                setCookie("access_token", token);
+                localStorage.setItem("access_token", token);
+                console.log('Token stored in cookie and localStorage');
             } else {
-                router.push("/dashboard");
+                console.warn('No token found in login response');
             }
+
+            localStorage.setItem("userType", result.role || userType.toUpperCase());
+            localStorage.setItem("isLoggedIn", "true");
+
+            setCookie("isLoggedIn", "true");
+
+
+            router.push("/dashboard");
         } catch (err) {
             console.error("Failed to login:", err);
             setErrorMsg(err?.data?.message || err?.message || "Invalid credentials. Please try again.");

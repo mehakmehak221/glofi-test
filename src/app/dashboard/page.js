@@ -7,8 +7,8 @@ export default function DashboardPage() {
     const router = useRouter();
 
     useEffect(() => {
-        const userType = localStorage.getItem("userType");
-        if (userType === "Partner") {
+        const userType = (localStorage.getItem("userType") || "").toUpperCase();
+        if (userType === "PARTNER") {
             router.replace("/dashboard/partner/overview");
         } else {
             router.replace("/dashboard/investor/marketplace");

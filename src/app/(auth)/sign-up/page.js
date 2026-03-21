@@ -7,10 +7,11 @@ import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import { ChevronLeftIcon, LoadingSpinner, ArrowRightIcon, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
 import { useRegisterMutation } from "@/store/api/authApi";
+import { setCookie } from "@/utils/cookieUtils";
 
 export default function SignUpPage() {
     const router = useRouter();
-    const [userType, setUserType] = useState("INVESTOR");
+    const [userType, setUserType] = useState("Investor");
     const [form, setForm] = useState({ name: "", email: "", password: "", referredByCode: "" });
     const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
@@ -26,13 +27,28 @@ export default function SignUpPage() {
         e.preventDefault();
         setErrorMsg("");
         try {
-            await register({
+            const result = await register({
                 fullName: form.name,
                 email: form.email,
                 password: form.password,
                 role: userType.toUpperCase(),
                 referredByCode: form.referredByCode || undefined
             }).unwrap();
+
+            console.log('Register Result:', result);
+            const token = result.accessToken || result.token;
+
+            if (token) {
+                setCookie("access_token", token);
+                localStorage.setItem("access_token", token);
+                console.log('Token stored in cookie and localStorage');
+            } else {
+                console.warn('No token found in register response');
+            }
+
+            localStorage.setItem("userType", result.role || userType.toUpperCase());
+            localStorage.setItem("isLoggedIn", "true");
+            setCookie("isLoggedIn", "true");
 
             router.push("/onboarding");
         } catch (err) {

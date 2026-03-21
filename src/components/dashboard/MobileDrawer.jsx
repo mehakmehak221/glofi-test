@@ -1,9 +1,11 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Avatar from "@/components/ui/Avatar";
+import { useLogoutMutation } from "@/store/api/authApi";
+import { removeCookie } from "@/utils/cookieUtils";
 import {
     CloseIcon,
     MarketplaceIcon,
@@ -56,8 +58,25 @@ const itemVariants = {
 
 export default function MobileDrawer({ isOpen, onClose }) {
     const pathname = usePathname();
+    const router = useRouter();
     const isPartner = pathname.startsWith("/dashboard/partner");
     const activeNavItems = isPartner ? PARTNER_NAV_ITEMS : NAV_ITEMS;
+    const [logout] = useLogoutMutation();
+
+    const handleLogout = async () => {
+        try {
+            await logout().unwrap();
+        } catch (err) {
+            console.error("Logout error:", err);
+        } finally {
+            localStorage.removeItem("userType");
+            localStorage.removeItem("isLoggedIn");
+            removeCookie("isLoggedIn");
+            removeCookie("access_token");
+            router.push("/");
+            onClose();
+        }
+    };
 
     return (
         <AnimatePresence>
@@ -144,7 +163,10 @@ export default function MobileDrawer({ isOpen, onClose }) {
                                 initial="hidden"
                                 animate="visible"
                             >
-                                <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent">
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent"
+                                >
                                     <SignOutIcon className="w-5 h-5" />
                                     <span className="text-sm font-medium">Sign Out</span>
                                 </button>

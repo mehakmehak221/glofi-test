@@ -8,78 +8,20 @@ import {
     PropertyIcon,
 } from "@/components/VectorImages";
 import NewListingForm from "@/components/dashboard/NewListingForm";
+import { useGetMyListingsQuery } from "@/store/api/assetApi";
 
-
-const PROPERTIES = [
-    {
-        id: 1,
-        name: "Burj Vista Tower",
-        location: "Downtown Dubai, UAE",
-        valuation: "$250.0M",
-        sold: "6,750",
-        yield: "12.5%",
-        investors: "135",
-        status: "LIVE",
-        img: "/assets/img-burj.png",
-    },
-    {
-        id: 2,
-        name: "Marina Business Hub",
-        location: "Dubai Marina, UAE",
-        valuation: "$180.0M",
-        sold: "2,400",
-        yield: "9.8%",
-        investors: "128",
-        status: "LIVE",
-        img: "/assets/img-marina.png",
-    },
-    {
-        id: 3,
-        name: "Palm Jumeirah Villa Estate",
-        location: "Palm Jumeirah, Dubai",
-        valuation: "$95.0M",
-        sold: "3,800",
-        yield: "15.2%",
-        investors: "142",
-        status: "LIVE",
-        img: "/assets/img-palm.png",
-    },
-    {
-        id: 4,
-        name: "Dubai South Development Land",
-        location: "Dubai South, UAE",
-        valuation: "$45.0M",
-        sold: "200",
-        yield: "22%",
-        investors: "186",
-        status: "LIVE",
-        img: "/assets/img-dubai.png",
-    },
-    {
-        id: 5,
-        name: "DIFC Innovation Tower",
-        location: "DIFC, Dubai",
-        valuation: "$320.0M",
-        sold: "3,600",
-        yield: "11.3%",
-        investors: "228",
-        status: "LIVE",
-        img: "/assets/img-difc.png",
-    },
-    {
-        id: 6,
-        name: "Marina Walk Residences",
-        location: "Dubai Marina, UAE",
-        valuation: "$150.0M",
-        sold: "3,400",
-        yield: "10.7%",
-        investors: "175",
-        status: "LIVE",
-        img: "/assets/img-walk.png",
-    },
-];
+const formatValuation = (val) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) return "N/A";
+    if (num >= 1e9) return `$${(num / 1e9).toFixed(1)}B`;
+    if (num >= 1e6) return `$${(num / 1e6).toFixed(1)}M`;
+    if (num >= 1e3) return `$${(num / 1e3).toFixed(1)}K`;
+    return `$${num}`;
+};
 
 function PropertyCard({ property, index }) {
+    const propertyImage = property.images && property.images.length > 0 ? property.images[0] : null;
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -88,10 +30,10 @@ function PropertyCard({ property, index }) {
             className="bg-[var(--color-bg-nav)] rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:border-[var(--color-primary-300)]/10 border border-transparent transition-all"
         >
             <div className="w-full md:w-32 lg:w-40 h-24 lg:h-28 bg-[var(--color-bg-card)] rounded-xl flex-shrink-0 flex items-center justify-center border border-[var(--color-border-subtle)] overflow-hidden relative">
-                {property.img ? (
+                {propertyImage ? (
                     <Image
-                        src={property.img}
-                        alt={property.name}
+                        src={propertyImage.startsWith('http') ? propertyImage : `/${propertyImage}`}
+                        alt={property.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 160px, 160px"
@@ -103,7 +45,7 @@ function PropertyCard({ property, index }) {
 
             <div className="flex-1 w-full">
                 <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.name}</h3>
+                    <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
                     <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1 flex items-center gap-1">
                         <MapPinIcon className="w-3 h-3" />
                         {property.location}
@@ -113,19 +55,27 @@ function PropertyCard({ property, index }) {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-2">
                     <div className="flex flex-col gap-1">
                         <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Valuation</span>
-                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">{property.valuation}</span>
+                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
+                            {formatValuation(property.valuation)}
+                        </span>
                     </div>
                     <div className="flex flex-col gap-1">
                         <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Sold</span>
-                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">{property.sold}</span>
+                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
+                            {property.soldFractions || 0}
+                        </span>
                     </div>
                     <div className="flex flex-col gap-1">
                         <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Yield</span>
-                        <span className="text-sm font-bold text-[var(--color-text-secondary)] font-montserrat">{property.yield}</span>
+                        <span className="text-sm font-bold text-[var(--color-text-secondary)] font-montserrat">
+                            {property.expectedYield}%
+                        </span>
                     </div>
                     <div className="flex flex-col gap-1">
                         <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Investors</span>
-                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">{property.investors}</span>
+                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
+                            {property.investorCount || 0}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -142,6 +92,7 @@ function PropertyCard({ property, index }) {
 
 export default function PartnerPropertiesPage() {
     const [isAddingNew, setIsAddingNew] = useState(false);
+    const { data, isLoading, isError } = useGetMyListingsQuery();
 
     return (
         <div className="p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen font-montserrat">
@@ -183,9 +134,23 @@ export default function PartnerPropertiesPage() {
 
 
                         <div className="flex flex-col gap-4 lg:gap-5">
-                            {PROPERTIES.map((prop, i) => (
-                                <PropertyCard key={prop.id} property={prop} index={i} />
-                            ))}
+                            {isLoading ? (
+                                <div className="flex items-center justify-center p-12">
+                                    <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />
+                                </div>
+                            ) : isError ? (
+                                <div className="text-center p-12 text-[var(--color-text-muted)]">
+                                    Error loading properties. Please try again later.
+                                </div>
+                            ) : data?.data?.length === 0 ? (
+                                <div className="text-center p-12 text-[var(--color-text-muted)] border border-dashed border-[var(--color-border-subtle)] rounded-2xl">
+                                    No properties found.
+                                </div>
+                            ) : (
+                                data?.data?.map((prop, i) => (
+                                    <PropertyCard key={prop.id} property={prop} index={i} />
+                                ))
+                            )}
                         </div>
                     </motion.div>
                 )}

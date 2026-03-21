@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import NavItem from "./NavItem";
 import { useLogoutMutation } from "@/store/api/authApi";
+import { removeCookie } from "@/utils/cookieUtils";
 
 import {
     OverviewIcon,
@@ -34,10 +35,15 @@ export default function PartnerSidebar() {
     const handleLogout = async () => {
         try {
             await logout().unwrap();
-            localStorage.removeItem("userType");
-            router.push("/sign-in");
         } catch (err) {
-            console.error("Failed to logout:", err);
+           
+            console.error("Logout error:", err);
+        } finally {
+            localStorage.removeItem("userType");
+            localStorage.removeItem("isLoggedIn");
+            removeCookie("isLoggedIn");
+            removeCookie("access_token");
+            router.push("/");
         }
     };
 
