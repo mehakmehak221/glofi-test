@@ -1,26 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGetProfileQuery } from "@/store/api/authApi";
 
 const TABS = ["Profile", "KYC", "Wallet", "Certificates", "Referrals"];
 
-const PROFILE_FIELDS = [
-    { label: "Full Name", value: "Ishan", type: "text" },
-    { label: "Email", value: "demo@glofi.estate", type: "email" },
-    { label: "Phone", value: "+971 50 123 4567", type: "tel" },
-    { label: "Country", value: "United Arab Emirates", type: "text" },
-];
-
 const tabContentVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
-    exit: { opacity: 0, y: -10, transition: { duration: 0.15 } },
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
 };
 
 export default function AccountPage() {
     const [activeTab, setActiveTab] = useState("Profile");
     const [copied, setCopied] = useState(false);
+
+    const { data: profileData, isLoading } = useGetProfileQuery();
+
+    const PROFILE_FIELDS = useMemo(() => {
+        if (!profileData) return [
+            { label: "Full Name", value: "Loading...", type: "text" },
+            { label: "Email", value: "Loading...", type: "email" },
+            { label: "Phone", value: "Loading...", type: "tel" },
+            { label: "Country", value: "Loading...", type: "text" },
+        ];
+
+        return [
+            { label: "Full Name", value: profileData.fullName || profileData.name || "", type: "text" },
+            { label: "Email", value: profileData.email || "", type: "email" },
+            { label: "Phone", value: profileData.phoneNumber || profileData.phone || "", type: "tel" },
+            { label: "Country", value: profileData.country || profileData.nationality || "", type: "text" },
+        ];
+    }, [profileData]);
 
     const handleCopy = () => {
         navigator.clipboard.writeText("glofi.estate/ref/DEMO-2026");
@@ -71,27 +83,36 @@ export default function AccountPage() {
                 >
                     {activeTab === "Profile" && (
                         <div className="bg-[var(--color-bg-dark-alt)] border border-[var(--color-border-subtle)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 max-w-[800px]">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6 mb-6 sm:mb-8">
-                                {PROFILE_FIELDS.map((field) => (
-                                    <div key={field.label} className="flex flex-col gap-1.5">
-                                        <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
-                                            {field.label}
-                                        </label>
-                                        <input
-                                            type={field.type}
-                                            defaultValue={field.value}
-                                            className="w-full rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium text-white bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] transition-all hover:border-[var(--color-border-muted)] focus:outline-none focus:border-[var(--color-primary-300)]/50"
-                                        />
+                            {isLoading ? (
+                                <div className="flex justify-center py-12">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary-300)]"></div>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6 mb-6 sm:mb-8">
+                                        {PROFILE_FIELDS.map((field) => (
+                                            <div key={field.label} className="flex flex-col gap-1.5">
+                                                <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
+                                                    {field.label}
+                                                </label>
+                                                <input
+                                                    type={field.type}
+                                                    defaultValue={field.value}
+                                                    key={field.value} // Force re-render when value changes
+                                                    className="w-full rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium text-white bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] transition-all hover:border-[var(--color-border-muted)] focus:outline-none focus:border-[var(--color-primary-300)]/50"
+                                                />
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                            <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[var(--color-primary-300)] text-black font-semibold text-[11px] sm:text-[13px] tracking-wide cursor-pointer border-0 shadow-[var(--shadow-glow-primary)]"
-                            >
-                                Save Changes
-                            </motion.button>
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[var(--color-primary-300)] text-black font-semibold text-[11px] sm:text-[13px] tracking-wide cursor-pointer border-0 shadow-[var(--shadow-glow-primary)]"
+                                    >
+                                        Save Changes
+                                    </motion.button>
+                                </>
+                            )}
                         </div>
                     )}
 

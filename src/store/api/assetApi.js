@@ -9,9 +9,32 @@ export const assetApi = baseApi.injectEndpoints({
         body: assetData,
       }),
     }),
+    getAssets: builder.query({
+      query: ({ category, riskRating, limit = 10, page = 1 } = {}) => {
+        const params = new URLSearchParams({ limit, page });
+        if (category) params.append('category', category);
+        if (riskRating) params.append('riskRating', riskRating);
+        return {
+          url: `assets?${params.toString()}`,
+          method: 'GET',
+        };
+      },
+    }),
+    getAssetById: builder.query({
+      query: (id) => ({
+        url: `assets/${id}`,
+        method: 'GET',
+      }),
+    }),
     getMyListings: builder.query({
       query: ({ limit = 10, page = 1 } = {}) => ({
         url: `assets/my/listings?limit=${limit}&page=${page}`,
+        method: 'GET',
+      }),
+    }),
+    getPartnerAssetById: builder.query({
+      query: (id) => ({
+        url: `assets/my/${id}`,
         method: 'GET',
       }),
     }),
@@ -56,5 +79,8 @@ export const {
   useDeleteAssetMutation,
   useUploadFileMutation,
   useGetMyListingsQuery,
+  useGetPartnerAssetByIdQuery,
+  useGetAssetsQuery,
+  useGetAssetByIdQuery,
   useSubmitAssetForReviewMutation,
 } = assetApi;

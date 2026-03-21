@@ -8,7 +8,7 @@ import {
     PropertyIcon,
 } from "@/components/VectorImages";
 import NewListingForm from "@/components/dashboard/NewListingForm";
-import { useGetMyListingsQuery } from "@/store/api/assetApi";
+import { useGetMyListingsQuery, useDeleteAssetMutation, useSubmitAssetForReviewMutation } from "@/store/api/assetApi";
 
 const formatValuation = (val) => {
     const num = parseFloat(val);
@@ -19,8 +19,9 @@ const formatValuation = (val) => {
     return `$${num}`;
 };
 
-function PropertyCard({ property, index }) {
+function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) {
     const propertyImage = property.images && property.images.length > 0 ? property.images[0] : null;
+    const isDraft = property.status === 'DRAFT';
 
     return (
         <motion.div
@@ -44,12 +45,37 @@ function PropertyCard({ property, index }) {
             </div>
 
             <div className="flex-1 w-full">
-                <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
-                    <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1 flex items-center gap-1">
-                        <MapPinIcon className="w-3 h-3" />
-                        {property.location}
-                    </p>
+                <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
+                    <div>
+                        <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
+                        <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1 flex items-center gap-1">
+                            <MapPinIcon className="w-3 h-3" />
+                            {property.location}
+                        </p>
+                    </div>
+
+                    {isDraft && (
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => onSubmitForReview(property.id)}
+                                className="px-3 py-1.5 rounded-lg bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] text-[10px] font-bold uppercase transition-all hover:bg-[var(--color-primary-300)]/20"
+                            >
+                                Submit
+                            </button>
+                             <button
+                                 onClick={() => onEdit(property.id)}
+                                 className="px-3 py-1.5 rounded-lg bg-[var(--color-bg-surface-subtle)] text-[var(--color-text-muted)] text-[10px] font-bold uppercase transition-all hover:text-white"
+                             >
+                                 Edit
+                             </button>
+                            <button
+                                onClick={() => onDelete(property.id)}
+                                className="px-3 py-1.5 rounded-lg bg-red-500/5 text-red-500/70 text-[10px] font-bold uppercase transition-all hover:bg-red-500/10 hover:text-red-500"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-2">
@@ -92,13 +118,46 @@ function PropertyCard({ property, index }) {
 
 export default function PartnerPropertiesPage() {
     const [isAddingNew, setIsAddingNew] = useState(false);
-    const { data, isLoading, isError } = useGetMyListingsQuery();
+    const [editId, setEditId] = useState(null);
+    const { data, isLoading, isError, refetch } = useGetMyListingsQuery();
+    const [deleteAsset] = useDeleteAssetMutation();
+    const [submitAssetForReview] = useSubmitAssetForReviewMutation();
+
+    const handleDelete = async (id) => {
+        if (!confirm("Are you sure you want to delete this listing?")) return;
+        try {
+            await deleteAsset(id).unwrap();
+            refetch();
+        } catch (err) {
+            console.error("Delete failed:", err);
+            alert("Delete failed");
+        }
+    };
+
+    const handleSubmitForReview = async (id) => {
+        try {
+            await submitAssetForReview(id).unwrap();
+            alert("Submitted for review!");
+            refetch();
+        } catch (err) {
+            console.error("Submission failed:", err);
+            alert("Submission failed");
+        }
+    };
 
     return (
         <div className="p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen font-montserrat">
             <AnimatePresence mode="wait">
-                {isAddingNew ? (
-                    <NewListingForm key="form" onBack={() => setIsAddingNew(false)} />
+                {isAddingNew || editId ? (
+                    <NewListingForm 
+                        key="form" 
+                        editId={editId}
+                        onBack={() => {
+                            setIsAddingNew(false);
+                            setEditId(null);
+                            refetch();
+                        }} 
+                    />
                 ) : (
                     <motion.div
                         key="list"
@@ -148,7 +207,14 @@ export default function PartnerPropertiesPage() {
                                 </div>
                             ) : (
                                 data?.data?.map((prop, i) => (
-                                    <PropertyCard key={prop.id} property={prop} index={i} />
+                                    <PropertyCard
+                                        key={prop.id}
+                                        property={prop}
+                                        index={i}
+                                        onDelete={handleDelete}
+                                        onSubmitForReview={handleSubmitForReview}
+                                        onEdit={setEditId}
+                                    />
                                 ))
                             )}
                         </div>

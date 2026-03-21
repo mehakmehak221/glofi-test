@@ -1,7 +1,14 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { BusinessPropertyIcon, UploadIcon, LoadingSpinner } from "../VectorImages";
-import { useCreateAssetMutation, useUploadFileMutation, useSubmitAssetForReviewMutation } from "@/store/api/assetApi";
+import { 
+    useCreateAssetMutation, 
+    useUploadFileMutation, 
+    useSubmitAssetForReviewMutation,
+    useGetPartnerAssetByIdQuery,
+    useUpdateAssetMutation 
+} from "@/store/api/assetApi";
+import { useGetKybStatusQuery } from "@/store/api/kybApi";
 import { validateFileUpload } from "@/utils/assetUtils";
 import KYBModal from "./KYBModal";
 
@@ -61,7 +68,7 @@ const UploadArea = ({ label, onUpload, value, isUploading }) => {
     );
 };
 
-export default function NewListingForm({ onBack }) {
+export default function NewListingForm({ onBack, editId }) {
     const [formData, setFormData] = useState({
         title: "",
         location: "",
@@ -79,10 +86,35 @@ export default function NewListingForm({ onBack }) {
 
     const [showKybModal, setShowKybModal] = useState(false);
 
-    const [createAsset, { isLoading: isSubmitting }] = useCreateAssetMutation();
+    const { data: assetData, isLoading: isLoadingAsset } = useGetPartnerAssetByIdQuery(editId, { skip: !editId });
+    const { data: kybStatus } = useGetKybStatusQuery();
+    const [createAsset, { isLoading: isCreating }] = useCreateAssetMutation();
+    const [updateAsset, { isLoading: isUpdating }] = useUpdateAssetMutation();
     const [submitAssetForReview] = useSubmitAssetForReviewMutation();
     const [uploadFile] = useUploadFileMutation();
     const [uploadingField, setUploadingField] = useState(null);
+
+    const isSubmitting = isCreating || isUpdating;
+
+    useEffect(() => {
+        if (assetData?.data) {
+            const asset = assetData.data;
+            setFormData({
+                title: asset.title || "",
+                location: asset.location || "",
+                valuation: asset.valuation || "",
+                totalFractions: asset.totalFractions || "",
+                expectedYield: asset.expectedYield || "",
+                description: asset.description || "",
+                riskRating: asset.riskRating || "MEDIUM",
+                category: asset.category || "DUBAI_SKYSCRAPER",
+                titleDeedUrl: asset.titleDeedUrl || "",
+                valuationReportUrl: asset.valuationReportUrl || "",
+                legalOpinionUrl: asset.legalOpinionUrl || "",
+                images: asset.images || []
+            });
+        }
+    }, [assetData]);
 
     const handleFileUpload = async (file, field) => {
         setUploadingField(field);
@@ -122,17 +154,32 @@ export default function NewListingForm({ onBack }) {
                 fractionPrice: Number(formData.valuation) / Number(formData.totalFractions),
             };
 
-            const result = await createAsset(payload).unwrap();
-            
-            // Now submit for review
-            await submitAssetForReview(result.id).unwrap();
+            console.log('Saving asset with payload:', payload);
 
-            alert('Asset created and submitted for review!');
-            setShowKybModal(true);
-            // onBack(); // Don't go back yet, let them do KYB
+            if (editId) {
+                await updateAsset({ id: editId, data: payload }).unwrap();
+                alert('Asset updated successfully!');
+                onBack();
+            } else {
+                const result = await createAsset(payload).unwrap();
+                console.log('Create asset result:', result);
+                
+             
+                await submitAssetForReview(result.asset.id).unwrap();
+
+                alert('Asset created and submitted for review!');
+                
+
+                if (kybStatus?.status === 'APPROVED' || kybStatus?.status === 'PENDING' || kybStatus?.status === 'UNDER_REVIEW') {
+                    onBack();
+                } else {
+                    setShowKybModal(true);
+                }
+            }
         } catch (err) {
-            console.error('Failed to create asset:', err);
-            alert(err?.data?.message || 'Failed to create asset');
+            console.error('Failed to save asset. Full error:', err);
+            console.error('Error detail:', JSON.stringify(err, null, 2));
+            alert(err?.data?.message || err?.message || 'Failed to save asset');
         }
     };
 
@@ -145,7 +192,7 @@ export default function NewListingForm({ onBack }) {
         >
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-xl lg:text-2xl font-semibold text-white font-montserrat tracking-tight">
-                    Properties
+                    {editId ? "Edit Property" : "New Property"}
                 </h1>
                 <button
                     onClick={onBack}
@@ -155,7 +202,13 @@ export default function NewListingForm({ onBack }) {
                 </button>
             </div>
 
-            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-3xl p-6 lg:p-10">
+            {isLoadingAsset ? (
+                <div className="flex items-center justify-center p-20">
+                    <LoadingSpinner />
+                </div>
+            ) : (
+                <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-3xl p-6 lg:p-10">
+                    {/* ... rest of the form ... */}
                 <div className="flex items-center justify-center gap-12 mb-10 border-b border-[var(--color-border-subtle)] pb-4">
                     {CATEGORIES.map((cat) => (
                         <button
@@ -282,9 +335,10 @@ export default function NewListingForm({ onBack }) {
                     whileTap={{ scale: 0.99 }}
                     className="bg-[var(--color-primary-300)] text-black font-bold text-sm px-8 py-3.5 rounded-2xl hover:bg-[var(--color-primary-100)] transition-colors font-montserrat min-w-[200px] flex items-center justify-center"
                 >
-                    {isSubmitting ? <LoadingSpinner color="black" /> : "Verify & Submit"}
+                    {isSubmitting ? <LoadingSpinner color="black" /> : editId ? "Update Property" : "Verify & Submit"}
                 </motion.button>
             </div>
+            )}
 
             <KYBModal 
                 isOpen={showKybModal} 

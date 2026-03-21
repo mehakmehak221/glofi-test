@@ -12,7 +12,13 @@ export default function OnboardingPage() {
     const [phone, setPhone] = useState("");
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [profile, setProfile] = useState({ fullName: "", dateOfBirth: "", nationality: "Indian", residentialAddress: "" });
+    const [userRole, setUserRole] = useState("INVESTOR");
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const role = localStorage.getItem("userType");
+        if (role) setUserRole(role.toUpperCase());
+    }, []);
     const [errorMsg, setErrorMsg] = useState("");
 
     const [setupProfile, { isLoading: isSettingUp }] = useSetupProfileMutation();
@@ -77,7 +83,7 @@ export default function OnboardingPage() {
             <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[var(--color-bg-surface-subtle)] mb-12 shadow-sm">
                 <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)]/60" />
                 <span className="text-[12px] font-bold tracking-[0.15em] text-[var(--color-text-muted)] uppercase font-Montserrat">
-                    Investor Setup
+                    {userRole === "PARTNER" ? "Partner Panel" : "Investor Setup"}
                 </span>
             </div>
 
