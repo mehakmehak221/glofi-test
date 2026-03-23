@@ -146,7 +146,7 @@ export default function MarketplacePage() {
                                         variants={cardVariants}
                                         layout
                                         onClick={() => handleCardClick(property.id)}
-                                        className="bg-[var(--color-bg-card-alt)] border border-[var(--color-border-subtle)] rounded-[16px] overflow-hidden hover:border-[var(--color-primary-100)]/20 transition-colors duration-300 group cursor-pointer"
+                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-[16px] overflow-hidden hover:border-[var(--sidebar-active-text)]/20 transition-colors duration-300 group cursor-pointer shadow-[var(--marketplace-card-shadow)]"
                                     >
 
                                         <div className="relative h-48 overflow-hidden">
@@ -157,10 +157,10 @@ export default function MarketplacePage() {
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                                                 className="object-cover transition-transform duration-500 group-hover:scale-110"
                                             />
-                                            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #050505 0%, rgba(0, 0, 0, 0.00) 50%, rgba(0, 0, 0, 0.00) 100%)' }} />
+                                            <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
 
-                                            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-[var(--color-bg-dark)]/80 text-[var(--color-text-secondary)] border border-[var(--color-border-muted)] backdrop-blur-sm">
+                                            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-black/50 text-white/90 border border-white/10 backdrop-blur-sm">
                                                 {property.category.replace('_', ' ')}
                                             </span>
 
@@ -175,7 +175,7 @@ export default function MarketplacePage() {
 
 
                                         <div className="p-5">
-                                            <h3 className="text-lg font-bold text-white mb-1 line-clamp-1">{property.title}</h3>
+                                            <h3 className="text-lg font-bold text-[var(--header-text)] mb-1 line-clamp-1">{property.title}</h3>
                                             <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-xs mb-4">
                                                 <MapPinIcon className="w-3.5 h-3.5" />
                                                 {property.location}
@@ -184,33 +184,34 @@ export default function MarketplacePage() {
                                             <div className="grid grid-cols-2 gap-3 mb-4">
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Valuation</p>
-                                                    <p className="text-base font-bold text-white">{formatValuation(property.valuation)}</p>
+                                                    <p className="text-base font-bold text-[var(--header-text)]">{formatValuation(property.valuation)}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Per Fraction</p>
-                                                    <p className="text-base font-bold text-white">${Number(property.fractionPrice).toLocaleString()}</p>
+                                                    <p className="text-base font-bold text-[var(--header-text)]">${Number(property.fractionPrice).toLocaleString()}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Yield</p>
-                                                    <p className="text-base font-bold text-[var(--color-primary-100)]">{property.expectedYield}%</p>
+                                                    <p className="text-base font-bold text-[var(--sidebar-active-text)]">{property.expectedYield}%</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Available</p>
-                                                    <p className="text-base font-bold text-white">{property.availableFractions?.toLocaleString()}</p>
+                                                    <p className="text-base font-bold text-[var(--header-text)]">{property.availableFractions?.toLocaleString()}</p>
                                                 </div>
                                             </div>
 
 
                                             <div className="mb-4">
-                                                <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                                                <div className="w-full h-1.5 bg-[var(--marketplace-card-border)] rounded-full overflow-hidden">
                                                     <motion.div
-                                                        className="h-full bg-gradient-to-r from-[#00FFCD] to-[#009976] rounded-full"
+                                                        className="h-full rounded-full"
+                                                        style={{ background: 'linear-gradient(90deg, var(--marketplace-card-progress-fill-start) 0%, var(--marketplace-card-progress-fill-end) 100%)' }}
                                                         initial={{ width: 0 }}
                                                         animate={{ width: `${fundedPercentage}%` }}
                                                         transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                                                     />
                                                 </div>
-                                                <p className="text-[10px] text-[var(--color-text-muted)] mt-1">{fundedPercentage}% funded</p>
+                                                <p className="text-[10px] text-[var(--marketplace-card-progress-text)] mt-1">{fundedPercentage}% funded</p>
                                             </div>
 
 
@@ -221,7 +222,7 @@ export default function MarketplacePage() {
                                                     e.stopPropagation();
                                                     handleCardClick(property.id);
                                                 }}
-                                                className="w-full py-3 rounded-xl bg-[var(--color-gradient-glofi)] text-black font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-[var(--shadow-glow-primary)]"
+                                                className="w-full py-3 rounded-xl bg-[var(--btn-mint-bg)] text-[var(--btn-mint-text)] font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-[var(--shadow-glow-primary)]"
                                             >
                                                 Invest Now
                                             </motion.button>

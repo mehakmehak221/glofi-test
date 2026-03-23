@@ -25,7 +25,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay }) 
     const total = subtotal + fee;
 
     const formatCurrency = (val) =>
-        "$" + val.toLocaleString("en-US", { minimumFractionDigits: 0 });
+        "$" + (Number(val) || 0).toLocaleString("en-US", { minimumFractionDigits: 0 });
 
     return (
         <AnimatePresence>
