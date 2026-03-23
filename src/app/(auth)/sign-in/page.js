@@ -52,7 +52,17 @@ export default function SignInPage() {
             console.error("Failed to login detailed error:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
             console.error("Failed to login error object:", err);
             console.error("Failed to login error structure keys:", Object.keys(err));
-            setErrorMsg(err?.data?.message || err?.message || "Invalid credentials. Please try again.");
+
+            const status = err?.status;
+            const message = err?.data?.message || err?.message;
+
+            if (status === 401) {
+                setErrorMsg(message || "Invalid credentials. Please check your email and password.");
+            } else if (status === 400) {
+                setErrorMsg(message || "Invalid request. Please check your input.");
+            } else {
+                setErrorMsg(message || "An unexpected error occurred. Please try again later.");
+            }
         }
     };
 

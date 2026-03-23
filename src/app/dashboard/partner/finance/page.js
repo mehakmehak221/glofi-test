@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useGetPendingApprovalsQuery, useApproveInvestmentMutation, useRejectInvestmentMutation } from "@/store/api/investmentApi";
+import { CheckIcon } from "@/components/VectorImages";
 
 const TABS = ["Commissions", "Payouts", "Approvals", "AI Plans"];
 

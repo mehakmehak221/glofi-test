@@ -7,11 +7,17 @@ export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${API_URL}/`,
     credentials: 'include',
-    prepareHeaders: (headers) => {
-      const token = getCookie('access_token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+    prepareHeaders: (headers, { endpoint }) => {
+      
+      const publicEndpoints = ['login', 'register'];
+
+      if (!publicEndpoints.includes(endpoint)) {
+        const token = getCookie('access_token');
+        if (token) {
+          headers.set('Authorization', `Bearer ${token}`);
+        }
       }
+
       if (!headers.has('Content-Type')) {
         headers.set('Content-Type', 'application/json');
       }
