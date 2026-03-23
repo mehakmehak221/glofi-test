@@ -33,6 +33,22 @@ export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const [isLight, setIsLight] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
+    const [logout] = useLogoutMutation();
+
+    const handleLogout = async () => {
+        try {
+            await logout().unwrap();
+        } catch (err) {
+            console.error("Logout error:", err);
+        } finally {
+            localStorage.removeItem("userType");
+            localStorage.removeItem("isLoggedIn");
+            removeCookie("isLoggedIn");
+            removeCookie("access_token");
+            router.push("/");
+        }
+    };
 
     return (
         <motion.aside
@@ -110,7 +126,10 @@ export default function Sidebar() {
                 </motion.button>
 
 
-                <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent group">
+                <button 
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent group"
+                >
                     <span className="flex-shrink-0 ml-0.5">
                         <SignOutIcon className="w-5 h-5" />
                     </span>
