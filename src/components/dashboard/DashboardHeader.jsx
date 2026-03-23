@@ -6,14 +6,19 @@ import Avatar from "@/components/ui/Avatar";
 import { BellIcon, MoonIcon, SunIcon } from "@/components/VectorImages";
 
 export default function DashboardHeader() {
-    const [isLight, setIsLight] = useState(() => {
-        if (typeof window !== "undefined") {
-            return localStorage.getItem("theme") === "light";
-        }
-        return false;
-    });
+    const [mounted, setMounted] = useState(false);
+    const [isLight, setIsLight] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light") {
+            setIsLight(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
         const root = document.documentElement;
         console.log("Setting theme to:", isLight ? "light" : "dark");
         if (isLight) {
@@ -25,7 +30,7 @@ export default function DashboardHeader() {
             root.classList.remove("light");
             localStorage.setItem("theme", "dark");
         }
-    }, [isLight]);
+    }, [isLight, mounted]);
 
     return (
         <header className="hidden lg:flex items-center justify-between px-6 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-30">

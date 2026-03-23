@@ -68,18 +68,18 @@ export default function FinancePage() {
         <div className="p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                <h1 className="text-3xl font-semibold text-white font-montserrat tracking-tight">
+                <h1 className="text-2xl lg:text-3xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight opacity-90">
                     Finance
                 </h1>
 
-                <div className="flex bg-[var(--color-bg-surface-subtle)] p-1 rounded-full border border-[var(--color-border-subtle)] self-start md:self-auto">
+                <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-2xl border border-[var(--sidebar-border)] self-start md:self-auto">
                     {TABS.map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`px-6 py-2 rounded-md text-xs font-semibold font-montserrat transition-all ${activeTab === tab
-                                ? "bg-[var(--color-primary-300)]/5 text-[var(--color-primary-300)] shadow-sm"
-                                : "text-[var(--color-text-muted)] hover:text-white"
+                            className={`px-6 py-2 rounded-xl text-[12px] font-medium font-montserrat transition-all ${activeTab === tab
+                                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] shadow-sm"
+                                : "text-[var(--sidebar-text)] opacity-40 hover:opacity-80"
                                 }`}
                         >
                             {tab}
@@ -96,13 +96,13 @@ export default function FinancePage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="rounded-md p-6 bg-[var(--color-primary-300)]/10 hover:border-[var(--color-primary-300)]/10 transition-colors"
-                        style={{ backgroundColor: stat.color }}
+                        className="rounded-2xl p-6 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
                     >
-                        <p className="text-[10px] font-bold tracking-widest text-[var(--color-text-muted)] font-montserrat mb-4">
+                        <div className="absolute inset-0 bg-[var(--sidebar-active-text)] opacity-[0.03] pointer-events-none" />
+                        <p className="text-[10px] font-bold tracking-[1.2px] text-[var(--sidebar-text)] opacity-30 font-montserrat mb-4 uppercase">
                             {stat.label}
                         </p>
-                        <p className="text-3xl font-semibold text-[var(--color-text-primary)] font-montserrat tracking-tight">
+                        <p className="text-2xl font-semibold text-[var(--foreground)] opacity-90 font-montserrat tracking-tight">
                             {stat.value}
                         </p>
                     </motion.div>
@@ -117,27 +117,27 @@ export default function FinancePage() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="rounded-md bg-[var(--color-bg-surface-subtle)] p-5"
+                    className="rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] p-5 border border-[var(--sidebar-border)]"
                 >
                     {activeTab === "Commissions" && (
                         <div>
-                            <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-6">Commission History</h2>
-                            <div className="space-y-3">
+                            <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat mb-6">Commission History</h2>
+                            <div className="space-y-2">
                                 {COMMISSIONS.map((item, i) => (
                                     <motion.div
                                         key={i}
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="bg-[var(--color-bg-surface-subtle)] p-5 rounded-md flex items-center justify-between border border-[var(--color-border-subtle)] hover:border-[var(--color-primary-300)]/20 transition-colors group"
+                                        className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex items-center justify-between hover:shadow-sm transition-all group"
                                     >
                                         <div>
-                                            <h3 className="text-sm font-semibold text-white font-montserrat group-hover:text-[var(--color-primary-300)] transition-colors">{item.name}</h3>
-                                            <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1">{item.detail}</p>
+                                            <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.name}</h3>
+                                            <p className="text-[11px] text-[var(--sidebar-text)] opacity-30 font-montserrat mt-1">{item.detail}</p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-sm font-bold text-[var(--color-status-success)]/70 font-montserrat">{item.amount}</p>
-                                            <p className={`text-[10px] font-bold font-montserrat mt-1 uppercase tracking-tighter`} style={{ color: item.color + '99' }}>
+                                            <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">{item.amount}</p>
+                                            <p className={`text-[10px] font-medium font-montserrat mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                 {item.status}
                                             </p>
                                         </div>
@@ -149,23 +149,23 @@ export default function FinancePage() {
 
                     {activeTab === "Payouts" && (
                         <div>
-                            <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-6">Payout History</h2>
-                            <div className="space-y-3">
+                            <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat mb-6">Payout History</h2>
+                            <div className="space-y-2">
                                 {PAYOUTS.map((item, i) => (
                                     <motion.div
                                         key={i}
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="bg-[var(--color-bg-surface-subtle)] p-5 rounded-md flex items-center justify-between border border-[var(--color-border-subtle)] hover:border-[var(--color-primary-300)]/20 transition-colors group"
+                                        className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex items-center justify-between hover:shadow-sm transition-all group"
                                     >
                                         <div>
-                                            <h3 className="text-sm font-semibold text-white font-montserrat group-hover:text-[var(--color-primary-300)] transition-colors">{item.name}</h3>
-                                            <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1">{item.detail}</p>
+                                            <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.name}</h3>
+                                            <p className="text-[11px] text-[var(--sidebar-text)] opacity-30 font-montserrat mt-1">{item.detail}</p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-sm font-bold text-[var(--color-primary-300)]/70 font-montserrat">{item.amount}</p>
-                                            <p className={`text-[10px] font-bold font-montserrat mt-1 uppercase tracking-tighter`} style={{ color: item.color + '99' }}>
+                                            <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">{item.amount}</p>
+                                            <p className={`text-[10px] font-medium font-montserrat mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                 {item.status}
                                             </p>
                                         </div>
@@ -182,30 +182,30 @@ export default function FinancePage() {
                                     key={plan.name}
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    whileHover={{ scale: 1.02, borderColor: 'var(--color-primary-300-alpha-30)', backgroundColor: 'var(--color-bg-surface-elevated)' }}
+                                    whileHover={{ scale: 1.02 }}
                                     transition={{ delay: i * 0.1 }}
-                                    className={`bg-[var(--color-bg-surface-subtle)] p-7 rounded-3xl border ${plan.popular ? 'border-[var(--color-primary-300)]/20' : 'border-[var(--color-border-subtle)]'} flex flex-col items-start relative overflow-hidden cursor-pointer transition-colors duration-300`}
+                                    className={`bg-[var(--sidebar-bg)] p-7 rounded-3xl border ${plan.popular ? 'border-[var(--sidebar-active-text)]/30' : 'border-[var(--sidebar-border)]'} flex flex-col items-start relative overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300`}
                                 >
                                     {plan.popular && (
-                                        <div className="absolute top-4 right-4 bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)]/70 text-[9px] font-bold px-2.5 py-1 rounded-full border border-[var(--color-primary-300)]/20">
+                                        <div className="absolute top-4 right-4 bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-[9px] font-bold px-2.5 py-1 rounded-full border border-[var(--sidebar-active-text)]/10">
                                             POPULAR
                                         </div>
                                     )}
-                                    <h3 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-2 uppercase tracking-wide">{plan.name}</h3>
-                                    <p className="text-2xl font-bold text-white font-montserrat mb-8">{plan.price}</p>
+                                    <h3 className="text-xs font-semibold text-[var(--sidebar-text)] opacity-50 font-montserrat mb-2 uppercase tracking-widest">{plan.name}</h3>
+                                    <p className="text-2xl font-bold text-[var(--foreground)] opacity-90 font-montserrat mb-8">{plan.price}</p>
 
                                     <ul className="space-y-4 mb-10 w-full">
                                         {plan.features.map((feature, fidx) => (
-                                            <li key={fidx} className="flex items-center gap-3 text-[11px] text-[var(--color-text-secondary)] font-montserrat">
-                                                <CheckIcon className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
+                                            <li key={fidx} className="flex items-center gap-3 text-[11px] text-[var(--foreground)] opacity-60 font-montserrat">
+                                                <CheckIcon className="w-3.5 h-3.5 text-[var(--sidebar-active-text)]" />
                                                 {feature}
                                             </li>
                                         ))}
                                     </ul>
 
                                     <button className={`w-full py-3.5 rounded-2xl text-[11px] font-bold font-montserrat transition-all ${plan.popular
-                                        ? 'bg-[var(--color-primary-300)]/70 text-black hover:bg-[var(--color-primary-100)] shadow-[var(--shadow-glow-primary)]'
-                                        : 'bg-[var(--color-bg-surface-subtle)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-surface-elevated)] border border-transparent hover:border-[var(--color-border-subtle)]'
+                                        ? 'bg-[var(--sidebar-active-text)] text-white hover:opacity-90 shadow-md'
+                                        : 'bg-black/5 dark:bg-white/5 text-[var(--foreground)] opacity-70 hover:opacity-100 border border-[var(--sidebar-border)]'
                                         }`}>
                                         {plan.button}
                                     </button>

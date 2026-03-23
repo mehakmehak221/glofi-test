@@ -19,8 +19,8 @@ import {
 const NAV_ITEMS = [
     { href: "/dashboard/partner/overview", icon: OverviewIcon, label: "Overview" },
     { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
-    // { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
-    // { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
+    { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
+    { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
 ];
 
 export default function PartnerSidebar() {
