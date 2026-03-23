@@ -72,22 +72,22 @@ function StatCard({ label, value, delta, icon: Icon, index }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: index * 0.07 }}
-            className="bg-[var(--color-bg-nav)] rounded-xl p-5 flex flex-col gap-3 hover:border-[var(--color-primary-300)]/10 transition-colors"
+            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5 flex flex-col gap-3 hover:shadow-md transition-all"
         >
             <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold tracking-[0.15em] text-[var(--color-text-muted)] font-montserrat uppercase">
+                <span className="text-[10px] font-semibold tracking-[0.15em] text-[var(--sidebar-text)] font-montserrat uppercase opacity-60">
                     {label}
                 </span>
-                <span className="text-[var(--color-primary-300)] opacity-80 bg-[var(--color-primary-300)]/10 rounded-full p-2">
+                <span className="text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)] rounded-xl p-2">
                     <Icon className="w-5 h-5" />
                 </span>
             </div>
 
-            <p className="text-3xl font-semibold text-white font-montserrat tracking-tight">
+            <p className="text-3xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight">
                 {value}
             </p>
 
-            <div className="flex items-center gap-1.5 text-[var(--color-primary-300)]/60 text-xs font-medium font-montserrat">
+            <div className="flex items-center gap-1.5 text-[var(--sidebar-active-text)]/70 text-xs font-medium font-montserrat">
                 <TrendingUpIcon className="w-3.5 h-3.5" />
                 <span>{delta}</span>
             </div>
@@ -101,7 +101,7 @@ function LeadRow({ lead, index }) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: 0.2 + index * 0.06 }}
-            className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-[var(--color-bg-surface-subtle)] transition-colors group"
+            className="flex items-center justify-between px-3 py-3 rounded-lg bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] transition-colors group mb-1 last:mb-0"
         >
             <div className="flex items-center gap-3">
                 <div
@@ -111,16 +111,16 @@ function LeadRow({ lead, index }) {
                     {lead.initials}
                 </div>
                 <div>
-                    <p className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat leading-tight">{lead.name}</p>
-                    <p className="text-[11px] text-[var(--color-text-muted)] font-montserrat mt-0.5">{lead.property}</p>
+                    <p className="text-sm font-semibold text-[var(--foreground)] font-montserrat leading-tight">{lead.name}</p>
+                    <p className="text-[11px] text-[var(--sidebar-text)] font-montserrat mt-0.5 opacity-60">{lead.property}</p>
                 </div>
             </div>
             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="w-7 h-7 rounded-md bg-[var(--color-bg-surface-subtle)] flex items-center justify-center hover:bg-[var(--color-primary-300)]/10 transition-colors">
-                    <PhoneIcon className="w-3.5 h-3.5 text-[var(--color-primary-300)]" />
+                <button className="w-7 h-7 rounded-md bg-[var(--sidebar-active-bg)] flex items-center justify-center hover:opacity-80 transition-opacity">
+                    <PhoneIcon className="w-3.5 h-3.5 text-[var(--sidebar-active-text)]" />
                 </button>
-                <button className="w-7 h-7 rounded-md bg-[var(--color-bg-surface-subtle)] flex items-center justify-center hover:bg-[var(--color-bg-surface-subtle)]/10 transition-colors">
-                    <svg className="w-3.5 h-3.5 text-[var(--color-text-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <button className="w-7 h-7 rounded-md bg-black/5 dark:bg-white/5 flex items-center justify-center hover:opacity-80 transition-opacity">
+                    <svg className="w-3.5 h-3.5 text-[var(--sidebar-text)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
                     </svg>
                 </button>
@@ -135,20 +135,20 @@ function ListingBar({ listing, index }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.3 + index * 0.06 }}
-            className="flex items-center gap-3"
+            className="flex items-center gap-3 p-2 rounded-xl bg-black/[0.02] dark:bg-white/[0.02]"
         >
 
-            <div className="w-10 h-10 rounded-lg bg-[var(--color-primary-300)]/10  flex-shrink-0 overflow-hidden flex items-center justify-center relative">
+            <div className="w-10 h-10 rounded-lg bg-[var(--sidebar-active-bg)]  flex-shrink-0 overflow-hidden flex items-center justify-center relative">
                 {listing.img ? (
                     <Image
                         src={listing.img}
                         alt={listing.name}
                         fill
-                        className="object-cover"
+                        className="object-cover opacity-80"
                         sizes="40px"
                     />
                 ) : (
-                    <svg className="w-5 h-5 text-[var(--color-primary-300)]/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <svg className="w-5 h-5 text-[var(--sidebar-active-text)]/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                         <rect x="2" y="7" width="20" height="15" rx="1" />
                         <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
                     </svg>
@@ -157,10 +157,10 @@ function ListingBar({ listing, index }) {
 
             <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1.5">
-                    <p className="text-sm text-white font-montserrat font-medium truncate pr-2">{listing.name}</p>
-                    <span className="text-[var(--color-primary-300)] text-sm font-bold font-montserrat flex-shrink-0">{listing.pct}%</span>
+                    <p className="text-[12px] text-[var(--foreground)] font-montserrat font-medium truncate pr-2 opacity-80">{listing.name}</p>
+                    <span className="text-[var(--sidebar-active-text)] text-[11px] font-bold font-montserrat flex-shrink-0">{listing.pct}%</span>
                 </div>
-                <div className="h-[3px] w-full bg-[var(--color-border-subtle)] rounded-full overflow-hidden">
+                <div className="h-[2px] w-full bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
                     <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${listing.pct}%` }}
@@ -205,10 +205,10 @@ export default function PartnerOverviewPage() {
                 transition={{ duration: 0.3 }}
                 className="mb-8"
             >
-                <h1 className="text-xl lg:text-2xl font-semibold text-white font-montserrat">
+                <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat">
                     Overview
                 </h1>
-                <p className="text-sm  font-montserrat mt-1 text-[var(--color-text-muted)]">Partner command center</p>
+                <p className="text-sm font-montserrat mt-1 text-[var(--sidebar-text)] opacity-60">Partner command center</p>
             </motion.div>
 
 
@@ -223,9 +223,9 @@ export default function PartnerOverviewPage() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.15 }}
-                    className="bg-[var(--color-bg-nav)] rounded-xl p-5"
+                    className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5"
                 >
-                    <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat mb-4">Hot Leads</h2>
+                    <h2 className="text-sm font-semibold text-[var(--foreground)] font-montserrat mb-4 opacity-70">Hot Leads</h2>
                     <div className="flex flex-col gap-1">
                         {HOT_LEADS.map((lead, i) => (
                             <LeadRow key={lead.name} lead={lead} index={i} />
@@ -237,12 +237,12 @@ export default function PartnerOverviewPage() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.2 }}
-                    className="bg-[var(--color-bg-nav)]  rounded-xl p-5"
+                    className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5"
                 >
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">AI Agent</h2>
-                        <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.12em] text-[var(--color-primary-300)]/60 font-montserrat uppercase bg-[var(--color-primary-300)]/5 rounded-full px-2.5 py-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-pulse" />
+                        <h2 className="text-sm font-semibold text-[var(--foreground)] font-montserrat opacity-70">AI Agent</h2>
+                        <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.12em] text-[var(--sidebar-active-text)] font-montserrat uppercase bg-[var(--sidebar-active-bg)] rounded-full px-2.5 py-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--sidebar-active-text)] animate-pulse" />
                             ACTIVE
                         </span>
                     </div>
@@ -256,10 +256,10 @@ export default function PartnerOverviewPage() {
                                 transition={{ duration: 0.3, delay: 0.25 + i * 0.06 }}
                                 className="flex items-center justify-between"
                             >
-                                <span className="text-sm text-[var(--color-text-muted)] font-montserrat">{stat.label}</span>
+                                <span className="text-sm text-[var(--sidebar-text)] font-montserrat opacity-60">{stat.label}</span>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm font-semibold text-white font-montserrat">{stat.value}</span>
-                                    <span className="text-[11px] text-[var(--color-primary-300)]/40 font-montserrat">{stat.delta}</span>
+                                    <span className="text-sm font-semibold text-[var(--foreground)] font-montserrat">{stat.value}</span>
+                                    <span className="text-[11px] text-[var(--sidebar-active-text)] opacity-50 font-montserrat">{stat.delta}</span>
                                 </div>
                             </motion.div>
                         ))}
@@ -271,7 +271,7 @@ export default function PartnerOverviewPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.25 }}
-                className="bg-[var(--color-bg-nav)]  rounded-xl p-5"
+                className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5"
             >
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">Listing Performance</h2>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -10,14 +10,25 @@ import MobileDrawer from "./MobileDrawer";
 export default function MobileTopbar() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
+    const [isLight, setIsLight] = useState(false);
+
+    useEffect(() => {
+        const checkTheme = () => {
+            setIsLight(document.documentElement.classList.contains('light'));
+        };
+        checkTheme();
+        const observer = new MutationObserver(checkTheme);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        return () => observer.disconnect();
+    }, []);
 
     return (
         <>
-            <header className="flex lg:hidden items-center justify-between px-4 py-3 bg-[var(--color-bg-dark)]/80 backdrop-blur-md border-b border-[var(--color-border-subtle)] sticky top-0 z-40">
+            <header className="flex lg:hidden items-center justify-between px-4 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-40">
 
                 <Link href="/dashboard/investor/marketplace" className="flex items-center gap-3 no-underline">
                     <Image
-                        src="/assets/logo.png"
+                        src={isLight ? "/light-logo.png" : "/assets/logo.png"}
                         alt="GloFi Logo"
                         width={80}
                         height={24}
@@ -56,7 +67,7 @@ export default function MobileTopbar() {
                         aria-label="Notifications"
                     >
                         <BellIcon className="w-5 h-5" />
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--color-primary-100)] rounded-full" />
+                        <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[var(--sidebar-active-text)] rounded-full border-2 border-[var(--header-bg)]" />
                     </button>
 
                     <button

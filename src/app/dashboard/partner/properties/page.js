@@ -28,7 +28,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
-            className="bg-[var(--color-bg-nav)] rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:border-[var(--color-primary-300)]/10 border border-transparent transition-all"
+            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:shadow-md transition-all"
         >
             <div className="w-full md:w-32 lg:w-40 h-24 lg:h-28 bg-[var(--color-bg-card)] rounded-xl flex-shrink-0 flex items-center justify-center border border-[var(--color-border-subtle)] overflow-hidden relative">
                 {propertyImage ? (
@@ -36,55 +36,55 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                         src={propertyImage.startsWith('http') ? propertyImage : `/${propertyImage}`}
                         alt={property.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 160px, 160px"
                     />
                 ) : (
-                    <PropertyIcon className="w-8 h-8 text-[var(--color-primary-300)]/20" />
+                    <PropertyIcon className="w-8 h-8 text-[var(--sidebar-active-text)]/20" />
                 )}
             </div>
 
             <div className="flex-1 w-full">
-                <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
-                    <div>
-                        <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
-                        <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1 flex items-center gap-1">
-                            <MapPinIcon className="w-3 h-3" />
-                            {property.location}
-                        </p>
-                    </div>
+    <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
+        <div>
+            <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
+            <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1 flex items-center gap-1">
+                <MapPinIcon className="w-3 h-3" />
+                {property.location}
+            </p>
+        </div>
 
-                    {isDraft && (
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => onSubmitForReview(property.id)}
-                                className="px-3 py-1.5 rounded-lg bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] text-[10px] font-bold uppercase transition-all hover:bg-[var(--color-primary-300)]/20"
-                            >
-                                Submit
-                            </button>
-                             <button
-                                 onClick={() => onEdit(property.id)}
-                                 className="px-3 py-1.5 rounded-lg bg-[var(--color-bg-surface-subtle)] text-[var(--color-text-muted)] text-[10px] font-bold uppercase transition-all hover:text-white"
-                             >
-                                 Edit
-                             </button>
-                            <button
-                                onClick={() => onDelete(property.id)}
-                                className="px-3 py-1.5 rounded-lg bg-red-500/5 text-red-500/70 text-[10px] font-bold uppercase transition-all hover:bg-red-500/10 hover:text-red-500"
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    )}
-                </div>
+        {isDraft && (
+            <div className="flex items-center gap-2">
+                <button
+                    onClick={() => onSubmitForReview(property.id)}
+                    className="px-3 py-1.5 rounded-lg bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] text-[10px] font-bold uppercase transition-all hover:bg-[var(--color-primary-300)]/20"
+                >
+                    Submit
+                </button>
+                <button
+                    onClick={() => onEdit(property.id)}
+                    className="px-3 py-1.5 rounded-lg bg-[var(--color-bg-surface-subtle)] text-[var(--color-text-muted)] text-[10px] font-bold uppercase transition-all hover:text-white"
+                >
+                    Edit
+                </button>
+                <button
+                    onClick={() => onDelete(property.id)}
+                    className="px-3 py-1.5 rounded-lg bg-red-500/5 text-red-500/70 text-[10px] font-bold uppercase transition-all hover:bg-red-500/10 hover:text-red-500"
+                >
+                    Delete
+                </button>
+            </div>
+        )}
+        </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-2">
-                    <div className="flex flex-col gap-1">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-2">
+            <div className="flex flex-col gap-1">
                         <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Valuation</span>
                         <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
                             {formatValuation(property.valuation)}
                         </span>
-                    </div>
+                    </div >
                     <div className="flex flex-col gap-1">
                         <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Sold</span>
                         <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
@@ -102,16 +102,16 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                         <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
                             {property.investorCount || 0}
                         </span>
-                    </div>
-                </div>
-            </div>
+        </div>
+                </div >
+            </div >
 
-            <div className="absolute top-4 right-4 lg:top-5 lg:right-6">
-                <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] text-[var(--color-primary-300)]/60 font-montserrat uppercase bg-[var(--color-primary-300)]/5 rounded-full px-2.5 py-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-pulse" />
-                    {property.status}
-                </span>
-            </div>
+        <div className="absolute top-4 right-4 lg:top-5 lg:right-6">
+            <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] text-[var(--sidebar-active-text)] font-montserrat uppercase bg-[var(--sidebar-active-bg)] rounded-full px-2.5 py-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--sidebar-active-text)] animate-pulse" />
+                {property.status}
+            </span>
+        </div>
         </motion.div >
     );
 }
@@ -149,14 +149,14 @@ export default function PartnerPropertiesPage() {
         <div className="p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen font-montserrat">
             <AnimatePresence mode="wait">
                 {isAddingNew || editId ? (
-                    <NewListingForm 
-                        key="form" 
+                    <NewListingForm
+                        key="form"
                         editId={editId}
                         onBack={() => {
                             setIsAddingNew(false);
                             setEditId(null);
                             refetch();
-                        }} 
+                        }}
                     />
                 ) : (
                     <motion.div
@@ -172,8 +172,8 @@ export default function PartnerPropertiesPage() {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.4 }}
                             >
-                                <h1 className="text-xl lg:text-2xl font-semibold text-white font-montserrat">
-                                    Listed Properties
+                                <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat">
+                                    Properties
                                 </h1>
                             </motion.div>
 
@@ -184,7 +184,7 @@ export default function PartnerPropertiesPage() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => setIsAddingNew(true)}
-                                className="flex items-center gap-2 bg-[var(--color-primary-300)]/10 hover:bg-[var(--color-primary-300)]/20 text-[var(--color-primary-300)]/80 px-4 py-2 rounded-lg text-sm font-medium font-montserrat transition-all"
+                                className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-lg text-sm font-medium font-montserrat transition-all"
                             >
                                 <span className="text-lg leading-none">+</span>
                                 New Listing

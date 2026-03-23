@@ -83,27 +83,27 @@ const rowVariants = {
 
 export default function TransactionsPage() {
     return (
-        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--color-bg-dark)] min-h-screen">
-           
+        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen text-[var(--sidebar-text)]">
+
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-2xl sm:text-3xl font-bold text-white mb-6"
+                className="text-2xl sm:text-3xl font-bold text-[var(--header-text)] mb-6"
             >
                 Transactions
             </motion.h1>
 
-          
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="hidden md:block bg-[var(--color-bg-dark-alt)] border border-[var(--color-border-subtle)] rounded-xl overflow-hidden"
+                className="hidden md:block bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl overflow-hidden shadow-sm"
             >
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-[var(--color-border-subtle)]">
+                            <tr className="border-b border-[var(--sidebar-border)] bg-[var(--background)]/50">
                                 <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Date</th>
                                 <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Type</th>
                                 <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Asset</th>
@@ -117,7 +117,7 @@ export default function TransactionsPage() {
                                 <motion.tr
                                     key={tx.id}
                                     variants={rowVariants}
-                                    className="border-b border-[var(--color-border-subtle)] hover:bg-[var(--color-bg-surface-subtle)] transition-colors"
+                                    className="border-b border-[var(--sidebar-border)] hover:bg-[var(--sidebar-active-bg)] transition-colors"
                                 >
                                     <td className="px-5 py-4 text-sm text-[var(--color-text-muted)]">{tx.date}</td>
                                     <td className="px-5 py-4">
@@ -125,8 +125,8 @@ export default function TransactionsPage() {
                                             {tx.type}
                                         </span>
                                     </td>
-                                    <td className="px-5 py-4 text-sm text-white font-medium">{tx.asset}</td>
-                                    <td className="px-5 py-4 text-sm text-white font-semibold">{tx.amount}</td>
+                                    <td className="px-5 py-4 text-sm text-[var(--header-text)] font-medium">{tx.asset}</td>
+                                    <td className="px-5 py-4 text-sm text-[var(--header-text)] font-semibold">{tx.amount}</td>
                                     <td className="px-5 py-4 text-sm text-[var(--color-text-muted)]">{tx.method}</td>
                                     <td className="px-5 py-4">
                                         <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border  ${tx.statusColor}`}>
@@ -150,7 +150,7 @@ export default function TransactionsPage() {
                     <motion.div
                         key={tx.id}
                         variants={rowVariants}
-                        className="bg-[var(--color-bg-dark-alt)] border border-[var(--color-border-subtle)] rounded-xl p-4"
+                        className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-4 shadow-sm"
                     >
                         <div className="flex items-center justify-between mb-3">
                             <span className={`inline-flex px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${tx.typeColor}`}>
@@ -160,19 +160,19 @@ export default function TransactionsPage() {
                                 {tx.status === "COMPLETED" ? "✓" : "◎"} {tx.status}
                             </span>
                         </div>
-                        <h3 className="text-sm font-semibold text-white mb-2">{tx.asset}</h3>
+                        <h3 className="text-sm font-semibold text-[var(--header-text)] mb-2">{tx.asset}</h3>
                         <div className="grid grid-cols-3 gap-2 text-xs">
                             <div>
                                 <p className="text-[var(--color-text-muted)]">Date</p>
-                                <p className="text-white font-medium">{tx.date}</p>
+                                <p className="text-[var(--header-text)] font-medium">{tx.date}</p>
                             </div>
                             <div>
                                 <p className="text-[var(--color-text-muted)]">Amount</p>
-                                <p className="text-white font-medium">{tx.amount}</p>
+                                <p className="text-[var(--header-text)] font-medium">{tx.amount}</p>
                             </div>
                             <div>
                                 <p className="text-[var(--color-text-muted)]">Method</p>
-                                <p className="text-white font-medium">{tx.method}</p>
+                                <p className="text-[var(--header-text)] font-medium">{tx.method}</p>
                             </div>
                         </div>
                     </motion.div>

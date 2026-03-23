@@ -6,7 +6,7 @@ import MobileTopbar from "@/components/dashboard/MobileTopbar";
 
 export default function DashboardLayout({ children }) {
     return (
-        <div className="flex min-h-screen bg-bg-dark">
+        <div className="flex min-h-screen bg-[var(--background)]">
 
             <PartnerSidebar />
 
@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }) {
                 <DashboardHeader />
 
 
-                <main className="flex-1 overflow-y-auto">
+                <main className="flex-1 overflow-y-auto bg-[var(--background)]">
                     {children}
                 </main>
             </div>

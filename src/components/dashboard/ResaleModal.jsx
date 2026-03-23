@@ -39,20 +39,20 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative w-full max-w-lg bg-[var(--color-bg-dark-alt)] border border-[var(--color-border-muted)] rounded-[24px] overflow-hidden shadow-lg max-h-[90vh] flex flex-col"
+                        className="relative w-full max-w-lg bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] overflow-hidden shadow-lg max-h-[90vh] flex flex-col transition-colors duration-300"
                     >
-                    <div className="p-4 sm:p-6 border-b border-[var(--color-border-subtle)] flex-shrink-0">
+                    <div className="p-4 sm:p-6 border-b border-[var(--sidebar-border)] flex-shrink-0">
                         <div className="flex items-center justify-between mb-2">
-                            <h2 className="text-lg sm:text-xl font-bold text-white font-Montserrat">List Property for Resale</h2>
-                            <button onClick={onClose} className="p-2 hover:bg-[var(--color-bg-surface-subtle)] rounded-full transition-colors border-0 bg-[var(--color-bg-surface-subtle)]  cursor-pointer">
-                                <CloseIcon className="w-5 h-5 text-[var(--color-text-secondary)]" />
+                            <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)] font-Montserrat">List Property for Resale</h2>
+                            <button onClick={onClose} className="p-2 hover:bg-[var(--sidebar-active-bg)] rounded-full transition-colors border-0 bg-[var(--background)] cursor-pointer group">
+                                <CloseIcon className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--header-text)]" />
                             </button>
                         </div>
                         <div className="flex items-center gap-2">
                             <p className="text-[10px] sm:text-xs text-[var(--color-text-muted)]">Step {step} of 4</p>
-                            <div className="flex-1 h-1 bg-[var(--color-bg-surface-subtle)] rounded-full overflow-hidden">
+                            <div className="flex-1 h-1 bg-[var(--background)] rounded-full overflow-hidden">
                                 <motion.div 
-                                    className="h-full bg-[var(--color-primary-300)]"
+                                    className="h-full bg-[var(--sidebar-active-text)]"
                                     animate={{ width: `${(step / 4) * 100}%` }}
                                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 />
@@ -101,11 +101,11 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                     </div>
 
                     
-                    <div className="p-4 sm:p-6 border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                    <div className="p-4 sm:p-6 border-t border-[var(--sidebar-border)] flex flex-col sm:flex-row gap-3 flex-shrink-0 transition-colors duration-300">
                         {step > 1 && (
                             <button 
                                 onClick={prevStep}
-                                className="w-full sm:flex-1 py-3 rounded-lg bg-[var(--color-bg-surface-subtle)] text-white font-semibold text-sm hover:bg-[var(--color-bg-surface-elevated)] transition-colors border-0 cursor-pointer"
+                                className="w-full sm:flex-1 py-3 rounded-lg bg-[var(--background)] text-[var(--header-text)] font-semibold text-sm hover:bg-[var(--sidebar-active-bg)] transition-colors border-0 cursor-pointer"
                             >
                                 Back
                             </button>
@@ -115,8 +115,8 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                             onClick={step === 4 ? onClose : nextStep}
                             className={`w-full sm:flex-1 py-3 rounded-lg font-semibold text-sm transition-all border-0 cursor-pointer ${
                                 step === 4 && !formData.agreed 
-                                    ? "bg-[var(--color-bg-surface-elevated)] text-[var(--color-text-muted)] cursor-not-allowed" 
-                                    : "bg-gradient-to-r from-[var(--color-primary-300)] to-[var(--color-primary-500)] text-black hover:shadow-[0_0_20px_rgba(0,255,205,0.3)]"
+                                    ? "bg-[var(--background)] text-[var(--color-text-muted)] cursor-not-allowed" 
+                                    : "bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] hover:shadow-[0_0_20px_rgba(var(--color-primary-300-rgb),0.3)] hover:opacity-90"
                             }`}
                         >
                             {step === 4 ? "List on Marketplace" : "Continue"}
@@ -136,28 +136,28 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4 sm:space-y-6"
         >
-            <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="bg-[var(--badge-bg)] border border-[var(--sidebar-border)] rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4 transition-colors">
                 <div className="w-full sm:w-20 h-32 sm:h-20 rounded-lg overflow-hidden relative flex-shrink-0">
                     <Image src={asset.image} alt={asset.name} fill className="object-cover" />
                 </div>
                 <div className="flex-1">
-                    <h3 className="text-base font-bold text-white mb-1">{asset.name}</h3>
+                    <h3 className="text-base font-bold text-[var(--header-text)] mb-1">{asset.name}</h3>
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Downtown Dubai, UAE</p>
                     <div className="flex gap-4">
                         <div>
                             <p className="text-[9px] text-[var(--color-text-muted)] uppercase mb-0.5">Your Fractions</p>
-                            <p className="text-xs font-bold text-white">{formData.fractionsToSell} / {totalOwned}</p>
+                            <p className="text-xs font-bold text-[var(--header-text)]">{formData.fractionsToSell} / {totalOwned}</p>
                         </div>
                         <div>
                             <p className="text-[9px] text-[var(--color-text-muted)] uppercase mb-0.5">Current Value</p>
-                            <p className="text-xs font-bold text-[var(--color-primary-300)]">{asset.value}</p>
+                            <p className="text-xs font-bold text-[var(--sidebar-active-text)]">{asset.value}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div className="space-y-4">
-                <p className="text-sm text-white font-Montserrat">How many fractions do you want to sell?</p>
+                <p className="text-sm text-[var(--header-text)] font-Montserrat">How many fractions do you want to sell?</p>
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1">
                         <label className="text-[10px] uppercase text-[var(--color-text-muted)] mb-1.5 block">Fractions to Sell</label>
@@ -165,12 +165,12 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
                             type="number"
                             value={formData.fractionsToSell}
                             onChange={(e) => setFormData({...formData, fractionsToSell: e.target.value})}
-                            className="w-full bg-[var(--color-bg-dark)] border border-[var(--color-border-muted)] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-primary-300)]/50 transition-colors"
+                            className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-lg px-4 py-3 text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50 transition-colors"
                         />
                     </div>
                     <div className="flex-1">
                         <label className="text-[10px] uppercase text-[var(--color-text-muted)] mb-1.5 block">You'll Keep</label>
-                        <div className="w-full bg-[var(--color-bg-dark)]/50 border border-[var(--color-border-subtle)] rounded-lg px-4 py-3 text-[var(--color-text-muted)]">
+                        <div className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-lg px-4 py-3 text-[var(--color-text-muted)] opacity-50">
                             {totalOwned - formData.fractionsToSell}
                         </div>
                     </div>
@@ -184,7 +184,7 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
                                 const mult = [0.5, 0.75, 1][idx];
                                 setFormData({...formData, fractionsToSell: Math.floor(totalOwned * mult)});
                             }}
-                            className="py-2 bg-[var(--color-bg-surface-subtle)] rounded-md text-[10px] text-[var(--color-text-muted)] hover:text-white hover:bg-[var(--color-bg-surface-elevated)] transition-colors cursor-pointer"
+                            className="py-2 bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md text-[10px] text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)] transition-colors cursor-pointer"
                         >
                             {label}
                         </button>
@@ -203,43 +203,41 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4 sm:space-y-6"
         >
-            <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-lg p-4">
-                <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-2">You're selling</p>
-                <p className="text-sm font-bold text-white">{formData.fractionsToSell} fractions of {asset.name}</p>
+            <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-6 shadow-sm">
+                <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-black mb-2">Liquidating Assets</p>
+                <p className="text-base font-black text-[var(--header-text)] uppercase">{formData.fractionsToSell} fractions of {asset.name}</p>
             </div>
 
-            <div className="space-y-4 sm:space-y-5">
-                <div className="bg-[var(--color-primary-300-alpha-10)] border border-[var(--color-border-subtle)] rounded-lg p-4 sm:p-5">
-                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Current Market Value per Fraction</p>
-                    <p className="text-xl sm:text-2xl font-bold text-white">$28,760</p>
+            <div className="space-y-6">
+                <div className="bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 rounded-2xl p-6 shadow-inner">
+                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-black mb-2">Current Market Value / Fraction</p>
+                    <p className="text-3xl font-black text-[var(--sidebar-active-text)] font-Montserrat">$28,760</p>
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-xs font-medium text-[var(--color-text-muted)]">Set your asking price per fraction</label>
+                <div className="space-y-3">
+                    <label className="text-[11px] font-black text-[var(--header-text)] uppercase tracking-widest">Set Your Asking Price</label>
                     <div className="relative">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)] text-sm">$</div>
+                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[var(--sidebar-active-text)] font-black text-lg">$</div>
                         <input 
                             type="number"
                             value={formData.pricePerFraction}
                             onChange={(e) => setFormData({...formData, pricePerFraction: e.target.value})}
-                            className="w-full bg-linear-to-r from-[var(--color-primary-300)]/10 to-[var(--color-primary-200)]/5 border border-[var(--color-primary-300)]/20 rounded-lg pl-10 pr-4 py-3 sm:py-4 text-white font-medium focus:outline-none focus:border-[var(--color-primary-300)]/50 transition-colors"
+                            className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl pl-12 pr-6 py-5 text-[var(--header-text)] font-black text-xl focus:outline-none focus:border-[var(--sidebar-active-text)]/40 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 transition-all shadow-md"
                         />
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {["-5% (Quick Sale)", "Market Value", "+5% (Premium)"].map((label, idx) => (
                         <button 
                             key={label}
                             onClick={() => {
                                 if (label === "Market Value") setFormData({...formData, pricePerFraction: 28760});
-                              
-
                             }}
-                            className={`py-2 sm:py-3 rounded-lg text-[10px] sm:text-xs font-medium transition-all cursor-pointer border ${
+                            className={`py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer border ${
                                 label === "Market Value" 
-                                    ? "bg-[var(--color-primary-300)]/10 border-[var(--color-primary-300)]/40 text-[var(--color-primary-300)]" 
-                                    : "bg-[var(--color-bg-surface-subtle)] border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-surface-elevated)]"
+                                    ? "bg-[var(--badge-bg)] border-[var(--sidebar-active-text)]/30 text-[var(--sidebar-active-text)] shadow-sm" 
+                                    : "bg-[var(--background)] border-[var(--sidebar-border)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:shadow-md"
                             }`}
                         >
                             {label}
@@ -247,10 +245,11 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
                     ))}
                 </div>
 
-                <div className="bg-[var(--color-bg-dark)]/50 border border-[var(--color-border-subtle)] rounded-2xl p-4 sm:p-6">
-                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Total Asking Price</p>
-                    <p className="text-2xl sm:text-[32px] font-bold text-white leading-tight mb-1">$ {(formData.fractionsToSell * formData.pricePerFraction).toLocaleString()}</p>
-                    <p className="text-[10px] text-[var(--color-text-muted)]">{formData.fractionsToSell} × ${parseFloat(formData.pricePerFraction).toLocaleString()}</p>
+                <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-[2rem] p-8 shadow-inner relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--sidebar-active-text)]/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-[var(--sidebar-active-text)]/10 transition-colors" />
+                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-black mb-3">Total Listing Value</p>
+                    <p className="text-[36px] font-black text-[var(--header-text)] leading-none tracking-tight mb-2">$ {(formData.fractionsToSell * formData.pricePerFraction).toLocaleString()}</p>
+                    <p className="text-[11px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-widest">{formData.fractionsToSell} Assets × ${parseFloat(formData.pricePerFraction).toLocaleString()}</p>
                 </div>
             </div>
         </motion.div>
@@ -265,45 +264,45 @@ function StepThree({ formData, setFormData, totalPrice }) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4 sm:space-y-6"
         >
-            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex justify-between items-center min-h-[72px]">
+            <div className="bg-[var(--badge-bg)] border border-[var(--sidebar-border)] rounded-lg p-4 flex justify-between items-center min-h-[72px] transition-colors">
                 <div>
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Selling</p>
-                    <p className="text-sm sm:text-base font-bold text-white">{formData.fractionsToSell} fractions</p>
+                    <p className="text-sm sm:text-base font-bold text-[var(--header-text)]">{formData.fractionsToSell} fractions</p>
                 </div>
                 <div className="text-right">
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Total Price</p>
-                    <p className="text-sm sm:text-base font-bold text-[var(--color-primary-300)]">$ {totalPrice}</p>
+                    <p className="text-sm sm:text-base font-bold text-[var(--sidebar-active-text)]">$ {totalPrice}</p>
                 </div>
             </div>
-
             <div className="space-y-4 sm:space-y-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Minimum purchase quantity</label>
+                    <label className="text-sm font-medium text-[var(--header-text)]">Minimum purchase quantity</label>
                     <p className="text-[11px] text-[var(--color-text-muted)]">Set the minimum number of fractions a buyer must purchase</p>
                     <div className="relative mt-2 sm:mt-3">
                         <input 
                             type="number"
                             value={formData.minPurchase}
                             onChange={(e) => setFormData({...formData, minPurchase: e.target.value})}
-                            className="w-full bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg px-4 py-3 sm:py-4 text-white font-medium focus:outline-none focus:border-[var(--color-primary-300)]/30 transition-colors"
+                            className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-lg px-4 py-3 sm:py-4 text-[var(--header-text)] font-medium focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors"
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] text-sm">fractions</div>
                     </div>
                 </div>
-
+ 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Additional notes (optional)</label>
+                    <label className="text-sm font-medium text-[var(--header-text)]">Additional notes (optional)</label>
                     <div className="relative mt-2 sm:mt-3">
                         <textarea 
                             placeholder="Any additional information for potential buyers..."
                             value={formData.notes}
                             onChange={(e) => setFormData({...formData, notes: e.target.value.slice(0, 500)})}
-                            className="w-full bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg px-4 py-3 sm:py-4 text-white focus:outline-none focus:border-[var(--color-primary-300)]/30 h-28 sm:h-36 resize-none placeholder:text-[var(--color-text-muted)]"
+                            className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-lg px-4 py-3 sm:py-4 text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 h-28 sm:h-36 resize-none placeholder:text-[var(--color-text-muted)]"
                         />
                         <div className="text-[10px] text-[var(--color-text-muted)] mt-2">{formData.notes.length}/500 characters</div>
                     </div>
                 </div>
             </div>
+
         </motion.div>
     );
 }
@@ -332,34 +331,33 @@ function StepFour({ asset, formData, setFormData }) {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4 sm:space-y-6"
         >
-            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg p-4 sm:p-6 space-y-4">
-                <h4 className="text-sm font-bold text-white mb-2 sm:mb-4">Review Your Listing</h4>
+            <div className="bg-[var(--badge-bg)] border border-[var(--sidebar-border)] rounded-lg p-4 sm:p-6 space-y-4 transition-colors">
+                <h4 className="text-sm font-bold text-[var(--header-text)] mb-2 sm:mb-4">Review Your Listing</h4>
                 <div className="space-y-3 sm:space-y-4">
                     {items.map((item, i) => (
-                        <div key={i} className={`flex justify-between items-center ${i !== items.length - 1 ? 'border-b border-[var(--color-border-subtle)] pb-3 sm:pb-4' : ''}`}>
+                        <div key={i} className={`flex justify-between items-center ${i !== items.length - 1 ? 'border-b border-[var(--sidebar-border)] pb-3 sm:pb-4' : ''}`}>
                             <span className="text-[11px] sm:text-xs text-[var(--color-text-muted)]">{item.label}</span>
-                            <span className={`text-[11px] sm:text-xs font-medium ${item.color || 'text-white'} ${item.bold ? 'font-bold' : ''}`}>{item.value}</span>
+                            <span className={`text-[11px] sm:text-xs font-medium ${item.color || 'text-[var(--header-text)]'} ${item.bold ? 'font-bold' : ''}`}>{item.value}</span>
                         </div>
                     ))}
                 </div>
             </div>
-
-            <div className="bg-[var(--color-bg-surface-subtle)] border border-[var(--color-border-subtle)] rounded-lg p-4 sm:p-6 space-y-4">
-                <h4 className="text-sm font-bold text-white mb-2 sm:mb-4">Terms & Conditions</h4>
+            <div className="bg-[var(--badge-bg)] border border-[var(--sidebar-border)] rounded-lg p-4 sm:p-6 space-y-4 transition-colors">
+                <h4 className="text-sm font-bold text-[var(--header-text)] mb-2 sm:mb-4">Terms & Conditions</h4>
                 <div className="space-y-2 sm:space-y-3">
                     {terms.map((term, i) => (
                         <div key={i} className="flex gap-3">
-                            <div className="w-4 h-4 rounded-full bg-transparent border border-[var(--color-primary-300)] flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <CheckIcon className="w-2 h-2 text-[var(--color-primary-300)]" />
+                            <div className="w-4 h-4 rounded-full bg-transparent border border-[var(--sidebar-active-text)]/40 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                                <CheckIcon className="w-2 h-2 text-[var(--sidebar-active-text)]" />
                             </div>
                             <p className="text-[10px] sm:text-[11px] text-[var(--color-text-muted)] leading-relaxed font-normal">{term}</p>
                         </div>
                     ))}
                 </div>
-
+ 
                 <label className="flex items-center gap-3 cursor-pointer group mt-4 sm:mt-6 pt-2">
                     <div className={`w-5 h-5 rounded transition-all flex items-center justify-center flex-shrink-0 ${
-                        formData.agreed ? 'bg-[var(--color-primary-300)]' : 'bg-[var(--color-bg-surface-elevated)]'
+                        formData.agreed ? 'bg-[var(--sidebar-active-text)]' : 'bg-[var(--background)] border border-[var(--sidebar-border)] group-hover:border-[var(--sidebar-active-text)]/50'
                     }`}>
                         <input 
                             type="checkbox" 
@@ -369,9 +367,10 @@ function StepFour({ asset, formData, setFormData }) {
                         />
                         {formData.agreed && <CheckIcon className="w-3 h-3 text-black" />}
                     </div>
-                    <span className="text-[11px] sm:text-[12px] text-white font-medium">I agree to the terms and conditions</span>
+                    <span className="text-[11px] sm:text-[12px] text-[var(--header-text)] font-medium">I agree to the terms and conditions</span>
                 </label>
             </div>
+
         </motion.div>
     );
 }

@@ -562,9 +562,9 @@ export const BusinessPropertyIcon = ({ className = "w-4 h-4" }) => (
 
 export const UploadIcon =  ({ className = "w-4 h-4" }) => (
 <svg className={className} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5" stroke="white" strokeOpacity="0.15" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M14.1673 6.66667L10.0007 2.5L5.83398 6.66667" stroke="white" strokeOpacity="0.15" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M10 2.5V12.5" stroke="white" strokeOpacity="0.15" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M14.1673 6.66667L10.0007 2.5L5.83398 6.66667" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M10 2.5V12.5" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 );
 
@@ -719,7 +719,7 @@ export const PendingIcon = ({ className = "w-4 h-4" }) => (
 
 export const VerifiedIcon = ({ className = "w-4 h-4" }) => (
     <svg className={className} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#clip0_386_343) -- NOT CORRECT, using original clip path">
+        <g clipPath="url(#clip0_386_3433)">
             <path d="M16.6673 10.8333C16.6673 15 13.7507 17.0833 10.284 18.2917C10.1025 18.3532 9.90527 18.3502 9.72565 18.2833C6.25065 17.0833 3.33398 15 3.33398 10.8333V5C3.33398 4.77899 3.42178 4.56703 3.57806 4.41075C3.73434 4.25447 3.9463 4.16667 4.16732 4.16667C5.83398 4.16667 7.91732 3.16667 9.36732 1.9C9.54386 1.74917 9.76845 1.66629 10.0007 1.66629C10.2329 1.66629 10.4574 1.74917 10.634 1.9C12.0923 3.175 14.1673 4.16667 15.834 4.16667C16.055 4.16667 16.267 4.25447 16.4232 4.41075C16.5795 4.56703 16.6673 4.77899 16.6673 5V10.8333Z" stroke="var(--color-primary-300)" strokeOpacity="var(--opacity-muted)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
         </g>
         <defs>
@@ -756,5 +756,25 @@ export const JoinNewGenBgGlow = ({ className = "w-full h-full" }) => (
                 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_join" result="shape" />
             </filter>
         </defs>
+    </svg>
+);
+
+export const MoonIcon = ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+    </svg>
+);
+
+export const SunIcon = ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
     </svg>
 );

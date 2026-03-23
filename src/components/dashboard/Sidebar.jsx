@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+
 
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -30,42 +31,27 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
+    const [isLight, setIsLight] = useState(false);
     const pathname = usePathname();
-    const router = useRouter();
-    const [logout] = useLogoutMutation();
-
-    const handleLogout = async () => {
-        try {
-            await logout().unwrap();
-        } catch (err) {
-            console.error("Logout error:", err);
-        } finally {
-            localStorage.removeItem("userType");
-            localStorage.removeItem("isLoggedIn");
-            removeCookie("isLoggedIn");
-            removeCookie("access_token");
-            router.push("/");
-        }
-    };
 
     return (
         <motion.aside
-            className="hidden lg:flex flex-col h-screen sticky top-0 bg-[var(--color-bg-dark)] border-r border-[var(--color-border-subtle)] z-40 overflow-hidden"
+            className="hidden lg:flex flex-col h-screen sticky top-0 bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] z-40 overflow-hidden"
             animate={{ width: collapsed ? 80 : 250 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
 
-            <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[var(--color-border-subtle)]">
+            <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[var(--sidebar-border)]">
                 <Link href="/dashboard/investor/marketplace" className="flex items-center gap-3 no-underline">
                     <Image
-                        src="/assets/logo.png"
+                        src={isLight ? "/light-logo.png" : "/assets/logo.png"}
                         alt="GloFi Logo"
                         width={120}
                         height={40}
                         className="h-7 w-auto flex-shrink-0 object-contain"
                     />
                     <motion.span
-                        className="font-montserrat text-[10px] font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] leading-[15px] whitespace-nowrap overflow-hidden"
+                        className="font-montserrat text-[10px] font-normal text-[var(--sidebar-text)] uppercase tracking-[1.5px] leading-[15px] whitespace-nowrap overflow-hidden"
                         animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
                         transition={{ duration: 0.2 }}
                     >
@@ -80,7 +66,7 @@ export default function Sidebar() {
                 animate={{ opacity: collapsed ? 0 : 1 }}
                 transition={{ duration: 0.2 }}
             >
-                <span className="text-[10px] font-normal text-[var(--color-primary-200)] tracking-[0.15em] uppercase border border-[var(--color-primary-300)]/30 font-montserrat bg-[var(--color-primary-300)]/5 rounded-full px-3 py-1 inline-block">
+                <span className="text-[10px] font-normal text-[var(--badge-text)] tracking-[0.15em] uppercase border border-[var(--badge-border)] font-montserrat bg-[var(--badge-bg)] rounded-full px-3 py-1 inline-block">
                     Investor Panel
                 </span>
             </motion.div>
@@ -104,7 +90,7 @@ export default function Sidebar() {
 
                 <motion.button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-surface-subtle)] transition-colors cursor-pointer w-full border-0 bg-transparent"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--sidebar-text)] hover:text-[var(--sidebar-text-hover)] hover:bg-[var(--sidebar-active-bg)] transition-all cursor-pointer w-full border-0 bg-transparent"
                     whileTap={{ scale: 0.95 }}
                 >
                     <motion.span
@@ -124,10 +110,7 @@ export default function Sidebar() {
                 </motion.button>
 
 
-                <button 
-                    onClick={handleLogout}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent group"
-                >
+                <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-500/5 transition-colors cursor-pointer w-full border-0 bg-transparent group">
                     <span className="flex-shrink-0 ml-0.5">
                         <SignOutIcon className="w-5 h-5" />
                     </span>
