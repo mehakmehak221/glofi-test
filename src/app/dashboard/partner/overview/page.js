@@ -13,6 +13,7 @@ import {
 } from "@/components/VectorImages";
 import { useGetKybStatusQuery } from "@/store/api/kybApi";
 import { useGetMyListingsQuery } from "@/store/api/assetApi";
+import { API_URL } from "@/constants";
 
 
 const STAT_CARDS = [
@@ -178,7 +179,6 @@ function ListingBar({ listing, index }) {
 
 
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://glofi-api.maxtron.ai";
 
 const getImageUrl = (imagePath) => {
     if (!imagePath) return null;

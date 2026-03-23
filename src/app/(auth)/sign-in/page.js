@@ -23,6 +23,7 @@ export default function SignInPage() {
         e.preventDefault();
         setErrorMsg("");
         try {
+            console.log('Attempting login with:', { email, role: userType.toUpperCase() });
             const result = await login({
                 email,
                 password,
@@ -30,17 +31,17 @@ export default function SignInPage() {
             }).unwrap();
 
             console.log('Login Result:', result);
-            const token = result.accessToken || result.token;
+            const token = result.accessToken || result.token || result.data?.accessToken || result.data?.token;
 
             if (token) {
                 setCookie("access_token", token);
                 localStorage.setItem("access_token", token);
-                console.log('Token stored in cookie and localStorage');
+                console.log('Token stored in cookie and localStorage:', token.substring(0, 10) + "...");
             } else {
-                console.warn('No token found in login response');
+                console.warn('No token found in login response keys:', Object.keys(result));
             }
 
-            localStorage.setItem("userType", result.role || userType.toUpperCase());
+            localStorage.setItem("userType", result.role || result.user?.role || userType.toUpperCase());
             localStorage.setItem("isLoggedIn", "true");
 
             setCookie("isLoggedIn", "true");
@@ -50,6 +51,7 @@ export default function SignInPage() {
         } catch (err) {
             console.error("Failed to login detailed error:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
             console.error("Failed to login error object:", err);
+            console.error("Failed to login error structure keys:", Object.keys(err));
             setErrorMsg(err?.data?.message || err?.message || "Invalid credentials. Please try again.");
         }
     };

@@ -5,46 +5,11 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { TrendingUpIcon, DollarIcon, TopArrow, Asset, ResaleIcon } from "@/components/VectorImages";
 import ResaleModal from "@/components/dashboard/ResaleModal";
+import { useGetInvestmentsQuery, useGetPortfolioQuery } from "@/store/api/investmentApi";
+import { useGetKycStatusQuery } from "@/store/api/kycApi";
 
-const STATS = [
-    { label: "Invested", value: "$1.1M", change: "+$19K this month", icon: DollarIcon },
-    { label: "Current Value", value: "$1.3M", change: "+15.2% overall", icon: TrendingUpIcon },
-    { label: "ROI", value: "13.7%", change: "+3.1% this quarter", icon: TopArrow },
-    { label: "Assets Owned", value: "3", change: "Verified assets", icon: Asset },
-];
+import { API_URL } from "@/constants";
 
-const ASSETS = [
-    {
-        id: 1,
-        name: "Burj Vista Tower",
-        image: "/assets/img_ext_0.jpeg",
-        fractions: 25,
-        invested: "$625K",
-        value: "$719K",
-        roi: "+15%",
-        isResale: true,
-    },
-    {
-        id: 2,
-        name: "Palm Jumeirah Villa Estate",
-        image: "/assets/img_2.jpeg",
-        fractions: 10,
-        invested: "$190K",
-        value: "$214K",
-        roi: "+12.4%",
-        isResale: false,
-    },
-    {
-        id: 3,
-        name: "Marina Walk Residences",
-        image: "/assets/img_ext_1.jpeg",
-        fractions: 15,
-        invested: "$300K",
-        value: "$336K",
-        roi: "+12%",
-        isResale: false,
-    },
-];
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -58,9 +23,89 @@ const itemVariants = {
 
 export default function PortfolioPage() {
     const [selectedAsset, setSelectedAsset] = useState(null);
+    const { data: investmentsData, isLoading: invLoading } = useGetInvestmentsQuery();
+    const { data: portfolioData, isLoading: portLoading } = useGetPortfolioQuery();
+    const { data: kycData, isLoading: kycLoading } = useGetKycStatusQuery();
+
+    const isLoading = invLoading || portLoading || kycLoading;
+
+    if (isLoading) {
+        return (
+            <div className="p-4 sm:p-6 lg:p-10 bg-[var(--background)] min-h-screen flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />
+            </div>
+        );
+    }
+
+    const investmentsArray = Array.isArray(investmentsData) ? investmentsData : (investmentsData?.data || []);
+
+    const stats = [
+        { label: "Invested", value: `$${(portfolioData?.totalInvested || 0).toLocaleString()}`, change: "+$0 this month", icon: DollarIcon },
+        { label: "Current Value", value: `$${(portfolioData?.currentValue || 0).toLocaleString()}`, change: "+0% overall", icon: TrendingUpIcon },
+        { label: "ROI", value: `${portfolioData?.roi || 0}%`, change: "+0% this quarter", icon: TopArrow },
+        { label: "Assets Owned", value: portfolioData?.assetsCount || investmentsArray.length || 0, change: "Verified assets", icon: Asset },
+    ];
+
+    const assets = investmentsArray.map(inv => {
+        const asset = inv.asset || {};
+        const propertyImage = asset.images?.[0];
+        const imageUrl = propertyImage
+            ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
+            : "/assets/img_ext_0.jpeg";
+
+        return {
+            id: inv.id || asset.id,
+            name: asset.title || "Unknown Asset",
+            image: imageUrl,
+            fractions: inv.fractions,
+            invested: `$${(inv.amount || 0).toLocaleString()}`,
+            value: `$${(inv.currentValue || inv.amount || 0).toLocaleString()}`,
+            roi: `+${inv.roi || 0}%`,
+            isResale: inv.status === "RESALE",
+            status: inv.status,
+            totalFractions: asset.totalFractions
+        };
+    });
+
+    const resaleAssets = assets.filter(a => a.isResale);
+    const otherAssets = assets.filter(a => !a.isResale);
 
     return (
         <div className="p-4 sm:p-6 lg:p-10 bg-[var(--background)] min-h-screen text-[var(--sidebar-text)] font-sans transition-colors duration-300">
+
+            {kycData && kycData.status !== "APPROVED" && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`mb-8 p-4 rounded-xl border flex items-center justify-between gap-4 ${kycData.status === "UNDER_REVIEW"
+                        ? "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
+                        : "bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]"
+                        }`}
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center bg-current/10 shrink-0">
+                            {kycData.status === "UNDER_REVIEW" ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" /><path d="M12 6v6l4 2" /></svg>
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                            )}
+                        </div>
+                        <div>
+                            <p className="text-xs font-bold uppercase tracking-wider mb-0.5">Verification Status: {kycData.status.replace("_", " ")}</p>
+                            <p className="text-[11px] opacity-80 leading-relaxed max-w-2xl">
+                                {kycData.status === "UNDER_REVIEW"
+                                    ? "Your identity verification is currently being processed. You can still view your portfolio, but some actions may be restricted."
+                                    : "There is an issue with your verification. Please review your details or contact support to resolve this."}
+                            </p>
+                        </div>
+                    </div>
+                    {kycData.status === "REJECTED" && (
+                        <button className="px-4 py-2 rounded-lg bg-current text-white text-[10px] font-bold uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer">
+                            Re-submit
+                        </button>
+                    )}
+                </motion.div>
+            )}
 
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
@@ -76,7 +121,7 @@ export default function PortfolioPage() {
                 animate="visible"
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12"
             >
-                {STATS.map((stat, idx) => (
+                {stats.map((stat, idx) => (
                     <motion.div
                         key={stat.label}
                         variants={itemVariants}
@@ -104,7 +149,11 @@ export default function PortfolioPage() {
                 <div>
                     <div className="flex items-center gap-3 mb-6">
                         <h2 className="text-xl font-bold text-[var(--header-text)]">Your Active Resale Listings</h2>
-                        <span className="px-2 py-0.5 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[10px] font-bold uppercase tracking-wider">1 Active</span>
+                        {resaleAssets.length > 0 && (
+                            <span className="px-2 py-0.5 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[10px] font-bold uppercase tracking-wider">
+                                {resaleAssets.length} {resaleAssets.length === 1 ? 'Active' : 'Active'}
+                            </span>
+                        )}
                     </div>
                     <motion.div
                         variants={containerVariants}
@@ -112,13 +161,24 @@ export default function PortfolioPage() {
                         animate="visible"
                         className="flex flex-col gap-5"
                     >
-                        {ASSETS.filter(a => a.isResale).map((asset) => (
-                            <AssetCard
-                                key={asset.id}
-                                asset={asset}
-                                onResale={() => setSelectedAsset(asset)}
-                            />
-                        ))}
+                        {resaleAssets.length > 0 ? (
+                            resaleAssets.map((asset) => (
+                                <AssetCard
+                                    key={asset.id}
+                                    asset={asset}
+                                    onResale={() => setSelectedAsset(asset)}
+                                />
+                            ))
+                        ) : (
+                            <motion.div
+                                variants={itemVariants}
+                                className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
+                            >
+                                <ResaleIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
+                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No active listings</h3>
+                                <p className="text-sm text-[var(--color-text-muted)]">You don't have any properties currently listed for resale</p>
+                            </motion.div>
+                        )}
                     </motion.div>
                 </div>
 
@@ -130,13 +190,32 @@ export default function PortfolioPage() {
                         animate="visible"
                         className="flex flex-col gap-5"
                     >
-                        {ASSETS.filter(a => !a.isResale).map((asset) => (
-                            <AssetCard
-                                key={asset.id}
-                                asset={asset}
-                                onResale={() => setSelectedAsset(asset)}
-                            />
-                        ))}
+                        {otherAssets.length > 0 ? (
+                            otherAssets.map((asset) => (
+                                <AssetCard
+                                    key={asset.id}
+                                    asset={asset}
+                                    onResale={() => setSelectedAsset(asset)}
+                                />
+                            ))
+                        ) : (
+                            <motion.div
+                                variants={itemVariants}
+                                className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
+                            >
+                                <Asset className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
+                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No properties listed</h3>
+                                <p className="text-sm text-[var(--color-text-muted)]">Find your dream investment property in the marketplace</p>
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => window.location.href = '/dashboard/investor/marketplace'}
+                                    className="mt-6 px-6 py-2.5 rounded-xl bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold hover:opacity-90 transition-all cursor-pointer"
+                                >
+                                    Browse Marketplace
+                                </motion.button>
+                            </motion.div>
+                        )}
                     </motion.div>
                 </div>
             </div>
@@ -151,7 +230,7 @@ export default function PortfolioPage() {
 }
 
 function AssetCard({ asset, onResale }) {
-    const totalFractions = asset.name === "Burj Vista Tower" ? 100 : (asset.name.includes("Palm") ? 50 : 80);
+    const totalFractions = asset.totalFractions || 100;
 
     return (
         <motion.div
@@ -180,8 +259,16 @@ function AssetCard({ asset, onResale }) {
                         <div className="flex-1 w-full flex flex-col gap-4 sm:gap-2">
                             <div className="flex flex-row items-center justify-between sm:justify-start gap-4">
                                 <h3 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{asset.name}</h3>
+                                {asset.status && asset.status !== "COMPLETED" && !asset.isResale && (
+                                    <div className={`px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider border ${asset.status === "PENDING" || asset.status === "UNDER_REVIEW"
+                                        ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]"
+                                        : "bg-[var(--color-status-info-bg)] text-[var(--color-status-info)] border-[var(--color-status-info-border)]"
+                                        }`}>
+                                        {asset.status.replace("_", " ")}
+                                    </div>
+                                )}
                                 {asset.isResale && (
-                                    <div className="sm:hidden px-3 py-1.5 rounded-full bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 flex items-center shrink-0 shadow-sm">
+                                    <div className="px-3 py-1.5 rounded-full bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 flex items-center shrink-0 shadow-sm">
                                         <span className="text-[9px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-wider">{asset.fractions} Listed</span>
                                     </div>
                                 )}
@@ -208,7 +295,7 @@ function AssetCard({ asset, onResale }) {
                         </div>
 
                         {asset.isResale && (
-                             <div className="hidden sm:flex px-3 py-1.5 rounded-full bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 items-center shrink-0 self-start lg:self-center">
+                            <div className="hidden sm:flex px-3 py-1.5 rounded-full bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 items-center shrink-0 self-start lg:self-center">
                                 <span className="text-[10px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-wider">{asset.fractions} Listed for Resale</span>
                             </div>
                         )}

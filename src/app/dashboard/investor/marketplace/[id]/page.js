@@ -12,8 +12,10 @@ import KYCModal from "@/components/dashboard/KYCModal";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 
 import { useGetAssetByIdQuery } from "@/store/api/assetApi";
+import { useCreateInvestmentMutation } from "@/store/api/investmentApi";
+import { useGetKycStatusQuery } from "@/store/api/kycApi";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://glofi-api.maxtron.ai";
+import { API_URL } from "@/constants";
 
 const formatValuation = (val) => {
     const num = parseFloat(val);
@@ -28,11 +30,14 @@ export default function PropertyDetailPage() {
     const params = useParams();
     const router = useRouter();
     const { data: property, isLoading, isError } = useGetAssetByIdQuery(params.id);
+    const { data: kycData } = useGetKycStatusQuery();
+    const [createInvestment, { isLoading: isInvesting }] = useCreateInvestmentMutation();
 
     const [investOpen, setInvestOpen] = useState(false);
     const [kycOpen, setKycOpen] = useState(false);
     const [confirmType, setConfirmType] = useState(null);
     const [investQuantity, setInvestQuantity] = useState(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     if (isLoading) {
         return (
@@ -66,10 +71,34 @@ export default function PropertyDetailPage() {
 
     const handleInvestNow = () => setInvestOpen(true);
 
-    const handleVerifyPay = (qty) => {
+    const handleVerifyPay = async (qty) => {
         setInvestQuantity(qty);
         setInvestOpen(false);
-        setKycOpen(true);
+
+        // Check KYC status
+        if (kycData?.status !== "APPROVED") {
+            setKycOpen(true);
+            return;
+        }
+
+        // If KYC is already approved, proceed to investment
+        try {
+            setIsSubmitting(true);
+            const result = await createInvestment({
+                assetId: params.id,
+                fractions: qty,
+                paymentMethod: "UPI", // Defaulting to UPI as per user request example
+                currency: "USD",      // Defaulting to USD
+            }).unwrap();
+
+            console.log("Investment successful:", result);
+            setConfirmType("confirmed");
+        } catch (err) {
+            console.error("Investment failed:", err);
+            alert("Investment failed. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleKycSubmit = () => {
@@ -231,14 +260,14 @@ export default function PropertyDetailPage() {
                         </p>
 
                         <div className="space-y-3 mb-6">
-                        <motion.button
-                            onClick={handleInvestNow}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)]"
-                        >
-                            Invest Now
-                        </motion.button>
+                            <motion.button
+                                onClick={handleInvestNow}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)]"
+                            >
+                                Invest Now
+                            </motion.button>
                         </div>
                     </div>
                 </motion.div>

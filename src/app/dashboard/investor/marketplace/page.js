@@ -8,7 +8,7 @@ import { MapPinIcon } from "@/components/VectorImages";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
 import { CATEGORIES } from "@/data/propertyData";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://glofi-api.maxtron.ai";
+import { API_URL } from "@/constants";
 
 const CATEGORY_MAP = {
     "Dubai Skyscrapers": "DUBAI_SKYSCRAPER",

@@ -91,7 +91,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                 >
                     <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="bg-[#0A0F0D] w-full max-w-lg p-10 rounded-[2rem] shadow-2xl relative border border-[var(--sidebar-border)] max-h-[90vh] overflow-y-auto"
+                        className="bg-[var(--sidebar-bg)] w-full max-w-lg p-10 rounded-[2rem] shadow-2xl relative border border-[var(--sidebar-border)] max-h-[90vh] overflow-y-auto"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -106,7 +106,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                             </div>
                             <button
                                 onClick={onClose}
-                                className="text-[var(--color-text-muted)] hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-1"
+                                className="text-[var(--color-text-muted)] hover:text-[var(--foreground)] transition-colors bg-transparent border-0 cursor-pointer p-1"
                             >
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -138,7 +138,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                         </svg>
                                     )}
                                 </div>
-                                <h2 className="text-xl font-bold text-[var(--header-text)] mb-2">
+                                <h2 className="text-xl font-bold text-[var(--foreground)] mb-2">
                                     {isVerified ? "Verified" : isRejected ? "KYC Rejected" : "KYC Submitted!"}
                                 </h2>
                                 <p className="text-sm text-[var(--color-text-muted)] mb-6">
@@ -156,7 +156,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                            
                         ) : (
                             <>
-                                <h2 className="text-2xl font-bold text-white mb-2 font-montserrat">Identity verification</h2>
+                                <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2 font-montserrat">Identity verification</h2>
                                 <p className="text-sm text-[var(--color-text-muted)] font-medium mb-8 font-montserrat">Upload a government-issued ID to verify your identity</p>
 
                                 <div className="space-y-6">
@@ -168,8 +168,8 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                     key={tab}
                                                     onClick={() => setActiveTab(tab)}
                                                     className={`px-6 py-2.5 rounded-[1.25rem] text-xs font-bold transition-all duration-200 cursor-pointer border ${activeTab === tab
-                                                        ? "bg-[#0D2D26] text-[#00DAAF] border-[#00DAAF]/30"
-                                                        : "bg-[#1A1F1C] text-[var(--color-text-muted)] border-transparent hover:border-[var(--color-text-muted)]/30 opacity-60"
+                                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
+                                                        : "bg-black/5 dark:bg-white/5 text-[var(--color-text-muted)] border-transparent hover:border-[var(--color-text-muted)]/30 opacity-60"
                                                         }`}
                                                 >
                                                     {tab}
@@ -177,11 +177,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                             ))}
                                         </div>
 
-                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${idDocKey ? 'bg-[#00DAAF]/5 border-[#00DAAF]/20' : 'bg-[#121614] border-[var(--sidebar-border)]'} mb-4`}>
+                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${idDocKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-black/5 dark:bg-white/5 border-[var(--sidebar-border)]'} mb-4`}>
                                             <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'id')} />
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${idDocKey ? 'bg-[#00DAAF]/10 text-[#00DAAF]' : 'bg-[#1A1F1C] text-[var(--color-text-muted)]'}`}>
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${idDocKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-black/10 dark:bg-white/10 text-[var(--color-text-muted)]'}`}>
                                                         {idDocKey ? (
                                                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -193,23 +193,23 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <p className="text-[15px] font-bold text-white mb-0.5 font-montserrat">Document — Front</p>
+                                                        <p className="text-[15px] font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Document — Front</p>
                                                         <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Clear photo of front side</p>
                                                         <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG, PDF — MAX 5 MB</p>
                                                     </div>
                                                 </div>
-                                                {idDocKey && <span className="text-[10px] font-bold text-[#00DAAF] bg-[#00DAAF]/10 px-3.5 py-1.5 rounded-xl border border-[#00DAAF]/20">DONE</span>}
+                                                {idDocKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-text)]/10 px-3.5 py-1.5 rounded-xl border border-[var(--sidebar-active-text)]/20">DONE</span>}
                                             </div>
                                         </label>
                                     </div>
 
                                     {/* Address Section */}
                                     <div>
-                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${addressKey ? 'bg-[#00DAAF]/5 border-[#00DAAF]/20' : 'bg-[#121614] border-[var(--sidebar-border)]'} mb-4`}>
+                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${addressKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-black/5 dark:bg-white/5 border-[var(--sidebar-border)]'} mb-4`}>
                                             <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'address')} />
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${addressKey ? 'bg-[#00DAAF]/10 text-[#00DAAF]' : 'bg-[#1A1F1C] text-[var(--color-text-muted)]'}`}>
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${addressKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-black/10 dark:bg-white/10 text-[var(--color-text-muted)]'}`}>
                                                         {addressKey ? (
                                                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -221,23 +221,23 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <p className="text-[15px] font-bold text-white mb-0.5 font-montserrat">Address Proof</p>
+                                                        <p className="text-[15px] font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Address Proof</p>
                                                         <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Utility Bill or Bank Statement</p>
                                                         <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG, PDF — MAX 5 MB</p>
                                                     </div>
                                                 </div>
-                                                {addressKey && <span className="text-[10px] font-bold text-[#00DAAF] bg-[#00DAAF]/10 px-3.5 py-1.5 rounded-xl border border-[#00DAAF]/20">DONE</span>}
+                                                {addressKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-text)]/10 px-3.5 py-1.5 rounded-xl border border-[var(--sidebar-active-text)]/20">DONE</span>}
                                             </div>
                                         </label>
                                     </div>
 
                                     {/* Selfie Section */}
                                     <div>
-                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${selfieKey ? 'bg-[#00DAAF]/5 border-[#00DAAF]/20' : 'bg-[#121614] border-[var(--sidebar-border)]'} mb-8`}>
+                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${selfieKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-black/5 dark:bg-white/5 border-[var(--sidebar-border)]'} mb-8`}>
                                             <input type="file" className="hidden" accept="image/*" capture="user" onChange={(e) => handleFileUpload(e, 'selfie')} />
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${selfieKey ? 'bg-[#00DAAF]/10 text-[#00DAAF]' : 'bg-[#1A1F1C] text-[var(--color-text-muted)]'}`}>
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${selfieKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-black/10 dark:bg-white/10 text-[var(--color-text-muted)]'}`}>
                                                         {selfieKey ? (
                                                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -250,18 +250,18 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <p className="text-[15px] font-bold text-white mb-0.5 font-montserrat">Selfie Verification</p>
+                                                        <p className="text-[15px] font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Selfie Verification</p>
                                                         <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Selfie holding your ID next to your face</p>
                                                         <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG — MAX 5 MB</p>
                                                     </div>
                                                 </div>
-                                                {selfieKey && <span className="text-[10px] font-bold text-[#00DAAF] bg-[#00DAAF]/10 px-3.5 py-1.5 rounded-xl border border-[#00DAAF]/20">DONE</span>}
+                                                {selfieKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-text)]/10 px-3.5 py-1.5 rounded-xl border border-[var(--sidebar-active-text)]/20">DONE</span>}
                                             </div>
                                         </label>
                                     </div>
                                 </div>
 
-                                 <div className="flex items-start gap-4 p-5 rounded-[1.25rem] bg-[#121614] border border-[var(--sidebar-border)] mb-8">
+                                 <div className="flex items-start gap-4 p-5 rounded-[1.25rem] bg-black/5 dark:bg-white/5 border border-[var(--sidebar-border)] mb-8">
                                     <div className="shrink-0 mt-0.5 text-[var(--color-text-muted)]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
