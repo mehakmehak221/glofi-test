@@ -59,7 +59,7 @@ const KybUploadItem = ({ label, description, onUpload, value, isUploading }) => 
     );
 };
 
-export default function KYBModal({ isOpen, onClose }) {
+export default function KYBModal({ isOpen, onClose, onSubmit }) {
     const [formData, setFormData] = useState({
         registrationCertificateKey: "",
         gstTaxCertificateKey: "",
@@ -101,7 +101,8 @@ export default function KYBModal({ isOpen, onClose }) {
             };
             await submitKyb(payload).unwrap();
             alert("KYB submitted successfully!");
-            onClose();
+            if (onSubmit) onSubmit();
+            else onClose();
         } catch (err) {
             console.error('KYB submission failed:', err);
             alert(err?.data?.message || "KYB submission failed");
@@ -157,7 +158,7 @@ export default function KYBModal({ isOpen, onClose }) {
                             <div className="flex items-center justify-center p-12">
                                 <LoadingSpinner className="w-8 h-8 text-[var(--color-primary-300)]" />
                             </div>
-                        ) : status && status !== 'PENDING' ? (
+                        ) : status && !['PENDING', 'NOT_SUBMITTED'].includes(status) ? (
                             <div className="space-y-6">
                                 <div className={`p-6 rounded-2xl border ${
                                     status === 'VERIFIED' ? 'bg-green-500/5 border-green-500/20' :

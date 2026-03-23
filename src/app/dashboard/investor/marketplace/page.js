@@ -98,8 +98,8 @@ export default function MarketplacePage() {
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
                             className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer border ${activeCategory === cat
-                                ? "bg-[var(--sidebar-active-text)] text-black border-[var(--sidebar-active-text)] shadow-[var(--shadow-glow-primary)]"
-                                : "bg-[var(--sidebar-bg)] text-[var(--sidebar-text)] border-[var(--sidebar-border)]"
+                                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-bg)]"
+                                : "bg-transparent text-[var(--sidebar-text)] border-transparent hover:text-[var(--sidebar-text-hover)]"
                                 }`}
                         >
                             {cat}

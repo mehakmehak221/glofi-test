@@ -75,7 +75,7 @@
   --color-accent-orange-alpha-10: color-mix(in srgb, var(--color-accent-orange), transparent 90%);
 
   --color-gradient-marketplace-hero: linear-gradient(180deg, #001812 0%, #0A0F0D 50%, #031D18 100%);
-  --color-gradient-text-hero: linear-gradient(180deg, #FDFCF8 8.28%, #74D9C5 95.4%);
+  --color-gradient-text-hero: linear-gradient(180deg, #1A1F1CF2 8.28%, #00A585B2 95.4%);
   --color-bg-white: #ffffff;
   --color-bg-light: #f8f9fa;
 
@@ -1642,4 +1642,9 @@
 ::-webkit-scrollbar-thumb {
   background: white/10;
   border-radius: 10px;
+}
+
+.custom-calendar-picker::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.5);
 }

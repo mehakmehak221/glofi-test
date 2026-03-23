@@ -48,7 +48,8 @@ export default function SignInPage() {
 
             router.push("/dashboard");
         } catch (err) {
-            console.error("Failed to login:", err);
+            console.error("Failed to login detailed error:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
+            console.error("Failed to login error object:", err);
             setErrorMsg(err?.data?.message || err?.message || "Invalid credentials. Please try again.");
         }
     };

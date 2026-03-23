@@ -91,26 +91,24 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                 >
                     <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-[2rem] p-5 sm:p-7 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-2xl"
+                        className="bg-[#0A0F0D] w-full max-w-lg p-10 rounded-[2rem] shadow-2xl relative border border-[var(--sidebar-border)] max-h-[90vh] overflow-y-auto"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                     >
-                        <div className="flex items-center justify-between mb-5">
-                            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)] font-bold">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <g clipPath="url(#clip0_99_1038)">
-                                        <path d="M13.3337 8.66664C13.3337 12 11.0003 13.6666 8.22699 14.6333C8.08177 14.6825 7.92402 14.6802 7.78033 14.6266C5.00033 13.6666 2.66699 12 2.66699 8.66664V3.99997C2.66699 3.82316 2.73723 3.65359 2.86225 3.52857C2.98728 3.40355 3.15685 3.33331 3.33366 3.33331C4.66699 3.33331 6.33366 2.53331 7.49366 1.51997C7.6349 1.39931 7.81456 1.33301 8.00033 1.33301C8.18609 1.33301 8.36576 1.39931 8.50699 1.51997C9.67366 2.53997 11.3337 3.33331 12.667 3.33331C12.8438 3.33331 13.0134 3.40355 13.1384 3.52857C13.2634 3.65359 13.3337 3.82316 13.3337 3.99997V8.66664Z" stroke="var(--color-status-success)" strokeOpacity="0.8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </g>
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-2.5 text-[11px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-bold font-montserrat opacity-80">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--sidebar-active-text)]">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                 </svg>
                                 <span>KYC Verification</span>
                             </div>
                             <button
                                 onClick={onClose}
-                                className="text-[var(--color-text-muted)] hover:text-[var(--header-text)] transition-colors bg-transparent border-0 cursor-pointer p-1"
+                                className="text-[var(--color-text-muted)] hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-1"
                             >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
@@ -141,44 +139,37 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                     )}
                                 </div>
                                 <h2 className="text-xl font-bold text-[var(--header-text)] mb-2">
-                                    {isVerified ? "Verified" : isRejected ? "KYC Rejected" : "Under Review"}
+                                    {isVerified ? "Verified" : isRejected ? "KYC Rejected" : "KYC Submitted!"}
                                 </h2>
                                 <p className="text-sm text-[var(--color-text-muted)] mb-6">
                                     {isVerified ? "Your identity has been successfully verified." : 
                                      isRejected ? (kycStatus?.rejectedNote || "Your submission was rejected. Please review and resubmit.") :
-                                     "Your documents are currently being reviewed by our team."}
+                                     "Verification takes 24-48 hours. You can now proceed with your investment."}
                                 </p>
-                                {isRejected && (
-                                    <button
-                                        onClick={() => {
-                                            setIdDocKey("");
-                                            setSelfieKey("");
-                                            setAddressKey("");
-                                        }}
-                                        className="text-xs text-[var(--sidebar-active-text)] bg-transparent border border-[var(--sidebar-active-text)]/30 px-4 py-2 rounded-lg cursor-pointer hover:bg-[var(--sidebar-active-bg)] transition-colors"
-                                    >
-                                        Resubmit Documents
-                                    </button>
-                                )}
+                                <button
+                                    onClick={onClose}
+                                    className="w-full py-4 rounded-full bg-[#00DAAF] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:shadow-[0_0_20px_rgba(0,218,175,0.3)] shadow-[var(--shadow-glow-primary)]"
+                                >
+                                    Continue
+                                </button>
                             </div>
                            
                         ) : (
                             <>
-                                <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)] mb-1">Identity verification</h2>
-                                <p className="text-xs text-[var(--color-text-muted)] font-medium mb-5">Upload a government-issued ID and address proof.</p>
+                                <h2 className="text-2xl font-bold text-white mb-2 font-montserrat">Identity verification</h2>
+                                <p className="text-sm text-[var(--color-text-muted)] font-medium mb-8 font-montserrat">Upload a government-issued ID to verify your identity</p>
 
                                 <div className="space-y-6">
                                     {/* Identity Section */}
                                     <div>
-                                        <p className="text-xs font-semibold text-[var(--color-text-muted)] mb-3">1. Select Identity Type</p>
-                                        <div className="flex flex-wrap gap-1.5 mb-4">
+                                        <div className="flex flex-wrap gap-2 mb-8">
                                             {DOC_TABS.map((tab) => (
                                                 <button
                                                     key={tab}
                                                     onClick={() => setActiveTab(tab)}
-                                                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer border ${activeTab === tab
-                                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
-                                                        : "bg-transparent text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--color-text-muted)]"
+                                                    className={`px-6 py-2.5 rounded-[1.25rem] text-xs font-bold transition-all duration-200 cursor-pointer border ${activeTab === tab
+                                                        ? "bg-[#0D2D26] text-[#00DAAF] border-[#00DAAF]/30"
+                                                        : "bg-[#1A1F1C] text-[var(--color-text-muted)] border-transparent hover:border-[var(--color-text-muted)]/30 opacity-60"
                                                         }`}
                                                 >
                                                     {tab}
@@ -186,108 +177,117 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                             ))}
                                         </div>
 
-                                        <label className="block rounded-2xl p-4 cursor-pointer hover:bg-[var(--sidebar-active-bg)]/50 transition-colors border border-[var(--sidebar-border)] bg-[var(--background)] shadow-sm">
+                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${idDocKey ? 'bg-[#00DAAF]/5 border-[#00DAAF]/20' : 'bg-[#121614] border-[var(--sidebar-border)]'} mb-4`}>
                                             <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'id')} />
                                             <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 rounded-full bg-[var(--badge-bg)] flex items-center justify-center flex-shrink-0">
-                                                        <svg className="w-5 h-5 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                        </svg>
+                                                <div className="flex items-center gap-5">
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${idDocKey ? 'bg-[#00DAAF]/10 text-[#00DAAF]' : 'bg-[#1A1F1C] text-[var(--color-text-muted)]'}`}>
+                                                        {idDocKey ? (
+                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                            </svg>
+                                                        ) : (
+                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                                            </svg>
+                                                        )}
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-bold text-[var(--header-text)]">Upload {activeTab}</p>
-                                                        <p className="text-[10px] text-[var(--color-text-muted)] font-medium">{idDocKey ? "File selected" : "Click to upload"}</p>
+                                                        <p className="text-[15px] font-bold text-white mb-0.5 font-montserrat">Document — Front</p>
+                                                        <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Clear photo of front side</p>
+                                                        <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG, PDF — MAX 5 MB</p>
                                                     </div>
                                                 </div>
-                                                {idDocKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--badge-bg)] px-3 py-1.5 rounded-xl">DONE</span>}
+                                                {idDocKey && <span className="text-[10px] font-bold text-[#00DAAF] bg-[#00DAAF]/10 px-3.5 py-1.5 rounded-xl border border-[#00DAAF]/20">DONE</span>}
                                             </div>
                                         </label>
                                     </div>
 
                                     {/* Address Section */}
                                     <div>
-                                        <p className="text-xs font-semibold text-[var(--color-text-muted)] mb-3">2. Select Address Proof</p>
-                                        <div className="flex flex-wrap gap-1.5 mb-4">
-                                            {ADDRESS_TABS.map((tab) => (
-                                                <button
-                                                    key={tab}
-                                                    onClick={() => setAddressTab(tab)}
-                                                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer border ${addressTab === tab
-                                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
-                                                        : "bg-transparent text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--color-text-muted)]"
-                                                        }`}
-                                                >
-                                                    {tab}
-                                                </button>
-                                            ))}
-                                        </div>
-
-                                        <label className="block rounded-2xl p-4 cursor-pointer hover:bg-[var(--sidebar-active-bg)]/50 transition-colors border border-[var(--sidebar-border)] bg-[var(--background)] shadow-sm">
+                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${addressKey ? 'bg-[#00DAAF]/5 border-[#00DAAF]/20' : 'bg-[#121614] border-[var(--sidebar-border)]'} mb-4`}>
                                             <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'address')} />
                                             <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 rounded-full bg-[var(--badge-bg)] flex items-center justify-center flex-shrink-0">
-                                                        <svg className="w-5 h-5 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                                        </svg>
+                                                <div className="flex items-center gap-5">
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${addressKey ? 'bg-[#00DAAF]/10 text-[#00DAAF]' : 'bg-[#1A1F1C] text-[var(--color-text-muted)]'}`}>
+                                                        {addressKey ? (
+                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                            </svg>
+                                                        ) : (
+                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                                            </svg>
+                                                        )}
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-bold text-[var(--header-text)]">Upload {addressTab}</p>
-                                                        <p className="text-[10px] text-[var(--color-text-muted)] font-medium">{addressKey ? "File selected" : "Click to upload"}</p>
+                                                        <p className="text-[15px] font-bold text-white mb-0.5 font-montserrat">Address Proof</p>
+                                                        <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Utility Bill or Bank Statement</p>
+                                                        <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG, PDF — MAX 5 MB</p>
                                                     </div>
                                                 </div>
-                                                {addressKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--badge-bg)] px-3 py-1.5 rounded-xl">DONE</span>}
+                                                {addressKey && <span className="text-[10px] font-bold text-[#00DAAF] bg-[#00DAAF]/10 px-3.5 py-1.5 rounded-xl border border-[#00DAAF]/20">DONE</span>}
                                             </div>
                                         </label>
                                     </div>
 
                                     {/* Selfie Section */}
                                     <div>
-                                        <p className="text-xs font-semibold text-[var(--color-text-muted)] mb-3">3. Selfie Verification</p>
-                                        <label className="block rounded-2xl p-4 cursor-pointer hover:bg-[var(--sidebar-active-bg)]/50 transition-colors border border-[var(--sidebar-border)] bg-[var(--background)] shadow-sm">
+                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${selfieKey ? 'bg-[#00DAAF]/5 border-[#00DAAF]/20' : 'bg-[#121614] border-[var(--sidebar-border)]'} mb-8`}>
                                             <input type="file" className="hidden" accept="image/*" capture="user" onChange={(e) => handleFileUpload(e, 'selfie')} />
                                             <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 rounded-full bg-[var(--badge-bg)] flex items-center justify-center flex-shrink-0">
-                                                        <svg className="w-5 h-5 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
+                                                <div className="flex items-center gap-5">
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${selfieKey ? 'bg-[#00DAAF]/10 text-[#00DAAF]' : 'bg-[#1A1F1C] text-[var(--color-text-muted)]'}`}>
+                                                        {selfieKey ? (
+                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                            </svg>
+                                                        ) : (
+                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            </svg>
+                                                        )}
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-bold text-[var(--header-text)]">Capture Selfie</p>
-                                                        <p className="text-[10px] text-[var(--color-text-muted)] font-medium">{selfieKey ? "Selfie captured" : "Click to open camera"}</p>
+                                                        <p className="text-[15px] font-bold text-white mb-0.5 font-montserrat">Selfie Verification</p>
+                                                        <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Selfie holding your ID next to your face</p>
+                                                        <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG — MAX 5 MB</p>
                                                     </div>
                                                 </div>
-                                                {selfieKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--badge-bg)] px-3 py-1.5 rounded-xl">DONE</span>}
+                                                {selfieKey && <span className="text-[10px] font-bold text-[#00DAAF] bg-[#00DAAF]/10 px-3.5 py-1.5 rounded-xl border border-[#00DAAF]/20">DONE</span>}
                                             </div>
                                         </label>
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-3 mt-6 mb-6 p-4 rounded-2xl bg-[var(--color-status-info-bg)] border border-[var(--color-status-info-border)]">
-                                    <span className="shrink-0 mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 14 14" fill="none">
-                                        <g clipPath="url(#clip0_99_1091)">
-                                            <path d="M7.00033 12.8334C10.222 12.8334 12.8337 10.2217 12.8337 7.00008C12.8337 3.77842 10.222 1.16675 7.00033 1.16675C3.77866 1.16675 1.16699 3.77842 1.16699 7.00008C1.16699 10.2217 3.77866 12.8334 7.00033 12.8334Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M7 4.66675V7.00008" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M7 9.33325H7.00583" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        </g>
-                                    </svg></span>
-                                    <p className="text-[11px] text-[var(--color-status-info)] font-medium leading-relaxed">
-                                        Your documents are encrypted and stored securely per UAE data
-                                        regulations.
+                                 <div className="flex items-start gap-4 p-5 rounded-[1.25rem] bg-[#121614] border border-[var(--sidebar-border)] mb-8">
+                                    <div className="shrink-0 mt-0.5 text-[var(--color-text-muted)]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                                        </svg>
+                                    </div>
+                                    <p className="text-[12px] text-[var(--color-text-muted)] font-medium leading-relaxed font-montserrat">
+                                        Your documents are encrypted and stored securely per UAE AML regulations.
                                     </p>
                                 </div>
 
                                 <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
+                                    whileHover={{ scale: 1.01 }}
+                                    whileTap={{ scale: 0.99 }}
                                     onClick={handleFormSubmit}
                                     disabled={isSubmitting || isUploading}
-                                    className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full py-4.5 rounded-2xl bg-[#11BA96] text-black font-bold text-base cursor-pointer border-0 transition-all hover:opacity-90 shadow-lg shadow-[#11BA96]/20 disabled:opacity-50 disabled:cursor-not-allowed font-montserrat flex items-center justify-center gap-2"
                                 >
-                                    {isSubmitting || isUploading ? "Processing..." : "Submit KYC →"}
+                                    {isSubmitting || isUploading ? "Processing..." : (
+                                        <>
+                                            Submit KYC
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                <polyline points="12 5 19 12 12 19"></polyline>
+                                            </svg>
+                                        </>
+                                    )}
                                 </motion.button>
                             </>
                         )}

@@ -50,6 +50,16 @@ export default function Sidebar() {
         }
     };
 
+    useEffect(() => {
+        const checkTheme = () => {
+            setIsLight(document.documentElement.classList.contains('light'));
+        };
+        checkTheme();
+        const observer = new MutationObserver(checkTheme);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        return () => observer.disconnect();
+    }, []);
+
     return (
         <motion.aside
             className="hidden lg:flex flex-col h-screen sticky top-0 bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] z-40 overflow-hidden"
