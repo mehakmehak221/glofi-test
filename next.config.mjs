@@ -9,6 +9,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'aws-glofi-uploads.s3.ap-south-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   devIndicators: {
