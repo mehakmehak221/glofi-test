@@ -161,11 +161,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                     </button>
                                 )}
                             </div>
-                                    >
-                                        Resubmit Documents
-                                    </button>
-                                )}
-                            </div>
+                           
                         ) : (
                             <>
                                 <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)] mb-1">Identity verification</h2>
