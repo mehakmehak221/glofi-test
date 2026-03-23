@@ -231,12 +231,17 @@ export default function PropertyDetailPage() {
                         </p>
 
                         <div className="space-y-3 mb-6">
+                        <motion.button
+                            onClick={handleInvestNow}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)]"
-            >
+                        >
                             Invest Now
                         </motion.button>
-                    </div >
-                </motion.div >
+                        </div>
+                    </div>
+                </motion.div>
             </div >
 
 
