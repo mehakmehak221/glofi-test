@@ -27,7 +27,7 @@ const NAV_ITEMS = [
     { href: "/dashboard/partner/secondary-approvals", icon: SecondaryMarketplaceIcon, label: "Resale Approvals" },
     { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
-    { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
+    // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
 ];
 
 export default function PartnerSidebar() {

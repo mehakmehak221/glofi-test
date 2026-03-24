@@ -7,97 +7,6 @@ import { TrendingUpIcon, SearchIcon, EyeOpenIcon, DownloadIcon, AboutIcon } from
 import PaymentModal from "@/components/dashboard/PaymentModal";
 import { useGetSecondaryListingsQuery, useBuySecondaryListingMutation } from "@/store/api/secondaryMarketApi";
 
-const STATS = [
-    { label: "Total Listings", value: "8", change: "+3 this week", icon: TrendingUpIcon, color: "text-white" },
-    { label: "Total Value", value: "$3.1M", change: "+8.5% overall", icon: TrendingUpIcon, color: "text-white" },
-    { label: "Average ROI", value: "13.6%", change: "High performing", icon: TrendingUpIcon, color: "text-white" },
-    { label: "Active Sellers", value: "8", change: "Verified users", icon: TrendingUpIcon, color: "text-white" },
-];
-
-const MARKETPLACE_ASSETS = [
-    {
-
-        id: 1,
-        name: "Burj Vista Tower",
-        image: "/assets/marketplace/Burj.png",
-        seller: "Sarah Chen",
-        change: "+15%",
-        fractions: "25/100",
-        price: "$625K",
-        currentValue: "$719K",
-    },
-    {
-        id: 2,
-        name: "Palm Jumeirah Villa",
-        image: "/assets/marketplace/Palm.png",
-        seller: "Michael Torres",
-        change: "+12.4%",
-        fractions: "10/50",
-        price: "$190K",
-        currentValue: "$214K",
-    },
-    {
-        id: 3,
-        name: "Marina Walk Residences",
-        image: "/assets/marketplace/Marina.png",
-        seller: "James Wilson",
-        change: "+12%",
-        fractions: "15/80",
-        price: "$300K",
-        currentValue: "$336K",
-    },
-    {
-        id: 4,
-        name: "Downtown Dubai",
-        image: "/assets/marketplace/Burj.png",
-        seller: "Emily Rodriguez",
-        change: "+16%",
-        fractions: "30/120",
-        price: "$450K",
-        currentValue: "$522K",
-    },
-    {
-        id: 5,
-        name: "Arabian Ranches Villa",
-        image: "/assets/marketplace/Palm.png",
-        seller: "David Kim",
-        change: "+10%",
-        fractions: "8/40",
-        price: "$160K",
-        currentValue: "$176K",
-    },
-    {
-        id: 6,
-        name: "Business Bay Corporate",
-        image: "/assets/marketplace/Bay.png",
-        seller: "Anna Martinez",
-        change: "+15%",
-        fractions: "20/100",
-        price: "$400K",
-        currentValue: "$460K",
-    },
-    {
-        id: 7,
-        name: "Jumeirah Beach",
-        image: "/assets/marketplace/Burj.png",
-        seller: "Robert Lee",
-        change: "+11.7%",
-        fractions: "12/60",
-        price: "$240K",
-        currentValue: "$268K",
-    },
-    {
-        id: 8,
-        name: "Dubai Creek Harbor",
-        image: "/assets/marketplace/Palm.png",
-        seller: "Sofia Ahmed",
-        change: "+17%",
-        fractions: "18/90",
-        price: "$360K",
-        currentValue: "$421K",
-    }
-];
-
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
@@ -117,21 +26,7 @@ export default function SecondaryMarketplacePage() {
     const { data: listingsResponse, isLoading } = useGetSecondaryListingsQuery();
     const [buySecondaryListing] = useBuySecondaryListingMutation();
 
-    const displayAssets = listingsResponse?.data && listingsResponse.data.length > 0 ? listingsResponse.data.map(item => {
-        const assetObj = item.asset || {};
-        const sellerObj = item.seller || {};
-        return {
-            id: item.id,
-            name: assetObj.title || "Unknown Property",
-            image: assetObj.images?.[0]?.startsWith('http') ? assetObj.images[0] : (assetObj.images?.[0] ? `/${assetObj.images[0]}` : "/assets/marketplace/Burj.png"),
-            seller: `${sellerObj.firstName || 'Unknown'} ${sellerObj.lastName || ''}`.trim() || 'Anonymous',
-            change: "+0%",
-            fractions: `${item.fractions || 0}`,
-            price: `$${(item.pricePerFraction && item.fractions ? item.pricePerFraction * item.fractions : 0).toLocaleString()}`,
-            currentValue: `$${(assetObj.valuation || item.pricePerFraction || 0).toLocaleString()}`,
-            pricePerFraction: item.pricePerFraction
-        };
-    }) : MARKETPLACE_ASSETS;
+    const displayAssets = listingsResponse?.data || [];
 
     const handleBuyFractions = (asset) => {
         setSelectedAsset(asset);
@@ -139,6 +34,19 @@ export default function SecondaryMarketplacePage() {
     };
 
     const filters = ["All Properties", "High ROI (15%+)", "Best Value"];
+
+
+    const stats = [
+        { label: "Total Listings", value: displayAssets.length.toString(), change: "Active listings", icon: TrendingUpIcon },
+        {
+            label: "Total Value",
+            value: `$${(displayAssets.reduce((acc, item) => acc + (item.pricePerFraction * item.fractions || 0), 0) / 1000).toFixed(1)}K`,
+            change: "Market volume",
+            icon: TrendingUpIcon
+        },
+        { label: "Active Sellers", value: new Set(displayAssets.map(item => item.sellerId)).size.toString(), change: "Verified investors", icon: TrendingUpIcon },
+        { label: "Avg Yield", value: displayAssets.length > 0 ? "12.4%" : "0%", change: "Property average", icon: TrendingUpIcon },
+    ];
 
     return (
         <div className="p-4 sm:p-6 lg:p-10 bg-[var(--background)] min-h-screen text-[var(--sidebar-text)] font-sans transition-colors duration-300">
@@ -164,7 +72,7 @@ export default function SecondaryMarketplacePage() {
 
 
                 <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
-                    {STATS.map((stat) => (
+                    {stats.map((stat) => (
                         <div key={stat.label} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-500">
                             <div className="flex justify-between items-start mb-6">
                                 <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-bold">{stat.label}</span>
@@ -198,20 +106,6 @@ export default function SecondaryMarketplacePage() {
                             </button>
                         ))}
                     </div>
-                    <div className="flex items-center gap-3 w-full md:w-auto">
-                        <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl text-[11px] font-bold text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:shadow-md transition-all border-0 cursor-pointer">
-                            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-                                <path d="M1.5 3H14.5V4.5H1.5V3ZM4 7H12V8.5H4V7ZM6.5 11H9.5V12.5H6.5V11Z" />
-                            </svg>
-                            <span className="md:hidden lg:inline uppercase tracking-widest">Filters</span>
-                        </button>
-                        <button className="flex-[2] md:flex-none flex items-center justify-between gap-6 px-6 py-3 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl text-[11px] font-bold min-w-[150px] text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:shadow-md transition-all border-0 cursor-pointer">
-                            <span className="uppercase tracking-widest">Most Recent</span>
-                            <svg width="8" height="5" viewBox="0 0 10 6" fill="none">
-                                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
-                    </div>
                 </div>
 
 
@@ -225,10 +119,31 @@ export default function SecondaryMarketplacePage() {
                         <div className="col-span-full flex justify-center p-12">
                             <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin"></div>
                         </div>
+                    ) : displayAssets.length === 0 ? (
+                        <div className="col-span-full flex flex-col items-center justify-center p-20 bg-[var(--sidebar-bg)] border border-dashed border-[var(--sidebar-border)] rounded-3xl text-center">
+                            <div className="w-20 h-20 rounded-full bg-[var(--badge-bg)] flex items-center justify-center mb-6">
+                                <SearchIcon className="w-10 h-10 text-[var(--color-text-muted)]" />
+                            </div>
+                            <h3 className="text-xl font-bold text-[var(--header-text)] mb-2">No active listings</h3>
+                            <p className="text-sm text-[var(--color-text-muted)] max-w-xs">There are no secondary market listings available at the moment. Check back later!</p>
+                        </div>
                     ) : (
-                        displayAssets.map((asset) => (
-                            <MarketplaceCard key={asset.id} asset={asset} onBuy={() => handleBuyFractions(asset)} />
-                        ))
+                        displayAssets.map((item) => {
+                            const assetObj = item.asset || {};
+                            const sellerObj = item.seller || {};
+                            const asset = {
+                                id: item.id,
+                                name: assetObj.title || "Unknown Property",
+                                image: assetObj.images?.[0]?.startsWith('http') ? assetObj.images[0] : (assetObj.images?.[0] ? `${API_URL}/${assetObj.images[0].replace(/^\//, '')}` : "/assets/marketplace/Burj.png"),
+                                seller: `${sellerObj.firstName || 'Unknown'} ${sellerObj.lastName || ''}`.trim() || 'Anonymous',
+                                change: `${assetObj.expectedYield || 0}%`,
+                                fractions: `${item.fractions || 0}`,
+                                price: `$${(item.pricePerFraction && item.fractions ? item.pricePerFraction * item.fractions : 0).toLocaleString()}`,
+                                currentValue: `$${(assetObj.valuation || item.pricePerFraction || 0).toLocaleString()}`,
+                                pricePerFraction: item.pricePerFraction
+                            };
+                            return <MarketplaceCard key={asset.id} asset={asset} onBuy={() => handleBuyFractions(asset)} />;
+                        })
                     )}
                 </motion.div>
 
@@ -259,7 +174,7 @@ export default function SecondaryMarketplacePage() {
                     <div className="relative z-10 text-center md:text-left">
                         <h2 className="text-xl font-bold mb-3 text-[var(--header-text)] uppercase tracking-widest">About Secondary Marketplace</h2>
                         <p className="text-sm font-medium text-[var(--color-text-muted)] leading-relaxed max-w-5xl">
-                            The Secondary Marketplace empowers investors to trade property fractions relisted by other community members. Whether you're looking to exit a position or acquire premium assets previously sold out, this platform provides immediate liquidity and transferability. All prices reflect current market conditions and seller valuations.
+                            The Secondary Marketplace allows investors to buy property fractions that have been relisted by other investors. All properties shown here were previously purchased from the primary marketplace and are now available for immediate transfer. Prices may vary based on current market value and seller preferences.
                         </p>
                     </div>
                 </section>

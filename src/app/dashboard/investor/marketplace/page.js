@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPinIcon } from "@/components/VectorImages";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
+import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { CATEGORIES } from "@/data/propertyData";
 
 import { API_URL } from "@/constants";
@@ -63,7 +64,6 @@ export default function MarketplacePage() {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)]">
-
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -136,8 +136,7 @@ export default function MarketplacePage() {
                                 const propertyImage = property.images?.[0];
                                 const imageUrl = propertyImage
                                     ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
-                                    : "/assets/img_ext_0.jpeg"; // Fallback image
-
+                                    : "/assets/img_ext_0.jpeg";
                                 const fundedPercentage = Math.round(((property.totalFractions - property.availableFractions) / property.totalFractions) * 100);
 
                                 return (

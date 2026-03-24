@@ -187,15 +187,25 @@ const getImageUrl = (imagePath) => {
 };
 
 export default function PartnerOverviewPage() {
-    const { data: listingsData, isLoading: isLoadingListings } = useGetMyListingsQuery();
+    const { data: listingsData, isLoading: isLoadingListings, isError, error } = useGetMyListingsQuery();
 
-    const displayListings = listingsData?.data?.length > 0
-        ? listingsData.data.slice(0, 6).map(l => ({
-            name: l.title,
-            pct: Math.round(((l.totalFractions - l.availableFractions) / l.totalFractions) * 100),
-            img: getImageUrl(l.images?.[0])
-        }))
-        : LISTINGS;
+    const isKycRequired = error?.status === 403 && error?.data?.message?.includes('KYC');
+    const isKybRequired = error?.status === 403 && error?.data?.message?.includes('KYB');
+
+    const totalRaised = listingsData?.data?.reduce((acc, l) => {
+        const raised = (l.totalFractions - l.availableFractions) * (l.fractionPrice || 0);
+        return acc + raised;
+    }, 0) || 0;
+
+    const totalCommissions = totalRaised * 0.03; // Mock 3% commission
+
+    const formatCurrency = (val) => {
+        if (val >= 1e6) return `$${(val / 1e6).toFixed(1)}M`;
+        if (val >= 1e3) return `$${(val / 1e3).toFixed(1)}K`;
+        return `$${val.toLocaleString()}`;
+    };
+
+    const displayListings = listingsData?.data || [];
 
     return (
         <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
@@ -205,17 +215,26 @@ export default function PartnerOverviewPage() {
                 transition={{ duration: 0.3 }}
                 className="mb-8"
             >
-                <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat">
+                <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight opacity-90 uppercase tracking-widest">
                     Overview
                 </h1>
-                <p className="text-sm font-montserrat mt-1 text-[var(--sidebar-text)] opacity-60">Partner command center</p>
+                <p className="text-[11px] font-bold tracking-[0.2em] font-montserrat mt-2 text-[var(--sidebar-text)] opacity-40 uppercase">Partner command center</p>
             </motion.div>
 
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                {STAT_CARDS.map((card, i) => (
-                    <StatCard key={card.label} {...card} index={i} />
-                ))}
+                {STAT_CARDS.map((card, i) => {
+                    let value = card.value;
+                    const liveListings = listingsData?.data || [];
+                    if (card.label === "LISTINGS") {
+                        value = liveListings.length;
+                    } else if (card.label === "FUNDS RAISED") {
+                        value = formatCurrency(totalRaised);
+                    } else if (card.label === "COMMISSIONS") {
+                        value = formatCurrency(totalCommissions);
+                    }
+                    return <StatCard key={card.label} {...card} value={value} index={i} />;
+                })}
             </div>
 
             {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
@@ -225,7 +244,7 @@ export default function PartnerOverviewPage() {
                     transition={{ duration: 0.35, delay: 0.15 }}
                     className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5"
                 >
-                    <h2 className="text-sm font-semibold text-[var(--foreground)] font-montserrat mb-4 opacity-70">Hot Leads</h2>
+                    <h2 className="text-sm font-semibold text-[var(--foreground)] font-montserrat mb-4 opacity-70 uppercase tracking-wider">Hot Leads</h2>
                     <div className="flex flex-col gap-1">
                         {HOT_LEADS.map((lead, i) => (
                             <LeadRow key={lead.name} lead={lead} index={i} />
@@ -240,7 +259,7 @@ export default function PartnerOverviewPage() {
                     className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5"
                 >
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-sm font-semibold text-[var(--foreground)] font-montserrat opacity-70">AI Agent</h2>
+                        <h2 className="text-sm font-semibold text-[var(--foreground)] font-montserrat opacity-70 uppercase tracking-wider">AI Agent Performance</h2>
                         <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.12em] text-[var(--sidebar-active-text)] font-montserrat uppercase bg-[var(--sidebar-active-bg)] rounded-full px-2.5 py-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--sidebar-active-text)] animate-pulse" />
                             ACTIVE
@@ -274,14 +293,39 @@ export default function PartnerOverviewPage() {
                 className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5"
             >
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">Listing Performance</h2>
+                    <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat uppercase tracking-wider">Listing Performance</h2>
                     {isLoadingListings && <div className="w-4 h-4 border border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
-                    {displayListings.map((listing, i) => (
-                        <ListingBar key={listing.name + i} listing={listing} index={i} />
-                    ))}
-                </div>
+
+                {isError ? (
+                    <div className="py-12 flex flex-col items-center justify-center text-center px-4">
+                        <p className="text-sm font-bold text-[var(--foreground)] opacity-90 mb-2 uppercase tracking-wide">
+                            {isKycRequired ? "Verification Required" : isKybRequired ? "Business Verification Required" : "Error Loading Data"}
+                        </p>
+                        <p className="text-[11px] text-[var(--sidebar-text)] opacity-60 max-w-xs mb-4">
+                            {isKycRequired ? "You need to complete identity verification to view and manage your listings performance." : "Your account verification is pending. Real-time listing performance will appear once approved."}
+                        </p>
+                    </div>
+                ) : listingsData?.data?.length === 0 ? (
+                    <div className="py-12 flex flex-col items-center justify-center text-center px-4 border border-dashed border-[var(--sidebar-border)] rounded-xl">
+                        <p className="text-sm font-bold text-[var(--foreground)] opacity-70 mb-1 uppercase tracking-wider">No active listings</p>
+                        <p className="text-[11px] text-[var(--sidebar-text)] opacity-40">Your property performance metrics will appear here once you list an asset.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
+                        {listingsData?.data?.slice(0, 6).map((l, i) => (
+                            <ListingBar
+                                key={l.id || l.title + i}
+                                listing={{
+                                    name: l.title,
+                                    pct: Math.round(((l.totalFractions - l.availableFractions) / l.totalFractions) * 100),
+                                    img: getImageUrl(l.images?.[0])
+                                }}
+                                index={i}
+                            />
+                        ))}
+                    </div>
+                )}
             </motion.div>
         </div>
     );

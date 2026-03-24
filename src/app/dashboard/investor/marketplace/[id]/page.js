@@ -77,7 +77,11 @@ export default function PropertyDetailPage() {
 
         // Check KYC status
         if (kycData?.status !== "APPROVED") {
-            setKycOpen(true);
+            if (kycData?.status !== "UNDER_REVIEW") {
+                setKycOpen(true);
+            } else {
+                alert("Your KYC is currently under review. Please wait for approval before investing.");
+            }
             return;
         }
 
@@ -87,8 +91,8 @@ export default function PropertyDetailPage() {
             const result = await createInvestment({
                 assetId: params.id,
                 fractions: qty,
-                paymentMethod: "UPI", // Defaulting to UPI as per user request example
-                currency: "USD",      // Defaulting to USD
+                paymentMethod: "UPI",
+                currency: "USD",
             }).unwrap();
 
             console.log("Investment successful:", result);
@@ -117,7 +121,6 @@ export default function PropertyDetailPage() {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen">
-
             <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -231,12 +234,21 @@ export default function PropertyDetailPage() {
                                             </span>
                                             <span className="text-sm font-medium text-[var(--sidebar-text)]">{doc.name}</span>
                                         </div>
-                                        <a href={doc.url.startsWith('http') ? doc.url : `${API_URL}/${doc.url}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-[var(--sidebar-active-text)] bg-transparent border-0 cursor-pointer hover:underline no-underline">
-                                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                            </svg>
-                                            View
-                                        </a>
+                                        <div className="flex items-center gap-4">
+                                            <a
+                                                href={doc.url.startsWith('http') ? doc.url : `${API_URL}/${doc.url}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1.5 text-xs font-bold text-[var(--sidebar-active-text)] bg-transparent border-0 cursor-pointer hover:underline no-underline"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                                View
+                                            </a>
+
+                                        </div>
                                     </div>
                                 ))}
                             </div>

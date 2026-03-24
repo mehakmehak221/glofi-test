@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGetKycStatusQuery } from "@/store/api/kycApi";
 
 const overlayVariants = {
     hidden: { opacity: 0 },
@@ -17,15 +18,18 @@ const modalVariants = {
 export default function InvestModal({ isOpen, onClose, property, onVerifyPay }) {
     const [quantity, setQuantity] = useState(1);
 
+    const { data: kycData } = useGetKycStatusQuery();
     if (!isOpen || !property) return null;
 
-    const price = property.perFractionNum;
+    const price = Number(property.fractionPrice) || 0;
     const subtotal = quantity * price;
     const fee = subtotal * 0.02;
     const total = subtotal + fee;
 
     const formatCurrency = (val) =>
         "$" + (Number(val) || 0).toLocaleString("en-US", { minimumFractionDigits: 0 });
+
+    const isKycApproved = kycData?.status === "APPROVED";
 
     return (
         <AnimatePresence>
@@ -47,7 +51,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay }) 
                     >
                      
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{property.name}</h2>
+                            <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{property.title}</h2>
                             <button
                                 onClick={onClose}
                                 className="text-[var(--color-text-muted)] hover:text-[var(--header-text)] transition-colors bg-transparent border-0 cursor-pointer p-1"
@@ -99,16 +103,39 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay }) 
                         </div>
 
                        
-                        <div
-                            className="rounded-2xl p-4 mb-6 flex items-start gap-3 bg-[var(--color-status-warning-bg)] border border-[var(--color-status-warning-border)]"
-                        >
-                            <span className="shrink-0 mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 12 15" fill="none">
-                                <path d="M11.3337 8.00038C11.3337 11.3337 9.00033 13.0004 6.22699 13.967C6.08177 14.0163 5.92402 14.0139 5.78033 13.9604C3.00033 13.0004 0.666992 11.3337 0.666992 8.00038V3.33371C0.666992 3.1569 0.73723 2.98733 0.862254 2.86231C0.987279 2.73729 1.15685 2.66705 1.33366 2.66705C2.66699 2.66705 4.33366 1.86705 5.49366 0.853714C5.6349 0.733047 5.81456 0.666748 6.00033 0.666748C6.18609 0.666748 6.36576 0.733047 6.50699 0.853714C7.67366 1.87371 9.33366 2.66705 10.667 2.66705C10.8438 2.66705 11.0134 2.73729 11.1384 2.86231C11.2634 2.98733 11.3337 3.1569 11.3337 3.33371V8.00038Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg></span>
-                            <p className="text-xs text-[var(--color-status-warning)] font-medium leading-relaxed">
-                                KYC verification required before your first investment. Quick 3-step process.
-                            </p>
-                        </div>
+                        {!isKycApproved && (
+                            <div
+                                className={`rounded-2xl p-4 mb-6 flex items-start gap-3 border ${
+                                    kycData?.status === "UNDER_REVIEW"
+                                        ? "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
+                                        : kycData?.status === "REJECTED"
+                                        ? "bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]"
+                                        : "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
+                                }`}
+                            >
+                                <span className="shrink-0 mt-0.5">
+                                    {kycData?.status === "UNDER_REVIEW" ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 12 15" fill="none">
+                                            <path d="M11.3337 8.00038C11.3337 11.3337 9.00033 13.0004 6.22699 13.967C6.08177 14.0163 5.92402 14.0139 5.78033 13.9604C3.00033 13.0004 0.666992 11.3337 0.666992 8.00038V3.33371C0.666992 3.1569 0.73723 2.98733 0.862254 2.86231C0.987279 2.73729 1.15685 2.66705 1.33366 2.66705C2.66699 2.66705 4.33366 1.86705 5.49366 0.853714C5.6349 0.733047 5.81456 0.666748 6.00033 0.666748C6.18609 0.666748 6.36576 0.733047 6.50699 0.853714C7.67366 1.87371 9.33366 2.66705 10.667 2.66705C10.8438 2.66705 11.0134 2.73729 11.1384 2.86231C11.2634 2.98733 11.3337 3.1569 11.3337 3.33371V8.00038Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    )}
+                                </span>
+                                <div className="flex flex-col gap-1">
+                                    <p className="text-[10px] font-bold uppercase tracking-wider">
+                                        Status: {kycData?.status?.replace("_", " ") || "Verification Required"}
+                                    </p>
+                                    <p className="text-xs font-medium leading-relaxed opacity-90">
+                                        {kycData?.status === "UNDER_REVIEW"
+                                            ? "Your identity verification is currently being processed. We'll notify you once it's approved."
+                                            : kycData?.status === "REJECTED"
+                                            ? `Your verification was rejected. Please check your details and re-submit. ${kycData?.rejectedNote ? `Reason: ${kycData.rejectedNote}` : ''}`
+                                            : "KYC verification required before your first investment. Quick 3-step process."}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
 
                         
                         <motion.button

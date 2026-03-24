@@ -25,7 +25,7 @@ export default function Navbar() {
                     </span>
                 </Link>
 
-                <nav aria-label="Main navigation" className="hidden xl:block">
+                <nav aria-label="Main navigation" className="hidden lg:block">
                     <ul className="navbar__nav flex items-center gap-4 lg:gap-6 xl:gap-8 list-none">
                         {NAV_LINKS.map((link) => (
                             <li key={link.label}>
@@ -43,20 +43,11 @@ export default function Navbar() {
                         Get GloFi
                     </Link>
 
-                    {/* <button className="navbar__lang text-language flex items-center gap-2 bg-transparent border-none cursor-pointer transition-colors hover:text-white whitespace-nowrap text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)]">
-                        <Image
-                            src="/globe.svg"
-                            alt="Globe"
-                            width={14}
-                            height={21}
-                            className="navbar__lang-icon w-3.5 h-5 sm:w-4 sm:h-6 lg:w-3.5 lg:h-5 flex-shrink-0"
-                        />
-                        <span className="hidden lg:inline">English</span>
-                    </button> */}
+                    {/* ... (commented out) ... */}
                 </div>
 
                 <button
-                    className="navbar__hamburger xl:hidden flex flex-col gap-1 bg-none border-none cursor-pointer p-2"
+                    className="navbar__hamburger lg:hidden flex flex-col gap-1 bg-none border-none cursor-pointer p-2"
                     aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
                     aria-expanded={mobileOpen}
                     onClick={() => setMobileOpen((prev) => !prev)}
