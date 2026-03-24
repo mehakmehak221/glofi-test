@@ -49,7 +49,7 @@ export default function InvestmentSection() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                     >
-                        <span className="text-inside-platform text-xs sm:text-sm lg:text-base rounded-full border border-[#ACFFEF] px-4 py-2 text-[#ACFFEF]">Inside the Platform</span>
+                        <span className="text-inside-platform text-xs sm:text-sm lg:text-base px-4 py-2 text-[#ACFFEF]">Inside the Platform</span>
                     </motion.div>
 
                     {/* Title */}
