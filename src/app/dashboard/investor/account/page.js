@@ -26,11 +26,13 @@ export default function AccountPage() {
             { label: "Country", value: "Loading...", type: "text" },
         ];
 
+        const profile = profileData.partnerProfile || profileData.investorProfile || {};
+
         return [
-            { label: "Full Name", value: profileData.fullName || profileData.name || "", type: "text" },
+            { label: "Full Name", value: profile.fullName || profileData.fullName || profileData.name || "", type: "text" },
             { label: "Email", value: profileData.email || "", type: "email" },
-            { label: "Phone", value: profileData.phoneNumber || profileData.phone || "", type: "tel" },
-            { label: "Country", value: profileData.country || profileData.nationality || "", type: "text" },
+            { label: "Phone", value: profileData.phoneNumber || profileData.phone || profile.phone || "", type: "tel" },
+            { label: "Country", value: profile.country || profile.nationality || profileData.country || profileData.nationality || "", type: "text" },
         ];
     }, [profileData]);
 

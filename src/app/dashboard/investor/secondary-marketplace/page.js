@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrendingUpIcon, SearchIcon, EyeOpenIcon, DownloadIcon, AboutIcon } from "@/components/VectorImages";
 import PaymentModal from "@/components/dashboard/PaymentModal";
+import { useGetSecondaryListingsQuery, useBuySecondaryListingMutation } from "@/store/api/secondaryMarketApi";
 
 const STATS = [
     { label: "Total Listings", value: "8", change: "+3 this week", icon: TrendingUpIcon, color: "text-white" },
@@ -113,6 +114,25 @@ export default function SecondaryMarketplacePage() {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState(null);
 
+    const { data: listingsResponse, isLoading } = useGetSecondaryListingsQuery();
+    const [buySecondaryListing] = useBuySecondaryListingMutation();
+
+    const displayAssets = listingsResponse?.data && listingsResponse.data.length > 0 ? listingsResponse.data.map(item => {
+        const assetObj = item.asset || {};
+        const sellerObj = item.seller || {};
+        return {
+            id: item.id,
+            name: assetObj.title || "Unknown Property",
+            image: assetObj.images?.[0]?.startsWith('http') ? assetObj.images[0] : (assetObj.images?.[0] ? `/${assetObj.images[0]}` : "/assets/marketplace/Burj.png"),
+            seller: `${sellerObj.firstName || 'Unknown'} ${sellerObj.lastName || ''}`.trim() || 'Anonymous',
+            change: "+0%",
+            fractions: `${item.fractions || 0}`,
+            price: `$${(item.pricePerFraction && item.fractions ? item.pricePerFraction * item.fractions : 0).toLocaleString()}`,
+            currentValue: `$${(assetObj.valuation || item.pricePerFraction || 0).toLocaleString()}`,
+            pricePerFraction: item.pricePerFraction
+        };
+    }) : MARKETPLACE_ASSETS;
+
     const handleBuyFractions = (asset) => {
         setSelectedAsset(asset);
         setIsPaymentModalOpen(true);
@@ -201,9 +221,15 @@ export default function SecondaryMarketplacePage() {
                     animate="visible"
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 mb-16"
                 >
-                    {MARKETPLACE_ASSETS.map((asset) => (
-                        <MarketplaceCard key={asset.id} asset={asset} onBuy={() => handleBuyFractions(asset)} />
-                    ))}
+                    {isLoading ? (
+                        <div className="col-span-full flex justify-center p-12">
+                            <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin"></div>
+                        </div>
+                    ) : (
+                        displayAssets.map((asset) => (
+                            <MarketplaceCard key={asset.id} asset={asset} onBuy={() => handleBuyFractions(asset)} />
+                        ))
+                    )}
                 </motion.div>
 
 
@@ -211,6 +237,17 @@ export default function SecondaryMarketplacePage() {
                     isOpen={isPaymentModalOpen}
                     onClose={() => setIsPaymentModalOpen(false)}
                     asset={selectedAsset}
+                    onProcessPayment={async () => {
+                        try {
+                            const fractions = 1; // Assuming 1 fraction by default
+                            await buySecondaryListing({ id: selectedAsset.id, fractions }).unwrap();
+                            return true;
+                        } catch (err) {
+                            console.error("Failed to buy fractions:", err);
+                            alert("Failed to purchase: " + (err.data?.message || err.message));
+                            return false;
+                        }
+                    }}
                 />
 
 

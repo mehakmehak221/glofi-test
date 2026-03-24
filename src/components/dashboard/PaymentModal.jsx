@@ -24,7 +24,7 @@ const modalVariants = {
     exit: { opacity: 0, scale: 0.95, y: 20 },
 };
 
-export default function PaymentModal({ isOpen, onClose, asset }) {
+export default function PaymentModal({ isOpen, onClose, asset, onProcessPayment }) {
     const [step, setStep] = useState(1); 
     const [selectedMethod, setSelectedMethod] = useState(null);
 
@@ -34,8 +34,16 @@ export default function PaymentModal({ isOpen, onClose, asset }) {
 
     if (!isOpen || !asset) return null;
 
-    const handleConfirmPayment = () => {
+    const handleConfirmPayment = async () => {
         setStep(3); 
+
+        if (onProcessPayment) {
+            const success = await onProcessPayment();
+            if (!success) {
+                onClose();
+                return;
+            }
+        }
         
         if (selectedMethod?.id === 'escrow') {
             setTimeout(() => setStep(6), 2000); 

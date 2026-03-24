@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { useGetProfileQuery } from "@/store/api/authApi";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Avatar from "@/components/ui/Avatar";
@@ -33,6 +34,7 @@ const PARTNER_NAV_ITEMS = [
     { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
     { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
+    { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
 ];
 
 const drawerVariants = {
@@ -62,6 +64,11 @@ export default function MobileDrawer({ isOpen, onClose }) {
     const isPartner = pathname.startsWith("/dashboard/partner");
     const activeNavItems = isPartner ? PARTNER_NAV_ITEMS : NAV_ITEMS;
     const [logout] = useLogoutMutation();
+    const { data: profileData } = useGetProfileQuery();
+
+    const profile = profileData?.partnerProfile || profileData?.investorProfile || {};
+    const fullName = profile.fullName || profileData?.fullName || profileData?.name || "Guest";
+    const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Partner" : "Investor");
 
     const handleLogout = async () => {
         try {
@@ -103,10 +110,10 @@ export default function MobileDrawer({ isOpen, onClose }) {
                         {/* Header */}
                         <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-border-subtle)]">
                             <div className="flex items-center gap-3">
-                                <Avatar name="Ishan" size="md" />
+                                <Avatar name={fullName} size="md" />
                                 <div className="flex flex-col">
-                                    <span className="text-sm font-semibold text-white">Ishan</span>
-                                    <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wider">{isPartner ? "Partner" : "Investor"}</span>
+                                    <span className="text-sm font-semibold text-white">{fullName}</span>
+                                    <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wider">{role}</span>
                                 </div>
                             </div>
 

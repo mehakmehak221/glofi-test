@@ -24,6 +24,28 @@ export const investmentApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Investment'],
     }),
+    getInvestmentById: builder.query({
+      query: (id) => ({
+        url: `investments/${id}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, id) => [{ type: 'Investment', id }],
+    }),
+    sellInvestment: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `investments/${id}/sell`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Investment', 'SecondaryMarketplace', 'MySecondaryListings'],
+    }),
+    getTransactions: builder.query({
+      query: () => ({
+        url: 'investments/transactions',
+        method: 'GET',
+      }),
+      providesTags: ['Investment'],
+    }),
     getPendingApprovals: builder.query({
       query: () => ({
         url: 'investments/pending-approvals',
@@ -53,6 +75,9 @@ export const {
   useGetInvestmentsQuery,
   useGetPortfolioQuery,
   useCreateInvestmentMutation,
+  useGetInvestmentByIdQuery,
+  useSellInvestmentMutation,
+  useGetTransactionsQuery,
   useGetPendingApprovalsQuery,
   useApproveInvestmentMutation,
   useRejectInvestmentMutation,

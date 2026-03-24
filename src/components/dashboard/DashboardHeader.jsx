@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import SearchBar from "./SearchBar";
 import Avatar from "@/components/ui/Avatar";
 import { BellIcon, MoonIcon, SunIcon } from "@/components/VectorImages";
+import { useGetProfileQuery } from "@/store/api/authApi";
 
 export default function DashboardHeader() {
     const [mounted, setMounted] = useState(false);
     const [isLight, setIsLight] = useState(false);
+    const { data: profileData } = useGetProfileQuery();
 
     useEffect(() => {
         setMounted(true);
@@ -20,7 +22,6 @@ export default function DashboardHeader() {
     useEffect(() => {
         if (!mounted) return;
         const root = document.documentElement;
-        console.log("Setting theme to:", isLight ? "light" : "dark");
         if (isLight) {
             root.classList.add("light");
             root.classList.remove("dark");
@@ -31,6 +32,10 @@ export default function DashboardHeader() {
             localStorage.setItem("theme", "dark");
         }
     }, [isLight, mounted]);
+
+    const profile = profileData?.partnerProfile || profileData?.investorProfile || {};
+    const fullName = profile.fullName || profileData?.name || "Guest";
+    const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : "User";
 
     return (
         <header className="hidden lg:flex items-center justify-between px-6 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-30">
@@ -58,10 +63,10 @@ export default function DashboardHeader() {
 
               
                 <div className="flex items-center gap-3 pl-3 border-l border-[var(--header-border)]">
-                    <Avatar name="Ishan" size="sm" />
+                    <Avatar name={fullName} size="sm" />
                     <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-[var(--header-text)] leading-tight">Ishan</span>
-                        <span className="text-[10px] text-[var(--header-text)] opacity-60 uppercase tracking-wider">Investor</span>
+                        <span className="text-sm font-semibold text-[var(--header-text)] leading-tight">{fullName}</span>
+                        <span className="text-[10px] text-[var(--header-text)] opacity-60 uppercase tracking-wider">{role}</span>
                     </div>
                 </div>
             </div>

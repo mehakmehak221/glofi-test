@@ -4,16 +4,19 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { CloseIcon, CheckIcon, ResaleIcon } from "@/components/VectorImages";
+import { useSellInvestmentMutation } from "@/store/api/investmentApi";
 
 export default function ResaleModal({ isOpen, onClose, asset }) {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
-        fractionsToSell: 25,
-        pricePerFraction: 28760,
+        fractionsToSell: 1,
+        pricePerFraction: 0,
         minPurchase: 1,
         notes: "",
         agreed: false
     });
+    const [sellError, setSellError] = useState(null);
+    const [sellInvestment, { isLoading: isSelling }] = useSellInvestmentMutation();
 
     if (!isOpen || !asset) return null;
 
@@ -21,8 +24,26 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
     const prevStep = () => setStep(s => Math.max(s - 1, 1));
 
     const totalOwned = asset.fractions || 100;
-    const totalValue = asset.value ? parseFloat(asset.value.replace(/[^0-9.]/g, '')) * 1000 : 719000;
-    const marketValuePerFraction = (totalValue / totalOwned).toLocaleString();
+    const totalValue = asset.value ? parseFloat(asset.value.replace(/[^0-9.]/g, '')) * 1000 : 0;
+    const marketValuePerFraction = totalOwned > 0 ? (totalValue / totalOwned).toLocaleString() : "0";
+
+    const handleSubmit = async () => {
+        setSellError(null);
+        try {
+            await sellInvestment({
+                id: asset.id,
+                fractions: Number(formData.fractionsToSell),
+                askPrice: Number(formData.pricePerFraction),
+                priceType: "MARKET_VALUE",
+                minimumPurchase: Number(formData.minPurchase),
+                notes: formData.notes,
+                termsAgreed: formData.agreed,
+            }).unwrap();
+            onClose();
+        } catch (err) {
+            setSellError(err?.data?.message || "Failed to create listing. Please try again.");
+        }
+    };
 
     return (
         <AnimatePresence>
@@ -101,7 +122,12 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                     </div>
 
                     
-                    <div className="p-4 sm:p-6 border-t border-[var(--sidebar-border)] flex flex-col sm:flex-row gap-3 flex-shrink-0 transition-colors duration-300">
+                        {sellError && (
+                            <div className="px-4 sm:px-6 pb-2">
+                                <p className="text-xs text-red-500">{sellError}</p>
+                            </div>
+                        )}
+                        <div className="p-4 sm:p-6 border-t border-[var(--sidebar-border)] flex flex-col sm:flex-row gap-3 flex-shrink-0 transition-colors duration-300">
                         {step > 1 && (
                             <button 
                                 onClick={prevStep}
@@ -111,15 +137,15 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                             </button>
                         )}
                         <button 
-                            disabled={step === 4 && !formData.agreed}
-                            onClick={step === 4 ? onClose : nextStep}
+                            disabled={(step === 4 && !formData.agreed) || isSelling}
+                            onClick={step === 4 ? handleSubmit : nextStep}
                             className={`w-full sm:flex-1 py-3 rounded-lg font-semibold text-sm transition-all border-0 cursor-pointer ${
-                                step === 4 && !formData.agreed 
+                                (step === 4 && !formData.agreed) || isSelling
                                     ? "bg-[var(--background)] text-[var(--color-text-muted)] cursor-not-allowed" 
                                     : "bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] hover:shadow-[0_0_20px_rgba(var(--color-primary-300-rgb),0.3)] hover:opacity-90"
                             }`}
                         >
-                            {step === 4 ? "List on Marketplace" : "Continue"}
+                            {isSelling ? "Submitting..." : step === 4 ? "List on Marketplace" : "Continue"}
                         </button>
                     </div>
                 </motion.div>

@@ -8,7 +8,7 @@ export const baseApi = createApi({
     baseUrl: `${API_URL}/`,
     credentials: 'include',
     prepareHeaders: (headers, { endpoint }) => {
-      
+
       const publicEndpoints = ['login', 'register'];
 
       if (!publicEndpoints.includes(endpoint)) {
@@ -25,6 +25,6 @@ export const baseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['User', 'Post', 'Kyb', 'Kyc', 'Investment'],
+  tagTypes: ['User', 'Post', 'Kyb', 'Kyc', 'Investment', 'SecondaryMarketplace', 'MySecondaryListings', 'PendingApprovals', 'Certificates'],
   endpoints: () => ({}),
 });

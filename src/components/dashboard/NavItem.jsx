@@ -9,7 +9,7 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
             <motion.div
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors duration-200 group relative ${isActive
                         ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]"
-                        : "text-[var(--sidebar-text)] opacity-70 hover:opacity-100 hover:bg-[var(--sidebar-active-bg)]"
+                        : "text-[var(--sidebar-text)] opacity-70 hover:opacity-100 hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--sidebar-active-text)]"
                     }`}
                 whileHover={{ x: collapsed ? 0 : 4 }}
                 whileTap={{ scale: 0.97 }}
@@ -23,7 +23,7 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
                     />
                 )}
 
-                <span className="flex-shrink-0 ml-0.5">
+                <span className="flex-shrink-0 ml-0.5 text-[var(--sidebar-active-text)]">
                     <Icon className="w-5 h-5" />
                 </span>
 

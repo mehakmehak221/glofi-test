@@ -24,6 +24,7 @@ import {
 const NAV_ITEMS = [
     { href: "/dashboard/investor/marketplace", icon: MarketplaceIcon, label: "Marketplace" },
     { href: "/dashboard/investor/secondary-marketplace", icon: SecondaryMarketplaceIcon, label: "Secondary Marketplace" },
+    { href: "/dashboard/investor/my-secondary-listings", icon: PortfolioIcon, label: "My Listings" },
     { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
     { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
     { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
