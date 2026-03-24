@@ -18,8 +18,11 @@ export default function Navbar() {
     return (
         <header className="navbar fixed top-0 left-0 right-0 z-50 bg-black border-b border-[#A4A7AE]">
             <div className="navbar__inner flex items-center justify-between h-16 lg:h-20 px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-10 max-w-7xl mx-auto">
-                <Link href="/" className="navbar__logo flex items-center text-decoration-none flex-shrink-0">
-                    <img src="/GloFi.png" alt="GloFi Logo" className="h-10 sm:h-12 lg:h-[50px] xl:h-[58px] w-auto object-contain object-left" />
+                <Link href="/" className="navbar__logo flex items-center gap-3 no-underline flex-shrink-0">
+                    <img src="/GloFi.png" alt="GloFi Logo" className="h-8 sm:h-10 lg:h-[42px] xl:h-[48px] w-auto object-contain" />
+                    <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap pt-1">
+                        Real Estate
+                    </span>
                 </Link>
 
                 <nav aria-label="Main navigation" className="hidden xl:block">
@@ -40,7 +43,7 @@ export default function Navbar() {
                         Get GloFi
                     </Link>
 
-                    <button className="navbar__lang text-language flex items-center gap-2 bg-transparent border-none cursor-pointer transition-colors hover:text-white whitespace-nowrap text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)]">
+                    {/* <button className="navbar__lang text-language flex items-center gap-2 bg-transparent border-none cursor-pointer transition-colors hover:text-white whitespace-nowrap text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)]">
                         <Image
                             src="/globe.svg"
                             alt="Globe"
@@ -49,7 +52,7 @@ export default function Navbar() {
                             className="navbar__lang-icon w-3.5 h-5 sm:w-4 sm:h-6 lg:w-3.5 lg:h-5 flex-shrink-0"
                         />
                         <span className="hidden lg:inline">English</span>
-                    </button>
+                    </button> */}
                 </div>
 
                 <button
@@ -90,7 +93,7 @@ export default function Navbar() {
                     <Link href="/sign-in" className="btn-get-glofi text-get-glofi inline-flex items-center justify-center w-full sm:w-24 h-10 px-4 bg-[var(--color-gradient-glofi)] text-black rounded-full text-sm font-semibold no-underline transition-transform hover:translate-y-[-1px] hover:shadow-lg whitespace-nowrap">
                         Get GloFi
                     </Link>
-                    <button
+                    {/* <button
                         className="navbar__lang text-language flex items-center gap-2 bg-transparent border-none cursor-pointer transition-colors hover:text-white whitespace-nowrap text-base text-[var(--color-text-secondary)] py-2 px-4"
                         aria-label="Change language"
                     >
@@ -102,7 +105,7 @@ export default function Navbar() {
                             className="navbar__lang-icon w-3.5 h-5 flex-shrink-0"
                         />
                         English
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </header>

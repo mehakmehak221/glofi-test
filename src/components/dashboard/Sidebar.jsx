@@ -78,7 +78,7 @@ export default function Sidebar() {
                         className="h-7 w-auto flex-shrink-0 object-contain"
                     />
                     <motion.span
-                        className="font-montserrat text-[10px] font-normal text-[var(--sidebar-text)] uppercase tracking-[1.5px] leading-[15px] whitespace-nowrap overflow-hidden"
+                        className="font-montserrat text-[10px] font-normal text-[var(--sidebar-text)] uppercase tracking-[1.5px] whitespace-nowrap overflow-hidden pt-0.5"
                         animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
                         transition={{ duration: 0.2 }}
                     >

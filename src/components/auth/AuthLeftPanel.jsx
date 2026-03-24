@@ -21,7 +21,7 @@ export default function AuthLeftPanel() {
         
         <div>
           <div className="flex items-baseline gap-3">
-            <img src="/assets/logo.png" alt="GloFi Logo" className="h-7 w-auto translate-y-[2px]" />
+            <img src="/GloFi.png" alt="GloFi Logo" className="h-7 w-auto translate-y-[2px]" />
             <span className="text-[var(--color-text-muted)] text-[11px] font-medium tracking-[0.25em] uppercase font-montserrat">
               Real Estate
             </span>

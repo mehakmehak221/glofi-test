@@ -32,10 +32,10 @@ export default function MobileTopbar() {
                         alt="GloFi Logo"
                         width={80}
                         height={24}
-                        className="object-contain"
+                        className="h-6 w-auto object-contain flex-shrink-0"
                     />
                     {!searchOpen && (
-                        <span className="font-montserrat text-[10px] font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] leading-[15px]">
+                        <span className="font-montserrat text-[10px] font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] leading-none whitespace-nowrap pt-0.5">
                             Real Estate
                         </span>
                     )}
