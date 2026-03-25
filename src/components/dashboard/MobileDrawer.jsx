@@ -33,6 +33,7 @@ const PARTNER_NAV_ITEMS = [
     { href: "/dashboard/partner/overview", icon: OverviewIcon, label: "Overview" },
     { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
     // { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
+     { href: "/dashboard/partner/secondary-approvals", icon: SecondaryMarketplaceIcon, label: "Resale Approvals" },
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
     // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
 ];
