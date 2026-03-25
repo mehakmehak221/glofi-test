@@ -60,7 +60,7 @@ const PLANS = [
 
 export default function FinancePage() {
     const [activeTab, setActiveTab] = useState("Commissions");
-    
+
     // Live Data Hooks
     const { data: partnerFinance } = useGetPartnerFinanceQuery();
     const { data: commissionHistory, isLoading: isLoadingCommissions } = useGetCommissionHistoryQuery(undefined, {
@@ -142,7 +142,7 @@ export default function FinancePage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="rounded-2xl p-6 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
+                        className="rounded-md p-6 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-[var(--sidebar-active-text)] opacity-[0.03] pointer-events-none" />
                         <p className="text-[10px] font-bold tracking-[1.2px] text-[var(--sidebar-text)] opacity-30 font-montserrat mb-4 uppercase">
@@ -163,7 +163,7 @@ export default function FinancePage() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] p-5 border border-[var(--sidebar-border)]"
+                    className="rounded-md bg-black/[0.02] dark:bg-white/[0.02] p-5 border border-[var(--sidebar-border)]"
                 >
                     {activeTab === "Commissions" && (
                         <div>
@@ -171,7 +171,7 @@ export default function FinancePage() {
                                 <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat">Commission History</h2>
                                 {isLoadingCommissions && <div className="w-4 h-4 border-2 border-[var(--sidebar-active-text)]/20 border-t-[var(--sidebar-active-text)] rounded-full animate-spin" />}
                             </div>
-                            
+
                             {!commissionHistory?.data?.length ? (
                                 <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-2xl">
                                     No commissions found.

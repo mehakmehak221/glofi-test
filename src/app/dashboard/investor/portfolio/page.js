@@ -158,11 +158,11 @@ export default function PortfolioPage() {
                     <motion.div
                         key={stat.label}
                         variants={itemVariants}
-                        className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-6 hover:border-[var(--sidebar-active-text)]/30 transition-all duration-300 group"
+                        className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-6 hover:border-[var(--sidebar-active-text)]/30 transition-all duration-300 group"
                     >
                         <div className="flex items-center justify-between mb-4">
                             <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.1em] font-bold">{stat.label}</span>
-                            <div className="w-10 h-10 rounded-full bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/10 flex items-center justify-center text-[var(--sidebar-active-text)] group-hover:scale-110 transition-transform">
+                            <div className="w-10 h-10 rounded-md bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/10 flex items-center justify-center text-[var(--sidebar-active-text)] group-hover:scale-110 transition-transform">
                                 <stat.icon className="w-5 h-5 text-[var(--sidebar-active-text)]" />
                             </div>
                         </div>

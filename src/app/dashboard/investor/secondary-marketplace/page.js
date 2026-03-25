@@ -20,7 +20,7 @@ const itemVariants = {
 
 export default function SecondaryMarketplacePage() {
     const [searchQuery, setSearchQuery] = useState("");
-    const [activeTab, setActiveTab] = useState("Marketplace"); // "Marketplace" or "My Listings"
+    const [activeTab, setActiveTab] = useState("Marketplace");
     const [activeFilter, setActiveFilter] = useState("All Properties");
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState(null);
@@ -134,7 +134,7 @@ export default function SecondaryMarketplacePage() {
 
                 <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
                     {stats.map((stat) => (
-                        <div key={stat.label} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-500">
+                        <div key={stat.label} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-500">
                             <div className="flex justify-between items-start mb-6">
                                 <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-bold">{stat.label}</span>
                                 <div className="w-10 h-10 rounded-xl bg-[var(--badge-bg)] flex items-center justify-center text-[var(--sidebar-active-text)] shadow-sm group-hover:scale-110 transition-transform">
@@ -224,12 +224,15 @@ export default function SecondaryMarketplacePage() {
                     asset={selectedAsset}
                     onProcessPayment={async () => {
                         try {
-                            const fractions = 1; // Assuming 1 fraction by default
-                            await buySecondaryListing({ id: selectedAsset.id, fractions }).unwrap();
+                            const fractions = selectedAsset?.fractions ? parseFloat(selectedAsset.fractions) : 1;
+                            console.log("Buying listing", selectedAsset.id, "with fractions", fractions);
+                            const result = await buySecondaryListing({ id: selectedAsset.id, fractions }).unwrap();
+                            console.log("Purchase result:", result);
                             return true;
                         } catch (err) {
                             console.error("Failed to buy fractions:", err);
-                            alert("Failed to purchase: " + (err.data?.message || err.message));
+                            const errorMessage = err?.data?.message || err?.message || JSON.stringify(err) || "Unknown error occurred";
+                            alert("Failed to purchase: " + errorMessage);
                             return false;
                         }
                     }}
@@ -291,8 +294,8 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
                 {isOwnListing && (
                     <div className="absolute top-4 left-4">
                         <div className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-lg ${asset.status === 'LISTED' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                                asset.status === 'PENDING_APPROVAL' ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' :
-                                    'bg-gray-500/10 text-gray-500 border border-gray-500/20'
+                            asset.status === 'PENDING_APPROVAL' ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' :
+                                'bg-gray-500/10 text-gray-500 border border-gray-500/20'
                             }`}>
                             {asset.status.replace('_', ' ')}
                         </div>

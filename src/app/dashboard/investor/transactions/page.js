@@ -75,12 +75,12 @@ export default function TransactionsPage() {
 
             {!isLoading && !isError && transactions.length > 0 && (
                 <>
-                   
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.15 }}
-                        className="hidden md:block bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl overflow-hidden shadow-sm"
+                        className="hidden md:block bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md overflow-hidden shadow-sm"
                     >
                         <div className="overflow-x-auto">
                             <table className="w-full">
@@ -103,7 +103,7 @@ export default function TransactionsPage() {
                                         >
                                             <td className="px-5 py-4 text-sm text-[var(--color-text-muted)]">{formatDate(tx.createdAt || tx.date)}</td>
                                             <td className="px-5 py-4">
-                                                <span className={`inline-flex px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${getTypeColor(tx.type)}`}>
+                                                <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeColor(tx.type)}`}>
                                                     {tx.type}
                                                 </span>
                                             </td>
@@ -117,7 +117,7 @@ export default function TransactionsPage() {
                                                 {tx.paymentMethod || tx.method || "-"}
                                             </td>
                                             <td className="px-5 py-4">
-                                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(tx.status)}`}>
+                                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(tx.status)}`}>
                                                     {tx.status?.toUpperCase() === "COMPLETED" ? "✓" : "◎"} {tx.status}
                                                 </span>
                                             </td>
@@ -142,10 +142,10 @@ export default function TransactionsPage() {
                                 className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-4 shadow-sm"
                             >
                                 <div className="flex items-center justify-between mb-3">
-                                    <span className={`inline-flex px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${getTypeColor(tx.type)}`}>
+                                    <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeColor(tx.type)}`}>
                                         {tx.type}
                                     </span>
-                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(tx.status)}`}>
+                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(tx.status)}`}>
                                         {tx.status?.toUpperCase() === "COMPLETED" ? "✓" : "◎"} {tx.status}
                                     </span>
                                 </div>

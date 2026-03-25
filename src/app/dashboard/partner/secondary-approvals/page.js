@@ -178,7 +178,7 @@ export default function SecondaryApprovalsPage() {
                         ) : (
                             <motion.div
                                 variants={itemVariants}
-                                className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
+                                className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <DocumentIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
                                 <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No pending approvals</h3>

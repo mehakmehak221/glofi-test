@@ -115,7 +115,7 @@
 }
 
 :root {
-  --background: var(--color-bg-dark);
+  --background: #0D1411;
   --foreground: var(--color-text-primary);
   --primary: var(--color-brand-green);
 
@@ -129,7 +129,7 @@
   --search-border: var(--color-border-muted);
   --search-placeholder: var(--color-text-muted);
 
-  --sidebar-bg: var(--color-bg-dark);
+  --sidebar-bg: #070A09;
   --sidebar-border: var(--color-border-subtle);
   --sidebar-text: var(--color-text-secondary);
   --sidebar-text-hover: #FFFFFF;
@@ -197,7 +197,7 @@
   --header-text: var(--color-gray-0);
   --header-border: var(--color-border-subtle);
 
-  --sidebar-bg: var(--color-bg-dark);
+  --sidebar-bg: #070A09;
   --sidebar-border: var(--color-border-subtle);
 
   --sidebar-text: var(--color-text-secondary);
@@ -225,10 +225,10 @@
   --btn-cta-text: #000000;
 
   --foreground: var(--color-text-primary);
-  --background: var(--color-bg-dark);
+  --background: #0D1411;
 }
 
-/* Remove prefers-color-scheme to allow manual toggle to win */
+
 
 @layer base {
 
@@ -306,7 +306,6 @@
     animation: fadeIn 0.25s ease-out both;
   }
 
-  /* Scroll-triggered animation helpers */
   .anim-fade-up {
     opacity: 0;
     transform: translateY(28px);

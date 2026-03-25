@@ -90,10 +90,10 @@ export default function AccountPage() {
                     exit="exit"
                 >
                     {activeTab === "Profile" && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
+                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
                             {isLoading ? (
                                 <div className="flex justify-center py-12">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary-300)]"></div>
+                                    <div className="animate-spin rounded-md h-8 w-8 border-b-2 border-[var(--color-primary-300)]"></div>
                                 </div>
                             ) : (
                                 <>
@@ -233,16 +233,18 @@ export default function AccountPage() {
                                         <div className="border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-3 sm:mb-5 bg-[var(--background)]/50">
                                             <div className="text-center">
                                                 <p className="text-[8px] sm:text-[9px] text-[var(--color-text-muted)] uppercase tracking-[1.5px] sm:tracking-[2px] mb-1.5 sm:mb-2 font-semibold">DIGITAL OWNERSHIP CERTIFICATE</p>
-                                                <h3 className="text-sm sm:text-lg lg:text-xl font-bold text-[var(--header-text)] mb-2 sm:mb-3">{cert.assetTitle || "Property Fraction"}</h3>
+                                                <h3 className="text-sm sm:text-lg lg:text-xl font-bold text-[var(--header-text)] mb-2 sm:mb-3">{cert.assetTitle || "Property"}</h3>
                                                 <p className="font-bold text-[var(--header-text)] flex items-center justify-center gap-1.5 sm:gap-2"><span className="text-2xl sm:text-3xl">{cert.fractionsOwned}</span> <span className="text-[11px] sm:text-[13px] font-normal text-[var(--color-text-muted)]">Fractions</span></p>
                                             </div>
                                         </div>
 
                                         <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-                                            <div className="flex justify-between items-center text-[11px] sm:text-[13px]">
-                                                <span className="text-[var(--color-text-muted)]">Network</span>
-                                                <span className="text-[var(--color-primary-300)] font-bold tracking-wide">BNB Chain</span>
-                                            </div>
+                                            {cert.network && (
+                                                <div className="flex justify-between items-center text-[11px] sm:text-[13px]">
+                                                    <span className="text-[var(--color-text-muted)]">Network</span>
+                                                    <span className="text-[var(--color-primary-300)] font-bold tracking-wide">{cert.network}</span>
+                                                </div>
+                                            )}
                                             {cert.issuedAt && (
                                                 <div className="flex justify-between items-center text-[11px] sm:text-[13px]">
                                                     <span className="text-[var(--color-text-muted)]">Issued At</span>
