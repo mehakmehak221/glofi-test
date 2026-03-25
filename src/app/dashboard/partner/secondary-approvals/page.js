@@ -102,7 +102,7 @@ export default function SecondaryApprovalsPage() {
                                                 <div className="flex flex-col sm:flex-row sm:items-start lg:items-center justify-between gap-4 mb-5 lg:mb-4">
                                                     <div className="flex-1 w-full flex flex-col gap-4 sm:gap-2">
                                                         <div className="flex flex-row items-center justify-between sm:justify-start gap-4">
-                                                            <h3 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{asset.title}</h3>
+                                                            <h3 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{asset.title || "Unknown Property"}</h3>
                                                             <div className="px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider border bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]">
                                                                 PENDING REVIEW
                                                             </div>
@@ -111,15 +111,15 @@ export default function SecondaryApprovalsPage() {
                                                         <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-4 sm:gap-6 lg:gap-8 w-full mt-2">
                                                             <div>
                                                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Seller</p>
-                                                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{seller.firstName || "Unknown"} {seller.lastName || ""}</p>
+                                                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{item.investor?.investorProfile?.fullName || "Anonymous"}</p>
                                                             </div>
                                                             <div>
                                                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Fractions listed</p>
-                                                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{item.fractions || 0}</p>
+                                                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{item.fractions || item.fractionsListed || 0}</p>
                                                             </div>
                                                             <div>
-                                                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Price per fraction</p>
-                                                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">${(item.pricePerFraction || 0).toLocaleString()}</p>
+                                                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Ask Price</p>
+                                                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">${(parseFloat(item.askPrice || 0)).toLocaleString()}</p>
                                                             </div>
                                                         </div>
                                                     </div>

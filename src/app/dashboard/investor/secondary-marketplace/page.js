@@ -5,7 +5,8 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrendingUpIcon, SearchIcon, EyeOpenIcon, DownloadIcon, AboutIcon } from "@/components/VectorImages";
 import PaymentModal from "@/components/dashboard/PaymentModal";
-import { useGetSecondaryListingsQuery, useBuySecondaryListingMutation } from "@/store/api/secondaryMarketApi";
+import { useGetSecondaryListingsQuery, useBuySecondaryListingMutation, useGetMySecondaryListingsQuery, useGetSecondaryListingByIdQuery } from "@/store/api/secondaryMarketApi";
+import { API_URL } from "@/constants";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -19,18 +20,78 @@ const itemVariants = {
 
 export default function SecondaryMarketplacePage() {
     const [searchQuery, setSearchQuery] = useState("");
+    const [activeTab, setActiveTab] = useState("Marketplace"); // "Marketplace" or "My Listings"
     const [activeFilter, setActiveFilter] = useState("All Properties");
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState(null);
+    const [viewingAssetId, setViewingAssetId] = useState(null);
 
-    const { data: listingsResponse, isLoading } = useGetSecondaryListingsQuery();
+    const { data: marketplaceResponse, isLoading: isLoadingMarketplace } = useGetSecondaryListingsQuery();
+    const { data: myListingsResponse, isLoading: isLoadingMyListings } = useGetMySecondaryListingsQuery();
     const [buySecondaryListing] = useBuySecondaryListingMutation();
 
-    const displayAssets = listingsResponse?.data || [];
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return "/assets/marketplace/Burj.png";
+        if (imagePath.startsWith('http')) return imagePath;
+        return `${API_URL}/${imagePath.replace(/^\//, '')}`;
+    };
+
+    const mapListing = (item) => {
+        const isFlattened = !!item.assetTitle;
+
+        if (isFlattened) {
+            return {
+                id: item.id,
+                name: item.assetTitle || "Unknown Property",
+                location: item.assetLocation || "N/A",
+                image: getImageUrl(item.assetImages?.[0]),
+                seller: "You",
+                fractions: item.fractionsListed || 0,
+                price: `$${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
+                currentValue: `$${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
+                status: item.status,
+                change: "0%",
+                pricePerFraction: parseFloat(item.askPrice || 0)
+            };
+        } else {
+            const assetObj = item.asset || {};
+            const investorProfile = item.investor?.investorProfile || {};
+            const sellerName = investorProfile.fullName || "Anonymous";
+
+            return {
+                id: item.id,
+                name: assetObj.title || "Unknown Property",
+                location: assetObj.location || "N/A",
+                image: getImageUrl(assetObj.images?.[0]),
+                seller: sellerName,
+                fractions: item.fractions || 0,
+                price: `$${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
+                currentValue: `$${(parseFloat(assetObj.fractionPrice || item.askPrice || 0)).toLocaleString()}`,
+                status: item.status,
+                change: `${assetObj.expectedYield || 0}%`,
+                pricePerFraction: parseFloat(item.askPrice || 0)
+            };
+        }
+    };
+
+    const marketplaceData = Array.isArray(marketplaceResponse) ? marketplaceResponse : (marketplaceResponse?.data || []);
+    const myListingsData = myListingsResponse?.data || [];
+
+    const rawData = activeTab === "Marketplace" ? marketplaceData : myListingsData;
+    const isLoading = activeTab === "Marketplace" ? isLoadingMarketplace : isLoadingMyListings;
+
+    const displayAssets = rawData.map(mapListing).filter(asset =>
+        asset.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const handleBuyFractions = (asset) => {
+        setViewingAssetId(null);
         setSelectedAsset(asset);
         setIsPaymentModalOpen(true);
+    };
+
+    const handleViewDetail = (id) => {
+        setViewingAssetId(id);
     };
 
     const filters = ["All Properties", "High ROI (15%+)", "Best Value"];
@@ -92,6 +153,21 @@ export default function SecondaryMarketplacePage() {
 
 
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
+                    <div className="flex items-center gap-2 p-1 bg-[var(--sidebar-bg)] rounded-xl border border-[var(--sidebar-border)] shadow-sm">
+                        {["Marketplace", "My Listings"].map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`px-5 py-2.5 rounded-lg text-[12px] font-bold transition-all duration-300 border-0 cursor-pointer ${activeTab === tab
+                                    ? "bg-[var(--color-primary-300)] text-black shadow-sm"
+                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)]"
+                                    }`}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
+
                     <div className="flex items-center gap-2 p-1 bg-[var(--sidebar-bg)] rounded-xl border border-[var(--sidebar-border)] overflow-x-auto max-w-full no-scrollbar shadow-sm">
                         {filters.map((filter) => (
                             <button
@@ -110,6 +186,7 @@ export default function SecondaryMarketplacePage() {
 
 
                 <motion.div
+                    key={activeTab}
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
@@ -128,22 +205,15 @@ export default function SecondaryMarketplacePage() {
                             <p className="text-sm text-[var(--color-text-muted)] max-w-xs">There are no secondary market listings available at the moment. Check back later!</p>
                         </div>
                     ) : (
-                        displayAssets.map((item) => {
-                            const assetObj = item.asset || {};
-                            const sellerObj = item.seller || {};
-                            const asset = {
-                                id: item.id,
-                                name: assetObj.title || "Unknown Property",
-                                image: assetObj.images?.[0]?.startsWith('http') ? assetObj.images[0] : (assetObj.images?.[0] ? `${API_URL}/${assetObj.images[0].replace(/^\//, '')}` : "/assets/marketplace/Burj.png"),
-                                seller: `${sellerObj.firstName || 'Unknown'} ${sellerObj.lastName || ''}`.trim() || 'Anonymous',
-                                change: `${assetObj.expectedYield || 0}%`,
-                                fractions: `${item.fractions || 0}`,
-                                price: `$${(item.pricePerFraction && item.fractions ? item.pricePerFraction * item.fractions : 0).toLocaleString()}`,
-                                currentValue: `$${(assetObj.valuation || item.pricePerFraction || 0).toLocaleString()}`,
-                                pricePerFraction: item.pricePerFraction
-                            };
-                            return <MarketplaceCard key={asset.id} asset={asset} onBuy={() => handleBuyFractions(asset)} />;
-                        })
+                        displayAssets.map((asset) => (
+                            <MarketplaceCard
+                                key={asset.id}
+                                asset={asset}
+                                onBuy={() => handleBuyFractions(asset)}
+                                onView={() => handleViewDetail(asset.id)}
+                                isOwnListing={activeTab === "My Listings"}
+                            />
+                        ))
                     )}
                 </motion.div>
 
@@ -165,6 +235,12 @@ export default function SecondaryMarketplacePage() {
                     }}
                 />
 
+                <DetailModal
+                    id={viewingAssetId}
+                    onClose={() => setViewingAssetId(null)}
+                    onBuy={handleBuyFractions}
+                />
+
 
                 <section className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-8 sm:p-10 flex flex-col md:flex-row items-center md:items-start gap-8 shadow-lg relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--sidebar-active-text)]/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
@@ -183,7 +259,7 @@ export default function SecondaryMarketplacePage() {
     );
 }
 
-function MarketplaceCard({ asset, onBuy }) {
+function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
     return (
         <motion.div
             variants={itemVariants}
@@ -212,6 +288,16 @@ function MarketplaceCard({ asset, onBuy }) {
                         <span className="text-[10px] font-bold text-[var(--header-text)] tracking-wider uppercase">{asset.seller}</span>
                     </div>
                 </div>
+                {isOwnListing && (
+                    <div className="absolute top-4 left-4">
+                        <div className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-lg ${asset.status === 'LISTED' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
+                                asset.status === 'PENDING_APPROVAL' ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' :
+                                    'bg-gray-500/10 text-gray-500 border border-gray-500/20'
+                            }`}>
+                            {asset.status.replace('_', ' ')}
+                        </div>
+                    </div>
+                )}
             </div>
 
 
@@ -234,14 +320,19 @@ function MarketplaceCard({ asset, onBuy }) {
                 </div>
 
                 <div className="mt-auto space-y-3">
-                    <button
-                        onClick={onBuy}
-                        className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold uppercase tracking-[0.2em] shadow-sm hover:opacity-90 hover:scale-[1.01] active:scale-95 transition-all duration-500 border-0 cursor-pointer"
-                    >
-                        Buy Fractions
-                    </button>
+                    {!isOwnListing && (
+                        <button
+                            onClick={onBuy}
+                            className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold uppercase tracking-[0.2em] shadow-sm hover:opacity-90 hover:scale-[1.01] active:scale-95 transition-all duration-500 border-0 cursor-pointer"
+                        >
+                            Buy Fractions
+                        </button>
+                    )}
                     <div className="grid grid-cols-2 gap-3">
-                        <button className="flex items-center justify-center gap-2 py-3 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-[10px] font-bold text-[var(--header-text)] uppercase tracking-widest hover:bg-[var(--sidebar-active-bg)] hover:shadow-md transition-all border-0 cursor-pointer">
+                        <button
+                            onClick={onView}
+                            className="flex items-center justify-center gap-2 py-3 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-[10px] font-bold text-[var(--header-text)] uppercase tracking-widest hover:bg-[var(--sidebar-active-bg)] hover:shadow-md transition-all border-0 cursor-pointer"
+                        >
                             <EyeOpenIcon className="w-4 h-4 text-[var(--sidebar-active-text)]" />
                             <span>View</span>
                         </button>
@@ -253,5 +344,100 @@ function MarketplaceCard({ asset, onBuy }) {
                 </div>
             </div>
         </motion.div>
+    );
+}
+
+function DetailModal({ id, onClose, onBuy }) {
+    const { data: listingResponse, isLoading } = useGetSecondaryListingByIdQuery(id, { skip: !id });
+    const listing = listingResponse?.data || listingResponse;
+
+    if (!id) return null;
+
+    return (
+        <AnimatePresence>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                    className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative"
+                >
+                    {isLoading ? (
+                        <div className="p-20 flex justify-center">
+                            <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin"></div>
+                        </div>
+                    ) : listing ? (
+                        <div className="flex flex-col md:flex-row h-full text-[var(--sidebar-text)]">
+                            <div className="w-full md:w-1/2 h-64 md:h-auto relative">
+                                <Image
+                                    src={listing.asset?.images?.[0] ? (listing.asset.images[0].startsWith('http') ? listing.asset.images[0] : `${API_URL}/${listing.asset.images[0].replace(/^\//, '')}`) : "/assets/marketplace/Burj.png"}
+                                    alt={listing.asset?.title}
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                            <div className="p-8 flex flex-col flex-1">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className="flex-1 pr-4">
+                                        <h2 className="text-2xl font-bold text-[var(--header-text)] mb-2 uppercase tracking-tight line-clamp-2">{listing.asset?.title}</h2>
+                                        <p className="text-[var(--color-text-muted)] text-sm font-medium">{listing.asset?.location}</p>
+                                    </div>
+                                    <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-2">
+                                        <XIcon className="w-6 h-6" />
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 mb-8">
+                                    <div className="bg-[var(--background)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
+                                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Price</p>
+                                        <p className="text-lg font-bold text-[var(--header-text)]">${(parseFloat(listing.askPrice || 0)).toLocaleString()}</p>
+                                    </div>
+                                    <div className="bg-[var(--background)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
+                                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Fractions</p>
+                                        <p className="text-lg font-bold text-[var(--header-text)]">{listing.fractions}</p>
+                                    </div>
+                                </div>
+
+                                <div className="mb-8 p-4 bg-[var(--badge-bg)] rounded-2xl border border-[var(--sidebar-active-text)]/10">
+                                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Seller Note</p>
+                                    <p className="text-sm font-medium text-[var(--header-text)] italic leading-relaxed">"{listing.notes || "No additional notes provided by the seller."}"</p>
+                                </div>
+
+                                <div className="mt-auto space-y-4">
+                                    <button
+                                        onClick={() => onBuy({
+                                            id: listing.id,
+                                            name: listing.asset?.title,
+                                            pricePerFraction: parseFloat(listing.askPrice || 0),
+                                            fractions: listing.fractions,
+                                            seller: listing.investor?.investorProfile?.fullName || "Anonymous",
+                                            image: listing.asset?.images?.[0] ? (listing.asset.images[0].startsWith('http') ? listing.asset.images[0] : `${API_URL}/${listing.asset.images[0].replace(/^\//, '')}`) : "/assets/marketplace/Burj.png"
+                                        })}
+                                        className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold uppercase tracking-[0.2em] shadow-lg hover:opacity-90 transition-all border-0 cursor-pointer"
+                                    >
+                                        Proceed to Purchase
+                                    </button>
+                                    <p className="text-[10px] text-center text-[var(--color-text-muted)] uppercase font-bold tracking-[0.2em]">Transaction secured by Glofy Escrow</p>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="p-20 text-center">
+                            <p className="text-red-500 font-bold mb-4">Listing not found</p>
+                            <button onClick={onClose} className="px-6 py-2 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-xs font-bold text-[var(--header-text)] cursor-pointer">Close</button>
+                        </div>
+                    )}
+                </motion.div>
+            </div>
+        </AnimatePresence>
+    );
+}
+
+function XIcon({ className }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
     );
 }
