@@ -20,7 +20,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [sellInvestment, { isLoading: isSelling }] = useSellInvestmentMutation();
 
-    // Initialize form data when asset changes
+  
     useEffect(() => {
         if (asset && isOpen) {
             const numericValue = asset.value?.includes("K") 

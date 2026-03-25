@@ -74,7 +74,7 @@ function StatCard({ label, value, delta, icon: Icon, index }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: index * 0.07 }}
-            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md p-5 flex flex-col gap-3 hover:shadow-md transition-all"
+            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-5 flex flex-col gap-3 hover:shadow-md transition-all"
         >
             <div className="flex items-center justify-between">
                 <span className="text-[10px] font-semibold tracking-[0.15em] text-[var(--sidebar-text)] font-montserrat uppercase opacity-60">
@@ -85,7 +85,7 @@ function StatCard({ label, value, delta, icon: Icon, index }) {
                 </span>
             </div>
 
-            <p className="text-3xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight">
+            <p className="text-2xl sm:text-3xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight">
                 {value}
             </p>
 
@@ -227,7 +227,7 @@ export default function PartnerOverviewPage() {
     ];
 
     return (
-        <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
+        <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto">
             <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -237,11 +237,11 @@ export default function PartnerOverviewPage() {
                 <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight opacity-90 uppercase tracking-widest">
                     Overview
                 </h1>
-                <p className="text-[11px] font-bold tracking-[0.2em] font-montserrat mt-2 text-[var(--sidebar-text)] opacity-40 uppercase">Partner command center</p>
+                <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] font-montserrat mt-2 text-[var(--sidebar-text)] opacity-40 uppercase">Partner command center</p>
             </motion.div>
 
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 {stats.map((card, i) => (
                     <StatCard key={card.label} {...card} index={i} />
                 ))}

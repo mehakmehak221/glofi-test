@@ -100,19 +100,19 @@ export default function FinancePage() {
     };
 
     return (
-        <div className="p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
+        <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                 <h1 className="text-2xl lg:text-3xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight opacity-90">
                     Finance
                 </h1>
 
-                <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-2xl border border-[var(--sidebar-border)] self-start md:self-auto">
+                <div className="flex overflow-x-auto whitespace-nowrap w-full md:w-auto bg-black/5 dark:bg-white/5 p-1 rounded-base sm:rounded-2xl border border-[var(--sidebar-border)] self-start md:self-auto custom-scrollbar-hide">
                     {TABS.map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`px-6 py-2 rounded-xl text-[12px] font-medium font-montserrat transition-all relative ${activeTab === tab
+                            className={`flex-shrink-0 px-4 sm:px-6 py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-[12px] font-medium font-montserrat transition-all relative ${activeTab === tab
                                 ? "text-[var(--sidebar-active-text)]"
                                 : "text-[var(--sidebar-text)] opacity-40 hover:opacity-80"
                                 }`}
@@ -184,7 +184,7 @@ export default function FinancePage() {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex items-center justify-between hover:shadow-sm transition-all group"
+                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
                                         >
                                             <div>
                                                 <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.asset?.title || "Commission Payment"}</h3>
@@ -192,9 +192,9 @@ export default function FinancePage() {
                                                     {item.type || 'Sale'} · {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                                 </p>
                                             </div>
-                                            <div className="text-right">
+                                            <div className="text-left sm:text-right">
                                                 <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">${(item.amount || 0).toLocaleString()}</p>
-                                                <p className={`text-[10px] font-medium font-montserrat mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
+                                                <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                     {item.status}
                                                 </p>
                                             </div>
@@ -224,7 +224,7 @@ export default function FinancePage() {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex items-center justify-between hover:shadow-sm transition-all group"
+                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
                                         >
                                             <div>
                                                 <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.method || "Bank Transfer"}</h3>
@@ -232,9 +232,9 @@ export default function FinancePage() {
                                                     {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} · {item.reference || "Completed"}
                                                 </p>
                                             </div>
-                                            <div className="text-right">
+                                            <div className="text-left sm:text-right">
                                                 <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">${(item.amount || 0).toLocaleString()}</p>
-                                                <p className={`text-[10px] font-medium font-montserrat mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
+                                                <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                     {item.status}
                                                 </p>
                                             </div>
@@ -264,23 +264,23 @@ export default function FinancePage() {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-5 rounded-2xl flex items-center justify-between group border border-transparent hover:border-[var(--sidebar-border)] transition-all"
+                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 group border border-transparent hover:border-[var(--sidebar-border)] transition-all"
                                         >
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-3 mb-1">
                                                     <h3 className="text-[14px] font-semibold text-[var(--foreground)] opacity-80 font-montserrat">{item.asset?.title || "Unknown Asset"}</h3>
                                                     <span className="text-[10px] px-2 py-0.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] font-bold uppercase">{item.fractionsOwned || item.fractions} Frac</span>
                                                 </div>
-                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-40 font-montserrat flex items-center gap-2">
+                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-40 font-montserrat flex flex-wrap items-center gap-2">
                                                     Investor: <span className="text-[var(--foreground)] opacity-60 font-medium">{item.investor?.investorProfile?.fullName || item.investor?.email || item.user?.fullName || "Anonymous"}</span>
                                                     • {new Date(item.createdAt).toLocaleDateString()}
                                                 </p>
                                             </div>
 
-                                            <div className="flex items-center gap-4 text-right">
-                                                <div>
+                                            <div className="flex items-center justify-between w-full md:w-auto md:gap-4 md:text-right">
+                                                <div className="text-left md:text-right">
                                                     <p className="text-[14px] font-bold text-[var(--foreground)] opacity-90 font-montserrat">${(item.totalPaid || item.amount || 0).toLocaleString()}</p>
-                                                    <p className="text-[10px] text-[var(--sidebar-text)] opacity-30 font-montserrat uppercase tracking-wider">{item.paymentMethod}</p>
+                                                    <p className="text-[10px] text-[var(--sidebar-text)] opacity-30 font-montserrat uppercase tracking-wider mt-0.5">{item.paymentMethod}</p>
                                                 </div>
                                                 <div className="flex items-center gap-2 ml-4">
                                                     <button

@@ -124,7 +124,7 @@ export default function NewListingForm({ onBack, editId }) {
         setUploadingField(field);
         try {
             const result = await uploadFile({ file, folder: 'assets' }).unwrap();
-            const url = result.key || result.url || result.path; // Use 'key' as returned by the server
+            const url = result.key || result.url || result.path; 
             
             if (field === 'images') {
                 setFormData(prev => ({ ...prev, images: [...prev.images, url] }));
@@ -140,7 +140,7 @@ export default function NewListingForm({ onBack, editId }) {
     };
 
     const handleSubmit = async () => {
-        // Validation
+      
         const required = ['title', 'location', 'valuation', 'totalFractions', 'expectedYield', 'description', 'titleDeedUrl'];
         for (const field of required) {
             if (!formData[field]) {
@@ -212,9 +212,9 @@ export default function NewListingForm({ onBack, editId }) {
                     <LoadingSpinner />
                 </div>
             ) : (
-                <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-3xl p-6 lg:p-10">
-                    {/* ... rest of the form ... */}
-                <div className="flex items-center justify-center gap-12 mb-10 border-b border-[var(--sidebar-border)] pb-4">
+                <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-10">
+                  
+                <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-[var(--sidebar-border)] pb-2 sm:pb-4 w-full">
                     {CATEGORIES.map((cat) => (
                         <button
                             key={cat.value}
@@ -355,7 +355,7 @@ export default function NewListingForm({ onBack, editId }) {
                     disabled={isSubmitting}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="bg-[var(--sidebar-active-text)] text-black font-bold text-sm px-8 py-3.5 rounded-2xl hover:opacity-90 transition-opacity font-montserrat min-w-[200px] flex items-center justify-center"
+                    className="w-full sm:w-auto bg-[var(--sidebar-active-text)] text-black font-bold text-sm px-8 py-3.5 rounded-2xl hover:opacity-90 transition-opacity font-montserrat min-w-[200px] flex items-center justify-center"
                 >
                     {isSubmitting ? <LoadingSpinner color="black" /> : editId ? "Update Property" : "Save as Draft"}
                 </motion.button>
