@@ -11,9 +11,9 @@ import CookieSection from "@/components/sections/CookieSection/CookieSection";
 
 export default function Home() {
   return (
-    <>
+    <div className="max-w-[1440px] mx-auto w-full overflow-x-hidden border-x border-white/5 bg-[var(--color-bg-dark)] shadow-2xl">
       <Navbar />
-      <main>
+      <main className="w-full">
         <HeroSection />
         <WorkingInstructionsSection />
         <PremiumPropertySection />
@@ -29,6 +29,6 @@ export default function Home() {
         <CookieSection />
         <div className="h-[28px]" />
       </main>
-    </>
+    </div>
   );
 }
