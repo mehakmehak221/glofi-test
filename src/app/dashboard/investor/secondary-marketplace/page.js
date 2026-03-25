@@ -152,13 +152,13 @@ export default function SecondaryMarketplacePage() {
                 </section>
 
 
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
-                    <div className="flex items-center gap-2 p-1 bg-[var(--background)] rounded-xl border border-[var(--sidebar-border)] shadow-sm">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 w-full">
+                    <div className="flex items-center gap-2 p-1 bg-[var(--background)] rounded-xl border border-[var(--sidebar-border)] shadow-sm w-full md:w-auto overflow-x-auto no-scrollbar">
                         {["Marketplace", "My Listings"].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`px-5 py-2.5 rounded-lg text-[12px] font-bold transition-all duration-300 border-0 cursor-pointer ${activeTab === tab
+                                className={`px-5 py-2.5 rounded-lg text-[12px] font-bold transition-all duration-300 border-0 cursor-pointer whitespace-nowrap ${activeTab === tab
                                     ? "bg-[var(--color-primary-300)] text-black shadow-sm"
                                     : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)]"
                                     }`}
@@ -363,15 +363,15 @@ function DetailModal({ id, onClose, onBuy }) {
                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                    className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative"
+                    className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col"
                 >
                     {isLoading ? (
                         <div className="p-20 flex justify-center">
                             <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin"></div>
                         </div>
                     ) : listing ? (
-                        <div className="flex flex-col md:flex-row h-full text-[var(--sidebar-text)]">
-                            <div className="w-full md:w-1/2 h-64 md:h-auto relative">
+                        <div className="flex flex-col md:flex-row h-full overflow-y-auto text-[var(--sidebar-text)]">
+                            <div className="w-full md:w-1/2 h-64 md:h-auto md:min-h-[400px] relative shrink-0">
                                 <Image
                                     src={listing.asset?.images?.[0] ? (listing.asset.images[0].startsWith('http') ? listing.asset.images[0] : `${API_URL}/${listing.asset.images[0].replace(/^\//, '')}`) : "/assets/marketplace/Burj.png"}
                                     alt={listing.asset?.title}
@@ -379,7 +379,7 @@ function DetailModal({ id, onClose, onBuy }) {
                                     className="object-cover"
                                 />
                             </div>
-                            <div className="p-8 flex flex-col flex-1">
+                            <div className="p-6 md:p-8 flex flex-col flex-1">
                                 <div className="flex justify-between items-start mb-6">
                                     <div className="flex-1 pr-4">
                                         <h2 className="text-2xl font-bold text-[var(--header-text)] mb-2 uppercase tracking-tight line-clamp-2">{listing.asset?.title}</h2>

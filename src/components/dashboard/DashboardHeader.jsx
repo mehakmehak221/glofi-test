@@ -44,14 +44,14 @@ export default function DashboardHeader() {
             <div className="flex items-center gap-4 ml-4">
                 <button 
                     onClick={() => setIsLight(!isLight)}
-                    className="flex items-center w-11 h-6 p-1 rounded-full transition-colors cursor-pointer bg-[var(--search-bg)] border border-[var(--search-border)] relative outline-none"
+                    className="flex items-center w-14 h-8 p-1 rounded-full transition-colors cursor-pointer bg-[var(--search-bg)] border border-[var(--search-border)] relative outline-none"
                     title={isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
                 >
-                    <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 ${isLight ? 'translate-x-5 bg-[var(--sidebar-active-text)] shadow-sm' : 'translate-x-0 bg-[#333333]'}`}>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 ${isLight ? 'translate-x-6 bg-[var(--sidebar-active-text)] shadow-sm' : 'translate-x-0 bg-[#333333]'}`}>
                         {isLight ? (
-                            <SunIcon className="w-2.5 h-2.5 text-white" />
+                            <SunIcon className="w-3.5 h-3.5 text-white" />
                         ) : (
-                            <MoonIcon className="w-2.5 h-2.5 text-white/70" />
+                            <MoonIcon className="w-3.5 h-3.5 text-white/70" />
                         )}
                     </div>
                 </button>

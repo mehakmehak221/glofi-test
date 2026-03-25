@@ -285,48 +285,67 @@ function SecondaryListingCard({ item, onDelete }) {
                 </div>
 
                 <div className="flex-1 w-full flex flex-col justify-center">
-                    <div className="flex flex-col sm:flex-row sm:items-start lg:items-center justify-between gap-4 mb-5 lg:mb-4">
-                        <div className="flex-1 w-full flex flex-col gap-4 sm:gap-2">
-                            <div className="flex flex-row items-center justify-between sm:justify-start gap-4">
-                                <h3 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{title}</h3>
-                                {item.status && (
-                                    <div className={`px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider border ${item.status === "PENDING" || item.status === "PENDING_APPROVAL" ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]" :
-                                        item.status === "APPROVED" || item.status === "LISTED" ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success-border)]" :
-                                            "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border border-[var(--color-status-error-border)]"
-                                        }`}>
-                                        {item.status?.replace('_', ' ')}
-                                    </div>
-                                )}
-                            </div>
-                            <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider hidden sm:block">
-                                {location}
-                            </p>
+                    <div className="flex flex-col gap-4 mb-6">
+                        <div className="flex flex-row items-center gap-4">
+                            <h3 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{title}</h3>
+                            {item.status && (
+                                <div className={`px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider border ${item.status === "PENDING" || item.status === "PENDING_APPROVAL" ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]" :
+                                    item.status === "APPROVED" || item.status === "LISTED" ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success-border)]" :
+                                        "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border border-[var(--color-status-error-border)]"
+                                    }`}>
+                                    {item.status?.replace('_', ' ')}
+                                </div>
+                            )}
+                        </div>
 
-                            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-4 sm:gap-6 lg:gap-8 w-full mt-2">
-                                <div>
-                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Fractions Listed</p>
-                                    <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{item.fractionsListed || item.fractions}</p>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Price Per Fraction</p>
-                                    <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">${Number(item.askPrice || item.pricePerFraction || 0).toLocaleString()}</p>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Total Expected</p>
-                                    <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">
-                                        ${((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0)).toLocaleString()}
-                                    </p>
-                                </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 items-center gap-4 sm:gap-6 lg:gap-8 w-full">
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Fractions</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{item.fractionsListed || item.fractions}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Invested</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">${Number(item.askPrice || item.pricePerFraction || 0).toLocaleString()}K</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Value</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">
+                                    ${Number(((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0)) || 0).toLocaleString()}K
+                                </p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">ROI</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">
+                                    +15%
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
                         <motion.button
+                            onClick={() => {}}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--background)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
+                        >
+                            <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
+                            Certificate
+                        </motion.button>
+                        <motion.button
+                            onClick={() => {}}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--background)] text-[var(--color-text-muted)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
+                        >
+                            <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
+                            Download
+                        </motion.button>
+                        <motion.button
                             onClick={() => onDelete(item.id)}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-red-500/10 text-red-500 text-[11px] font-bold hover:bg-red-500/20 transition-all border border-red-500/20 cursor-pointer"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-red-500/10 text-red-500 text-[11px] font-bold hover:bg-red-500/20 transition-all border border-red-500/20 cursor-pointer"
                         >
                             Delete Listing
                         </motion.button>
@@ -371,50 +390,37 @@ function AssetCard({ asset, onResale }) {
                 </div>
 
                 <div className="flex-1 w-full flex flex-col justify-center">
-                    <div className="flex flex-col sm:flex-row sm:items-start lg:items-center justify-between gap-4 mb-5 lg:mb-4">
-                        <div className="flex-1 w-full flex flex-col gap-4 sm:gap-2">
-                            <div className="flex flex-row items-center justify-between sm:justify-start gap-4">
-                                <h3 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{asset.name}</h3>
-                                {asset.status && asset.status !== "COMPLETED" && !asset.isResale && (
-                                    <div className={`px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider border ${asset.status === "PENDING" || asset.status === "UNDER_REVIEW"
-                                        ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]"
-                                        : "bg-[var(--color-status-info-bg)] text-[var(--color-status-info)] border-[var(--color-status-info-border)]"
-                                        }`}>
-                                        {asset.status.replace("_", " ")}
-                                    </div>
-                                )}
-                                {asset.isResale && (
-                                    <div className="px-3 py-1.5 rounded-full bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 flex items-center shrink-0 shadow-sm">
-                                        <span className="text-[9px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-wider">{asset.fractions} Listed</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-4 sm:gap-6 lg:gap-8 w-full">
-                                <div>
-                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Fractions</p>
-                                    <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{asset.fractions}/{totalFractions}</p>
+                    <div className="flex flex-col gap-4 mb-6">
+                        <div className="flex flex-row items-center gap-4">
+                            <h3 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{asset.name}</h3>
+                            {asset.status && asset.status !== "COMPLETED" && !asset.isResale && (
+                                <div className={`px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider border ${asset.status === "PENDING" || asset.status === "UNDER_REVIEW"
+                                    ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]"
+                                    : "bg-[var(--color-status-info-bg)] text-[var(--color-status-info)] border-[var(--color-status-info-border)]"
+                                    }`}>
+                                    {asset.status.replace("_", " ")}
                                 </div>
-                                <div className="block">
-                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Invested</p>
-                                    <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{asset.invested}</p>
-                                </div>
-                                <div className="block">
-                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Value</p>
-                                    <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">{asset.value}</p>
-                                </div>
-                                <div className="block">
-                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">ROI</p>
-                                    <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">{asset.roi}</p>
-                                </div>
-                            </div>
+                            )}
                         </div>
 
-                        {asset.isResale && (
-                            <div className="hidden sm:flex px-3 py-1.5 rounded-full bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 items-center shrink-0 self-start lg:self-center">
-                                <span className="text-[10px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-wider">{asset.fractions} Listed for Resale</span>
+                        <div className="grid grid-cols-2 md:grid-cols-4 items-center gap-4 sm:gap-6 lg:gap-8 w-full">
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Fractions</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{asset.fractions}</p>
                             </div>
-                        )}
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Invested</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{asset.invested}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Value</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">{asset.value}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">ROI</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">{asset.roi}</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">

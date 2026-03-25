@@ -43,7 +43,9 @@ export default function AccountPage() {
     }, [profileData]);
 
     const handleCopy = () => {
-        navigator.clipboard.writeText("glofi.estate/ref/DEMO-2026");
+        const refLink = profileData?.referralCode ? `glofi.estate/ref/${profileData.referralCode}` : "";
+        if (!refLink) return;
+        navigator.clipboard.writeText(refLink);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -182,7 +184,7 @@ export default function AccountPage() {
                             >
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                                 <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-black/40 mb-1.5 sm:mb-2.5">USD BALANCE</p>
-                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-black text-black mb-5 sm:mb-8">$24,500</p>
+                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-black text-black mb-5 sm:mb-8">${profileData?.usdBalance || "0.00"}</p>
                                 <div className="flex gap-2 text-black">
                                     <button className="px-3 py-1 bg-black/10 text-black text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-black/5 hover:bg-black/20">Deposit</button>
                                     <button className="px-3 py-1 bg-black/10 text-black text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-black/5 transition-colors cursor-pointer hover:bg-black/20">Withdraw</button>
@@ -192,7 +194,7 @@ export default function AccountPage() {
                             <div className="rounded-[16px] sm:rounded-[24px] p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-700)] shadow-[var(--shadow-glow-primary)]">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                                 <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">AED BALANCE</p>
-                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">AED 89,975</p>
+                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">AED {profileData?.aedBalance || "0.00"}</p>
                                 <div className="flex gap-2">
                                     <button className="px-3 py-1 bg-[var(--background)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--sidebar-border)]">Deposit</button>
                                     <button className="px-3 py-1 bg-[var(--background)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--sidebar-border)] transition-colors cursor-pointer">Withdraw</button>
@@ -202,7 +204,7 @@ export default function AccountPage() {
                             <div className="rounded-[16px] sm:rounded-[24px] p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-300)] shadow-[var(--shadow-glow-primary)]">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                                 <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">CRYPTO</p>
-                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">0.85 ETH</p>
+                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">{profileData?.cryptoBalance || "0.00"} ETH</p>
                                 <div className="flex gap-2">
                                     <button className="px-3 py-1 bg-[var(--color-bg-surface-subtle)] text-white text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--color-border-subtle)]">Deposit</button>
                                     <button className="px-3 py-1 bg-[var(--color-bg-surface-subtle)] text-white text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--color-border-subtle)] transition-colors cursor-pointer">Withdraw</button>
@@ -233,8 +235,8 @@ export default function AccountPage() {
                                         <div className="border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-3 sm:mb-5 bg-[var(--background)]/50">
                                             <div className="text-center">
                                                 <p className="text-[8px] sm:text-[9px] text-[var(--color-text-muted)] uppercase tracking-[1.5px] sm:tracking-[2px] mb-1.5 sm:mb-2 font-semibold">DIGITAL OWNERSHIP CERTIFICATE</p>
-                                                <h3 className="text-sm sm:text-lg lg:text-xl font-bold text-[var(--header-text)] mb-2 sm:mb-3">{cert.assetTitle || "Property"}</h3>
-                                                <p className="font-bold text-[var(--header-text)] flex items-center justify-center gap-1.5 sm:gap-2"><span className="text-2xl sm:text-3xl">{cert.fractionsOwned}</span> <span className="text-[11px] sm:text-[13px] font-normal text-[var(--color-text-muted)]">Fractions</span></p>
+                                                <h3 className="text-sm sm:text-lg lg:text-xl font-bold text-[var(--header-text)] mb-2 sm:mb-3">{cert.assetTitle || cert.asset?.title || cert.asset?.name || "Property"}</h3>
+                                                <p className="font-bold text-[var(--header-text)] flex items-center justify-center gap-1.5 sm:gap-2"><span className="text-2xl sm:text-3xl">{cert.fractionsOwned || cert.fractions || cert.investment?.fractions || 1}</span> <span className="text-[11px] sm:text-[13px] font-normal text-[var(--color-text-muted)]">Fractions</span></p>
                                             </div>
                                         </div>
 
@@ -289,7 +291,7 @@ export default function AccountPage() {
                             <div className="flex items-center bg-[var(--background)] border border-[var(--sidebar-border)] rounded-full p-1 sm:p-1.5 mb-6 sm:mb-10 w-full max-w-[800px]">
                                 <input
                                     readOnly
-                                    value="glofi.estate/ref/DEMO-2026"
+                                    value={profileData?.referralCode ? `glofi.estate/ref/${profileData.referralCode}` : "Not available"}
                                     className="flex-1 min-w-0 bg-transparent border-0 text-[var(--color-text-muted)] text-[11px] sm:text-sm px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 focus:outline-none placeholder-[var(--color-text-muted)]/20 font-mono tracking-wide"
                                 />
                                 <button
@@ -317,7 +319,7 @@ export default function AccountPage() {
                                         <svg className="w-3 h-3 sm:w-4 sm:h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                                     </div>
                                     <p className="text-[9px] sm:text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-2 sm:mb-4 tracking-[1.5px]">REFERRALS</p>
-                                    <p className="text-2xl sm:text-[32px] font-black text-[var(--header-text)]">12</p>
+                                    <p className="text-2xl sm:text-[32px] font-black text-[var(--header-text)]">{profileData?.referralsCount || 0}</p>
                                 </div>
 
                                 <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-[16px] p-4 sm:p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/20 transition-colors cursor-default shadow-sm">
@@ -325,7 +327,7 @@ export default function AccountPage() {
                                         <svg className="w-3 h-3 sm:w-4 sm:h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                     </div>
                                     <p className="text-[9px] sm:text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-2 sm:mb-4 tracking-[1.5px]">CONVERTED</p>
-                                    <p className="text-2xl sm:text-[32px] font-black text-[var(--header-text)]">8</p>
+                                    <p className="text-2xl sm:text-[32px] font-black text-[var(--header-text)]">{profileData?.convertedCount || 0}</p>
                                 </div>
 
                                 <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-[16px] p-4 sm:p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/20 transition-colors cursor-default shadow-sm">
@@ -333,7 +335,7 @@ export default function AccountPage() {
                                         <svg className="w-3 h-3 sm:w-4 sm:h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
                                     </div>
                                     <p className="text-[9px] sm:text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-2 sm:mb-4 tracking-[1.5px]">EARNED</p>
-                                    <p className="text-2xl sm:text-[32px] font-black text-[var(--header-text)]">2,000</p>
+                                    <p className="text-2xl sm:text-[32px] font-black text-[var(--header-text)]">{profileData?.referralEarnings || 0}</p>
                                 </div>
                             </div>
                         </div>

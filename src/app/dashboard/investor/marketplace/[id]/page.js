@@ -251,9 +251,10 @@ export default function PropertyDetailPage() {
                                 }`}>{property.riskRating}</p>
                         </div >
                         <div
+                            className="rounded-xl p-3 sm:p-4 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                         >
-                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Fractions</p>
-                            <p className="text-base sm:text-lg font-bold text-[var(--header-text)]">{property.totalFractions?.toLocaleString()}</p>
+                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Fractions</p>
+                            <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{property.totalFractions?.toLocaleString()}</p>
                         </div>
                     </div >
 

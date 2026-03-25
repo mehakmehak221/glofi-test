@@ -82,8 +82,8 @@ export default function TransactionsPage() {
                         transition={{ delay: 0.15 }}
                         className="hidden md:block bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md overflow-hidden shadow-sm"
                     >
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
+                        <div className="overflow-x-auto w-full pb-4">
+                            <table className="w-full whitespace-nowrap min-w-[800px]">
                                 <thead>
                                     <tr className="border-b border-[var(--sidebar-border)] bg-[var(--background)]/50">
                                         <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Date</th>
@@ -149,21 +149,21 @@ export default function TransactionsPage() {
                                         {tx.status?.toUpperCase() === "COMPLETED" ? "✓" : "◎"} {tx.status}
                                     </span>
                                 </div>
-                                <h3 className="text-sm font-semibold text-[var(--header-text)] mb-2">
+                                <h3 className="text-base font-bold text-[var(--header-text)] mb-4">
                                     {tx.asset?.title || tx.assetTitle || tx.asset || "-"}
                                 </h3>
-                                <div className="grid grid-cols-3 gap-2 text-xs">
+                                <div className="grid grid-cols-2 gap-4 text-xs bg-[var(--sidebar-active-bg)]/30 rounded-lg p-3">
                                     <div>
-                                        <p className="text-[var(--color-text-muted)]">Date</p>
-                                        <p className="text-[var(--header-text)] font-medium">{formatDate(tx.createdAt || tx.date)}</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Date</p>
+                                        <p className="text-[var(--header-text)] font-bold">{formatDate(tx.createdAt || tx.date)}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[var(--color-text-muted)]">Amount</p>
-                                        <p className="text-[var(--header-text)] font-medium">{formatAmount(tx.amount, tx.currency)}</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Amount</p>
+                                        <p className="text-[var(--header-text)] font-bold">{formatAmount(tx.amount, tx.currency)}</p>
                                     </div>
-                                    <div>
-                                        <p className="text-[var(--color-text-muted)]">Method</p>
-                                        <p className="text-[var(--header-text)] font-medium">{tx.paymentMethod || tx.method || "-"}</p>
+                                    <div className="col-span-2">
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Method</p>
+                                        <p className="text-[var(--header-text)] font-bold">{tx.paymentMethod || tx.method || "-"}</p>
                                     </div>
                                 </div>
                             </motion.div>
