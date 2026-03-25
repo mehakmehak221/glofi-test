@@ -32,7 +32,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
-            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:shadow-md transition-all"
+            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:shadow-md transition-all"
         >
             <div className="w-full md:w-32 lg:w-40 h-24 lg:h-28 bg-[var(--color-bg-card)] rounded-xl flex-shrink-0 flex items-center justify-center border border-[var(--color-border-subtle)] overflow-hidden relative">
                 {propertyImage ? (
@@ -210,7 +210,7 @@ export default function PartnerPropertiesPage() {
                                     <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />
                                 </div>
                             ) : isError ? (
-                                <div className="text-center p-12 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl">
+                                <div className="text-center p-12 bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl">
                                     <div className="w-12 h-12 rounded-full bg-red-500/10 text-red-500/60 flex items-center justify-center mx-auto mb-4">
                                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />

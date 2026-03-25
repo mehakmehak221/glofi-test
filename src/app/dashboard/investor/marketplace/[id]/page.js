@@ -200,7 +200,7 @@ export default function PropertyDetailPage() {
                         <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
 
-                        <span className="absolute top-3 left-3 sm:top-4 sm:left-4 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-[var(--sidebar-bg)]/80 text-[var(--color-text-muted)] border border-[var(--sidebar-border)] backdrop-blur-sm">
+                        <span className="absolute top-3 left-3 sm:top-4 sm:left-4 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-[var(--background)]/80 text-[var(--color-text-muted)] border border-[var(--sidebar-border)] backdrop-blur-sm">
                             {property.category?.replace('_', ' ')}
                         </span>
 
@@ -223,26 +223,26 @@ export default function PropertyDetailPage() {
                     </div >
 
 
-                    <p className="text-sm rounded-xl p-3 sm:p-4 text-[var(--color-text-muted)] leading-relaxed mb-6 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] font-montserrat tracking-tight shadow-sm">
+                    <p className="text-sm rounded-xl p-3 sm:p-4 text-[var(--color-text-muted)] leading-relaxed mb-6 bg-[var(--background)] border border-[var(--sidebar-border)] font-montserrat tracking-tight shadow-sm">
                         {property.description}
                     </p>
 
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                         <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
+                            className="rounded-xl p-3 sm:p-4 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                         >
                             <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Valuation</p>
                             <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{formatValuation(property.valuation)}</p>
                         </div >
                         <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
+                            className="rounded-xl p-3 sm:p-4 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                         >
                             <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Yield</p>
                             <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)] truncate">{Number(property.expectedYield).toFixed(2)}%</p>
                         </div >
                         <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
+                            className="rounded-xl p-3 sm:p-4 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                         >
                             <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Risk Level</p>
                             <p className={`text-base sm:text-lg font-bold truncate ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)]' :
@@ -265,7 +265,7 @@ export default function PropertyDetailPage() {
                                 {documents.map((doc) => (
                                     <div
                                         key={doc.name}
-                                        className="flex items-center justify-between rounded-xl px-4 py-3 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm"
+                                        className="flex items-center justify-between rounded-xl px-4 py-3 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm"
                                     >
                                         <div className="flex items-center gap-3">
                                             <span className="w-8 h-8 rounded-full bg-[var(--badge-bg)] flex items-center justify-center text-xs">
@@ -305,7 +305,7 @@ export default function PropertyDetailPage() {
                     transition={{ duration: 1.5, delay: 0.15 }}
                 >
                     <div
-                        className="rounded-2xl p-5 sm:p-6 lg:sticky lg:top-24 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-xl"
+                        className="rounded-2xl p-5 sm:p-6 lg:sticky lg:top-24 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-xl"
                     >
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold">Per Fraction</p>
                         <p className="text-2xl sm:text-3xl font-bold text-[var(--header-text)] mb-5">

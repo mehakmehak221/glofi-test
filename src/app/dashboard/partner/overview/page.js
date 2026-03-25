@@ -74,7 +74,7 @@ function StatCard({ label, value, delta, icon: Icon, index }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: index * 0.07 }}
-            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-5 flex flex-col gap-3 hover:shadow-md transition-all"
+            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md p-5 flex flex-col gap-3 hover:shadow-md transition-all"
         >
             <div className="flex items-center justify-between">
                 <span className="text-[10px] font-semibold tracking-[0.15em] text-[var(--sidebar-text)] font-montserrat uppercase opacity-60">
@@ -300,7 +300,7 @@ export default function PartnerOverviewPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.25 }}
-                className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-5"
+                className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md p-5"
             >
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat uppercase tracking-wider">Listing Performance</h2>

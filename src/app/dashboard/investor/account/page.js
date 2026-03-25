@@ -72,7 +72,7 @@ export default function AccountPage() {
                         onClick={() => setActiveTab(tab)}
                         className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-[13px] font-medium transition-all duration-300 cursor-pointer border ${activeTab === tab
                             ? "bg-[var(--color-primary-300)] text-black border-[var(--color-primary-300)] shadow-[var(--shadow-glow-primary)]"
-                            : "bg-[var(--sidebar-bg)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
+                            : "bg-[var(--background)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
                             }`}
                     >
                         {tab}
@@ -90,7 +90,7 @@ export default function AccountPage() {
                     exit="exit"
                 >
                     {activeTab === "Profile" && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
+                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
                             {isLoading ? (
                                 <div className="flex justify-center py-12">
                                     <div className="animate-spin rounded-md h-8 w-8 border-b-2 border-[var(--color-primary-300)]"></div>
@@ -125,7 +125,7 @@ export default function AccountPage() {
                     )}
 
                     {activeTab === "KYC" && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
+                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
                             <div className="flex items-center gap-3 sm:gap-5 mb-5 sm:mb-8">
                                 <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-[var(--color-primary-300)]/10 flex items-center justify-center flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-7 sm:h-7 text-[var(--color-primary-300)]">
@@ -189,7 +189,7 @@ export default function AccountPage() {
                                 </div>
                             </div>
 
-                            <div className="rounded-[16px] sm:rounded-[24px] p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--sidebar-bg)] to-[var(--color-primary-700)] shadow-[var(--shadow-glow-primary)]">
+                            <div className="rounded-[16px] sm:rounded-[24px] p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-700)] shadow-[var(--shadow-glow-primary)]">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                                 <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">AED BALANCE</p>
                                 <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">AED 89,975</p>
@@ -199,7 +199,7 @@ export default function AccountPage() {
                                 </div>
                             </div>
 
-                            <div className="rounded-[16px] sm:rounded-[24px] p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--sidebar-bg)] to-[var(--color-primary-300)] shadow-[var(--shadow-glow-primary)]">
+                            <div className="rounded-[16px] sm:rounded-[24px] p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-300)] shadow-[var(--shadow-glow-primary)]">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                                 <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">CRYPTO</p>
                                 <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">0.85 ETH</p>
@@ -219,7 +219,7 @@ export default function AccountPage() {
                                 </div>
                             ) : certificates.length > 0 ? (
                                 certificates.map((cert) => (
-                                    <div key={cert.id} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-[20px] p-3.5 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-colors shadow-sm">
+                                    <div key={cert.id} className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-[20px] p-3.5 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-colors shadow-sm">
                                         <div className="flex justify-between items-center mb-3 sm:mb-5">
                                             <div className="flex items-center gap-1.5 sm:gap-2 text-[8px] sm:text-[10px] text-[var(--color-primary-300)] font-semibold tracking-wider uppercase">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-3 sm:h-3 text-[var(--color-primary-300)]">
@@ -272,7 +272,7 @@ export default function AccountPage() {
                                     </div>
                                 ))
                             ) : (
-                                <div className="col-span-1 md:col-span-2 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+                                <div className="col-span-1 md:col-span-2 bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-12 flex flex-col items-center justify-center text-center">
                                     <svg className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                                     <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No certificates found</h3>
                                     <p className="text-sm text-[var(--color-text-muted)]">Your digital ownership certificates will appear here once issued.</p>
@@ -282,7 +282,7 @@ export default function AccountPage() {
                     )}
 
                     {activeTab === "Referrals" && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10 max-w-[900px] shadow-sm">
+                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10 max-w-[900px] shadow-sm">
                             <h2 className="text-base sm:text-[22px] font-bold text-[var(--header-text)] mb-1">Invite & Earn</h2>
                             <p className="text-xs sm:text-sm text-[var(--color-text-muted)] mb-5 sm:mb-8 font-medium">Earn $250 for every referred investor</p>
 

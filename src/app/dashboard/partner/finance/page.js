@@ -142,7 +142,7 @@ export default function FinancePage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="rounded-md p-6 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
+                        className="rounded-md p-6 bg-[var(--background)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-[var(--sidebar-active-text)] opacity-[0.03] pointer-events-none" />
                         <p className="text-[10px] font-bold tracking-[1.2px] text-[var(--sidebar-text)] opacity-30 font-montserrat mb-4 uppercase">
@@ -317,7 +317,7 @@ export default function FinancePage() {
                                     animate={{ opacity: 1, scale: 1 }}
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ delay: i * 0.1 }}
-                                    className={`bg-[var(--sidebar-bg)] p-7 rounded-3xl border ${plan.popular ? 'border-[var(--sidebar-active-text)]/30' : 'border-[var(--sidebar-border)]'} flex flex-col items-start relative overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300`}
+                                    className={`bg-[var(--background)] p-7 rounded-3xl border ${plan.popular ? 'border-[var(--sidebar-active-text)]/30' : 'border-[var(--sidebar-border)]'} flex flex-col items-start relative overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300`}
                                 >
                                     {plan.popular && (
                                         <div className="absolute top-4 right-4 bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-[9px] font-bold px-2.5 py-1 rounded-full border border-[var(--sidebar-active-text)]/10">

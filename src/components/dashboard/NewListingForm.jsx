@@ -39,7 +39,7 @@ const UploadArea = ({ label, onUpload, value, isUploading }) => {
     return (
         <div 
             onClick={() => !isUploading && fileInputRef.current?.click()}
-            className={`flex-1 min-w-[200px] aspect-[3/2] rounded-xl border border-[var(--sidebar-border)] bg-[var(--sidebar-bg)] hover:shadow-md flex flex-col items-center justify-center p-4 transition-all cursor-pointer group ${
+            className={`flex-1 min-w-[200px] aspect-[3/2] rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] hover:shadow-md flex flex-col items-center justify-center p-4 transition-all cursor-pointer group ${
                 value ? 'border-[var(--sidebar-active-text)]/40 bg-[var(--sidebar-active-bg)]' : 'hover:border-[var(--sidebar-active-text)]/20'
             }`}
         >
@@ -212,7 +212,7 @@ export default function NewListingForm({ onBack, editId }) {
                     <LoadingSpinner />
                 </div>
             ) : (
-                <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-3xl p-6 lg:p-10">
+                <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-3xl p-6 lg:p-10">
                     {/* ... rest of the form ... */}
                 <div className="flex items-center justify-center gap-12 mb-10 border-b border-[var(--sidebar-border)] pb-4">
                     {CATEGORIES.map((cat) => (
@@ -242,7 +242,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -252,7 +252,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.location}
                             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -262,7 +262,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.valuation}
                             onChange={(e) => setFormData({ ...formData, valuation: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -272,7 +272,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.totalFractions}
                             onChange={(e) => setFormData({ ...formData, totalFractions: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-1">
@@ -282,7 +282,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.expectedYield}
                             onChange={(e) => setFormData({ ...formData, expectedYield: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat md:max-w-[calc(50%-16px)]"
+                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat md:max-w-[calc(50%-16px)]"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-2">
@@ -292,7 +292,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
+                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
                         />
                     </div>
                 </div>

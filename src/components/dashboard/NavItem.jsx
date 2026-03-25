@@ -39,7 +39,7 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
                 </motion.span>
 
                 {collapsed && (
-                    <div className="absolute left-full ml-3 px-2.5 py-1 rounded-md bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] text-xs text-[var(--sidebar-text)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 shadow-lg">
+                    <div className="absolute left-full ml-3 px-2.5 py-1 rounded-md bg-[var(--background)] border border-[var(--sidebar-border)] text-xs text-[var(--sidebar-text)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 shadow-lg">
                         {label}
                     </div>
                 )}

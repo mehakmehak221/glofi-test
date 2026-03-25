@@ -156,7 +156,7 @@
   --header-text: #1A1F1C;
   --header-border: #E5E7EB;
 
-  --search-bg: #F9FAFB;
+  --search-bg: #00000006;
   --search-text: #1A1F1C;
   --search-border: #E5E7EB;
   --search-placeholder: #1A1F1C4D;
@@ -172,7 +172,7 @@
   --badge-bg: #E8F7F4;
   --badge-border: #11BA9633;
 
-  --marketplace-hero-bg: #E8F7F4;
+  --marketplace-hero-bg: #00000006;
   --marketplace-hero-text: #11BA96;
   --marketplace-card-bg: #FFFFFF;
   --marketplace-card-border: #F0F0F0;

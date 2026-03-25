@@ -63,7 +63,7 @@ export default function PartnerSidebar() {
 
     return (
         <motion.aside
-            className="hidden lg:flex flex-col h-screen sticky top-0 bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] z-40 overflow-hidden"
+            className="hidden lg:flex flex-col h-screen sticky top-0 bg-[var(--background)] border-r border-[var(--sidebar-border)] z-40 overflow-hidden"
             animate={{ width: collapsed ? 80 : 220 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >

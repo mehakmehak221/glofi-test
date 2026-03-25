@@ -56,7 +56,7 @@ export default function PartnerAccountPage() {
                         onClick={() => setActiveTab(tab)}
                         className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-[13px] font-medium transition-all duration-300 cursor-pointer border ${activeTab === tab
                             ? "bg-[var(--color-primary-300)] text-black border-[var(--color-primary-300)] shadow-[var(--shadow-glow-primary)]"
-                            : "bg-[var(--sidebar-bg)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
+                            : "bg-[var(--background)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
                             }`}
                     >
                         {tab}
@@ -73,7 +73,7 @@ export default function PartnerAccountPage() {
                     exit="exit"
                 >
                     {activeTab === "Profile" && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
+                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
                             {isLoading ? (
                                 <div className="flex justify-center py-12">
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary-300)]"></div>
@@ -108,7 +108,7 @@ export default function PartnerAccountPage() {
                     )}
 
                     {activeTab === "KYB" && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
+                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
                             <div className="flex items-center gap-3 sm:gap-5 mb-5 sm:mb-8">
                                 <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center flex-shrink-0 ${profileData?.kybStatus === "APPROVED" || profileData?.kybStatus === "VERIFIED" ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"}`}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-7 sm:h-7">
@@ -128,13 +128,13 @@ export default function PartnerAccountPage() {
                     )}
 
                     {activeTab === "Wallet" && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-8 text-center text-[var(--color-text-muted)] text-sm shadow-sm">
+                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-8 text-center text-[var(--color-text-muted)] text-sm shadow-sm">
                             Wallet functionality for partners is coming soon.
                         </div>
                     )}
 
                     {activeTab === "Settings" && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-6 lg:p-8 max-w-[800px] shadow-sm">
+                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-6 lg:p-8 max-w-[800px] shadow-sm">
                             <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Notification Settings</h3>
                             <div className="space-y-4">
                                 <label className="flex items-center gap-3 cursor-pointer">

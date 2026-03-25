@@ -91,7 +91,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                 >
                     <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="bg-[var(--sidebar-bg)] w-full max-w-lg p-10 rounded-[2rem] shadow-2xl relative border border-[var(--sidebar-border)] max-h-[90vh] overflow-y-auto"
+                        className="bg-[var(--background)] w-full max-w-lg p-10 rounded-[2rem] shadow-2xl relative border border-[var(--sidebar-border)] max-h-[90vh] overflow-y-auto"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"

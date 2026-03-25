@@ -119,7 +119,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="relative w-full max-w-lg bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] overflow-hidden shadow-lg max-h-[90vh] flex flex-col transition-colors duration-300"
+                    className="relative w-full max-w-lg bg-[var(--background)] border border-[var(--sidebar-border)] rounded-[24px] overflow-hidden shadow-lg max-h-[90vh] flex flex-col transition-colors duration-300"
                 >
                     <div className="p-4 sm:p-6 border-b border-[var(--sidebar-border)] flex-shrink-0">
                         <div className="flex items-center justify-between mb-2">

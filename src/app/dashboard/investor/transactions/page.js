@@ -68,7 +68,7 @@ export default function TransactionsPage() {
             )}
 
             {!isLoading && !isError && transactions.length === 0 && (
-                <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-12 text-center text-[var(--color-text-muted)] text-sm">
+                <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-12 text-center text-[var(--color-text-muted)] text-sm">
                     No transactions found.
                 </div>
             )}
@@ -80,7 +80,7 @@ export default function TransactionsPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.15 }}
-                        className="hidden md:block bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md overflow-hidden shadow-sm"
+                        className="hidden md:block bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md overflow-hidden shadow-sm"
                     >
                         <div className="overflow-x-auto">
                             <table className="w-full">
@@ -139,7 +139,7 @@ export default function TransactionsPage() {
                             <motion.div
                                 key={tx.id || idx}
                                 variants={rowVariants}
-                                className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-4 shadow-sm"
+                                className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-4 shadow-sm"
                             >
                                 <div className="flex items-center justify-between mb-3">
                                     <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeColor(tx.type)}`}>

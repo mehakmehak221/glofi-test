@@ -42,7 +42,7 @@ export default function ConfirmationModal({ isOpen, onClose, type = "kyc", prope
                 >
                     <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="relative w-full max-w-sm rounded-[2rem] p-5 sm:p-7 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-2xl"
+                        className="relative w-full max-w-sm rounded-[2rem] p-5 sm:p-7 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-2xl"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"

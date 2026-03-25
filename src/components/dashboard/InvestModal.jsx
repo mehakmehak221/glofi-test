@@ -43,7 +43,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                 >
                     <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="relative w-full max-w-sm rounded-[2rem] p-5 sm:p-7 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-2xl"
+                        className="relative w-full max-w-sm rounded-[2rem] p-5 sm:p-7 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-2xl"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -71,7 +71,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                             <motion.button
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="w-11 h-11 rounded-xl bg-[var(--sidebar-bg)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
+                                className="w-11 h-11 rounded-xl bg-[var(--background)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
                             >
                                 −
                             </motion.button>
@@ -79,7 +79,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                             <motion.button
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => setQuantity(quantity + 1)}
-                                className="w-11 h-11 rounded-xl bg-[var(--sidebar-bg)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
+                                className="w-11 h-11 rounded-xl bg-[var(--background)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
                             >
                                 +
                             </motion.button>
