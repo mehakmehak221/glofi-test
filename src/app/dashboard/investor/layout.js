@@ -11,9 +11,36 @@ import { useGetKycStatusQuery } from "@/store/api/kycApi";
 export default function DashboardLayout({ children }) {
     const { data: kycData, refetch: refetchKyc } = useGetKycStatusQuery();
     const [showKycModal, setShowKycModal] = useState(false);
+    const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+
+    const showToast = (message, type = "success") => {
+        setToast({ show: true, message, type });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+    };
 
     return (
         <div className="flex min-h-screen bg-[var(--background)]">
+            <AnimatePresence>
+                {toast.show && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -50 }}
+                        className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-full shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
+                            ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success)]/20"
+                            : "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border border-[var(--color-status-error)]/20"
+                            }`}
+                        style={{ backdropFilter: "blur(8px)" }}
+                    >
+                        {toast.type === "success" ? (
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                        ) : (
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        )}
+                        {toast.message}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <Sidebar />
 
@@ -28,14 +55,14 @@ export default function DashboardLayout({ children }) {
 
                 <main className="flex-1 overflow-y-auto bg-[var(--background)]">
                     <AnimatePresence>
-                        {kycData && kycData.status !== "APPROVED" && (
+                        {kycData && kycData.status !== "APPROVED" && kycData.status !== "VERIFIED" && (
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 className={`mx-4 lg:mx-8 mt-6 p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-between gap-4 ${kycData.status === "UNDER_REVIEW"
-                                        ? "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
-                                        : "bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]"
+                                    ? "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
+                                    : "bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]"
                                     }`}
                             >
                                 <div className="flex items-center gap-3">
@@ -58,8 +85,10 @@ export default function DashboardLayout({ children }) {
                                 {kycData.status !== "UNDER_REVIEW" && (
                                     <button
                                         onClick={() => setShowKycModal(true)}
-                                        className="px-4 py-2 rounded-lg bg-current text-white text-[10px] font-bold uppercase transition-all hover:opacity-90 whitespace-nowrap"
-                                        style={{ backgroundColor: 'currentColor', color: 'var(--color-bg-dark)' }}
+                                        className={`px-5 py-2.5 rounded-lg text-white text-[11px] font-bold uppercase transition-all hover:opacity-90 whitespace-nowrap border-0 cursor-pointer shadow-sm ${kycData.status === "UNDER_REVIEW"
+                                            ? "bg-[var(--color-status-warning)]"
+                                            : "bg-[var(--color-status-error)]"
+                                            }`}
                                     >
                                         Verify Now
                                     </button>
@@ -77,6 +106,7 @@ export default function DashboardLayout({ children }) {
                 onSubmit={() => {
                     setShowKycModal(false);
                     refetchKyc();
+                    showToast("KYC submitted successfully!", "success");
                 }}
             />
         </div>

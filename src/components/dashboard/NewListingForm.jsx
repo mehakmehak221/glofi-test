@@ -16,8 +16,8 @@ import KYCModal from "./KYCModal";
 
 const CATEGORIES = [
     { label: "Skyscraper", value: "DUBAI_SKYSCRAPER" },
-    { label: "Land", value: "LAND" },
-    { label: "Commercial", value: "COMMERCIAL" },
+    { label: "Land", value: "LAND_PARCEL" },
+    { label: "Commercial", value: "COMMERCIAL_REAL_ESTATE" },
     { label: "Residential", value: "RESIDENTIAL" }
 ];
 
@@ -170,16 +170,11 @@ export default function NewListingForm({ onBack, editId }) {
                 alert('Asset updated successfully!');
                 onBack();
             } else {
-                const result = await createAsset(payload).unwrap();
-                console.log('Create asset result:', result);
-                
-             
-                await submitAssetForReview(result.asset.id).unwrap();
-
-                alert('Asset created and submitted for review!');
+                await createAsset(payload).unwrap();
+                alert('Asset created and saved as draft!');
                 
 
-                if (kybStatus?.status === 'APPROVED' || kybStatus?.status === 'PENDING' || kybStatus?.status === 'UNDER_REVIEW') {
+                if (kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED' || kybStatus?.status === 'PENDING' || kybStatus?.status === 'UNDER_REVIEW') {
                     onBack();
                 } else {
                     setShowKybModal(true);
@@ -346,9 +341,9 @@ export default function NewListingForm({ onBack, editId }) {
                                 <button onClick={() => setShowKycModal(true)} className="text-[9px] underline font-bold uppercase cursor-pointer bg-transparent border-0 text-inherit p-0">Verify</button>
                             )}
                         </div>
-                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${kybStatus?.status === 'APPROVED' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
                             <span className="text-[10px] font-bold uppercase font-montserrat">KYB: {kybStatus?.status || 'NOT SUBMITTED'}</span>
-                            {kybStatus?.status !== 'APPROVED' && (
+                            {kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED' && (
                                 <button onClick={() => setShowKybModal(true)} className="text-[9px] underline font-bold uppercase cursor-pointer bg-transparent border-0 text-inherit p-0">Verify</button>
                             )}
                         </div>
@@ -362,7 +357,7 @@ export default function NewListingForm({ onBack, editId }) {
                     whileTap={{ scale: 0.99 }}
                     className="bg-[var(--sidebar-active-text)] text-black font-bold text-sm px-8 py-3.5 rounded-2xl hover:opacity-90 transition-opacity font-montserrat min-w-[200px] flex items-center justify-center"
                 >
-                    {isSubmitting ? <LoadingSpinner color="black" /> : editId ? "Update Property" : "Verify & Submit"}
+                    {isSubmitting ? <LoadingSpinner color="black" /> : editId ? "Update Property" : "Save as Draft"}
                 </motion.button>
             </div>
             )}

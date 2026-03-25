@@ -13,8 +13,8 @@ import { API_URL } from "@/constants";
 
 const CATEGORY_MAP = {
     "Dubai Skyscrapers": "DUBAI_SKYSCRAPER",
-    "Land Parcels": "LAND",
-    "Commercial Real Estate": "COMMERCIAL",
+    "Land Parcels": "LAND_PARCEL",
+    "Commercial Real Estate": "COMMERCIAL_REAL_ESTATE",
     "Residential": "RESIDENTIAL"
 };
 
@@ -137,7 +137,12 @@ export default function MarketplacePage() {
                                 const imageUrl = propertyImage
                                     ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
                                     : "/assets/img_ext_0.jpeg";
-                                const fundedPercentage = Math.round(((property.totalFractions - property.availableFractions) / property.totalFractions) * 100);
+                                const rawYield = parseFloat(property.expectedYield || 0);
+                                const formattedYield = rawYield.toFixed(2).replace(/\.?0+$/, '');
+
+                                const total = property.totalFractions || 1;
+                                const available = property.availableFractions || 0;
+                                const fundedPercentage = Math.max(0, Math.min(100, Math.round(((total - available) / total) * 100)));
 
                                 return (
                                     <motion.div
@@ -191,11 +196,11 @@ export default function MarketplacePage() {
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Yield</p>
-                                                    <p className="text-base font-bold text-[var(--sidebar-active-text)]">{property.expectedYield}%</p>
+                                                    <p className="text-base font-bold text-[var(--sidebar-active-text)] truncate">{formattedYield}%</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Available</p>
-                                                    <p className="text-base font-bold text-[var(--header-text)]">{property.availableFractions?.toLocaleString()}</p>
+                                                    <p className="text-base font-bold text-[var(--header-text)] truncate">{property.availableFractions?.toLocaleString()}</p>
                                                 </div>
                                             </div>
 

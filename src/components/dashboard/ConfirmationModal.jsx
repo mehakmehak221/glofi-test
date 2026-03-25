@@ -25,7 +25,7 @@ const SmallShieldIcon = () => (
     </svg>
 );
 
-export default function ConfirmationModal({ isOpen, onClose, type = "kyc", propertyName = "", quantity = 1 }) {
+export default function ConfirmationModal({ isOpen, onClose, type = "kyc", propertyName = "", quantity = 1, status = "" }) {
     if (!isOpen) return null;
 
     const isKYC = type === "kyc";
@@ -103,6 +103,20 @@ export default function ConfirmationModal({ isOpen, onClose, type = "kyc", prope
                                     ? "Verification takes 24-48 hours. You can now proceed with your investment."
                                     : `${quantity} fraction${quantity > 1 ? "s" : ""} of ${propertyName}`}
                             </p>
+
+                            {/* Status Badge (Investment only) */}
+                            {!isKYC && status && (
+                                <div className="flex justify-center mb-6">
+                                    <span className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                                        status === 'SUCCESS' || status === 'ACTIVE' 
+                                        ? 'bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border-[var(--color-status-success-border)]' 
+                                        : 'bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]'
+                                    }`}>
+                                        <span className={`w-1.5 h-1.5 rounded-full ${status === 'SUCCESS' || status === 'ACTIVE' ? 'bg-[var(--color-status-success)]' : 'bg-[var(--color-status-warning)] animate-pulse'}`} />
+                                        {status}
+                                    </span>
+                                </div>
+                            )}
 
                             {/* Under Review Badge (KYC only) */}
                             {isKYC && (

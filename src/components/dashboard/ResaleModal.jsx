@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { CloseIcon, CheckIcon, ResaleIcon } from "@/components/VectorImages";
@@ -9,28 +9,59 @@ import { useSellInvestmentMutation } from "@/store/api/investmentApi";
 export default function ResaleModal({ isOpen, onClose, asset }) {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
-        fractionsToSell: 1,
+        fractionsToSell: 0,
         pricePerFraction: 0,
         minPurchase: 1,
         notes: "",
         agreed: false
     });
     const [sellError, setSellError] = useState(null);
+    const [successData, setSuccessData] = useState(null);
+    const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [sellInvestment, { isLoading: isSelling }] = useSellInvestmentMutation();
+
+    // Initialize form data when asset changes
+    useEffect(() => {
+        if (asset && isOpen) {
+            const numericValue = asset.value?.includes("K") 
+                ? parseFloat(asset.value.replace(/[^0-9.]/g, "")) * 1000 
+                : parseFloat(asset.value.replace(/[^0-9.]/g, ""));
+            
+            const perFraction = asset.fractions > 0 ? (numericValue / asset.fractions) : 0;
+            
+            setFormData({
+                fractionsToSell: asset.fractions || 0,
+                pricePerFraction: Math.round(perFraction),
+                minPurchase: 1,
+                notes: "",
+                agreed: false
+            });
+            setStep(1);
+            setSellError(null);
+            setSuccessData(null);
+        }
+    }, [asset, isOpen]);
 
     if (!isOpen || !asset) return null;
 
-    const nextStep = () => setStep(s => Math.min(s + 1, 4));
+    const showToast = (message, type = "success") => {
+        setToast({ show: true, message, type });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+    };
+
+    const nextStep = () => setStep(s => Math.min(s + 1, 5));
     const prevStep = () => setStep(s => Math.max(s - 1, 1));
 
-    const totalOwned = asset.fractions || 100;
-    const totalValue = asset.value ? parseFloat(asset.value.replace(/[^0-9.]/g, '')) * 1000 : 0;
-    const marketValuePerFraction = totalOwned > 0 ? (totalValue / totalOwned).toLocaleString() : "0";
+    const totalOwned = asset.fractions || 0;
+    const totalValueNumeric = asset.value?.includes("K") 
+        ? parseFloat(asset.value.replace(/[^0-9.]/g, "")) * 1000 
+        : parseFloat(asset.value.replace(/[^0-9.]/g, ""));
+    const marketValuePerFraction = totalOwned > 0 ? (totalValueNumeric / totalOwned) : 0;
 
     const handleSubmit = async () => {
         setSellError(null);
         try {
-            await sellInvestment({
+            const result = await sellInvestment({
                 id: asset.id,
                 fractions: Number(formData.fractionsToSell),
                 askPrice: Number(formData.pricePerFraction),
@@ -39,15 +70,19 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                 notes: formData.notes,
                 termsAgreed: formData.agreed,
             }).unwrap();
-            onClose();
+            
+            setSuccessData(result);
+            showToast(result.message || "Fractions submitted for resale successfully!");
+            setStep(5);
         } catch (err) {
             setSellError(err?.data?.message || "Failed to create listing. Please try again.");
+            showToast(err?.data?.message || "Failed to create listing.", "error");
         }
     };
 
     return (
         <AnimatePresence>
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -56,32 +91,59 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                     className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm"
                 />
                 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative w-full max-w-lg bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] overflow-hidden shadow-lg max-h-[90vh] flex flex-col transition-colors duration-300"
-                    >
+                {/* Toast Notification */}
+                <AnimatePresence>
+                    {toast.show && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -50 }}
+                            className={`fixed top-4 left-1/2 -translate-x-1/2 z-[70] px-6 py-3 rounded-full shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${
+                                toast.type === "success" 
+                                    ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success)]/20" 
+                                    : "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border border-[var(--color-status-error)]/20"
+                            }`}
+                            style={{ backdropFilter: "blur(8px)" }}
+                        >
+                            {toast.type === "success" ? (
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                            ) : (
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            )}
+                            {toast.message}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+                
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    className="relative w-full max-w-lg bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] overflow-hidden shadow-lg max-h-[90vh] flex flex-col transition-colors duration-300"
+                >
                     <div className="p-4 sm:p-6 border-b border-[var(--sidebar-border)] flex-shrink-0">
                         <div className="flex items-center justify-between mb-2">
-                            <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)] font-Montserrat">List Property for Resale</h2>
+                            <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)] font-Montserrat">
+                                {step === 5 ? "Submission Successful" : "List Property for Resale"}
+                            </h2>
                             <button onClick={onClose} className="p-2 hover:bg-[var(--sidebar-active-bg)] rounded-full transition-colors border-0 bg-[var(--background)] cursor-pointer group">
                                 <CloseIcon className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--header-text)]" />
                             </button>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <p className="text-[10px] sm:text-xs text-[var(--color-text-muted)]">Step {step} of 4</p>
-                            <div className="flex-1 h-1 bg-[var(--background)] rounded-full overflow-hidden">
-                                <motion.div 
-                                    className="h-full bg-[var(--sidebar-active-text)]"
-                                    animate={{ width: `${(step / 4) * 100}%` }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                />
+                        {step < 5 && (
+                            <div className="flex items-center gap-2">
+                                <p className="text-[10px] sm:text-xs text-[var(--color-text-muted)]">Step {step} of 4</p>
+                                <div className="flex-1 h-1 bg-[var(--background)] rounded-full overflow-hidden">
+                                    <motion.div 
+                                        className="h-full bg-[var(--sidebar-active-text)]"
+                                        animate={{ width: `${(step / 4) * 100}%` }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
-                  
                     <div className="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
                         <AnimatePresence mode="wait">
                             {step === 1 && (
@@ -118,17 +180,23 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                                     setFormData={setFormData} 
                                 />
                             )}
+                            {step === 5 && (
+                                <StepFive 
+                                    key="step5" 
+                                    successData={successData} 
+                                />
+                            )}
                         </AnimatePresence>
                     </div>
 
+                    {sellError && step < 5 && (
+                        <div className="px-4 sm:px-6 pb-2">
+                            <p className="text-xs text-red-500">{sellError}</p>
+                        </div>
+                    )}
                     
-                        {sellError && (
-                            <div className="px-4 sm:px-6 pb-2">
-                                <p className="text-xs text-red-500">{sellError}</p>
-                            </div>
-                        )}
-                        <div className="p-4 sm:p-6 border-t border-[var(--sidebar-border)] flex flex-col sm:flex-row gap-3 flex-shrink-0 transition-colors duration-300">
-                        {step > 1 && (
+                    <div className="p-4 sm:p-6 border-t border-[var(--sidebar-border)] flex flex-col sm:flex-row gap-3 flex-shrink-0 transition-colors duration-300">
+                        {step > 1 && step < 5 && (
                             <button 
                                 onClick={prevStep}
                                 className="w-full sm:flex-1 py-3 rounded-lg bg-[var(--background)] text-[var(--header-text)] font-semibold text-sm hover:bg-[var(--sidebar-active-bg)] transition-colors border-0 cursor-pointer"
@@ -138,14 +206,14 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                         )}
                         <button 
                             disabled={(step === 4 && !formData.agreed) || isSelling}
-                            onClick={step === 4 ? handleSubmit : nextStep}
+                            onClick={step === 5 ? onClose : step === 4 ? handleSubmit : nextStep}
                             className={`w-full sm:flex-1 py-3 rounded-lg font-semibold text-sm transition-all border-0 cursor-pointer ${
-                                (step === 4 && !formData.agreed) || isSelling
+                                ((step === 4 && !formData.agreed) || isSelling) && step !== 5
                                     ? "bg-[var(--background)] text-[var(--color-text-muted)] cursor-not-allowed" 
                                     : "bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] hover:shadow-[0_0_20px_rgba(var(--color-primary-300-rgb),0.3)] hover:opacity-90"
                             }`}
                         >
-                            {isSelling ? "Submitting..." : step === 4 ? "List on Marketplace" : "Continue"}
+                            {isSelling ? "Submitting..." : step === 5 ? "Return to Portfolio" : step === 4 ? "List on Marketplace" : "Continue"}
                         </button>
                     </div>
                 </motion.div>
@@ -168,7 +236,7 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
                 </div>
                 <div className="flex-1">
                     <h3 className="text-base font-bold text-[var(--header-text)] mb-1">{asset.name}</h3>
-                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Downtown Dubai, UAE</p>
+                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-2">{asset.location}</p>
                     <div className="flex gap-4">
                         <div>
                             <p className="text-[9px] text-[var(--color-text-muted)] uppercase mb-0.5">Your Fractions</p>
@@ -190,7 +258,7 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
                         <input 
                             type="number"
                             value={formData.fractionsToSell}
-                            onChange={(e) => setFormData({...formData, fractionsToSell: e.target.value})}
+                            onChange={(e) => setFormData({...formData, fractionsToSell: Number(e.target.value)})}
                             className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-lg px-4 py-3 text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50 transition-colors"
                         />
                     </div>
@@ -222,6 +290,8 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
 }
 
 function StepTwo({ asset, formData, setFormData, marketValue }) {
+    const marketValueNum = typeof marketValue === 'number' ? marketValue : parseFloat(marketValue.replace(/[^0-9.]/g, ''));
+
     return (
         <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -237,7 +307,7 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
             <div className="space-y-6">
                 <div className="bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 rounded-2xl p-6 shadow-inner">
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-black mb-2">Current Market Value / Fraction</p>
-                    <p className="text-3xl font-black text-[var(--sidebar-active-text)] font-Montserrat">$28,760</p>
+                    <p className="text-3xl font-black text-[var(--sidebar-active-text)] font-Montserrat">$ {Math.round(marketValueNum).toLocaleString()}</p>
                 </div>
 
                 <div className="space-y-3">
@@ -247,35 +317,41 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
                         <input 
                             type="number"
                             value={formData.pricePerFraction}
-                            onChange={(e) => setFormData({...formData, pricePerFraction: e.target.value})}
+                            onChange={(e) => setFormData({...formData, pricePerFraction: Number(e.target.value)})}
                             className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl pl-12 pr-6 py-5 text-[var(--header-text)] font-black text-xl focus:outline-none focus:border-[var(--sidebar-active-text)]/40 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 transition-all shadow-md"
                         />
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {["-5% (Quick Sale)", "Market Value", "+5% (Premium)"].map((label, idx) => (
-                        <button 
-                            key={label}
-                            onClick={() => {
-                                if (label === "Market Value") setFormData({...formData, pricePerFraction: 28760});
-                            }}
-                            className={`py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer border ${
-                                label === "Market Value" 
-                                    ? "bg-[var(--badge-bg)] border-[var(--sidebar-active-text)]/30 text-[var(--sidebar-active-text)] shadow-sm" 
-                                    : "bg-[var(--background)] border-[var(--sidebar-border)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:shadow-md"
-                            }`}
-                        >
-                            {label}
-                        </button>
-                    ))}
+                    {["-5% (Quick Sale)", "Market Value", "+5% (Premium)"].map((label) => {
+                        const factor = label === "-5% (Quick Sale)" ? 0.95 : label === "+5% (Premium)" ? 1.05 : 1.0;
+                        const targetPrice = Math.round(marketValueNum * factor);
+                        const isSelected = Math.round(formData.pricePerFraction) === targetPrice;
+                        
+                        return (
+                            <button 
+                                key={label}
+                                onClick={() => {
+                                    setFormData({...formData, pricePerFraction: targetPrice});
+                                }}
+                                className={`py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer border ${
+                                    isSelected 
+                                        ? "bg-[var(--badge-bg)] border-[var(--sidebar-active-text)]/30 text-[var(--sidebar-active-text)] shadow-sm" 
+                                        : "bg-[var(--background)] border border-[var(--sidebar-border)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:shadow-md"
+                                }`}
+                            >
+                                {label}
+                            </button>
+                        );
+                    })}
                 </div>
 
                 <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-[2rem] p-8 shadow-inner relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--sidebar-active-text)]/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-[var(--sidebar-active-text)]/10 transition-colors" />
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-black mb-3">Total Listing Value</p>
                     <p className="text-[36px] font-black text-[var(--header-text)] leading-none tracking-tight mb-2">$ {(formData.fractionsToSell * formData.pricePerFraction).toLocaleString()}</p>
-                    <p className="text-[11px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-widest">{formData.fractionsToSell} Assets × ${parseFloat(formData.pricePerFraction).toLocaleString()}</p>
+                    <p className="text-[11px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-widest">{formData.fractionsToSell} Assets × $ {parseFloat(formData.pricePerFraction).toLocaleString()}</p>
                 </div>
             </div>
         </motion.div>
@@ -308,7 +384,7 @@ function StepThree({ formData, setFormData, totalPrice }) {
                         <input 
                             type="number"
                             value={formData.minPurchase}
-                            onChange={(e) => setFormData({...formData, minPurchase: e.target.value})}
+                            onChange={(e) => setFormData({...formData, minPurchase: Number(e.target.value)})}
                             className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-lg px-4 py-3 sm:py-4 text-[var(--header-text)] font-medium focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors"
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] text-sm">fractions</div>
@@ -397,6 +473,58 @@ function StepFour({ asset, formData, setFormData }) {
                 </label>
             </div>
 
+        </motion.div>
+    );
+}
+
+function StepFive({ successData }) {
+    if (!successData) return null;
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        >
+            <div className="w-20 h-20 rounded-full bg-[var(--color-status-success-bg)] border border-[var(--color-status-success)]/20 flex items-center justify-center mb-6 shadow-glow-success">
+                <svg className="w-10 h-10 text-[var(--color-status-success)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <motion.path 
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={3} 
+                        d="M5 13l4 4L19 7" 
+                    />
+                </svg>
+            </div>
+            
+            <h3 className="text-xl font-black text-[var(--header-text)] uppercase tracking-tight mb-2">Listing Submitted!</h3>
+            <p className="text-sm text-[var(--color-text-muted)] max-w-[300px] leading-relaxed mb-8">
+                {successData.message || "Your fractions have been successfully submitted for resale."}
+            </p>
+            
+            <div className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-6 space-y-4">
+                <div className="flex justify-between items-center border-b border-[var(--sidebar-border)] pb-3">
+                    <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Listing Status</span>
+                    <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border border-[var(--color-status-warning)]/20">
+                        {successData.status?.replace('_', ' ') || "PENDING APPROVAL"}
+                    </span>
+                </div>
+                {successData.sellListingId && (
+                    <div className="flex justify-between items-center">
+                        <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Reference ID</span>
+                        <span className="text-[10px] font-mono text-[var(--header-text)]">
+                            #{successData.sellListingId.slice(0, 8)}...
+                        </span>
+                    </div>
+                )}
+            </div>
+            
+            <p className="mt-8 text-[10px] text-[var(--color-text-muted)] italic">
+                Our team will review your listing shortly. You'll be notified once it's live.
+            </p>
         </motion.div>
     );
 }

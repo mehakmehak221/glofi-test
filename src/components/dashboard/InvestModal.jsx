@@ -15,7 +15,7 @@ const modalVariants = {
     exit: { opacity: 0, scale: 0.95, y: 20 },
 };
 
-export default function InvestModal({ isOpen, onClose, property, onVerifyPay }) {
+export default function InvestModal({ isOpen, onClose, property, onVerifyPay, isLoading = false }) {
     const [quantity, setQuantity] = useState(1);
 
     const { data: kycData } = useGetKycStatusQuery();
@@ -29,7 +29,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay }) 
     const formatCurrency = (val) =>
         "$" + (Number(val) || 0).toLocaleString("en-US", { minimumFractionDigits: 0 });
 
-    const isKycApproved = kycData?.status === "APPROVED";
+    const isKycApproved = kycData?.status === "APPROVED" || kycData?.status === "VERIFIED";
 
     return (
         <AnimatePresence>
@@ -139,12 +139,20 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay }) 
 
                         
                         <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => onVerifyPay(quantity, total)}
-                            className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)]"
+                            whileHover={!isLoading ? { scale: 1.02 } : {}}
+                            whileTap={!isLoading ? { scale: 0.98 } : {}}
+                            onClick={() => !isLoading && onVerifyPay(quantity, total)}
+                            disabled={isLoading}
+                            className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Verify & Pay
+                            {isLoading ? (
+                                <div className="flex items-center justify-center gap-2">
+                                    <div className="w-4 h-4 border-2 border-current/20 border-t-current rounded-full animate-spin" />
+                                    Processing...
+                                </div>
+                            ) : (
+                                "Verify & Pay"
+                            )}
                         </motion.button>
                     </motion.div>
                 </motion.div>

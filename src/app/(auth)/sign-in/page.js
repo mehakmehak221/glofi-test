@@ -23,12 +23,16 @@ export default function SignInPage() {
         e.preventDefault();
         setErrorMsg("");
         try {
-            console.log('Attempting login with:', { email, role: userType.toUpperCase() });
-            const result = await login({
-                email,
+            const trimmedEmail = email.trim();
+            const payload = {
+                email: trimmedEmail,
                 password,
                 role: userType.toUpperCase(),
-            }).unwrap();
+            };
+
+            console.log('Login Request Payload:', JSON.stringify(payload, null, 2));
+
+            const result = await login(payload).unwrap();
 
             console.log('Login Result:', result);
             const token = result.accessToken || result.token || result.data?.accessToken || result.data?.token;
@@ -36,30 +40,34 @@ export default function SignInPage() {
             if (token) {
                 setCookie("access_token", token);
                 localStorage.setItem("access_token", token);
-                console.log('Token stored in cookie and localStorage:', token.substring(0, 10) + "...");
-            } else {
-                console.warn('No token found in login response keys:', Object.keys(result));
             }
 
             localStorage.setItem("userType", result.role || result.user?.role || userType.toUpperCase());
             localStorage.setItem("isLoggedIn", "true");
-
             setCookie("isLoggedIn", "true");
-
 
             router.push("/dashboard");
         } catch (err) {
-            console.error("Failed to login detailed error:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
-            console.error("Failed to login error object:", err);
-            console.error("Failed to login error structure keys:", Object.keys(err));
-
             const status = err?.status;
-            const message = err?.data?.message || err?.message;
+            const errorBody = err?.data;
+            const message = errorBody?.message || errorBody?.error || err?.message;
+
+            console.error("Login Error Details:", JSON.stringify({
+                status: status || 'Unknown Status',
+                data: errorBody || 'No Data',
+                message: message || 'No Message'
+            }, null, 2));
 
             if (status === 401) {
-                setErrorMsg(message || "Invalid credentials. Please check your email and password.");
+                setErrorMsg("Incorrect email or password. Please try again.");
+            } else if (status === 403) {
+                setErrorMsg("Access denied. Please check your account type (Investor/Partner).");
             } else if (status === 400) {
-                setErrorMsg(message || "Invalid request. Please check your input.");
+                setErrorMsg(message || "Invalid login request. Please check your credentials.");
+            } else if (status === 404) {
+                setErrorMsg("Account not found. Please check your email or sign up.");
+            } else if (status === 'FETCH_ERROR') {
+                setErrorMsg("Connecting to server failed. Please check your internet connection.");
             } else {
                 setErrorMsg(message || "An unexpected error occurred. Please try again later.");
             }

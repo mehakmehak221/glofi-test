@@ -49,9 +49,15 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
             </div>
 
             <div className="flex-1 w-full">
-                <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
-                    <div>
-                        <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
+                <div className="mb-4 flex flex-col md:flex-row md:items-start justify-between gap-4">
+                    <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-1 flex-wrap">
+                            <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
+                            <span className="flex items-center gap-1.5 text-[9px] font-bold tracking-[0.1em] text-[var(--sidebar-active-text)] font-montserrat uppercase bg-[var(--sidebar-active-bg)] rounded-full px-2.5 py-1 whitespace-nowrap">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--sidebar-active-text)] animate-pulse" />
+                                {property.status}
+                            </span>
+                        </div>
                         <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1 flex items-center gap-1">
                             <MapPinIcon className="w-3 h-3" />
                             {property.location}
@@ -59,7 +65,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                     </div>
 
                     {isDraft && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-shrink-0">
                             <button
                                 onClick={() => onSubmitForReview(property.id)}
                                 className="px-3 py-1.5 rounded-lg bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] text-[10px] font-bold uppercase transition-all hover:bg-[var(--color-primary-300)]/20"
@@ -109,13 +115,6 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                     </div>
                 </div >
             </div >
-
-            <div className="absolute top-4 right-4 lg:top-5 lg:right-6">
-                <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] text-[var(--sidebar-active-text)] font-montserrat uppercase bg-[var(--sidebar-active-bg)] rounded-full px-2.5 py-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--sidebar-active-text)] animate-pulse" />
-                    {property.status}
-                </span>
-            </div>
         </motion.div >
     );
 }

@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }) {
 
                 <main className="flex-1 overflow-y-auto bg-[var(--background)]">
                     <AnimatePresence>
-                        {kycData && kycData.status !== "APPROVED" && (
+                        {kycData && kycData.status !== "APPROVED" && kycData.status !== "VERIFIED" && (
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -68,7 +68,7 @@ export default function DashboardLayout({ children }) {
                             </motion.div>
                         )}
 
-                        {kybData && kybData.status !== "APPROVED" && (
+                        {kybData && kybData.status !== "APPROVED" && kybData.status !== "VERIFIED" && (
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}

@@ -3,6 +3,8 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetProfileQuery } from "@/store/api/authApi";
+import { useGetMyCertificatesQuery } from "@/store/api/certificatesApi";
+import { API_URL } from "@/constants";
 
 const TABS = ["Profile", "KYC", "Wallet", "Certificates", "Referrals"];
 
@@ -16,14 +18,18 @@ export default function AccountPage() {
     const [activeTab, setActiveTab] = useState("Profile");
     const [copied, setCopied] = useState(false);
 
-    const { data: profileData, isLoading } = useGetProfileQuery();
+    const { data: profileData, isLoading: profileLoading } = useGetProfileQuery();
+    const { data: certsResponse, isLoading: certsLoading } = useGetMyCertificatesQuery();
+
+    const isLoading = profileLoading || (activeTab === "Certificates" && certsLoading);
+    const certificates = certsResponse?.data || [];
 
     const PROFILE_FIELDS = useMemo(() => {
         if (!profileData) return [
             { label: "Full Name", value: "Loading...", type: "text" },
             { label: "Email", value: "Loading...", type: "email" },
-            { label: "Phone", value: "Loading...", type: "tel" },
-            { label: "Country", value: "Loading...", type: "text" },
+            // { label: "Phone", value: "Loading...", type: "tel" },
+            // { label: "Country", value: "Loading...", type: "text" },
         ];
 
         const profile = profileData.partnerProfile || profileData.investorProfile || {};
@@ -31,8 +37,8 @@ export default function AccountPage() {
         return [
             { label: "Full Name", value: profile.fullName || profileData.fullName || profileData.name || "", type: "text" },
             { label: "Email", value: profileData.email || "", type: "email" },
-            { label: "Phone", value: profileData.phoneNumber || profileData.phone || profile.phone || "", type: "tel" },
-            { label: "Country", value: profile.country || profile.nationality || profileData.country || profileData.nationality || "", type: "text" },
+            // { label: "Phone", value: profileData.phoneNumber || profileData.phone || profile.phone || "", type: "tel" },
+            // { label: "Country", value: profile.country || profile.nationality || profileData.country || profileData.nationality || "", type: "text" },
         ];
     }, [profileData]);
 
@@ -106,13 +112,13 @@ export default function AccountPage() {
                                             </div>
                                         ))}
                                     </div>
-                                    <motion.button
+                                    {/* <motion.button
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[var(--color-primary-300)] text-black font-semibold text-[11px] sm:text-[13px] tracking-wide cursor-pointer border-0 shadow-[var(--shadow-glow-primary)]"
                                     >
                                         Save Changes
-                                    </motion.button>
+                                    </motion.button> */}
                                 </>
                             )}
                         </div>
@@ -207,57 +213,69 @@ export default function AccountPage() {
 
                     {activeTab === "Certificates" && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 xl:max-w-6xl">
-
-                            {[
-                                { name: "Burj Vista Tower", fractions: 25, certId: "CERT-BVT-001-2025" },
-                                { name: "Palm Jumeirah Villa Estate", fractions: 10, certId: "CERT-PJV-002-2025" },
-                                { name: "Marina Walk Residences", fractions: 15, certId: "CERT-MWR-006-2025" }
-                            ].map((cert, i) => (
-                                <div key={i} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-[20px] p-3.5 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-colors shadow-sm">
-                                    <div className="flex justify-between items-center mb-3 sm:mb-5">
-                                        <div className="flex items-center gap-1.5 sm:gap-2 text-[8px] sm:text-[10px] text-[var(--color-primary-300)] font-semibold tracking-wider uppercase">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-3 sm:h-3 text-[var(--color-primary-300)]">
-                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                            </svg>
-                                            Blockchain Verified
-                                        </div>
-                                        <span className="text-[7px] sm:text-[9px] text-[var(--color-text-muted)] font-mono tracking-wider">{cert.certId}</span>
-                                    </div>
-
-                                    <div className="border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-3 sm:mb-5 bg-[var(--background)]/50">
-                                        <div className="text-center">
-                                            <p className="text-[8px] sm:text-[9px] text-[var(--color-text-muted)] uppercase tracking-[1.5px] sm:tracking-[2px] mb-1.5 sm:mb-2 font-semibold">DIGITAL OWNERSHIP CERTIFICATE</p>
-                                            <h3 className="text-sm sm:text-lg lg:text-xl font-bold text-[var(--header-text)] mb-2 sm:mb-3">{cert.name}</h3>
-                                            <p className="font-bold text-[var(--header-text)] flex items-center justify-center gap-1.5 sm:gap-2"><span className="text-2xl sm:text-3xl">{cert.fractions}</span> <span className="text-[11px] sm:text-[13px] font-normal text-[var(--color-text-muted)]">Fractions</span></p>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-                                        <div className="flex justify-between items-center text-[11px] sm:text-[13px]">
-                                            <span className="text-[var(--color-text-muted)]">Network</span>
-                                            <span className="text-[var(--color-primary-300)] font-bold tracking-wide">BNB Chain</span>
-                                        </div>
-                                        <div className="flex justify-between items-center text-[11px] sm:text-[13px]">
-                                            <span className="text-[var(--color-text-muted)]">IPFS Hash</span>
-                                            <span className="text-[var(--header-text)] font-mono flex items-center gap-1.5 sm:gap-2">
-                                                Qm...x4Kp
-                                                <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--color-text-muted)] cursor-pointer hover:text-[var(--header-text)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 sm:gap-3 w-full">
-                                        <button className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-[var(--color-primary-300)]/10 hover:bg-[var(--color-primary-300)]/15 text-[var(--color-primary-300)] text-[10px] sm:text-[11px] font-bold tracking-widest uppercase rounded-full flex justify-center items-center gap-1.5 sm:gap-2 border-0 transition-colors cursor-pointer">
-                                            <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                            PDF
-                                        </button>
-                                        <button className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-transparent hover:bg-[var(--sidebar-active-bg)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] text-[10px] sm:text-[11px] font-bold tracking-widest uppercase rounded-full flex justify-center items-center gap-1.5 sm:gap-2 border border-[var(--sidebar-border)] transition-all cursor-pointer">
-                                            <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                                            NFT
-                                        </button>
-                                    </div>
+                            {certsLoading ? (
+                                <div className="col-span-1 md:col-span-2 flex justify-center py-12">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary-300)]"></div>
                                 </div>
-                            ))}
+                            ) : certificates.length > 0 ? (
+                                certificates.map((cert) => (
+                                    <div key={cert.id} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-[20px] p-3.5 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-colors shadow-sm">
+                                        <div className="flex justify-between items-center mb-3 sm:mb-5">
+                                            <div className="flex items-center gap-1.5 sm:gap-2 text-[8px] sm:text-[10px] text-[var(--color-primary-300)] font-semibold tracking-wider uppercase">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-3 sm:h-3 text-[var(--color-primary-300)]">
+                                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                                </svg>
+                                                Blockchain Verified
+                                            </div>
+                                            <span className="text-[7px] sm:text-[9px] text-[var(--color-text-muted)] font-mono tracking-wider">{cert.certificateNo || cert.id}</span>
+                                        </div>
+
+                                        <div className="border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-3 sm:mb-5 bg-[var(--background)]/50">
+                                            <div className="text-center">
+                                                <p className="text-[8px] sm:text-[9px] text-[var(--color-text-muted)] uppercase tracking-[1.5px] sm:tracking-[2px] mb-1.5 sm:mb-2 font-semibold">DIGITAL OWNERSHIP CERTIFICATE</p>
+                                                <h3 className="text-sm sm:text-lg lg:text-xl font-bold text-[var(--header-text)] mb-2 sm:mb-3">{cert.assetTitle || "Property Fraction"}</h3>
+                                                <p className="font-bold text-[var(--header-text)] flex items-center justify-center gap-1.5 sm:gap-2"><span className="text-2xl sm:text-3xl">{cert.fractionsOwned}</span> <span className="text-[11px] sm:text-[13px] font-normal text-[var(--color-text-muted)]">Fractions</span></p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                                            <div className="flex justify-between items-center text-[11px] sm:text-[13px]">
+                                                <span className="text-[var(--color-text-muted)]">Network</span>
+                                                <span className="text-[var(--color-primary-300)] font-bold tracking-wide">BNB Chain</span>
+                                            </div>
+                                            {cert.issuedAt && (
+                                                <div className="flex justify-between items-center text-[11px] sm:text-[13px]">
+                                                    <span className="text-[var(--color-text-muted)]">Issued At</span>
+                                                    <span className="text-[var(--header-text)] font-mono">
+                                                        {new Date(cert.issuedAt).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex items-center gap-2 sm:gap-3 w-full">
+                                            <button
+                                                onClick={() => cert.pdfUrl && window.open(cert.pdfUrl.startsWith('http') ? cert.pdfUrl : `${API_URL}/${cert.pdfUrl.replace(/^\//, '')}`, '_blank')}
+                                                disabled={!cert.pdfUrl}
+                                                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-[var(--color-primary-300)]/10 hover:bg-[var(--color-primary-300)]/15 text-[var(--color-primary-300)] text-[10px] sm:text-[11px] font-bold tracking-widest uppercase rounded-full flex justify-center items-center gap-1.5 sm:gap-2 border-0 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                                PDF
+                                            </button>
+                                            <button className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-transparent hover:bg-[var(--sidebar-active-bg)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] text-[10px] sm:text-[11px] font-bold tracking-widest uppercase rounded-full flex justify-center items-center gap-1.5 sm:gap-2 border border-[var(--sidebar-border)] transition-all cursor-pointer">
+                                                <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                                NFT
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="col-span-1 md:col-span-2 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+                                    <svg className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                    <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No certificates found</h3>
+                                    <p className="text-sm text-[var(--color-text-muted)]">Your digital ownership certificates will appear here once issued.</p>
+                                </div>
+                            )}
                         </div>
                     )}
 

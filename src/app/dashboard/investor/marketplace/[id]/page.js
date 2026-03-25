@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MapPinIcon } from "@/components/VectorImages";
 import { PROPERTIES } from "@/data/propertyData";
 import InvestModal from "@/components/dashboard/InvestModal";
@@ -12,7 +12,7 @@ import KYCModal from "@/components/dashboard/KYCModal";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 
 import { useGetAssetByIdQuery } from "@/store/api/assetApi";
-import { useCreateInvestmentMutation } from "@/store/api/investmentApi";
+import { useCreateInvestmentMutation, useGetInvestmentsQuery } from "@/store/api/investmentApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
 
 import { API_URL } from "@/constants";
@@ -31,13 +31,24 @@ export default function PropertyDetailPage() {
     const router = useRouter();
     const { data: property, isLoading, isError } = useGetAssetByIdQuery(params.id);
     const { data: kycData } = useGetKycStatusQuery();
+    const { data: investmentsData, refetch: refetchInvestments } = useGetInvestmentsQuery();
     const [createInvestment, { isLoading: isInvesting }] = useCreateInvestmentMutation();
 
     const [investOpen, setInvestOpen] = useState(false);
     const [kycOpen, setKycOpen] = useState(false);
     const [confirmType, setConfirmType] = useState(null);
     const [investQuantity, setInvestQuantity] = useState(1);
+    const [investStatus, setInvestStatus] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+
+    const showToast = (message, type = "success") => {
+        setToast({ show: true, message, type });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+    };
+
+    const investmentsArray = Array.isArray(investmentsData) ? investmentsData : (investmentsData?.data || []);
+    const userInvestment = investmentsArray.find(inv => (inv.asset?.id === params.id) || (inv.assetId === params.id));
 
     if (isLoading) {
         return (
@@ -58,7 +69,7 @@ export default function PropertyDetailPage() {
 
     const propertyImage = property.images?.[0];
     const imageUrl = propertyImage
-        ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
+        ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\/+/, '')}`)
         : "/assets/img_ext_0.jpeg";
 
     const fundedPercentage = Math.round(((property.totalFractions - property.availableFractions) / property.totalFractions) * 100);
@@ -76,11 +87,13 @@ export default function PropertyDetailPage() {
         setInvestOpen(false);
 
         // Check KYC status
-        if (kycData?.status !== "APPROVED") {
+        const isApproved = kycData?.status === "APPROVED" || kycData?.status === "VERIFIED";
+
+        if (!isApproved) {
             if (kycData?.status !== "UNDER_REVIEW") {
                 setKycOpen(true);
             } else {
-                alert("Your KYC is currently under review. Please wait for approval before investing.");
+                showToast("Your KYC is currently under review. Please wait for approval before investing.", "warning");
             }
             return;
         }
@@ -96,10 +109,13 @@ export default function PropertyDetailPage() {
             }).unwrap();
 
             console.log("Investment successful:", result);
+            showToast("Investment successful! You can view it in your portfolio.");
+            refetchInvestments();
+            setInvestStatus(result?.data?.status || result?.status || "PENDING");
             setConfirmType("confirmed");
         } catch (err) {
             console.error("Investment failed:", err);
-            alert("Investment failed. Please try again.");
+            showToast(err?.data?.message || "Investment failed. Please try again.", "error");
         } finally {
             setIsSubmitting(false);
         }
@@ -112,15 +128,41 @@ export default function PropertyDetailPage() {
 
     const handleKycConfirmClose = () => {
         setConfirmType(null);
-        setConfirmType("confirmed");
     };
 
     const handleFinalClose = () => {
         setConfirmType(null);
+        setInvestStatus("");
     };
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen">
+            <AnimatePresence>
+                {toast.show && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -50 }}
+                        className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-full shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
+                            ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success)]/20"
+                            : toast.type === "warning"
+                                ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border border-[var(--color-status-warning)]/20"
+                                : "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border border-[var(--color-status-error)]/20"
+                            }`}
+                        style={{ backdropFilter: "blur(8px)" }}
+                    >
+                        {toast.type === "success" ? (
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                        ) : toast.type === "warning" ? (
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                        ) : (
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        )}
+                        {toast.message}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -188,28 +230,27 @@ export default function PropertyDetailPage() {
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                         <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm"
+                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                         >
-                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Valuation</p>
-                            <p className="text-base sm:text-lg font-bold text-[var(--header-text)]">{formatValuation(property.valuation)}</p>
+                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Valuation</p>
+                            <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{formatValuation(property.valuation)}</p>
                         </div >
                         <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm"
+                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                         >
-                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Yield</p>
-                            <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)]">{property.expectedYield}%</p>
+                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Yield</p>
+                            <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)] truncate">{Number(property.expectedYield).toFixed(2)}%</p>
                         </div >
                         <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm"
+                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                         >
-                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Risk Level</p>
-                            <p className={`text-base sm:text-lg font-bold ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)]' :
+                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Risk Level</p>
+                            <p className={`text-base sm:text-lg font-bold truncate ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)]' :
                                 property.riskRating === 'HIGH' ? 'text-[var(--color-status-error)]' :
                                     'text-[var(--color-status-warning)]'
                                 }`}>{property.riskRating}</p>
                         </div >
                         <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-sm"
                         >
                             <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Fractions</p>
                             <p className="text-base sm:text-lg font-bold text-[var(--header-text)]">{property.totalFractions?.toLocaleString()}</p>
@@ -272,14 +313,32 @@ export default function PropertyDetailPage() {
                         </p>
 
                         <div className="space-y-3 mb-6">
-                            <motion.button
-                                onClick={handleInvestNow}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)]"
-                            >
-                                Invest Now
-                            </motion.button>
+                            {userInvestment ? (
+                                <div className="p-4 rounded-xl border border-[var(--sidebar-active-text)]/30 bg-[var(--sidebar-active-bg)] flex flex-col items-center justify-center gap-2">
+                                    <div className="w-10 h-10 rounded-full bg-[var(--sidebar-active-text)]/20 flex items-center justify-center mb-1">
+                                        <svg className="w-5 h-5 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    <h4 className="font-bold text-[var(--sidebar-active-text)] text-sm uppercase tracking-wider">Investment {userInvestment.status || "Processing"}</h4>
+                                    <p className="text-xs text-[var(--color-text-muted)] text-center max-w-[200px] leading-relaxed">
+                                        You have successfully invested in <span className="font-bold text-[var(--sidebar-text)]">{userInvestment.fractions} fraction{userInvestment.fractions > 1 ? "s" : ""}</span> of this property.
+                                    </p>
+                                    <Link href="/dashboard/investor/portfolio" className="mt-2 text-xs font-bold text-[var(--header-text)] underline hover:text-[var(--sidebar-active-text)] transition-colors">
+                                        View in Portfolio
+                                    </Link>
+                                </div>
+                            ) : (
+                                <motion.button
+                                    onClick={handleInvestNow}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    disabled={isSubmitting || isInvesting}
+                                    className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {isSubmitting || isInvesting ? "Processing..." : "Invest Now"}
+                                </motion.button>
+                            )}
                         </div>
                     </div>
                 </motion.div>
@@ -291,6 +350,7 @@ export default function PropertyDetailPage() {
                 onClose={() => setInvestOpen(false)}
                 property={property}
                 onVerifyPay={handleVerifyPay}
+                isLoading={isSubmitting || isInvesting}
             />
             <KYCModal
                 isOpen={kycOpen}
@@ -314,6 +374,7 @@ export default function PropertyDetailPage() {
                         type="confirmed"
                         propertyName={property.title}
                         quantity={investQuantity}
+                        status={investStatus}
                     />
                 )
             }
