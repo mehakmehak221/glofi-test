@@ -25,6 +25,6 @@ export const baseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['User', 'Post', 'Kyb', 'Kyc', 'Investment', 'SecondaryMarketplace', 'MySecondaryListings', 'PendingApprovals', 'Certificates'],
+  tagTypes: ['User', 'Post', 'Kyb', 'Kyc', 'Investment', 'SecondaryMarketplace', 'MySecondaryListings', 'PendingApprovals', 'Certificates', 'Commission', 'PartnerFinance', 'Payout', 'Asset'],
   endpoints: () => ({}),
 });

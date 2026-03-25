@@ -72,12 +72,12 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                             >
                                 Submit
                             </button>
-                            <button
+                            {/* <button
                                 onClick={() => onEdit(property.id)}
                                 className="px-3 py-1.5 rounded-lg bg-[var(--color-bg-surface-subtle)] text-[var(--color-text-muted)] text-[10px] font-bold uppercase transition-all hover:text-white"
                             >
                                 Edit
-                            </button>
+                            </button> */}
                             <button
                                 onClick={() => onDelete(property.id)}
                                 className="px-3 py-1.5 rounded-lg bg-red-500/5 text-red-500/70 text-[10px] font-bold uppercase transition-all hover:bg-red-500/10 hover:text-red-500"

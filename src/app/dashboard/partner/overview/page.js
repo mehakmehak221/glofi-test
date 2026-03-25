@@ -13,6 +13,7 @@ import {
 } from "@/components/VectorImages";
 import { useGetKybStatusQuery } from "@/store/api/kybApi";
 import { useGetMyListingsQuery } from "@/store/api/assetApi";
+import { useGetPartnerPortfolioQuery, useGetListingPerformanceQuery } from "@/store/api/partnerApi";
 import { API_URL } from "@/constants";
 
 
@@ -186,26 +187,44 @@ const getImageUrl = (imagePath) => {
     return `${API_URL}/${imagePath.replace(/^\//, '')}`;
 };
 
+const formatCurrency = (val) => {
+    if (val >= 1e6) return `$${(val / 1e6).toFixed(1)}M`;
+    if (val >= 1e3) return `$${(val / 1e3).toFixed(1)}K`;
+    return `$${val.toLocaleString()}`;
+};
+
 export default function PartnerOverviewPage() {
-    const { data: listingsData, isLoading: isLoadingListings, isError, error } = useGetMyListingsQuery();
+    const { data: portfolioData, isLoading: isLoadingPortfolio } = useGetPartnerPortfolioQuery();
+    const { data: performanceData, isLoading: isLoadingPerformance, isError, error } = useGetListingPerformanceQuery();
 
-    const isKycRequired = error?.status === 403 && error?.data?.message?.includes('KYC');
-    const isKybRequired = error?.status === 403 && error?.data?.message?.includes('KYB');
+    const displayListings = performanceData?.data || [];
 
-    const totalRaised = listingsData?.data?.reduce((acc, l) => {
-        const raised = (l.totalFractions - l.availableFractions) * (l.fractionPrice || 0);
-        return acc + raised;
-    }, 0) || 0;
-
-    const totalCommissions = totalRaised * 0.03; // Mock 3% commission
-
-    const formatCurrency = (val) => {
-        if (val >= 1e6) return `$${(val / 1e6).toFixed(1)}M`;
-        if (val >= 1e3) return `$${(val / 1e3).toFixed(1)}K`;
-        return `$${val.toLocaleString()}`;
-    };
-
-    const displayListings = listingsData?.data || [];
+    const stats = [
+        {
+            label: "LISTINGS",
+            value: portfolioData?.listings?.total || 0,
+            delta: `+${portfolioData?.listings?.thisMonth || 0} this month`,
+            icon: PropertyIcon,
+        },
+        {
+            label: "ACTIVE LEADS",
+            value: "0",
+            delta: "0 this week",
+            icon: LeadIcon,
+        },
+        {
+            label: "FUNDS RAISED",
+            value: formatCurrency(portfolioData?.fundsRaised?.total || 0),
+            delta: `+${formatCurrency(portfolioData?.fundsRaised?.thisMonth || 0)}`,
+            icon: FinancialIcon,
+        },
+        {
+            label: "COMMISSIONS",
+            value: formatCurrency(portfolioData?.commissions?.total || 0),
+            delta: `+${formatCurrency(portfolioData?.commissions?.thisMonth || 0)}`,
+            icon: TrendingUpIcon,
+        },
+    ];
 
     return (
         <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
@@ -223,18 +242,9 @@ export default function PartnerOverviewPage() {
 
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                {STAT_CARDS.map((card, i) => {
-                    let value = card.value;
-                    const liveListings = listingsData?.data || [];
-                    if (card.label === "LISTINGS") {
-                        value = liveListings.length;
-                    } else if (card.label === "FUNDS RAISED") {
-                        value = formatCurrency(totalRaised);
-                    } else if (card.label === "COMMISSIONS") {
-                        value = formatCurrency(totalCommissions);
-                    }
-                    return <StatCard key={card.label} {...card} value={value} index={i} />;
-                })}
+                {stats.map((card, i) => (
+                    <StatCard key={card.label} {...card} index={i} />
+                ))}
             </div>
 
             {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
@@ -294,31 +304,31 @@ export default function PartnerOverviewPage() {
             >
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat uppercase tracking-wider">Listing Performance</h2>
-                    {isLoadingListings && <div className="w-4 h-4 border border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />}
+                    {isLoadingPerformance && <div className="w-4 h-4 border border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />}
                 </div>
 
                 {isError ? (
                     <div className="py-12 flex flex-col items-center justify-center text-center px-4">
                         <p className="text-sm font-bold text-[var(--foreground)] opacity-90 mb-2 uppercase tracking-wide">
-                            {isKycRequired ? "Verification Required" : isKybRequired ? "Business Verification Required" : "Error Loading Data"}
+                            {error?.status === 403 && error?.data?.message?.includes('KYC') ? "Verification Required" : error?.status === 403 && error?.data?.message?.includes('KYB') ? "Business Verification Required" : "Error Loading Data"}
                         </p>
                         <p className="text-[11px] text-[var(--sidebar-text)] opacity-60 max-w-xs mb-4">
-                            {isKycRequired ? "You need to complete identity verification to view and manage your listings performance." : "Your account verification is pending. Real-time listing performance will appear once approved."}
+                            {error?.status === 403 && error?.data?.message?.includes('KYC') ? "You need to complete identity verification to view and manage your listings performance." : "Your account verification is pending. Real-time listing performance will appear once approved."}
                         </p>
                     </div>
-                ) : listingsData?.data?.length === 0 ? (
+                ) : displayListings.length === 0 ? (
                     <div className="py-12 flex flex-col items-center justify-center text-center px-4 border border-dashed border-[var(--sidebar-border)] rounded-xl">
                         <p className="text-sm font-bold text-[var(--foreground)] opacity-70 mb-1 uppercase tracking-wider">No active listings</p>
                         <p className="text-[11px] text-[var(--sidebar-text)] opacity-40">Your property performance metrics will appear here once you list an asset.</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
-                        {listingsData?.data?.slice(0, 6).map((l, i) => (
+                        {displayListings.slice(0, 6).map((l, i) => (
                             <ListingBar
                                 key={l.id || l.title + i}
                                 listing={{
                                     name: l.title,
-                                    pct: Math.round(((l.totalFractions - l.availableFractions) / l.totalFractions) * 100),
+                                    pct: l.fundedPercentage || 0,
                                     img: getImageUrl(l.images?.[0])
                                 }}
                                 index={i}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetPendingApprovalsQuery, useApproveInvestmentMutation, useRejectInvestmentMutation } from "@/store/api/investmentApi";
+import { useGetPartnerFinanceQuery, useGetCommissionHistoryQuery, useGetPayoutHistoryQuery } from "@/store/api/partnerApi";
 import { CheckIcon } from "@/components/VectorImages";
 
 const TABS = ["Commissions", "Payouts", "Approvals", "AI Plans"];
@@ -59,9 +60,19 @@ const PLANS = [
 
 export default function FinancePage() {
     const [activeTab, setActiveTab] = useState("Commissions");
+    
+    // Live Data Hooks
+    const { data: partnerFinance } = useGetPartnerFinanceQuery();
+    const { data: commissionHistory, isLoading: isLoadingCommissions } = useGetCommissionHistoryQuery(undefined, {
+        skip: activeTab !== "Commissions"
+    });
+    const { data: payoutHistory, isLoading: isLoadingPayouts } = useGetPayoutHistoryQuery(undefined, {
+        skip: activeTab !== "Payouts"
+    });
     const { data: pendingData, isLoading: isLoadingPending } = useGetPendingApprovalsQuery(undefined, {
         skip: activeTab !== "Approvals"
     });
+
     const [approveInvestment] = useApproveInvestmentMutation();
     const [rejectInvestment] = useRejectInvestmentMutation();
 
@@ -121,7 +132,11 @@ export default function FinancePage() {
 
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-                {STATS.map((stat, i) => (
+                {[
+                    { label: "TOTAL EARNED", value: partnerFinance?.totalEarned || 0 },
+                    { label: "PENDING PAYOUT", value: partnerFinance?.pendingPayout || 0 },
+                    { label: "THIS MONTH", value: partnerFinance?.thisMonth || 0 },
+                ].map((stat, i) => (
                     <motion.div
                         key={stat.label}
                         initial={{ opacity: 0, y: 16 }}
@@ -134,7 +149,7 @@ export default function FinancePage() {
                             {stat.label}
                         </p>
                         <p className="text-2xl font-semibold text-[var(--foreground)] opacity-90 font-montserrat tracking-tight">
-                            {stat.value}
+                            ${(stat.value || 0).toLocaleString()}
                         </p>
                     </motion.div>
                 ))}
@@ -152,57 +167,81 @@ export default function FinancePage() {
                 >
                     {activeTab === "Commissions" && (
                         <div>
-                            <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat mb-6">Commission History</h2>
-                            <div className="space-y-2">
-                                {COMMISSIONS.map((item, i) => (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: i * 0.05 }}
-                                        className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex items-center justify-between hover:shadow-sm transition-all group"
-                                    >
-                                        <div>
-                                            <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.name}</h3>
-                                            <p className="text-[11px] text-[var(--sidebar-text)] opacity-30 font-montserrat mt-1">{item.detail}</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">{item.amount}</p>
-                                            <p className={`text-[10px] font-medium font-montserrat mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
-                                                {item.status}
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                ))}
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat">Commission History</h2>
+                                {isLoadingCommissions && <div className="w-4 h-4 border-2 border-[var(--sidebar-active-text)]/20 border-t-[var(--sidebar-active-text)] rounded-full animate-spin" />}
                             </div>
+                            
+                            {!commissionHistory?.data?.length ? (
+                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-2xl">
+                                    No commissions found.
+                                </div>
+                            ) : (
+                                <div className="space-y-2">
+                                    {commissionHistory.data.map((item, i) => (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: i * 0.05 }}
+                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex items-center justify-between hover:shadow-sm transition-all group"
+                                        >
+                                            <div>
+                                                <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.asset?.title || "Commission Payment"}</h3>
+                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-30 font-montserrat mt-1">
+                                                    {item.type || 'Sale'} · {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                                </p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">${(item.amount || 0).toLocaleString()}</p>
+                                                <p className={`text-[10px] font-medium font-montserrat mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
+                                                    {item.status}
+                                                </p>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
 
                     {activeTab === "Payouts" && (
                         <div>
-                            <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat mb-6">Payout History</h2>
-                            <div className="space-y-2">
-                                {PAYOUTS.map((item, i) => (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: i * 0.05 }}
-                                        className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex items-center justify-between hover:shadow-sm transition-all group"
-                                    >
-                                        <div>
-                                            <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.name}</h3>
-                                            <p className="text-[11px] text-[var(--sidebar-text)] opacity-30 font-montserrat mt-1">{item.detail}</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">{item.amount}</p>
-                                            <p className={`text-[10px] font-medium font-montserrat mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
-                                                {item.status}
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                ))}
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat">Payout History</h2>
+                                {isLoadingPayouts && <div className="w-4 h-4 border-2 border-[var(--sidebar-active-text)]/20 border-t-[var(--sidebar-active-text)] rounded-full animate-spin" />}
                             </div>
+
+                            {!payoutHistory?.data?.length ? (
+                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-2xl">
+                                    No payouts found.
+                                </div>
+                            ) : (
+                                <div className="space-y-2">
+                                    {payoutHistory.data.map((item, i) => (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: i * 0.05 }}
+                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex items-center justify-between hover:shadow-sm transition-all group"
+                                        >
+                                            <div>
+                                                <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.method || "Bank Transfer"}</h3>
+                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-30 font-montserrat mt-1">
+                                                    {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} · {item.reference || "Completed"}
+                                                </p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">${(item.amount || 0).toLocaleString()}</p>
+                                                <p className={`text-[10px] font-medium font-montserrat mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
+                                                    {item.status}
+                                                </p>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -230,17 +269,17 @@ export default function FinancePage() {
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-3 mb-1">
                                                     <h3 className="text-[14px] font-semibold text-[var(--foreground)] opacity-80 font-montserrat">{item.asset?.title || "Unknown Asset"}</h3>
-                                                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] font-bold uppercase">{item.fractions} Frac</span>
+                                                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] font-bold uppercase">{item.fractionsOwned || item.fractions} Frac</span>
                                                 </div>
                                                 <p className="text-[11px] text-[var(--sidebar-text)] opacity-40 font-montserrat flex items-center gap-2">
-                                                    Investor: <span className="text-[var(--foreground)] opacity-60 font-medium">{item.user?.fullName || item.user?.email || "Anonymous"}</span>
+                                                    Investor: <span className="text-[var(--foreground)] opacity-60 font-medium">{item.investor?.investorProfile?.fullName || item.investor?.email || item.user?.fullName || "Anonymous"}</span>
                                                     • {new Date(item.createdAt).toLocaleDateString()}
                                                 </p>
                                             </div>
 
                                             <div className="flex items-center gap-4 text-right">
                                                 <div>
-                                                    <p className="text-[14px] font-bold text-[var(--foreground)] opacity-90 font-montserrat">${item.amount?.toLocaleString()}</p>
+                                                    <p className="text-[14px] font-bold text-[var(--foreground)] opacity-90 font-montserrat">${(item.totalPaid || item.amount || 0).toLocaleString()}</p>
                                                     <p className="text-[10px] text-[var(--sidebar-text)] opacity-30 font-montserrat uppercase tracking-wider">{item.paymentMethod}</p>
                                                 </div>
                                                 <div className="flex items-center gap-2 ml-4">
