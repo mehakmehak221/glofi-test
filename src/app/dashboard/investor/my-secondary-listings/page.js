@@ -47,7 +47,7 @@ export default function MySecondaryListingsPage() {
                         initial={{ opacity: 0, y: -50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -50 }}
-                        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
+                        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-md shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
                             ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success)]/20"
                             : "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border border-[var(--color-status-error)]/20"
                             }`}
@@ -91,10 +91,10 @@ export default function MySecondaryListingsPage() {
                                     <motion.div
                                         variants={itemVariants}
                                         key={item.id}
-                                        className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group"
+                                        className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group"
                                     >
                                         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-5 lg:gap-8">
-                                            <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-xl overflow-hidden flex-shrink-0 relative">
+                                            <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-md overflow-hidden flex-shrink-0 relative">
                                                 <Image
                                                     src={imageUrl}
                                                     alt={title}
@@ -146,7 +146,7 @@ export default function MySecondaryListingsPage() {
                                                         onClick={() => handleDelete(item.id)}
                                                         whileHover={{ scale: 1.02 }}
                                                         whileTap={{ scale: 0.98 }}
-                                                        className="flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-red-500/10 text-red-500 text-[11px] font-bold hover:bg-red-500/20 transition-all border border-red-500/20 cursor-pointer"
+                                                        className="flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-red-500/10 text-red-500 text-[11px] font-bold hover:bg-red-500/20 transition-all border border-red-500/20 cursor-pointer"
                                                     >
                                                         Delete Listing
                                                     </motion.button>
@@ -159,7 +159,7 @@ export default function MySecondaryListingsPage() {
                         ) : (
                             <motion.div
                                 variants={itemVariants}
-                                className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
+                                className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <ResaleIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
                                 <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No active listings</h3>

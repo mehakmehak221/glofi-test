@@ -42,7 +42,7 @@ export default function ConfirmationModal({ isOpen, onClose, type = "kyc", prope
                 >
                     <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="relative w-full max-w-sm rounded-[2rem] p-5 sm:p-7 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-2xl"
+                        className="bg-[var(--card-surface)] w-full max-w-sm p-6 sm:p-8 rounded-md shadow-2xl relative border border-[var(--sidebar-border)]"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -136,7 +136,7 @@ export default function ConfirmationModal({ isOpen, onClose, type = "kyc", prope
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={onClose}
-                                className={`py-4 bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)] ${isKYC ? "w-full rounded-full" : "px-14 rounded-full"
+                                className={`py-4 rounded-md bg-[#00DAAF] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-glow-primary ${isKYC ? "w-full" : "px-14"
                                     }`}
                             >
                                 {isKYC ? "Continue to Payment  →" : "Done"}

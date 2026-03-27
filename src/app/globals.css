@@ -13,6 +13,9 @@
   --color-primary-800: #005041;
   --color-primary-900: #003D31;
   --color-primary-925: #021411;
+  --color-primary-300-rgb: 0, 218, 175;
+  --color-primary-500-rgb: 0, 147, 118;
+
 
   --color-gray-0: #FFFFFF;
   --color-gray-50: #F5F5F5;
@@ -50,7 +53,8 @@
   --text-xl: 1.25rem;
 
   --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  --shadow-btn: 0 4px 14px var(--color-primary-300-alpha-40);
+  --shadow-btn: 0 4px 14px rgba(0, 218, 175, 0.4);
+
 
   --color-brand-green: #00c853;
   --color-brand-green-dark: #00a844;
@@ -96,6 +100,7 @@
   --color-border-subtle: color-mix(in srgb, white, transparent 95%);
   --shadow-glow-primary: 0 0 20px color-mix(in srgb, var(--color-primary-300), transparent 80%);
   --shadow-glow-primary-lg: 0 0 30px color-mix(in srgb, var(--color-primary-300), transparent 70%);
+  --shadow-glow-success: 0 0 20px color-mix(in srgb, var(--color-status-success), transparent 80%);
 
   /* Status Colors */
   --color-status-success: var(--color-primary-300);
@@ -115,7 +120,7 @@
 }
 
 :root {
-  --background: #0D1411;
+  --background: #030403;
   --foreground: var(--color-text-primary);
   --primary: var(--color-brand-green);
 
@@ -148,6 +153,10 @@
   --transition-fast: 0.15s ease;
   --transition-base: 0.25s ease;
   --transition-slow: 0.4s ease;
+
+  --card-surface: #0A0F0D;
+  --field-surface: #FFFFFF05;
+  --form-surface: #0D1411;
 }
 
 .light {
@@ -161,7 +170,7 @@
   --search-border: #E5E7EB;
   --search-placeholder: #1A1F1C4D;
 
-  --sidebar-bg: #FFFFFF;
+  --sidebar-bg: var(--card-surface);
   --sidebar-border: #F0F0F0;
   --sidebar-text: #6B7280;
   --sidebar-text-hover: #1A1F1C;
@@ -174,7 +183,7 @@
 
   --marketplace-hero-bg: #00000006;
   --marketplace-hero-text: #11BA96;
-  --marketplace-card-bg: #FFFFFF;
+  --marketplace-card-bg: var(--card-surface);
   --marketplace-card-border: #F0F0F0;
   --marketplace-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   --marketplace-card-progress-fill-start: #11BA96;
@@ -190,6 +199,20 @@
 
   --foreground: #1A1F1C;
   --background: #F8FBFA;
+
+  --color-text-primary: #1A1F1C;
+  --color-text-secondary: #4B5563;
+  --color-text-muted: #6B7280;
+
+  /* Component background overrides */
+  --color-bg-card: #FFFFFF;
+  --color-bg-section: #F9FAFB;
+  --color-bg-light: #F8FBFA;
+
+  /* Card & field surface colors */
+  --card-surface: #00000006;
+  --field-surface: #00000006;
+  --form-surface: #FFFFFF;
 }
 
 .dark {
@@ -225,7 +248,7 @@
   --btn-cta-text: #000000;
 
   --foreground: var(--color-text-primary);
-  --background: #0D1411;
+  --background: #030403;
 }
 
 
@@ -272,7 +295,6 @@
 
 }
 
-/* close @layer base for @utility blocks */
 
 @utility glass {
   background: var(--color-primary-300-alpha-10);

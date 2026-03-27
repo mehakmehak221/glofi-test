@@ -39,7 +39,7 @@ const UploadArea = ({ label, onUpload, value, isUploading }) => {
     return (
         <div 
             onClick={() => !isUploading && fileInputRef.current?.click()}
-            className={`flex-1 min-w-[200px] aspect-[3/2] rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] hover:shadow-md flex flex-col items-center justify-center p-4 transition-all cursor-pointer group ${
+            className={`flex-1 min-w-[200px] aspect-[3/2] rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] hover:shadow-md flex flex-col items-center justify-center p-4 transition-all cursor-pointer group ${
                 value ? 'border-[var(--sidebar-active-text)]/40 bg-[var(--sidebar-active-bg)]' : 'hover:border-[var(--sidebar-active-text)]/20'
             }`}
         >
@@ -201,7 +201,7 @@ export default function NewListingForm({ onBack, editId }) {
                 </h1>
                 <button
                     onClick={onBack}
-                    className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-lg text-sm font-medium font-montserrat transition-all"
+                    className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all"
                 >
                     Back to List
                 </button>
@@ -212,7 +212,7 @@ export default function NewListingForm({ onBack, editId }) {
                     <LoadingSpinner />
                 </div>
             ) : (
-                <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-10">
+                <div className="bg-[var(--form-surface)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 lg:p-10">
                   
                 <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-[var(--sidebar-border)] pb-2 sm:pb-4 w-full">
                     {CATEGORIES.map((cat) => (
@@ -242,7 +242,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -252,7 +252,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.location}
                             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -262,7 +262,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.valuation}
                             onChange={(e) => setFormData({ ...formData, valuation: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -272,7 +272,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.totalFractions}
                             onChange={(e) => setFormData({ ...formData, totalFractions: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-1">
@@ -282,7 +282,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.expectedYield}
                             onChange={(e) => setFormData({ ...formData, expectedYield: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat md:max-w-[calc(50%-16px)]"
+                            className="bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat md:max-w-[calc(50%-16px)]"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-2">
@@ -292,7 +292,7 @@ export default function NewListingForm({ onBack, editId }) {
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
+                            className="bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
                         />
                     </div>
                 </div>
@@ -324,7 +324,7 @@ export default function NewListingForm({ onBack, editId }) {
                     />
                 </div>
 
-                <div className="bg-[#f5a623]/5 dark:bg-[var(--color-accent-orange)]/5 border border-[#f5a623]/20 dark:border-[var(--color-accent-orange)]/10 rounded-xl p-4 mb-8 flex flex-col gap-3">
+                <div className="bg-[#f5a623]/5 dark:bg-[var(--color-accent-orange)]/5 border border-[#f5a623]/20 dark:border-[var(--color-accent-orange)]/10 rounded-md p-4 mb-8 flex flex-col gap-3">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
                             <BusinessPropertyIcon className="w-4 h-4 text-[#f5a623] dark:text-[var(--color-accent-orange)]" />
@@ -335,13 +335,13 @@ export default function NewListingForm({ onBack, editId }) {
                     </div>
                     
                     <div className="flex flex-wrap gap-3 ml-11">
-                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${kycStatus?.status === 'VERIFIED' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border ${kycStatus?.status === 'VERIFIED' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
                             <span className="text-[10px] font-bold uppercase font-montserrat">KYC: {kycStatus?.status || 'NOT SUBMITTED'}</span>
                             {kycStatus?.status !== 'VERIFIED' && (
                                 <button onClick={() => setShowKycModal(true)} className="text-[9px] underline font-bold uppercase cursor-pointer bg-transparent border-0 text-inherit p-0">Verify</button>
                             )}
                         </div>
-                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border ${kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
                             <span className="text-[10px] font-bold uppercase font-montserrat">KYB: {kybStatus?.status || 'NOT SUBMITTED'}</span>
                             {kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED' && (
                                 <button onClick={() => setShowKybModal(true)} className="text-[9px] underline font-bold uppercase cursor-pointer bg-transparent border-0 text-inherit p-0">Verify</button>
@@ -355,7 +355,7 @@ export default function NewListingForm({ onBack, editId }) {
                     disabled={isSubmitting}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="w-full sm:w-auto bg-[var(--sidebar-active-text)] text-black font-bold text-sm px-8 py-3.5 rounded-2xl hover:opacity-90 transition-opacity font-montserrat min-w-[200px] flex items-center justify-center"
+                    className="w-full sm:w-auto bg-[var(--sidebar-active-text)] text-black font-bold text-sm px-8 py-3.5 rounded-md hover:opacity-90 transition-opacity font-montserrat min-w-[200px] flex items-center justify-center"
                 >
                     {isSubmitting ? <LoadingSpinner color="black" /> : editId ? "Update Property" : "Save as Draft"}
                 </motion.button>

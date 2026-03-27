@@ -108,7 +108,7 @@ const AUTOMATIONS = [
 
 
 const StatCard = ({ label, value, delta, icon: Icon, color, bgColor }) => (
-    <div className="flex-1 min-w-[180px] bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-5 hover:shadow-md transition-all group relative overflow-hidden">
+    <div className="flex-1 min-w-[180px] bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl p-5 hover:shadow-md transition-all group relative overflow-hidden">
         {Icon && (
             <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[var(--sidebar-active-bg)] flex items-center justify-center text-[var(--sidebar-text)] opacity-60 group-hover:bg-[var(--sidebar-active-text)] group-hover:text-white group-hover:opacity-100 transition-all">
                 <Icon className="w-4 h-4" />
@@ -132,7 +132,7 @@ const StatCard = ({ label, value, delta, icon: Icon, color, bgColor }) => (
 );
 
 const AutomationCard = ({ item }) => (
-    <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-6 hover:shadow-md transition-all group">
+    <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-6 hover:shadow-md transition-all group">
         <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center group-hover:bg-[var(--sidebar-active-bg)] transition-colors">
@@ -221,7 +221,7 @@ export default function LeadsAIPage() {
                         </div>
 
 
-                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden shadow-sm">
+                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden shadow-sm">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left">
                                     <thead>
@@ -296,7 +296,7 @@ export default function LeadsAIPage() {
                         </div>
 
 
-                        <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden shadow-sm">
+                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden shadow-sm">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left">
                                     <thead>
@@ -358,7 +358,7 @@ export default function LeadsAIPage() {
                         ))}
 
 
-                        <div className="bg-[var(--background)] border border-dashed border-[var(--sidebar-border)] rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-bg)]/50 transition-all cursor-pointer group min-h-[280px]">
+                        <div className="bg-[var(--card-surface)] border border-dashed border-[var(--sidebar-border)] rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-bg)]/50 transition-all cursor-pointer group min-h-[280px]">
                             <div className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center group-hover:bg-[var(--sidebar-active-bg)] transition-all">
                                 <span className="text-2xl text-[var(--sidebar-text)] opacity-40 group-hover:text-[var(--sidebar-active-text)] group-hover:opacity-100">+</span>
                             </div>

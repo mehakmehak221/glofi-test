@@ -119,7 +119,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="relative w-full max-w-lg bg-[var(--background)] border border-[var(--sidebar-border)] rounded-[24px] overflow-hidden shadow-lg max-h-[90vh] flex flex-col transition-colors duration-300"
+                    className="relative w-full max-w-md mx-auto rounded-md overflow-hidden bg-[var(--background)] border border-[var(--sidebar-border)] shadow-2xl"
                 >
                     <div className="p-4 sm:p-6 border-b border-[var(--sidebar-border)] flex-shrink-0">
                         <div className="flex items-center justify-between mb-2">
@@ -207,10 +207,10 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                         <button 
                             disabled={(step === 4 && !formData.agreed) || isSelling}
                             onClick={step === 5 ? onClose : step === 4 ? handleSubmit : nextStep}
-                            className={`w-full sm:flex-1 py-3 rounded-lg font-semibold text-sm transition-all border-0 cursor-pointer ${
+                            className={`w-full sm:flex-1 py-3 rounded-md font-semibold text-sm transition-all border-0 cursor-pointer ${
                                 ((step === 4 && !formData.agreed) || isSelling) && step !== 5
                                     ? "bg-[var(--background)] text-[var(--color-text-muted)] cursor-not-allowed" 
-                                    : "bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] hover:shadow-[0_0_20px_rgba(var(--color-primary-300-rgb),0.3)] hover:opacity-90"
+                                    : "bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] hover:shadow-glow-primary hover:opacity-90"
                             }`}
                         >
                             {isSelling ? "Submitting..." : step === 5 ? "Return to Portfolio" : step === 4 ? "List on Marketplace" : "Continue"}
@@ -278,7 +278,7 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
                                 const mult = [0.5, 0.75, 1][idx];
                                 setFormData({...formData, fractionsToSell: Math.floor(totalOwned * mult)});
                             }}
-                            className="py-2 bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md text-[10px] text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)] transition-colors cursor-pointer"
+                            className="py-3 rounded-md font-semibold text-sm transition-all border border-[var(--sidebar-border)] bg-[var(--background)] text-[var(--color-text-muted)] cursor-pointer hover:border-[var(--color-text-muted)]/50 hover:bg-[var(--sidebar-active-bg)] transition-colors cursor-pointer"
                         >
                             {label}
                         </button>
@@ -318,7 +318,7 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
                             type="number"
                             value={formData.pricePerFraction}
                             onChange={(e) => setFormData({...formData, pricePerFraction: Number(e.target.value)})}
-                            className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl pl-12 pr-6 py-5 text-[var(--header-text)] font-black text-xl focus:outline-none focus:border-[var(--sidebar-active-text)]/40 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 transition-all shadow-md"
+                            className="w-full rounded-md bg-black/5 dark:bg-white/5 border border-[var(--sidebar-border)] p-4 focus:outline-none focus:border-[var(--color-primary-300)]/50 text-[var(--header-text)] font-montserrat text-lg font-bold transition-all focus:border-[var(--sidebar-active-text)]/40 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 shadow-md"
                         />
                     </div>
                 </div>

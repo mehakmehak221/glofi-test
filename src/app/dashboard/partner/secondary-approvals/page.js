@@ -85,7 +85,7 @@ export default function SecondaryApprovalsPage() {
                                     <motion.div
                                         variants={itemVariants}
                                         key={item.id}
-                                        className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 lg:p-6 transition-all duration-300 relative group"
+                                        className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 lg:p-6 transition-all duration-300 relative group"
                                     >
                                         <div className="flex flex-col xl:flex-row items-start xl:items-center gap-5 lg:gap-8">
                                             <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-xl overflow-hidden flex-shrink-0 relative">
@@ -129,7 +129,7 @@ export default function SecondaryApprovalsPage() {
                                                     <div className="mt-4 flex flex-col gap-3">
                                                         <textarea
                                                             placeholder="Reason for rejection..."
-                                                            className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-3 px-4 text-sm font-medium text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 min-h-[80px]"
+                                                            className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-3 px-4 text-sm font-medium text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 min-h-[80px]"
                                                             value={rejectReason}
                                                             onChange={(e) => setRejectReason(e.target.value)}
                                                         />
@@ -142,7 +142,7 @@ export default function SecondaryApprovalsPage() {
                                                             </button>
                                                             <button
                                                                 onClick={() => { setRejectingId(null); setRejectReason(""); }}
-                                                                className="px-4 py-2 rounded-lg bg-[var(--background)] text-[var(--color-text-muted)] text-[11px] font-bold border border-[var(--sidebar-border)] cursor-pointer hover:text-[var(--header-text)] transition-all"
+                                                                className="px-4 py-2 rounded-lg bg-[var(--card-surface)] text-[var(--color-text-muted)] text-[11px] font-bold border border-[var(--sidebar-border)] cursor-pointer hover:text-[var(--header-text)] transition-all"
                                                             >
                                                                 Cancel
                                                             </button>
@@ -163,7 +163,7 @@ export default function SecondaryApprovalsPage() {
                                                             onClick={() => setRejectingId(item.id)}
                                                             whileHover={{ scale: 1.02 }}
                                                             whileTap={{ scale: 0.98 }}
-                                                            className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-[var(--background)] text-red-500 border border-red-500/20 text-[11px] font-bold hover:bg-red-500/10 transition-all cursor-pointer"
+                                                            className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-[var(--card-surface)] text-red-500 border border-red-500/20 text-[11px] font-bold hover:bg-red-500/10 transition-all cursor-pointer"
                                                         >
                                                             <XIcon className="w-4 h-4" />
                                                             Reject
@@ -178,7 +178,7 @@ export default function SecondaryApprovalsPage() {
                         ) : (
                             <motion.div
                                 variants={itemVariants}
-                                className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md p-12 flex flex-col items-center justify-center text-center"
+                                className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <DocumentIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
                                 <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No pending approvals</h3>

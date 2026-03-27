@@ -96,7 +96,7 @@ export default function SignUpPage() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <input
                     type="text" value={form.name} onChange={set("name")} placeholder="Full name" required
-                    className="w-full rounded-md px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
+                    className="w-full rounded-md px-4 py-4 text-sm text-white placeholder-[var(--color-text-muted)] border border-[var(--color-border-subtle)] focus:outline-none focus:border-[var(--color-primary-100)]/60 transition-all font-medium font-montserrat"
                 />
                 <input
                     type="email" value={form.email} onChange={set("email")} placeholder="Email address" required

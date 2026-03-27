@@ -30,7 +30,7 @@ export default function AuthLeftPanel() {
 
         <div>
           <h1 className="text-auth-gradient font-bold text-4xl xl:text-5xl leading-[1.1] tracking-tight mb-6 font-montserrat">
-            Own Premium<br />
+            Own Any Premium<br />
             Real Estate,<br />
             Fraction by Fraction
           </h1>

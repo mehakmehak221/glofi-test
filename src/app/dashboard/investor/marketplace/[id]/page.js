@@ -143,7 +143,7 @@ export default function PropertyDetailPage() {
                         initial={{ opacity: 0, y: -50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -50 }}
-                        className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-full shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
+                        className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-md shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
                             ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success)]/20"
                             : toast.type === "warning"
                                 ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border border-[var(--color-status-warning)]/20"
@@ -188,7 +188,7 @@ export default function PropertyDetailPage() {
                     transition={{ duration: 0.5 }}
                 >
 
-                    <div className="relative w-full h-56 sm:h-72 lg:h-80 rounded-2xl overflow-hidden mb-5">
+                    <div className="relative w-full h-56 sm:h-72 lg:h-80 rounded-md overflow-hidden mb-5">
                         <Image
                             src={imageUrl}
                             alt={property.title}
@@ -214,7 +214,7 @@ export default function PropertyDetailPage() {
 
 
                         <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                            <h1 className="text-xl sm:text-2xl font-bold text-[var(--header-text)] mb-1">{property.title}</h1>
+                            <h1 className="text-xl sm:text-md font-bold text-[var(--header-text)] mb-1">{property.title}</h1>
                             <div className="flex items-center gap-1.5 text-[var(--sidebar-text)] text-xs font-semibold">
                                 <MapPinIcon className="w-3.5 h-3.5" />
                                 {property.location}
@@ -223,50 +223,51 @@ export default function PropertyDetailPage() {
                     </div >
 
 
-                    <p className="text-sm rounded-xl p-3 sm:p-4 text-[var(--color-text-muted)] leading-relaxed mb-6 bg-[var(--background)] border border-[var(--sidebar-border)] font-montserrat tracking-tight shadow-sm">
-                        {property.description}
-                    </p>
+                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 mb-6">
+                        <p className="text-sm text-[var(--color-text-muted)] leading-relaxed mb-6 font-montserrat tracking-tight">
+                            {property.description}
+                        </p>
 
-
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                        <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
-                        >
-                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Valuation</p>
-                            <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{formatValuation(property.valuation)}</p>
-                        </div >
-                        <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
-                        >
-                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Yield</p>
-                            <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)] truncate">{Number(property.expectedYield).toFixed(2)}%</p>
-                        </div >
-                        <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
-                        >
-                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Risk Level</p>
-                            <p className={`text-base sm:text-lg font-bold truncate ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)]' :
-                                property.riskRating === 'HIGH' ? 'text-[var(--color-status-error)]' :
-                                    'text-[var(--color-status-warning)]'
-                                }`}>{property.riskRating}</p>
-                        </div >
-                        <div
-                            className="rounded-xl p-3 sm:p-4 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
-                        >
-                            <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Fractions</p>
-                            <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{property.totalFractions?.toLocaleString()}</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div
+                                className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
+                            >
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Valuation</p>
+                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{formatValuation(property.valuation)}</p>
+                            </div>
+                            <div
+                                className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
+                            >
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Yield</p>
+                                <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)] truncate">{Number(property.expectedYield).toFixed(2)}%</p>
+                            </div>
+                            <div
+                                className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
+                            >
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Risk Level</p>
+                                <p className={`text-base sm:text-lg font-bold truncate ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)]' :
+                                    property.riskRating === 'HIGH' ? 'text-[var(--color-status-error)]' :
+                                        'text-[var(--color-status-warning)]'
+                                    }`}>{property.riskRating}</p>
+                            </div>
+                            <div
+                                className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)]  border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
+                            >
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Fractions</p>
+                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{property.totalFractions?.toLocaleString()}</p>
+                            </div>
                         </div>
-                    </div >
+                    </div>
 
 
                     {documents.length > 0 && (
-                        <div>
-                            <h3 className="text-sm font-bold text-[var(--header-text)] mb-3">Documents</h3>
-                            <div className="space-y-2">
+                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 mb-6">
+                            <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Documents</h3>
+                            <div className="space-y-3">
                                 {documents.map((doc) => (
                                     <div
                                         key={doc.name}
-                                        className="flex items-center justify-between rounded-xl px-4 py-3 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-sm"
+                                        className="flex items-center justify-between rounded-md px-4 py-3 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm"
                                     >
                                         <div className="flex items-center gap-3">
                                             <span className="w-8 h-8 rounded-full bg-[var(--badge-bg)] flex items-center justify-center text-xs">
@@ -289,7 +290,6 @@ export default function PropertyDetailPage() {
                                                 </svg>
                                                 View
                                             </a>
-
                                         </div>
                                     </div>
                                 ))}
@@ -306,16 +306,16 @@ export default function PropertyDetailPage() {
                     transition={{ duration: 1.5, delay: 0.15 }}
                 >
                     <div
-                        className="rounded-2xl p-5 sm:p-6 lg:sticky lg:top-24 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-xl"
+                        className="rounded-md p-5 sm:p-6 lg:sticky lg:top-24 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-xl"
                     >
-                        <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold">Per Fraction</p>
-                        <p className="text-2xl sm:text-3xl font-bold text-[var(--header-text)] mb-5">
+                        <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">Per Fraction</p>
+                        <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">
                             ${Number(property.fractionPrice)?.toLocaleString()}
                         </p>
 
                         <div className="space-y-3 mb-6">
                             {userInvestment ? (
-                                <div className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 ${userInvestment.status === 'PENDING' ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-[var(--sidebar-active-text)]/30 bg-[var(--sidebar-active-bg)]'
+                                <div className={`p-4 rounded-md border flex flex-col items-center justify-center gap-2 ${userInvestment.status === 'PENDING' ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-[var(--sidebar-active-text)]/30 bg-[var(--sidebar-active-bg)]'
                                     }`}>
                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${userInvestment.status === 'PENDING' ? 'bg-yellow-500/20' : 'bg-[var(--sidebar-active-text)]/20'
                                         }`}>
@@ -344,7 +344,7 @@ export default function PropertyDetailPage() {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     disabled={isSubmitting || isInvesting}
-                                    className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full py-4 rounded-md bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-glow-primary disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isSubmitting || isInvesting ? "Processing..." : "Invest Now"}
                                 </motion.button>

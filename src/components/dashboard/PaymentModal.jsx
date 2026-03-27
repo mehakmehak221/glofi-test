@@ -66,7 +66,7 @@ export default function PaymentModal({ isOpen, onClose, asset, onProcessPayment 
                 >
                     <div className="absolute inset-0" onClick={onClose} />
                     <motion.div
-                        className="relative w-[95%] sm:w-full max-w-[520px] max-h-[90vh] overflow-y-auto bg-[var(--background)] border border-[var(--sidebar-border)] rounded-[2rem] mx-auto custom-scrollbar shadow-2xl"
+                        className="relative w-[95%] sm:w-full max-w-[520px] max-h-[90vh] overflow-y-auto bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-[2rem] mx-auto custom-scrollbar shadow-2xl"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -116,7 +116,7 @@ function StepSelection({ asset, onSelect, onClose }) {
                 </button>
             </div>
 
-            <div className="bg-[var(--background)] rounded-2xl p-5 flex justify-between items-center mb-8 border border-[var(--sidebar-border)] shadow-sm">
+            <div className="bg-[var(--field-surface)] rounded-2xl p-5 flex justify-between items-center mb-8 border border-[var(--sidebar-border)] shadow-sm">
                 <span className="text-sm font-bold text-[var(--color-text-muted)] uppercase tracking-wider">Total Amount</span>
                 <span className="text-2xl font-black text-[var(--header-text)]">{asset.currentValue}</span>
             </div>
@@ -126,7 +126,7 @@ function StepSelection({ asset, onSelect, onClose }) {
                     <button
                         key={method.id}
                         onClick={() => onSelect(method)}
-                        className="w-full group flex items-center justify-between p-5 bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl hover:border-[var(--sidebar-active-text)]/30 hover:shadow-lg transition-all text-left cursor-pointer"
+                        className="w-full group flex items-center justify-between p-5 bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-2xl hover:border-[var(--sidebar-active-text)]/30 hover:shadow-lg transition-all text-left cursor-pointer"
                     >
                         <div className="flex items-center gap-4 flex-1 overflow-hidden pr-2">
                             <div className="w-12 h-12 rounded-xl bg-[var(--badge-bg)] flex-shrink-0 flex items-center justify-center text-[var(--sidebar-active-text)]">
@@ -171,12 +171,12 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                         <input 
                             type="text" 
                             defaultValue="ishant@upi" 
-                            className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30"
+                            className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30"
                         />
                     </div>
 
-                    <div className="flex flex-col items-center justify-center p-8 bg-[var(--background)] rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm">
-                        <div className="w-32 h-32 bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl flex items-center justify-center mb-5 shadow-inner">
+                    <div className="flex flex-col items-center justify-center p-8 bg-[var(--field-surface)] rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm">
+                        <div className="w-32 h-32 bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-2xl flex items-center justify-center mb-5 shadow-inner">
                            {/* Simplified Placeholder for QR */}
                            <div className="w-24 h-24 text-[var(--header-text)]/10">
                                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2zm-3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm3-10h2v2h-2V5zm-3 0h2v2h-2V5zm3 3h2v2h-2V8zm-3 0h2v2h-2V8z"/></svg>
@@ -191,28 +191,28 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                 <div className="space-y-6">
                     <div>
                         <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">Card Number</label>
-                        <input type="text" placeholder="1234 5678 9012 3456" className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
+                        <input type="text" placeholder="1234 5678 9012 3456" className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">Expiry</label>
-                            <input type="text" placeholder="MM/YY" className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
+                            <input type="text" placeholder="MM/YY" className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
                         </div>
                         <div>
                             <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">CVV</label>
-                            <input type="text" placeholder="123" className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
+                            <input type="text" placeholder="123" className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
                         </div>
                     </div>
                     <div>
                         <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">Cardholder Name</label>
-                        <input type="text" placeholder="JOHN DOE" className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
+                        <input type="text" placeholder="JOHN DOE" className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30" />
                     </div>
                 </div>
             )}
 
             {method.id === 'escrow' && (
                 <div className="space-y-6">
-                    <div className="bg-[var(--background)] rounded-2xl p-5 flex gap-4 border border-[var(--sidebar-border)] shadow-sm">
+                    <div className="bg-[var(--field-surface)] rounded-2xl p-5 flex gap-4 border border-[var(--sidebar-border)] shadow-sm">
                         <div className="w-10 h-10 rounded-full bg-[var(--badge-bg)] flex items-center justify-center flex-shrink-0">
                             <span className="text-[var(--sidebar-active-text)]"><VerifiedIcon className="w-6 h-6" /></span>
                         </div>
@@ -226,7 +226,7 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                     </p>
                     <div>
                         <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">Escrow Provider</label>
-                        <div className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)]">Default Provider</div>
+                        <div className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)]">Default Provider</div>
                     </div>
                 </div>
             )}
@@ -235,7 +235,7 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                 <div className="space-y-6">
                     <div>
                         <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-3 block">Cryptocurrency</label>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-[var(--background)] p-1.5 rounded-2xl border border-[var(--sidebar-border)]">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-[var(--field-surface)] p-1.5 rounded-2xl border border-[var(--sidebar-border)]">
                             {cryptos.map(crypto => (
                                 <button
                                     key={crypto}
@@ -252,7 +252,7 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                         </div>
                     </div>
 
-                    <div className="bg-[var(--background)] rounded-2xl overflow-hidden border border-[var(--sidebar-border)] shadow-sm">
+                    <div className="bg-[var(--field-surface)] rounded-2xl overflow-hidden border border-[var(--sidebar-border)] shadow-sm">
                         <div className="p-5 space-y-4">
                             <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold block">Send to Wallet Address</label>
                             <div className="relative group">
@@ -260,7 +260,7 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                                     readOnly
                                     type="text" 
                                     value="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb" 
-                                    className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl py-4 pl-5 pr-12 text-[10px] font-mono font-bold text-[var(--header-text)] focus:outline-none truncate"
+                                    className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 pl-5 pr-12 text-[10px] font-mono font-bold text-[var(--header-text)] focus:outline-none truncate"
                                 />
                                 <button className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--sidebar-active-text)] hover:opacity-80 transition-opacity bg-transparent border-0 cursor-pointer">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -272,7 +272,7 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                 </div>
             )}
 
-            <div className="mt-8 space-y-4 bg-[var(--background)] p-5 rounded-2xl border border-[var(--sidebar-border)]">
+            <div className="mt-8 space-y-4 bg-[var(--field-surface)] p-5 rounded-2xl border border-[var(--sidebar-border)]">
                 <div className="flex justify-between text-sm">
                     <span className="font-bold text-[var(--color-text-muted)] uppercase tracking-wider">Amount</span>
                     <span className="font-extrabold text-[var(--header-text)]">{asset.currentValue}</span>

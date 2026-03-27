@@ -158,7 +158,7 @@ export default function PortfolioPage() {
                     <motion.div
                         key={stat.label}
                         variants={itemVariants}
-                        className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md p-6 hover:border-[var(--sidebar-active-text)]/30 transition-all duration-300 group"
+                        className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-6 hover:border-[var(--sidebar-active-text)]/30 transition-all duration-300 group shadow-sm"
                     >
                         <div className="flex items-center justify-between mb-4">
                             <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.1em] font-bold">{stat.label}</span>
@@ -205,7 +205,7 @@ export default function PortfolioPage() {
                         ) : (
                             <motion.div
                                 variants={itemVariants}
-                                className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
+                                className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <ResaleIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
                                 <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No active listings</h3>
@@ -234,7 +234,7 @@ export default function PortfolioPage() {
                         ) : (
                             <motion.div
                                 variants={itemVariants}
-                                className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
+                                className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <Asset className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
                                 <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No properties listed</h3>
@@ -243,7 +243,7 @@ export default function PortfolioPage() {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => window.location.href = '/dashboard/investor/marketplace'}
-                                    className="mt-6 px-6 py-2.5 rounded-xl bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold hover:opacity-90 transition-all cursor-pointer"
+                                    className="mt-6 px-5 py-2.5 rounded-md bg-[var(--color-primary-300)] text-black text-xs font-bold hover:scale-105 transition-all shadow-glow-primary border-0 cursor-pointer"
                                 >
                                     Browse Marketplace
                                 </motion.button>
@@ -271,7 +271,7 @@ function SecondaryListingCard({ item, onDelete }) {
     return (
         <motion.div
             variants={itemVariants}
-            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group"
+            className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group"
         >
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-5 lg:gap-8">
                 <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-xl overflow-hidden flex-shrink-0 relative">
@@ -324,19 +324,19 @@ function SecondaryListingCard({ item, onDelete }) {
 
                     <div className="flex flex-wrap items-center gap-3">
                         <motion.button
-                            onClick={() => {}}
+                            onClick={() => { }}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--background)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
                         >
                             <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
                             Certificate
                         </motion.button>
                         <motion.button
-                            onClick={() => {}}
+                            onClick={() => { }}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--background)] text-[var(--color-text-muted)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
                         >
                             <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
                             Download
@@ -370,7 +370,7 @@ function AssetCard({ asset, onResale }) {
     return (
         <motion.div
             variants={itemVariants}
-            className={`bg-[var(--background)] border ${asset.isResale ? 'border-[var(--sidebar-active-text)]/10' : 'border-[var(--sidebar-border)]'} rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group`}
+            className={`bg-[var(--card-surface)] border ${asset.isResale ? 'border-[var(--sidebar-active-text)]/10' : 'border-[var(--sidebar-border)]'} rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group`}
         >
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-5 lg:gap-8">
 
@@ -428,7 +428,7 @@ function AssetCard({ asset, onResale }) {
                             onClick={handleOpenCertificate}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--background)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
                         >
                             <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
                             Certificate
@@ -437,7 +437,7 @@ function AssetCard({ asset, onResale }) {
                             onClick={handleOpenCertificate}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--background)] text-[var(--color-text-muted)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
                         >
                             <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
                             Download

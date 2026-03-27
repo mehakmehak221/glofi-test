@@ -28,7 +28,7 @@ export default function Input({
         <input
           id={inputId}
           className={[
-            "w-full rounded-xl px-4 py-3 text-sm text-white placeholder-[var(--color-text-muted)]/50",
+            "w-full rounded-md px-4 py-3 text-sm text-white placeholder-[var(--color-text-muted)]/50",
             "bg-[var(--color-bg-dark-alt)] border transition-all duration-200",
             "focus:outline-none focus:ring-2",
             error

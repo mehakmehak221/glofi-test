@@ -10,7 +10,7 @@ export default function CookieSection() {
     return (
         <section className="fixed bottom-0 w-full z-50 flex justify-center bg-transparent pointer-events-none">
             <div className="cookie-section-wrapper pointer-events-auto w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-3 sm:py-4 lg:py-5 bg-[var(--color-bg-dark)] border-t border-[var(--color-primary-300-alpha-30)] backdrop-blur-lg flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 lg:gap-6 text-center sm:text-left">
-                <span className="cookie-text text-xs sm:text-sm lg:text-base text-[var(--color-text-primary)]/90 flex-1">
+                <span className="cookie-text text-xs sm:text-sm lg:text-base text-[#F5F5F5] flex-1">
                     We use cookies to enhance your experience, analyze site traffic, and for marketing purposes.
                     <a href="#learn-more" className="cookie-link text-[var(--color-primary-200)] no-underline font-medium ml-1">Learn more</a>
                 </span>

@@ -150,7 +150,7 @@ export default function MarketplacePage() {
                                         variants={cardVariants}
                                         layout
                                         onClick={() => handleCardClick(property.id)}
-                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-[16px] overflow-hidden hover:border-[var(--sidebar-active-text)]/20 transition-colors duration-300 group cursor-pointer shadow-[var(--marketplace-card-shadow)]"
+                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-md overflow-hidden hover:border-[var(--sidebar-active-text)]/20 transition-colors duration-300 group cursor-pointer shadow-[var(--marketplace-card-shadow)]"
                                     >
 
                                         <div className="relative h-48 overflow-hidden">
@@ -226,7 +226,7 @@ export default function MarketplacePage() {
                                                     e.stopPropagation();
                                                     handleCardClick(property.id);
                                                 }}
-                                                className="w-full py-3 rounded-xl bg-[var(--btn-mint-bg)] text-[var(--btn-mint-text)] font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-[var(--shadow-glow-primary)]"
+                                                className="w-full py-3 rounded-md bg-[var(--btn-mint-bg)] text-[var(--btn-mint-text)] font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-glow-primary"
                                             >
                                                 Invest Now
                                             </motion.button>

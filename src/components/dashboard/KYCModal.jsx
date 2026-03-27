@@ -91,7 +91,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                 >
                     <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="bg-[var(--background)] w-full max-w-lg p-10 rounded-[2rem] shadow-2xl relative border border-[var(--sidebar-border)] max-h-[90vh] overflow-y-auto"
+                        className="bg-[var(--card-surface)] w-full max-w-lg p-10 rounded-md shadow-2xl relative border border-[var(--sidebar-border)] max-h-[90vh] overflow-y-auto"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -148,7 +148,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                 </p>
                                 <button
                                     onClick={onClose}
-                                    className="w-full py-4 rounded-full bg-[#00DAAF] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:shadow-[0_0_20px_rgba(0,218,175,0.3)] shadow-[var(--shadow-glow-primary)]"
+                                    className="w-full py-4 rounded-md bg-[#00DAAF] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:shadow-[0_0_20px_rgba(0,218,175,0.3)] shadow-glow-primary"
                                 >
                                     Continue
                                 </button>
@@ -160,16 +160,16 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                 <p className="text-sm text-[var(--color-text-muted)] font-medium mb-8 font-montserrat">Upload a government-issued ID to verify your identity</p>
 
                                 <div className="space-y-6">
-                                    {/* Identity Section */}
+                                   
                                     <div>
                                         <div className="flex flex-wrap gap-2 mb-8">
                                             {DOC_TABS.map((tab) => (
                                                 <button
                                                     key={tab}
                                                     onClick={() => setActiveTab(tab)}
-                                                    className={`px-6 py-2.5 rounded-[1.25rem] text-xs font-bold transition-all duration-200 cursor-pointer border ${activeTab === tab
+                                                    className={`px-6 py-2.5 rounded-md text-xs font-bold transition-all duration-200 cursor-pointer border ${activeTab === tab
                                                         ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
-                                                        : "bg-black/5 dark:bg-white/5 text-[var(--color-text-muted)] border-transparent hover:border-[var(--color-text-muted)]/30 opacity-60"
+                                                        : "bg-[var(--field-surface)] text-[var(--color-text-muted)] border-transparent hover:border-[var(--color-text-muted)]/30 opacity-60"
                                                         }`}
                                                 >
                                                     {tab}
@@ -177,11 +177,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                             ))}
                                         </div>
 
-                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${idDocKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-black/5 dark:bg-white/5 border-[var(--sidebar-border)]'} mb-4`}>
+                                        <label className={`block rounded-md p-5 cursor-pointer transition-all border ${idDocKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-[var(--field-surface)] border-[var(--sidebar-border)]'} mb-4`}>
                                             <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'id')} />
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${idDocKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-black/10 dark:bg-white/10 text-[var(--color-text-muted)]'}`}>
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${idDocKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-[var(--field-surface)] text-[var(--color-text-muted)]'}`}>
                                                         {idDocKey ? (
                                                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -205,11 +205,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
 
                                     {/* Address Section */}
                                     <div>
-                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${addressKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-black/5 dark:bg-white/5 border-[var(--sidebar-border)]'} mb-4`}>
+                                        <label className={`block rounded-md p-5 cursor-pointer transition-all border ${addressKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-[var(--field-surface)] border-[var(--sidebar-border)]'} mb-4`}>
                                             <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'address')} />
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${addressKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-black/10 dark:bg-white/10 text-[var(--color-text-muted)]'}`}>
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${addressKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-[var(--field-surface)] text-[var(--color-text-muted)]'}`}>
                                                         {addressKey ? (
                                                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -233,11 +233,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
 
                                     {/* Selfie Section */}
                                     <div>
-                                        <label className={`block rounded-[1.5rem] p-5 cursor-pointer transition-all border ${selfieKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-black/5 dark:bg-white/5 border-[var(--sidebar-border)]'} mb-8`}>
+                                        <label className={`block rounded-md p-5 cursor-pointer transition-all border ${selfieKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-[var(--field-surface)] border-[var(--sidebar-border)]'} mb-8`}>
                                             <input type="file" className="hidden" accept="image/*" capture="user" onChange={(e) => handleFileUpload(e, 'selfie')} />
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${selfieKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-black/10 dark:bg-white/10 text-[var(--color-text-muted)]'}`}>
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${selfieKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-[var(--field-surface)] text-[var(--color-text-muted)]'}`}>
                                                         {selfieKey ? (
                                                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -261,7 +261,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                     </div>
                                 </div>
 
-                                 <div className="flex items-start gap-4 p-5 rounded-[1.25rem] bg-black/5 dark:bg-white/5 border border-[var(--sidebar-border)] mb-8">
+                                 <div className="flex items-start gap-4 p-5 rounded-md bg-[var(--field-surface)] border border-[var(--sidebar-border)] mb-8">
                                     <div className="shrink-0 mt-0.5 text-[var(--color-text-muted)]">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -277,7 +277,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                     whileTap={{ scale: 0.99 }}
                                     onClick={handleFormSubmit}
                                     disabled={isSubmitting || isUploading}
-                                    className="w-full py-4.5 rounded-2xl bg-[#11BA96] text-black font-bold text-base cursor-pointer border-0 transition-all hover:opacity-90 shadow-lg shadow-[#11BA96]/20 disabled:opacity-50 disabled:cursor-not-allowed font-montserrat flex items-center justify-center gap-2"
+                                    className="w-full py-4.5 rounded-md bg-[#11BA96] text-black font-bold text-base cursor-pointer border-0 transition-all hover:opacity-90 shadow-lg shadow-[#11BA96]/20 disabled:opacity-50 disabled:cursor-not-allowed font-montserrat flex items-center justify-center gap-2"
                                 >
                                     {isSubmitting || isUploading ? "Processing..." : (
                                         <>

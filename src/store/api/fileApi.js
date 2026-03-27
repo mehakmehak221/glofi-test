@@ -10,7 +10,6 @@ export const fileApi = baseApi.injectEndpoints({
           url: `upload/file?folder=${folder}`,
           method: 'POST',
           body: formData,
-
         };
       },
     }),

@@ -32,9 +32,9 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
-            className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:shadow-md transition-all"
+            className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:shadow-md transition-all"
         >
-            <div className="w-full md:w-32 lg:w-40 h-24 lg:h-28 bg-[var(--color-bg-card)] rounded-xl flex-shrink-0 flex items-center justify-center border border-[var(--color-border-subtle)] overflow-hidden relative">
+            <div className="w-full md:w-32 lg:w-40 h-24 lg:h-28 bg-[var(--color-bg-card)] rounded-md flex-shrink-0 flex items-center justify-center border border-[var(--color-border-subtle)] overflow-hidden relative">
                 {propertyImage ? (
                     <Image
                         src={propertyImage.startsWith('http') ? propertyImage : `/${propertyImage}`}
@@ -53,7 +53,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                     <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1 flex-wrap">
                             <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
-                            <span className="flex items-center gap-1.5 text-[9px] font-bold tracking-[0.1em] text-[var(--sidebar-active-text)] font-montserrat uppercase bg-[var(--sidebar-active-bg)] rounded-full px-2.5 py-1 whitespace-nowrap">
+                            <span className="flex items-center gap-1.5 text-[9px] font-bold tracking-[0.1em] text-[var(--sidebar-active-text)] font-montserrat uppercase bg-[var(--sidebar-active-bg)] rounded-md px-2.5 py-1 whitespace-nowrap">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--sidebar-active-text)] animate-pulse" />
                                 {property.status}
                             </span>
@@ -196,7 +196,7 @@ export default function PartnerPropertiesPage() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => setIsAddingNew(true)}
-                                className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-lg text-sm font-medium font-montserrat transition-all"
+                                className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all"
                             >
                                 <span className="text-lg leading-none">+</span>
                                 New Listing
@@ -210,7 +210,7 @@ export default function PartnerPropertiesPage() {
                                     <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />
                                 </div>
                             ) : isError ? (
-                                <div className="text-center p-12 bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl">
+                                <div className="text-center p-12 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md">
                                     <div className="w-12 h-12 rounded-full bg-red-500/10 text-red-500/60 flex items-center justify-center mx-auto mb-4">
                                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -234,13 +234,13 @@ export default function PartnerPropertiesPage() {
                                     {(isKycRequired || isKybRequired) && (
                                         <div className="flex flex-col items-center gap-4">
                                             {(isKycRequired && kycStatus === 'UNDER_REVIEW') && (
-                                                <div className="flex items-center gap-2 px-4 py-2 bg-[#F79009]/10 border border-[#F79009]/20 rounded-xl text-[#F79009] text-sm font-bold animate-pulse">
+                                                <div className="flex items-center gap-2 px-4 py-2 bg-[#F79009]/10 border border-[#F79009]/20 rounded-md text-[#F79009] text-sm font-bold animate-pulse">
                                                     <span className="w-2 h-2 rounded-full bg-[#F79009]" />
                                                     STATUS: UNDER REVIEW (KYC)
                                                 </div>
                                             )}
                                             {(isKybRequired && kybStatus === 'UNDER_REVIEW') && (
-                                                <div className="flex items-center gap-2 px-4 py-2 bg-[#F79009]/10 border border-[#F79009]/20 rounded-xl text-[#F79009] text-sm font-bold animate-pulse">
+                                                <div className="flex items-center gap-2 px-4 py-2 bg-[#F79009]/10 border border-[#F79009]/20 rounded-md text-[#F79009] text-sm font-bold animate-pulse">
                                                     <span className="w-2 h-2 rounded-full bg-[#F79009]" />
                                                     STATUS: UNDER REVIEW (KYB)
                                                 </div>
@@ -264,7 +264,7 @@ export default function PartnerPropertiesPage() {
                                                         }
                                                     }
                                                 }}
-                                                className={`px-10 py-4 ${(isKycRequired && kycStatus === 'UNDER_REVIEW') || (isKybRequired && kybStatus === 'UNDER_REVIEW') ? 'bg-[#1A1F1C] text-[var(--color-text-muted)] border border-[var(--sidebar-border)]' : 'bg-[#00DAAF] text-black shadow-[0_0_20px_rgba(0,218,175,0.3)]'} rounded-full text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all font-montserrat cursor-pointer`}
+                                                className={`px-10 py-4 ${(isKycRequired && kycStatus === 'UNDER_REVIEW') || (isKybRequired && kybStatus === 'UNDER_REVIEW') ? 'bg-[#1A1F1C] text-[var(--color-text-muted)] border border-[var(--sidebar-border)]' : 'bg-[#00DAAF] text-black shadow-[0_0_20px_rgba(0,218,175,0.3)]'} rounded-md text-base font-bold hover:scale-[1.02] active:scale-[0.98] transition-all font-montserrat cursor-pointer`}
                                             >
                                                 {isKycRequired
                                                     ? kycStatus === 'UNDER_REVIEW' ? "Refresh KYC Status" : "Verify Identity Now"
@@ -274,7 +274,7 @@ export default function PartnerPropertiesPage() {
                                     )}
                                 </div>
                             ) : data?.data?.length === 0 ? (
-                                <div className="text-center p-12 text-[var(--color-text-muted)] border border-dashed border-[var(--color-border-subtle)] rounded-2xl">
+                                <div className="text-center p-12 text-[var(--color-text-muted)] border border-dashed border-[var(--color-border-subtle)] rounded-md">
                                     No properties found.
                                 </div>
                             ) : (

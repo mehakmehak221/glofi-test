@@ -124,7 +124,7 @@ export default function SecondaryMarketplacePage() {
                         <input
                             type="text"
                             placeholder="Search properties by name..."
-                            className="w-full bg-[var(--search-bg)] border border-[var(--sidebar-border)] rounded-xl py-3.5 pl-14 pr-6 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 transition-all shadow-sm"
+                            className="w-full bg-[var(--search-bg)] border border-[var(--sidebar-border)] rounded-md py-3.5 pl-14 pr-6 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 transition-all shadow-sm"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -134,7 +134,7 @@ export default function SecondaryMarketplacePage() {
 
                 <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
                     {stats.map((stat) => (
-                        <div key={stat.label} className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-md p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-500">
+                        <div key={stat.label} className="bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-500">
                             <div className="flex justify-between items-start mb-6">
                                 <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-bold">{stat.label}</span>
                                 <div className="w-10 h-10 rounded-xl bg-[var(--badge-bg)] flex items-center justify-center text-[var(--sidebar-active-text)] shadow-sm group-hover:scale-110 transition-transform">
@@ -153,7 +153,7 @@ export default function SecondaryMarketplacePage() {
 
 
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 w-full">
-                    <div className="flex items-center gap-2 p-1 bg-[var(--background)] rounded-xl border border-[var(--sidebar-border)] shadow-sm w-full md:w-auto overflow-x-auto no-scrollbar">
+                    <div className="flex items-center gap-2 p-1 bg-[var(--marketplace-card-bg)] rounded-xl border border-[var(--sidebar-border)] shadow-sm w-full md:w-auto overflow-x-auto no-scrollbar">
                         {["Marketplace", "My Listings"].map((tab) => (
                             <button
                                 key={tab}
@@ -168,7 +168,7 @@ export default function SecondaryMarketplacePage() {
                         ))}
                     </div>
 
-                    <div className="flex items-center gap-2 p-1 bg-[var(--background)] rounded-xl border border-[var(--sidebar-border)] overflow-x-auto max-w-full no-scrollbar shadow-sm">
+                    <div className="flex items-center gap-2 p-1 bg-[var(--marketplace-card-bg)] rounded-xl border border-[var(--sidebar-border)] overflow-x-auto max-w-full no-scrollbar shadow-sm">
                         {filters.map((filter) => (
                             <button
                                 key={filter}
@@ -197,7 +197,7 @@ export default function SecondaryMarketplacePage() {
                             <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin"></div>
                         </div>
                     ) : displayAssets.length === 0 ? (
-                        <div className="col-span-full flex flex-col items-center justify-center p-20 bg-[var(--background)] border border-dashed border-[var(--sidebar-border)] rounded-3xl text-center">
+                        <div className="col-span-full flex flex-col items-center justify-center p-20 bg-[var(--marketplace-card-bg)] border border-dashed border-[var(--sidebar-border)] rounded-3xl text-center">
                             <div className="w-20 h-20 rounded-full bg-[var(--badge-bg)] flex items-center justify-center mb-6">
                                 <SearchIcon className="w-10 h-10 text-[var(--color-text-muted)]" />
                             </div>
@@ -245,7 +245,7 @@ export default function SecondaryMarketplacePage() {
                 />
 
 
-                <section className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-8 sm:p-10 flex flex-col md:flex-row items-center md:items-start gap-8 shadow-lg relative overflow-hidden">
+                <section className="bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md p-8 sm:p-10 flex flex-col md:flex-row items-center md:items-start gap-8 shadow-lg relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--sidebar-active-text)]/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
                     <div className="w-14 h-14 rounded-2xl bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 flex items-center justify-center flex-shrink-0 shadow-md relative z-10">
                         <AboutIcon className="w-6 h-6 text-[var(--sidebar-active-text)]" />
@@ -266,7 +266,7 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
     return (
         <motion.div
             variants={itemVariants}
-            className="group bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden flex flex-col hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-700 h-full shadow-md"
+            className="group bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md overflow-hidden flex flex-col hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-700 h-full shadow-md"
         >
 
             <div className="relative h-56 overflow-hidden">
@@ -276,26 +276,26 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-1000"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--sidebar-bg)] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700" />
                 <div className="absolute top-4 right-4">
-                    <div className="px-3 py-1.5 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[10px] font-bold flex items-center gap-1.5 shadow-lg ring-1 ring-white/10 backdrop-blur-sm">
+                    <div className="px-3 py-1.5 rounded-full bg-[var(--color-primary-200)] text-black text-[11px] font-bold flex items-center gap-1.5 shadow-lg">
                         <TrendingUpIcon className="w-3.5 h-3.5" />
                         {asset.change}
                     </div>
                 </div>
                 <div className="absolute bottom-4 left-4">
-                    <div className="flex items-center gap-2.5 p-1 bg-[var(--background)]/80 backdrop-blur-xl rounded-full pr-4 border border-white/10 shadow-lg ring-1 ring-black/5 hover:bg-[var(--background)] transition-colors duration-300">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[var(--color-primary-300)] to-[var(--color-primary-500)] flex items-center justify-center text-[9px] font-bold text-black border border-white shadow-sm">
+                    <div className="flex items-center gap-2.5 p-1 bg-[var(--sidebar-bg)]/80 backdrop-blur-md rounded-full pr-4 shadow-lg border border-[var(--sidebar-border)]/50 transition-colors duration-300">
+                        <div className="w-6 h-6 rounded-full bg-[var(--color-primary-200)] flex items-center justify-center text-[10px] font-bold text-black border border-[var(--color-primary-200)] shadow-sm">
                             {asset.seller.charAt(0)}
                         </div>
-                        <span className="text-[10px] font-bold text-[var(--header-text)] tracking-wider uppercase">{asset.seller}</span>
+                        <span className="text-[11px] font-medium text-[var(--header-text)]">{asset.seller}</span>
                     </div>
                 </div>
                 {isOwnListing && (
                     <div className="absolute top-4 left-4">
-                        <div className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-lg ${asset.status === 'LISTED' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                            asset.status === 'PENDING_APPROVAL' ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' :
-                                'bg-gray-500/10 text-gray-500 border border-gray-500/20'
+                        <div className={`px-3 py-1 rounded-full text-[10px] font-bold shadow-lg ${asset.status === 'LISTED' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                            asset.status === 'PENDING_APPROVAL' ? 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30' :
+                                'bg-gray-500/20 text-gray-400 border border-gray-500/30'
                             }`}>
                             {asset.status.replace('_', ' ')}
                         </div>
@@ -304,21 +304,21 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
             </div>
 
 
-            <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-lg font-bold mb-6 text-[var(--header-text)] leading-tight group-hover:text-[var(--sidebar-active-text)] transition-colors duration-500 min-h-[2.5rem] line-clamp-2 uppercase tracking-tight">{asset.name}</h3>
+            <div className="p-5 sm:p-6 flex flex-col flex-1">
+                <h3 className="text-lg sm:text-xl font-bold mb-5 text-[var(--header-text)] leading-tight group-hover:text-[var(--sidebar-active-text)] transition-colors duration-500 line-clamp-1">{asset.name}</h3>
 
-                <div className="grid grid-cols-2 gap-3 mb-8">
-                    <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-4 flex flex-col justify-between min-h-[80px] shadow-sm hover:shadow-md transition-shadow">
-                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Fractions</p>
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="bg-[var(--card-surface)] rounded-md py-3 px-4 flex flex-col justify-center min-h-[70px]">
+                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-1">Fractions</p>
                         <p className="text-base font-bold text-[var(--header-text)]">{asset.fractions}</p>
                     </div>
-                    <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-xl p-4 flex flex-col justify-between min-h-[80px] shadow-sm hover:shadow-md transition-shadow">
-                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Price</p>
+                    <div className="bg-[var(--card-surface)] rounded-md py-3 px-4 flex flex-col justify-center min-h-[70px]">
+                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-1">Price</p>
                         <p className="text-base font-bold text-[var(--header-text)]">{asset.price}</p>
                     </div>
-                    <div className="col-span-2 bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 rounded-xl p-5 flex flex-col justify-between min-h-[90px] shadow-inner">
-                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold opacity-60">Current Marketplace Value</p>
-                        <p className="text-xl font-bold text-[var(--sidebar-active-text)]">{asset.currentValue}</p>
+                    <div className="col-span-2 bg-[var(--card-surface)] rounded-md py-3 px-4 flex flex-col justify-center min-h-[70px]">
+                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-1">Current Value</p>
+                        <p className="text-lg font-bold text-[var(--color-primary-200)]">{asset.currentValue}</p>
                     </div>
                 </div>
 
@@ -326,7 +326,7 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
                     {!isOwnListing && (
                         <button
                             onClick={onBuy}
-                            className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold uppercase tracking-[0.2em] shadow-sm hover:opacity-90 hover:scale-[1.01] active:scale-95 transition-all duration-500 border-0 cursor-pointer"
+                            className="w-full py-3.5 rounded-md bg-[var(--color-primary-200)] text-[#000000] text-sm font-bold shadow-sm hover:scale-[1.02] active:scale-95 transition-all duration-300 border-0 cursor-pointer"
                         >
                             Buy Fractions
                         </button>
@@ -334,13 +334,13 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
                     <div className="grid grid-cols-2 gap-3">
                         <button
                             onClick={onView}
-                            className="flex items-center justify-center gap-2 py-3 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-[10px] font-bold text-[var(--header-text)] uppercase tracking-widest hover:bg-[var(--sidebar-active-bg)] hover:shadow-md transition-all border-0 cursor-pointer"
+                            className="flex items-center justify-center gap-2 py-2.5 rounded-md bg-[var(--card-surface)] border border-[var(--sidebar-border)]/5 text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-border)] transition-all cursor-pointer"
                         >
-                            <EyeOpenIcon className="w-4 h-4 text-[var(--sidebar-active-text)]" />
+                            <EyeOpenIcon className="w-4 h-4 text-[var(--color-text-secondary)]" />
                             <span>View</span>
                         </button>
-                        <button className="flex items-center justify-center gap-2 py-3 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-[10px] font-bold text-[var(--header-text)] uppercase tracking-widest hover:bg-[var(--sidebar-active-bg)] hover:shadow-md transition-all border-0 cursor-pointer">
-                            <DownloadIcon className="w-4 h-4 text-[var(--sidebar-active-text)]" />
+                        <button className="flex items-center justify-center gap-2 py-2.5 rounded-md bg-[var(--card-surface)] border border-[var(--sidebar-border)]/5 text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-border)] transition-all cursor-pointer">
+                            <DownloadIcon className="w-4 h-4 text-[var(--color-text-secondary)]" />
                             <span>Info</span>
                         </button>
                     </div>
@@ -363,7 +363,7 @@ function DetailModal({ id, onClose, onBuy }) {
                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                    className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col"
+                    className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col"
                 >
                     {isLoading ? (
                         <div className="p-20 flex justify-center">
@@ -391,11 +391,11 @@ function DetailModal({ id, onClose, onBuy }) {
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4 mb-8">
-                                    <div className="bg-[var(--background)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
+                                    <div className="bg-[var(--card-surface)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
                                         <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Price</p>
                                         <p className="text-lg font-bold text-[var(--header-text)]">${(parseFloat(listing.askPrice || 0)).toLocaleString()}</p>
                                     </div>
-                                    <div className="bg-[var(--background)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
+                                    <div className="bg-[var(--card-surface)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
                                         <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Fractions</p>
                                         <p className="text-lg font-bold text-[var(--header-text)]">{listing.fractions}</p>
                                     </div>
@@ -427,7 +427,7 @@ function DetailModal({ id, onClose, onBuy }) {
                     ) : (
                         <div className="p-20 text-center">
                             <p className="text-red-500 font-bold mb-4">Listing not found</p>
-                            <button onClick={onClose} className="px-6 py-2 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-xs font-bold text-[var(--header-text)] cursor-pointer">Close</button>
+                            <button onClick={onClose} className="px-6 py-2 rounded-full bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-xs font-bold text-[var(--header-text)] cursor-pointer">Close</button>
                         </div>
                     )}
                 </motion.div>

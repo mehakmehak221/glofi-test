@@ -43,7 +43,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                 >
                     <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="relative w-full max-w-sm rounded-[2rem] p-5 sm:p-7 bg-[var(--background)] border border-[var(--sidebar-border)] shadow-2xl"
+                        className="relative w-full max-w-sm rounded-md p-5 sm:p-7 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-2xl"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
@@ -66,12 +66,12 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)] font-bold mb-3">Fractions</p>
 
                       
-                        <div className="flex items-center justify-between rounded-2xl p-1.5 mb-6 bg-[var(--background)] border border-[var(--sidebar-border)]"
+                        <div className="flex items-center justify-between rounded-md p-1.5 mb-6 bg-[var(--field-surface)] border border-[var(--sidebar-border)]"
                         >
                             <motion.button
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="w-11 h-11 rounded-xl bg-[var(--background)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
+                                className="w-11 h-11 rounded-md bg-[var(--field-surface)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
                             >
                                 −
                             </motion.button>
@@ -79,14 +79,14 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                             <motion.button
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => setQuantity(quantity + 1)}
-                                className="w-11 h-11 rounded-xl bg-[var(--background)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
+                                className="w-11 h-11 rounded-md bg-[var(--field-surface)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
                             >
                                 +
                             </motion.button>
                         </div>
 
                    
-                        <div className="space-y-3 mb-6 bg-[var(--background)]/50 rounded-2xl p-4 border border-[var(--sidebar-border)]">
+                        <div className="space-y-3 mb-6 bg-[var(--field-surface)] rounded-md p-4 border border-[var(--sidebar-border)]">
                             <div className="flex items-center justify-between text-sm">
                                 <span className="text-[var(--color-text-muted)] font-medium">{quantity} × {formatCurrency(price)}</span>
                                 <span className="text-[var(--header-text)] font-extrabold">{formatCurrency(subtotal)}</span>
@@ -95,7 +95,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                                 <span className="text-[var(--color-text-muted)] font-medium">Fee (2%)</span>
                                 <span className="text-[var(--header-text)] font-extrabold">{formatCurrency(fee)}</span>
                             </div>
-                            <div className="h-px bg-[var(--sidebar-border)] my-1" />
+                            <div className="h-px bg-[var(--background)] my-1" />
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-bold text-[var(--header-text)]">Total</span>
                                 <span className="text-xl font-black text-[var(--header-text)]">{formatCurrency(total)}</span>
@@ -105,7 +105,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                        
                         {!isKycApproved && (
                             <div
-                                className={`rounded-2xl p-4 mb-6 flex items-start gap-3 border ${
+                                className={`rounded-md p-4 mb-6 flex items-start gap-3 border ${
                                     kycData?.status === "UNDER_REVIEW"
                                         ? "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
                                         : kycData?.status === "REJECTED"
@@ -143,7 +143,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                             whileTap={!isLoading ? { scale: 0.98 } : {}}
                             onClick={() => !isLoading && onVerifyPay(quantity, total)}
                             disabled={isLoading}
-                            className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full py-4 rounded-md bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-glow-primary disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-2">

@@ -22,7 +22,7 @@ const KybUploadItem = ({ label, description, onUpload, value, isUploading }) => 
 
     return (
         <div
-            className="rounded-xl p-4 mb-3 transition-all border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)] hover:border-[var(--color-primary-300)]/20"
+            className="rounded-xl p-4 mb-3 transition-all border border-[var(--sidebar-border)] bg-[var(--field-surface)] hover:border-[var(--color-primary-300)]/20"
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -125,7 +125,7 @@ export default function KYBModal({ isOpen, onClose, onSubmit }) {
                     <motion.div
                         className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl p-6 lg:p-8"
                         style={{
-                            background: 'var(--color-bg-dark-alt)',
+                            background: 'var(--card-surface)',
                             border: '1px solid var(--color-primary-300-alpha-30)',
                         }}
                         variants={modalVariants}

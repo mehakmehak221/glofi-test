@@ -107,12 +107,12 @@ export default function FinancePage() {
                     Finance
                 </h1>
 
-                <div className="flex overflow-x-auto whitespace-nowrap w-full md:w-auto bg-black/5 dark:bg-white/5 p-1 rounded-base sm:rounded-2xl border border-[var(--sidebar-border)] self-start md:self-auto custom-scrollbar-hide">
+                <div className="flex overflow-x-auto whitespace-nowrap w-full md:w-auto bg-black/5 dark:bg-white/5 p-1 rounded-md border border-[var(--sidebar-border)] self-start md:self-auto custom-scrollbar-hide">
                     {TABS.map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`flex-shrink-0 px-4 sm:px-6 py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-[12px] font-medium font-montserrat transition-all relative ${activeTab === tab
+                            className={`flex-shrink-0 px-4 sm:px-6 py-2 rounded-md text-[11px] sm:text-[12px] font-medium font-montserrat transition-all relative ${activeTab === tab
                                 ? "text-[var(--sidebar-active-text)]"
                                 : "text-[var(--sidebar-text)] opacity-40 hover:opacity-80"
                                 }`}
@@ -120,7 +120,7 @@ export default function FinancePage() {
                             {activeTab === tab && (
                                 <motion.div
                                     layoutId="activeTabPill"
-                                    className="absolute inset-0 bg-[var(--sidebar-active-bg)] rounded-xl shadow-sm"
+                                    className="absolute inset-0 bg-[var(--sidebar-active-bg)] rounded-md shadow-sm"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                 />
                             )}
@@ -142,7 +142,7 @@ export default function FinancePage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="rounded-md p-6 bg-[var(--background)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
+                        className="rounded-md p-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-[var(--sidebar-active-text)] opacity-[0.03] pointer-events-none" />
                         <p className="text-[10px] font-bold tracking-[1.2px] text-[var(--sidebar-text)] opacity-30 font-montserrat mb-4 uppercase">
@@ -163,7 +163,7 @@ export default function FinancePage() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="rounded-md bg-black/[0.02] dark:bg-white/[0.02] p-5 border border-[var(--sidebar-border)]"
+                    className="rounded-md bg-[var(--card-surface)] p-5 border border-[var(--sidebar-border)]"
                 >
                     {activeTab === "Commissions" && (
                         <div>
@@ -173,7 +173,7 @@ export default function FinancePage() {
                             </div>
 
                             {!commissionHistory?.data?.length ? (
-                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-2xl">
+                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-md">
                                     No commissions found.
                                 </div>
                             ) : (
@@ -184,7 +184,7 @@ export default function FinancePage() {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
+                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
                                         >
                                             <div>
                                                 <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.asset?.title || "Commission Payment"}</h3>
@@ -213,7 +213,7 @@ export default function FinancePage() {
                             </div>
 
                             {!payoutHistory?.data?.length ? (
-                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-2xl">
+                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-md">
                                     No payouts found.
                                 </div>
                             ) : (
@@ -224,7 +224,7 @@ export default function FinancePage() {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
+                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
                                         >
                                             <div>
                                                 <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.method || "Bank Transfer"}</h3>
@@ -253,7 +253,7 @@ export default function FinancePage() {
                             </div>
 
                             {pendingData?.length === 0 ? (
-                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-2xl">
+                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-md">
                                     No pending approvals found.
                                 </div>
                             ) : (
@@ -264,7 +264,7 @@ export default function FinancePage() {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 group border border-transparent hover:border-[var(--sidebar-border)] transition-all"
+                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-5 rounded-md flex flex-col md:flex-row md:items-center justify-between gap-4 group border border-transparent hover:border-[var(--sidebar-border)] transition-all"
                                         >
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-3 mb-1">
@@ -317,7 +317,7 @@ export default function FinancePage() {
                                     animate={{ opacity: 1, scale: 1 }}
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ delay: i * 0.1 }}
-                                    className={`bg-[var(--background)] p-7 rounded-3xl border ${plan.popular ? 'border-[var(--sidebar-active-text)]/30' : 'border-[var(--sidebar-border)]'} flex flex-col items-start relative overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300`}
+                                    className={`bg-[var(--card-surface)] p-7 rounded-md border ${plan.popular ? 'border-[var(--sidebar-active-text)]/30' : 'border-[var(--sidebar-border)]'} flex flex-col items-start relative overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300`}
                                 >
                                     {plan.popular && (
                                         <div className="absolute top-4 right-4 bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-[9px] font-bold px-2.5 py-1 rounded-full border border-[var(--sidebar-active-text)]/10">
@@ -336,7 +336,7 @@ export default function FinancePage() {
                                         ))}
                                     </ul>
 
-                                    <button className={`w-full py-3.5 rounded-2xl text-[11px] font-bold font-montserrat transition-all ${plan.popular
+                                    <button className={`w-full py-3.5 rounded-md text-[11px] font-bold font-montserrat transition-all ${plan.popular
                                         ? 'bg-[var(--sidebar-active-text)] text-white hover:opacity-90 shadow-md'
                                         : 'bg-black/5 dark:bg-white/5 text-[var(--foreground)] opacity-70 hover:opacity-100 border border-[var(--sidebar-border)]'
                                         }`}>
