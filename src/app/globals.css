@@ -7,7 +7,7 @@
   --color-primary-200: #00F4C4;
   --color-primary-300: #00DAAF;
   --color-primary-400: #00BF9A;
-  --color-primary-500: #009376;
+  --color-primary-500: #00876D;
   --color-primary-600: #00876D;
   --color-primary-700: #006652;
   --color-primary-800: #005041;
@@ -59,7 +59,7 @@
   --color-brand-green: #00c853;
   --color-brand-green-dark: #00a844;
   --color-brand-green-light: #e8fdf0;
-  --color-gradient-glofi: linear-gradient(163.66deg, #00FFCD 28.72%, #00997B 73.06%);
+  --color-gradient-Glofi: linear-gradient(163.66deg, #00FFCD 28.72%, #00997B 73.06%);
   --color-gradient-step: linear-gradient(180deg, #001812 0%, #007E5F 100%);
 
   --color-bg-dark: #0a0a0a;
@@ -208,11 +208,18 @@
   --color-bg-card: #FFFFFF;
   --color-bg-section: #F9FAFB;
   --color-bg-light: #F8FBFA;
+  --background: #F8FBFA;
+  --dashboard-bg: #F8FBFA;
+  --dashboard-surface: #FFFFFF;
+  --dashboard-border: rgba(0, 0, 0, 0.12);
 
-  /* Card & field surface colors */
-  --card-surface: #00000006;
-  --field-surface: #00000006;
-  --form-surface: #FFFFFF;
+  --sidebar-border: var(--dashboard-border);
+  --header-border: var(--dashboard-border);
+
+  --card-surface: var(--dashboard-surface);
+  --field-surface: var(--dashboard-surface);
+  --form-surface: var(--dashboard-surface);
+  --color-bg-card-alt: var(--dashboard-surface);
 }
 
 .dark {
@@ -249,6 +256,14 @@
 
   --foreground: var(--color-text-primary);
   --background: #030403;
+  --dashboard-bg: #030403;
+  --dashboard-surface: #0a0a0a;
+  --dashboard-border: rgba(255, 255, 255, 0.08);
+
+  --card-surface: var(--dashboard-surface);
+  --field-surface: var(--dashboard-surface);
+  --form-surface: var(--dashboard-surface);
+  --color-bg-card-alt: var(--dashboard-surface);
 }
 
 
@@ -297,9 +312,58 @@
 
 
 @utility glass {
-  background: var(--color-primary-300-alpha-10);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-primary-300-alpha-30);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+@utility premium-input {
+  background: var(--field-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  padding: 0.75rem 1rem;
+  transition: all var(--transition-base);
+  outline: none;
+  font-family: var(--font-montserrat);
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+@utility btn-primary {
+  background: var(--color-gradient-Glofi);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  transition: all var(--transition-base);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-montserrat);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+}
+
+@utility btn-secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-subtle);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-montserrat);
+  font-size: 0.875rem;
 }
 
 @utility transition-premium {
@@ -393,7 +457,7 @@
     vertical-align: middle;
   }
 
-  .text-get-glofi {
+  .text-get-Glofi {
     font-family: var(--font-montserrat);
     font-weight: 600;
     font-size: 14px;
@@ -545,15 +609,15 @@
     flex-shrink: 0;
   }
 
-  /* Get GloFi Button - Exact Figma Specifications */
-  .btn-get-glofi {
+  /* Get Glofi Button - Exact Figma Specifications */
+  .btn-get-Glofi {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 99px;
     height: 37px;
     padding: 8px 16px;
-    background: var(--color-gradient-glofi);
+    background: var(--color-gradient-Glofi);
     color: black;
     border-radius: 100px;
     text-decoration: none;
@@ -564,7 +628,7 @@
     opacity: 1;
   }
 
-  .btn-get-glofi:hover {
+  .btn-get-Glofi:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 15px var(--color-primary-300-alpha-30);
   }
@@ -756,7 +820,7 @@
     text-align: center;
     vertical-align: middle;
     text-transform: uppercase;
-    background: var(--color-gradient-glofi);
+    background: var(--color-gradient-Glofi);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1406,7 +1470,7 @@
     gap: 12px;
     padding: 16px 40px;
     border-radius: 100px;
-    background: var(--color-gradient-glofi);
+    background: var(--color-gradient-Glofi);
     color: #000;
     font-weight: 600;
     border: none;

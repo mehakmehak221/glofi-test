@@ -1,0 +1,144 @@
+export interface Property {
+  id: number;
+  name: string;
+  location: string;
+  category: string;
+  image: string;
+  valuation: string;
+  perFraction: string;
+  perFractionNum: number;
+  yield: string;
+  available: string;
+  totalFractions: number;
+  funded: number;
+  risk: string;
+  riskColor: string;
+  riskTextColor: string;
+  broker: string;
+  description: string;
+}
+
+export const CATEGORIES: string[] = [
+  "All",
+  "Dubai Skyscrapers",
+  "Land Parcels",
+  "Commercial Real Estate",
+  "Residential",
+];
+
+export const PROPERTIES: Property[] = [
+  {
+    id: 1,
+    name: "Burj Vista Tower",
+    location: "Downtown Dubai, UAE",
+    category: "Dubai Skyscrapers",
+    image: "/assets/img_ext_0.jpeg",
+    valuation: "$250.0M",
+    perFraction: "$25K",
+    perFractionNum: 25000,
+    yield: "12.5%",
+    available: "3,240",
+    totalFractions: 10000,
+    funded: 68,
+    risk: "MEDIUM",
+    riskColor: "bg-[var(--color-status-warning-bg)]",
+    riskTextColor: "text-[var(--color-status-warning)]",
+    broker: "Al Habtoor Group",
+    description: "A landmark 52-story luxury skyscraper in the heart of Downtown Dubai, offering premium commercial and residential spaces with panoramic views of the Burj Khalifa.",
+  },
+  {
+    id: 2,
+    name: "Marina Business Hub",
+    location: "Dubai Marina, UAE",
+    category: "Commercial Real Estate",
+    image: "/assets/img_ext_2.png",
+    valuation: "$180.0M",
+    perFraction: "$23K",
+    perFractionNum: 23000,
+    yield: "9.8%",
+    available: "5,600",
+    totalFractions: 8000,
+    funded: 30,
+    risk: "LOW",
+    riskColor: "bg-[var(--color-status-success-bg)]",
+    riskTextColor: "text-[var(--color-status-success)]",
+    broker: "Emaar Properties",
+    description: "A state-of-the-art commercial complex in Dubai Marina featuring Grade A office spaces, retail outlets, and waterfront dining experiences.",
+  },
+  {
+    id: 3,
+    name: "Palm Jumeirah Villa Estate",
+    location: "Palm Jumeirah, Dubai",
+    category: "Residential",
+    image: "/assets/img_2.jpeg",
+    valuation: "$95.0M",
+    perFraction: "$19K",
+    perFractionNum: 19000,
+    yield: "15.2%",
+    available: "1,200",
+    totalFractions: 5000,
+    funded: 76,
+    risk: "LOW",
+    riskColor: "bg-[var(--color-status-success-bg)]",
+    riskTextColor: "text-[var(--color-status-success)]",
+    broker: "Nakheel Properties",
+    description: "An exclusive collection of waterfront villas on the iconic Palm Jumeirah, offering private beaches, infinity pools, and unmatched luxury living.",
+  },
+  {
+    id: 4,
+    name: "Desert Oasis Resort",
+    location: "Al Ain, UAE",
+    category: "Land Parcels",
+    image: "/assets/img_3.jpeg",
+    valuation: "$120.0M",
+    perFraction: "$15K",
+    perFractionNum: 15000,
+    yield: "11.3%",
+    available: "4,100",
+    totalFractions: 8000,
+    funded: 45,
+    risk: "HIGH",
+    riskColor: "bg-[var(--color-status-error-bg)]",
+    riskTextColor: "text-[var(--color-status-error)]",
+    broker: "Aldar Properties",
+    description: "A sprawling desert resort and wellness retreat featuring eco-friendly villas, championship golf courses, and natural hot springs.",
+  },
+  {
+    id: 5,
+    name: "DIFC Innovation Tower",
+    location: "DIFC, Dubai",
+    category: "Dubai Skyscrapers",
+    image: "/assets/img_1.jpeg",
+    valuation: "$320.0M",
+    perFraction: "$30K",
+    perFractionNum: 30000,
+    yield: "8.5%",
+    available: "2,800",
+    totalFractions: 10000,
+    funded: 55,
+    risk: "MEDIUM",
+    riskColor: "bg-[var(--color-status-warning-bg)]",
+    riskTextColor: "text-[var(--color-status-warning)]",
+    broker: "DIFC Investments",
+    description: "A cutting-edge commercial tower in the Dubai International Financial Centre, designed for fintech companies and global financial institutions.",
+  },
+  {
+    id: 6,
+    name: "Waterfront Residences",
+    location: "JBR, Dubai",
+    category: "Residential",
+    image: "/assets/img_ext_1.jpeg",
+    valuation: "$75.0M",
+    perFraction: "$12K",
+    perFractionNum: 12000,
+    yield: "14.1%",
+    available: "6,200",
+    totalFractions: 8000,
+    funded: 22,
+    risk: "LOW",
+    riskColor: "bg-[var(--color-status-success-bg)]",
+    riskTextColor: "text-[var(--color-status-success)]",
+    broker: "Meraas Holdings",
+    description: "Premium beachfront apartments at Jumeirah Beach Residence with direct beach access, stunning sea views, and world-class amenities.",
+  },
+];
