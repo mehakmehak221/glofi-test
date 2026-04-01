@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGetPendingApprovalsQuery, useApproveInvestmentMutation, useRejectInvestmentMutation } from "@/store/api/investmentApi";
 import { useGetPartnerFinanceQuery, useGetCommissionHistoryQuery, useGetPayoutHistoryQuery } from "@/store/api/partnerApi";
 import { CheckIcon } from "@/components/VectorImages";
 
-const TABS = ["Commissions", "Payouts", "Approvals", "AI Plans"];
+const TABS = ["Commissions", "Payouts", "AI Plans"];
 
 const STATS = [
     { label: "TOTAL EARNED", value: "$126,450", color: "var(--color-primary-300-alpha-10)" },
@@ -61,7 +60,6 @@ const PLANS = [
 export default function FinancePage() {
     const [activeTab, setActiveTab] = useState("Commissions");
 
-    // Live Data Hooks
     const { data: partnerFinance } = useGetPartnerFinanceQuery();
     const { data: commissionHistory, isLoading: isLoadingCommissions } = useGetCommissionHistoryQuery(undefined, {
         skip: activeTab !== "Commissions"
@@ -69,35 +67,7 @@ export default function FinancePage() {
     const { data: payoutHistory, isLoading: isLoadingPayouts } = useGetPayoutHistoryQuery(undefined, {
         skip: activeTab !== "Payouts"
     });
-    const { data: pendingData, isLoading: isLoadingPending } = useGetPendingApprovalsQuery(undefined, {
-        skip: activeTab !== "Approvals"
-    });
 
-    const [approveInvestment] = useApproveInvestmentMutation();
-    const [rejectInvestment] = useRejectInvestmentMutation();
-
-    const handleApprove = async (id) => {
-        if (!confirm("Approve this investment?")) return;
-        try {
-            await approveInvestment(id).unwrap();
-            alert("Investment approved successfully");
-        } catch (err) {
-            console.error("Approval failed:", err);
-            alert("Failed to approve investment");
-        }
-    };
-
-    const handleReject = async (id) => {
-        const reason = prompt("Enter reason for rejection:");
-        if (!reason) return;
-        try {
-            await rejectInvestment({ id, reason }).unwrap();
-            alert("Investment rejected");
-        } catch (err) {
-            console.error("Rejection failed:", err);
-            alert("Failed to reject investment");
-        }
-    };
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
@@ -245,68 +215,7 @@ export default function FinancePage() {
                         </div>
                     )}
 
-                    {activeTab === "Approvals" && (
-                        <div>
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat">Pending Investment Approvals</h2>
-                                {isLoadingPending && <div className="w-4 h-4 border-2 border-[var(--sidebar-active-text)]/20 border-t-[var(--sidebar-active-text)] rounded-full animate-spin" />}
-                            </div>
 
-                            {pendingData?.length === 0 ? (
-                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-md">
-                                    No pending approvals found.
-                                </div>
-                            ) : (
-                                <div className="space-y-3">
-                                    {pendingData?.map((item, i) => (
-                                        <motion.div
-                                            key={item.id}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-5 rounded-md flex flex-col md:flex-row md:items-center justify-between gap-4 group border border-transparent hover:border-[var(--sidebar-border)] transition-all"
-                                        >
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-3 mb-1">
-                                                    <h3 className="text-[14px] font-semibold text-[var(--foreground)] opacity-80 font-montserrat">{item.asset?.title || "Unknown Asset"}</h3>
-                                                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] font-bold uppercase">{item.fractionsOwned || item.fractions} Frac</span>
-                                                </div>
-                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-40 font-montserrat flex flex-wrap items-center gap-2">
-                                                    Investor: <span className="text-[var(--foreground)] opacity-60 font-medium">{item.investor?.investorProfile?.fullName || item.investor?.email || item.user?.fullName || "Anonymous"}</span>
-                                                    • {new Date(item.createdAt).toLocaleDateString()}
-                                                </p>
-                                            </div>
-
-                                            <div className="flex items-center justify-between w-full md:w-auto md:gap-4 md:text-right">
-                                                <div className="text-left md:text-right">
-                                                    <p className="text-[14px] font-bold text-[var(--foreground)] opacity-90 font-montserrat">${(item.totalPaid || item.amount || 0).toLocaleString()}</p>
-                                                    <p className="text-[10px] text-[var(--sidebar-text)] opacity-30 font-montserrat uppercase tracking-wider mt-0.5">{item.paymentMethod}</p>
-                                                </div>
-                                                <div className="flex items-center gap-2 ml-4">
-                                                    <button
-                                                        onClick={() => handleApprove(item.id)}
-                                                        className="w-8 h-8 rounded-full bg-[var(--color-status-success)]/10 text-[var(--color-status-success)] flex items-center justify-center hover:bg-[var(--color-status-success)] hover:text-white transition-all shadow-sm"
-                                                        title="Approve"
-                                                    >
-                                                        <CheckIcon className="w-4 h-4" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleReject(item.id)}
-                                                        className="w-8 h-8 rounded-full bg-[var(--color-status-error)]/10 text-[var(--color-status-error)] flex items-center justify-center hover:bg-[var(--color-status-error)] hover:text-white transition-all shadow-sm"
-                                                        title="Reject"
-                                                    >
-                                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
 
                     {activeTab === "AI Plans" && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

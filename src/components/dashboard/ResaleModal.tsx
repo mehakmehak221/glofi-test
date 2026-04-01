@@ -124,7 +124,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                     <div className="p-4 sm:p-6 border-b border-[var(--sidebar-border)] flex-shrink-0">
                         <div className="flex items-center justify-between mb-2">
                             <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)] font-Montserrat">
-                                {step === 5 ? "Submission Successful" : "List Property for Resale"}
+                                {step === 5 ? "Listing Live" : "List Property for Resale"}
                             </h2>
                             <button onClick={onClose} className="p-2 hover:bg-[var(--sidebar-active-bg)] rounded-full transition-colors border-0 bg-[var(--background)] cursor-pointer group">
                                 <CloseIcon className="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-[var(--header-text)]" />
@@ -500,16 +500,16 @@ function StepFive({ successData }) {
                 </svg>
             </div>
             
-            <h3 className="text-xl font-black text-[var(--header-text)] uppercase tracking-tight mb-2">Listing Submitted!</h3>
+            <h3 className="text-xl font-black text-[var(--header-text)] uppercase tracking-tight mb-2">Listing Live!</h3>
             <p className="text-sm text-[var(--color-text-muted)] max-w-[300px] leading-relaxed mb-8">
-                {successData.message || "Your fractions have been successfully submitted for resale."}
+                {successData.message || "Your fractions have been successfully listed on the marketplace."}
             </p>
             
             <div className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-2xl p-6 space-y-4">
                 <div className="flex justify-between items-center border-b border-[var(--sidebar-border)] pb-3">
                     <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Listing Status</span>
-                    <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border border-[var(--color-status-warning)]/20">
-                        {successData.status?.replace('_', ' ') || "PENDING APPROVAL"}
+                    <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success)]/20">
+                        {successData.status?.replace('_', ' ') || "LISTED"}
                     </span>
                 </div>
                 {successData.sellListingId && (
@@ -523,7 +523,7 @@ function StepFive({ successData }) {
             </div>
             
             <p className="mt-8 text-[10px] text-[var(--color-text-muted)] italic">
-                Our team will review your listing shortly. You'll be notified once it's live.
+                Your listing is now visible to other investors in the secondary marketplace.
             </p>
         </motion.div>
     );

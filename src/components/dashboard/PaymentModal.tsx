@@ -45,13 +45,7 @@ export default function PaymentModal({ isOpen, onClose, asset, onProcessPayment 
             }
         }
         
-        if (selectedMethod?.id === 'escrow') {
-            setTimeout(() => setStep(6), 2000); 
-            setTimeout(() => setStep(5), 6000); 
-        } else {
-            setTimeout(() => setStep(4), 2000); 
-            setTimeout(() => setStep(5), 5000); 
-        }
+        setTimeout(() => setStep(5), 2000); 
     };
 
     return (
@@ -90,9 +84,8 @@ export default function PaymentModal({ isOpen, onClose, asset, onProcessPayment 
                                 />
                             )}
                             {step === 3 && <StepProcessing />}
-                            {step === 4 && <StepStatus onFinalize={() => setStep(5)} />}
+                            {step === 4 && <StepSuccess asset={asset} method={selectedMethod} onClose={onClose} />}
                             {step === 5 && <StepSuccess asset={asset} method={selectedMethod} onClose={onClose} />}
-                            {step === 6 && <StepEscrowStatus asset={asset} />}
                         </div>
                     </motion.div>
                 </motion.div>
