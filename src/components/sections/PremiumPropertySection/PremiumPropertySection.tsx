@@ -5,11 +5,11 @@ import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
 
 const PROPERTIES = [
-    { id: 1, src: '/assets/images/BanglowImage.png', alt: 'Banglow' },
-    { id: 2, src: '/assets/images/SkyCraperImage.png', alt: 'Sky Craper' },
-    { id: 3, src: '/assets/images/RetailImage.png', alt: 'Retail' },
-    { id: 4, src: '/assets/images/RealEstateImage.png', alt: 'Real Estate' },
-    { id: 5, src: '/assets/images/FlatBuildingImage.png', alt: 'Flat Building' },
+    { id: 1, src: '/assets/images/properties/BanglowImage.png', alt: 'Banglow' },
+    { id: 2, src: '/assets/images/properties/SkyCraperImage.png', alt: 'Sky Craper' },
+    { id: 3, src: '/assets/images/properties/RetailImage.png', alt: 'Retail' },
+    { id: 4, src: '/assets/images/properties/RealEstateImage.png', alt: 'Real Estate' },
+    { id: 5, src: '/assets/images/properties/FlatBuildingImage.png', alt: 'Flat Building' },
 ];
 
 export default function PremiumPropertySection() {

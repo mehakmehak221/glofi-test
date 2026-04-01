@@ -86,7 +86,7 @@ export default function PortfolioPage() {
         const propertyImage = inv.images?.[0] || asset.images?.[0];
         const imageUrl = propertyImage
             ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
-            : "/assets/img_ext_0.jpeg";
+            : "/assets/images/content/img_ext_0.jpeg";
 
 
         const certificate = certsArray?.find(c =>
@@ -266,7 +266,7 @@ function SecondaryListingCard({ item, onDelete }) {
     const title = item.assetTitle || item.asset?.title || item.asset?.name || "Property Listing";
     const location = item.assetLocation || item.asset?.location || "N/A";
     const propertyImage = item.assetImages?.[0] || item.asset?.images?.[0];
-    const imageUrl = propertyImage?.startsWith('http') ? propertyImage : (propertyImage ? `${API_URL}/${propertyImage.replace(/^\//, '')}` : "/assets/marketplace/Burj.png");
+    const imageUrl = propertyImage?.startsWith('http') ? propertyImage : (propertyImage ? `${API_URL}/${propertyImage.replace(/^\//, '')}` : "/assets/images/marketplace/Burj.png");
 
     return (
         <motion.div

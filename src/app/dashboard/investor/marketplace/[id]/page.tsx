@@ -70,7 +70,7 @@ export default function PropertyDetailPage() {
     const propertyImage = property.images?.[0];
     const imageUrl = propertyImage
         ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\/+/, '')}`)
-        : "/assets/img_ext_0.jpeg";
+        : "/assets/images/content/img_ext_0.jpeg";
 
     const fundedPercentage = Math.round(((property.totalFractions - property.availableFractions) / property.totalFractions) * 100);
 

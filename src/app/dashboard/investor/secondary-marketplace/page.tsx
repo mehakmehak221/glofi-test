@@ -31,7 +31,7 @@ export default function SecondaryMarketplacePage() {
     const [buySecondaryListing] = useBuySecondaryListingMutation();
 
     const getImageUrl = (imagePath) => {
-        if (!imagePath) return "/assets/marketplace/Burj.png";
+        if (!imagePath) return "/assets/images/marketplace/Burj.png";
         if (imagePath.startsWith('http')) return imagePath;
         return `${API_URL}/${imagePath.replace(/^\//, '')}`;
     };
@@ -373,7 +373,7 @@ function DetailModal({ id, onClose, onBuy }) {
                         <div className="flex flex-col md:flex-row h-full overflow-y-auto text-[var(--sidebar-text)]">
                             <div className="w-full md:w-1/2 h-64 md:h-auto md:min-h-[400px] relative shrink-0">
                                 <Image
-                                    src={listing.asset?.images?.[0] ? (listing.asset.images[0].startsWith('http') ? listing.asset.images[0] : `${API_URL}/${listing.asset.images[0].replace(/^\//, '')}`) : "/assets/marketplace/Burj.png"}
+                                    src={listing.asset?.images?.[0] ? (listing.asset.images[0].startsWith('http') ? listing.asset.images[0] : `${API_URL}/${listing.asset.images[0].replace(/^\//, '')}`) : "/assets/images/marketplace/Burj.png"}
                                     alt={listing.asset?.title}
                                     fill
                                     className="object-cover"
@@ -414,7 +414,7 @@ function DetailModal({ id, onClose, onBuy }) {
                                             pricePerFraction: parseFloat(listing.askPrice || 0),
                                             fractions: listing.fractions,
                                             seller: listing.investor?.investorProfile?.fullName || "Anonymous",
-                                            image: listing.asset?.images?.[0] ? (listing.asset.images[0].startsWith('http') ? listing.asset.images[0] : `${API_URL}/${listing.asset.images[0].replace(/^\//, '')}`) : "/assets/marketplace/Burj.png"
+                                            image: listing.asset?.images?.[0] ? (listing.asset.images[0].startsWith('http') ? listing.asset.images[0] : `${API_URL}/${listing.asset.images[0].replace(/^\//, '')}`) : "/assets/images/marketplace/Burj.png"
                                         })}
                                         className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold uppercase tracking-[0.2em] shadow-lg hover:opacity-90 transition-all border-0 cursor-pointer"
                                     >

@@ -59,12 +59,12 @@ const AI_STATS = [
 ];
 
 const LISTINGS = [
-    { name: "Burj Vista Tower", pct: 68, img: "/assets/img_burj.png" },
-    { name: "Marina Business Hub", pct: 30, img: "/assets/img_marina.png" },
-    { name: "Palm Jumeirah Villa Estate", pct: 76, img: "/assets/img_palm.png" },
-    { name: "Dubai South Development Land", pct: 7, img: "/assets/img_dubai.png" },
-    { name: "DIFC Innovation Tower", pct: 30, img: "/assets/img_difc.png" },
-    { name: "Marina Walk Residences", pct: 45, img: "/assets/img_walk.png" },
+    { name: "Burj Vista Tower", pct: 68, img: "/assets/images/content/img_burj.png" },
+    { name: "Marina Business Hub", pct: 30, img: "/assets/images/content/img_marina.png" },
+    { name: "Palm Jumeirah Villa Estate", pct: 76, img: "/assets/images/content/img_palm.png" },
+    { name: "Dubai South Development Land", pct: 7, img: "/assets/images/content/img_dubai.png" },
+    { name: "DIFC Innovation Tower", pct: 30, img: "/assets/images/content/img_difc.png" },
+    { name: "Marina Walk Residences", pct: 45, img: "/assets/images/content/img_walk.png" },
 ];
 
 

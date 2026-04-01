@@ -77,7 +77,7 @@ export default function OnboardingPage() {
     return (
         <main className="min-h-screen bg-[var(--color-bg-dark)] flex flex-col items-center justify-center p-6 font-sans selection:bg-[var(--color-primary-300)]/30 theme-purple">
             <div className="mb-12">
-                <Image src="/assets/logo.jpeg" alt="Glofi Logo" width={144} height={48} className="h-12 w-auto" priority />
+                <Image src="/assets/images/branding/logo.jpeg" alt="Glofi Logo" width={144} height={48} className="h-12 w-auto" priority />
                  <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap pt-1">
                         Real Estate
                     </span>

@@ -33,7 +33,7 @@ export default function InvestmentSection() {
             <div 
                 className="absolute inset-0 z-0 pointer-events-none opacity-40 lg:opacity-60"
                 style={{
-                    backgroundImage: "url('/potential-bg.png')",
+                    backgroundImage: "url('/assets/images/backgrounds/potential-bg.png')",
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat'

@@ -85,7 +85,7 @@ export default function MySecondaryListingsPage() {
                                 const title = item.assetTitle || item.asset?.title || item.asset?.name || "Property Listing";
                                 const location = item.assetLocation || item.asset?.location || "N/A";
                                 const propertyImage = item.assetImages?.[0] || item.asset?.images?.[0];
-                                const imageUrl = propertyImage?.startsWith('http') ? propertyImage : (propertyImage ? `/${propertyImage}` : "/assets/marketplace/Burj.png");
+                                const imageUrl = propertyImage?.startsWith('http') ? propertyImage : (propertyImage ? `/${propertyImage}` : "/assets/images/marketplace/Burj.png");
 
                                 return (
                                     <motion.div

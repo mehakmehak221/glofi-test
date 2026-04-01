@@ -19,7 +19,7 @@ export default function Navbar() {
         <header className="navbar fixed top-0 left-0 right-0 z-50 bg-black border-b border-[#A4A7AE]">
             <div className="navbar__inner flex items-center justify-between h-16 lg:h-20 px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-10 max-w-7xl mx-auto">
                 <Link href="/" className="navbar__logo flex items-center gap-3 no-underline flex-shrink-0">
-                    <Image src="/assets/logo.jpeg" alt="Glofi Logo" width={144} height={48} className="h-8 sm:h-10 lg:h-[42px] xl:h-[48px] w-auto object-contain" priority />
+                    <Image src="/assets/images/branding/logo.jpeg" alt="Glofi Logo" width={144} height={48} className="h-8 sm:h-10 lg:h-[42px] xl:h-[48px] w-auto object-contain" priority />
                     <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap pt-1">
                         Real Estate
                     </span>

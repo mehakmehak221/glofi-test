@@ -50,7 +50,7 @@ export default function HeroSection() {
                     variants={imageVariants}
                 >
                     <Image
-                        src="/hero-bg.png"
+                        src="/assets/images/backgrounds/hero-bg.png"
                         alt="Dubai Skyline Night"
                         fill
                         className="object-cover"

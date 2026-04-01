@@ -136,7 +136,7 @@ export default function MarketplacePage() {
                                 const propertyImage = property.images?.[0];
                                 const imageUrl = propertyImage
                                     ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
-                                    : "/assets/img_ext_0.jpeg";
+                                    : "/assets/images/content/img_ext_0.jpeg";
                                 const rawYield = parseFloat(property.expectedYield || 0);
                                 const formattedYield = rawYield.toFixed(2).replace(/\.?0+$/, '');
 

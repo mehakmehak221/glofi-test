@@ -109,7 +109,7 @@ export default function PropertyInvestmentCategoriesSection() {
                         <motion.div variants={itemVariants} className="relative flex flex-col min-w-0 group">
                             <div className="relative w-full h-48 sm:h-56 lg:h-64 rounded-t-2xl border border-[var(--color-border-subtle)] border-b-0 overflow-hidden bg-[var(--color-bg-surface-subtle)]">
                                 <Image
-                                    src="/assets/farmhouseimage.jpg"
+                                    src="/assets/images/content/farmhouseimage.jpg"
                                     alt="Land Parcels"
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-105"

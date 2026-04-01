@@ -71,7 +71,7 @@ export default function PartnerSidebar() {
             <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[var(--color-border-subtle)]">
                 <Link href="/dashboard/partner/overview" className="flex items-center gap-3 no-underline">
                     <Image
-                        src={isLight ? "/assets/light-logo.png" : "/assets/logo.png"}
+                        src={isLight ? "/assets/images/branding/light-logo.png" : "/assets/images/branding/logo.png"}
                         alt="Glofi Logo"
                         width={120}
                         height={40}

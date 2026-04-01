@@ -7,7 +7,7 @@ export const RealEstateImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1777" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1777" transform="scale(0.000390625 0.000585823)" />
             </pattern>
-            <image id="image0_14_1777" width="2560" height="1707" preserveAspectRatio="none" xlinkHref="/assets/img_0.jpeg" />
+            <image id="image0_14_1777" width="2560" height="1707" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_0.jpeg" />
         </defs>
     </svg>
 );
@@ -19,7 +19,7 @@ export const SkyCraperImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1781" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1781" transform="scale(0.000833333 0.0015949)" />
             </pattern>
-            <image id="image0_14_1781" width="1200" height="627" preserveAspectRatio="none" xlinkHref="/assets/img_1.jpeg" />
+            <image id="image0_14_1781" width="1200" height="627" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_1.jpeg" />
         </defs>
     </svg>
 );
@@ -31,7 +31,7 @@ export const BanglowImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1783" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1783" transform="matrix(0.000558036 0 0 0.000839631 0 -0.880772)" />
             </pattern>
-            <image id="image0_14_1783" width="1792" height="2240" preserveAspectRatio="none" xlinkHref="/assets/img_ext_1.jpeg" />
+            <image id="image0_14_1783" width="1792" height="2240" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_ext_1.jpeg" />
         </defs>
     </svg>
 );
@@ -43,7 +43,7 @@ export const FlatBuildingImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1790" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1790" transform="scale(0.000924214 0.00164204)" />
             </pattern>
-            <image id="image0_14_1790" width="1082" height="609" preserveAspectRatio="none" xlinkHref="/assets/img_ext_2.png" />
+            <image id="image0_14_1790" width="1082" height="609" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_ext_2.png" />
         </defs>
     </svg>
 );
@@ -55,7 +55,7 @@ export const RetailImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1792" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1792" transform="scale(0.00165017 0.0025)" />
             </pattern>
-            <image id="image0_14_1792" width="606" height="400" preserveAspectRatio="none" xlinkHref="/assets/img_ext_3.png" />
+            <image id="image0_14_1792" width="606" height="400" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_ext_3.png" />
         </defs>
     </svg>
 );
@@ -67,7 +67,7 @@ export const HotelImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1787" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1787" transform="scale(0.0005 0.000745156)" />
             </pattern>
-            <image id="image0_14_1787" width="2000" height="1342" preserveAspectRatio="none" xlinkHref="/assets/img_2.jpeg" />
+            <image id="image0_14_1787" width="2000" height="1342" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_2.jpeg" />
         </defs>
     </svg>
 );
@@ -79,7 +79,7 @@ export const FarmHouseImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1794" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1794" transform="scale(0.00125 0.00166667)" />
             </pattern>
-            <image id="image0_14_1794" width="800" height="600" preserveAspectRatio="none" xlinkHref="/assets/img_3.jpeg" />
+            <image id="image0_14_1794" width="800" height="600" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_3.jpeg" />
         </defs>
     </svg>
 );
@@ -91,7 +91,7 @@ export const IndustryImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_10_301" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_10_301" transform="matrix(0.000949648 0 0 0.00203704 -0.107775 -0.233333)" />
             </pattern>
-            <image id="image0_10_301" width="1280" height="720" preserveAspectRatio="none" xlinkHref="/assets/img_ext_5.png" />
+            <image id="image0_10_301" width="1280" height="720" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_ext_5.png" />
         </defs>
     </svg>
 );
@@ -103,7 +103,7 @@ export const GlobalScaleGlobeImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_10_279" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_10_279" transform="matrix(0.00143482 0 0 0.00145179 -1.05751 -0.256594)" />
             </pattern>
-            <image id="image0_10_279" width="1440" height="886" preserveAspectRatio="none" xlinkHref="/assets/img_4.png" />
+            <image id="image0_10_279" width="1440" height="886" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_4.png" />
         </defs>
     </svg>
 );
@@ -115,7 +115,7 @@ export const IndoSpaceImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1793" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1793" transform="scale(0.0015625 0.00277778)" />
             </pattern>
-            <image id="image0_14_1793" width="640" height="360" preserveAspectRatio="none" xlinkHref="/assets/img_ext_4.jpeg" />
+            <image id="image0_14_1793" width="640" height="360" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_ext_4.jpeg" />
         </defs>
     </svg>
 );
@@ -127,7 +127,7 @@ export const NewYorkImage = ({ className = "w-full h-auto" }) => (
             <pattern id="pattern0_14_1780" patternContentUnits="objectBoundingBox" width="1" height="1">
                 <use xlinkHref="#image0_14_1780" transform="scale(0.000423012)" />
             </pattern>
-            <image id="image0_14_1780" width="2364" height="2364" preserveAspectRatio="none" xlinkHref="/assets/img_ext_0.jpeg" />
+            <image id="image0_14_1780" width="2364" height="2364" preserveAspectRatio="none" xlinkHref="/assets/images/content/img_ext_0.jpeg" />
         </defs>
     </svg>
 );
@@ -265,7 +265,7 @@ export const LogoIcon = ({ className = "w-8 h-8" }) => (
 
 export const LogoIconPng = ({ className = "w-34 h-62" }) => (
     <Image 
-        src="/assets/logo.jpeg" 
+        src="/assets/images/branding/logo.jpeg" 
         alt="Glofi Logo" 
         width={136}
         height={248}

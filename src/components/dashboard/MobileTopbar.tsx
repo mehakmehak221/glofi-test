@@ -28,7 +28,7 @@ export default function MobileTopbar() {
 
                 <Link href="/dashboard/investor/marketplace" className="flex items-center gap-3 no-underline">
                     <Image
-                        src={isLight ? "/assets/light-logo.png" : "/assets/logo.png"}
+                        src={isLight ? "/assets/images/branding/light-logo.png" : "/assets/images/branding/logo.png"}
                         alt="Glofi Logo"
                         width={80}
                         height={24}

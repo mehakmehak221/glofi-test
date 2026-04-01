@@ -5,12 +5,12 @@ export default function AuthLeftPanel() {
     <div className="auth-left-panel relative hidden lg:flex h-full overflow-hidden bg-[var(--color-bg-dark-alt)]">
      
       <div className="absolute inset-0 z-0">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('/images/left-bg.png')`,
-          }}
-        />
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/assets/images/backgrounds/left-bg.png')`,
+            }}
+          />
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-bg-dark-alt)]/80 via-[var(--color-bg-dark-alt)]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-dark-alt)]/95 via-transparent to-[var(--color-bg-dark-alt)]/40" />
       </div>
@@ -20,7 +20,7 @@ export default function AuthLeftPanel() {
         
         <div>
           <div className="flex items-baseline gap-3">
-            <Image src="/assets/logo.png" alt="Glofi Logo" width={112} height={28} className="h-7 w-auto translate-y-[2px]" priority />
+            <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={112} height={28} className="h-7 w-auto translate-y-[2px]" priority />
             <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap pt-1">
                         Real Estate
                     </span>
