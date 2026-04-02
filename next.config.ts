@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  transpilePackages: ['@reduxjs/toolkit', 'react-redux'],
   devIndicators: false,
 };
 
