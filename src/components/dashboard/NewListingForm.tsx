@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { BusinessPropertyIcon, UploadIcon, LoadingSpinner } from "../VectorImages";
 import { 
     useCreateAssetMutation, 
@@ -11,8 +11,105 @@ import {
 import { useGetKybStatusQuery } from "@/store/api/kybApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { validateFileUpload } from "@/utils/assetUtils";
+import { Country, State, City } from "country-state-city";
 import KYBModal from "./KYBModal";
 import KYCModal from "./KYCModal";
+
+const DROPDOWN_STYLES = `
+  .dropdown-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+  .dropdown-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .dropdown-scroll::-webkit-scrollbar-thumb {
+    background: var(--sidebar-border);
+    border-radius: 10px;
+  }
+  .dropdown-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--sidebar-active-text);
+  }
+`;
+
+function LocationDropdown({ label, options, value, onChange, placeholder, disabled = false }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const filteredOptions = options.filter(opt => 
+        opt.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+        <div className="flex flex-col gap-2 relative" ref={dropdownRef}>
+            <label className="text-[10px] font-semibold text-[var(--sidebar-text)] opacity-50 tracking-widest uppercase font-montserrat">{label}</label>
+            <div 
+                onClick={() => !disabled && setIsOpen(!isOpen)}
+                className={`flex justify-between items-center bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md px-4 py-3.5 text-sm font-montserrat cursor-pointer transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[var(--sidebar-active-text)]/30'} ${isOpen ? 'border-[var(--sidebar-active-text)]/30 ring-1 ring-[var(--sidebar-active-text)]/10' : ''}`}
+            >
+                <span className={value ? "text-[var(--foreground)]" : "text-[var(--sidebar-text)]/30"}>
+                    {value || placeholder}
+                </span>
+                <svg className={`w-4 h-4 text-[var(--sidebar-text)]/50 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute z-[100] top-[calc(100%+8px)] left-0 right-0 bg-[var(--form-surface)] border border-[var(--sidebar-border)] rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
+                    >
+                        <div className="p-3 border-b border-[var(--sidebar-border)]">
+                            <input
+                                type="text"
+                                autoFocus
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-lg px-3 py-2 text-xs text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 font-montserrat"
+                            />
+                        </div>
+                        <div className="max-h-[250px] overflow-y-auto dropdown-scroll">
+                            {filteredOptions.length > 0 ? (
+                                filteredOptions.map((opt) => (
+                                    <div
+                                        key={opt.isoCode || opt.name}
+                                        onClick={() => {
+                                            onChange(opt);
+                                            setIsOpen(false);
+                                            setSearchTerm("");
+                                        }}
+                                        className={`px-4 py-2.5 text-sm font-montserrat cursor-pointer hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--sidebar-active-text)] transition-colors ${value === opt.name ? 'bg-[var(--sidebar-active-text)] text-black' : 'text-[var(--foreground)]'}`}
+                                    >
+                                        {opt.name}
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="px-4 py-3 text-xs text-[var(--sidebar-text)]/50 font-montserrat text-center italic">
+                                    No results found
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
 
 const CATEGORIES = [
     { label: "Skyscraper", value: "DUBAI_SKYSCRAPER" },
@@ -80,11 +177,16 @@ export default function NewListingForm({ onBack, editId }) {
         description: "",
         riskRating: "MEDIUM",
         category: "DUBAI_SKYSCRAPER",
+        country: "",
+        state: "",
+        city: "",
         titleDeedUrl: "",
         valuationReportUrl: "",
         legalOpinionUrl: "",
         images: []
     });
+    const [countryIsoCode, setCountryIsoCode] = useState("");
+    const [stateIsoCode, setStateIsoCode] = useState("");
 
     const [showKybModal, setShowKybModal] = useState(false);
     const [showKycModal, setShowKycModal] = useState(false);
@@ -112,6 +214,9 @@ export default function NewListingForm({ onBack, editId }) {
                 description: asset.description || "",
                 riskRating: asset.riskRating || "MEDIUM",
                 category: asset.category || "DUBAI_SKYSCRAPER",
+                country: asset.country || "",
+                state: asset.state || "",
+                city: asset.city || "",
                 titleDeedUrl: asset.titleDeedUrl || "",
                 valuationReportUrl: asset.valuationReportUrl || "",
                 legalOpinionUrl: asset.legalOpinionUrl || "",
@@ -141,7 +246,7 @@ export default function NewListingForm({ onBack, editId }) {
 
     const handleSubmit = async () => {
       
-        const required = ['title', 'location', 'valuation', 'totalFractions', 'expectedYield', 'description', 'titleDeedUrl'];
+        const required = ['title', 'location', 'country', 'state', 'city', 'valuation', 'totalFractions', 'expectedYield', 'description', 'titleDeedUrl'];
         for (const field of required) {
             if (!formData[field]) {
                 alert(`Please fill in ${field}`);
@@ -187,8 +292,13 @@ export default function NewListingForm({ onBack, editId }) {
         }
     };
 
+    useEffect(() => {
+        // Drop we don't need script for custom dropdown
+    }, []);
+
     return (
         <>
+        <style>{DROPDOWN_STYLES}</style>
         <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -255,6 +365,38 @@ export default function NewListingForm({ onBack, editId }) {
                             className="bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
+                    <LocationDropdown
+                        label="Country"
+                        options={Country.getAllCountries()}
+                        value={formData.country}
+                        onChange={(opt) => {
+                            setCountryIsoCode(opt.isoCode);
+                            setFormData({ ...formData, country: opt.name, state: "", city: "" });
+                            setStateIsoCode("");
+                        }}
+                        placeholder="Select Country"
+                    />
+                    <LocationDropdown
+                        label="State"
+                        options={countryIsoCode ? State.getStatesOfCountry(countryIsoCode) : []}
+                        value={formData.state}
+                        onChange={(opt) => {
+                            setStateIsoCode(opt.isoCode);
+                            setFormData({ ...formData, state: opt.name, city: "" });
+                        }}
+                        placeholder="Select State"
+                        disabled={!countryIsoCode}
+                    />
+                    <LocationDropdown
+                        label="City"
+                        options={(countryIsoCode && stateIsoCode) ? City.getCitiesOfState(countryIsoCode, stateIsoCode) : []}
+                        value={formData.city}
+                        onChange={(opt) => {
+                            setFormData({ ...formData, city: opt.name });
+                        }}
+                        placeholder="Select City"
+                        disabled={!stateIsoCode}
+                    />
                     <div className="flex flex-col gap-2">
                         <label className="text-[10px] font-semibold text-[var(--sidebar-text)] opacity-50 tracking-widest uppercase font-montserrat">Valuation ($)</label>
                         <input

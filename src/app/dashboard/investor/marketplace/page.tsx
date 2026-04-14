@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
@@ -8,8 +8,105 @@ import { MapPinIcon } from "@/components/VectorImages";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { CATEGORIES } from "@/data/propertyData";
+import { Country, State, City } from "country-state-city";
 
 import { API_URL } from "@/constants";
+
+const DROPDOWN_STYLES = `
+  .dropdown-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+  .dropdown-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .dropdown-scroll::-webkit-scrollbar-thumb {
+    background: var(--sidebar-border);
+    border-radius: 10px;
+  }
+  .dropdown-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--sidebar-active-text);
+  }
+`;
+
+function PillDropdown({ label, options, value, onChange, placeholder, disabled = false }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const filteredOptions = options.filter(opt => 
+        opt.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+        <div className="flex flex-col gap-1.5 relative" ref={dropdownRef}>
+            <label className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold px-1 font-montserrat">{label}</label>
+            <div 
+                onClick={() => !disabled && setIsOpen(!isOpen)}
+                className={`flex justify-between items-center bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-full px-4 py-1.5 text-xs font-montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[var(--sidebar-active-text)]/30'} ${isOpen ? 'border-[var(--sidebar-active-text)]/30 shadow-sm' : ''}`}
+            >
+                <span className={value ? "text-[var(--foreground)]" : "text-[var(--color-text-muted)]"}>
+                    {value || placeholder}
+                </span>
+                <svg className={`w-3 h-3 text-[var(--color-text-muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        className="absolute z-[100] top-[calc(100%+6px)] left-0 min-w-[200px] bg-[var(--marketplace-hero-bg)] border border-[var(--sidebar-border)] rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
+                    >
+                        <div className="p-2 border-b border-[var(--sidebar-border)]">
+                            <input
+                                type="text"
+                                autoFocus
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-full px-3 py-1.5 text-[10px] text-[var(--foreground)] focus:outline-none font-montserrat"
+                            />
+                        </div>
+                        <div className="max-h-[200px] overflow-y-auto dropdown-scroll">
+                            {filteredOptions.length > 0 ? (
+                                filteredOptions.map((opt) => (
+                                    <div
+                                        key={opt.isoCode || opt.name}
+                                        onClick={() => {
+                                            onChange(opt);
+                                            setIsOpen(false);
+                                            setSearchTerm("");
+                                        }}
+                                        className={`px-4 py-2 text-[11px] font-montserrat cursor-pointer hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--sidebar-active-text)] transition-colors ${value === opt.name ? 'bg-[var(--sidebar-active-text)] text-black' : 'text-[var(--color-text-muted)]'}`}
+                                    >
+                                        {opt.name}
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="px-4 py-3 text-[10px] text-[var(--color-text-muted)] font-montserrat text-center italic">
+                                    No results found
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
 
 const CATEGORY_MAP = {
     "Dubai Skyscrapers": "DUBAI_SKYSCRAPER",
@@ -51,10 +148,20 @@ const cardVariants: Variants = {
 
 export default function MarketplacePage() {
     const [activeCategory, setActiveCategory] = useState("All");
+    const [countryFilter, setCountryFilter] = useState("");
+    const [stateFilter, setStateFilter] = useState("");
+    const [cityFilter, setCityFilter] = useState("");
+    const [countryIsoCode, setCountryIsoCode] = useState("");
+    const [stateIsoCode, setStateIsoCode] = useState("");
     const router = useRouter();
 
     const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
-    const { data: assetsData, isLoading, isError } = useGetAssetsQuery({ category: apiCategory });
+    const { data: assetsData, isLoading, isError } = useGetAssetsQuery({ 
+      category: apiCategory,
+      country: countryFilter || undefined,
+      state: stateFilter || undefined,
+      city: cityFilter || undefined
+    });
 
     const assets = assetsData?.data || [];
 
@@ -62,8 +169,13 @@ export default function MarketplacePage() {
         router.push(`/dashboard/investor/marketplace/${id}`);
     };
 
+    useEffect(() => {
+       
+    }, []);
+
     return (
         <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)]">
+            <style>{DROPDOWN_STYLES}</style>
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -105,6 +217,58 @@ export default function MarketplacePage() {
                             {cat}
                         </button>
                     ))}
+                </div>
+
+                <div className="flex flex-wrap gap-4 mt-6 items-center">
+                    <PillDropdown 
+                        label="Country"
+                        options={Country.getAllCountries()}
+                        value={countryFilter}
+                        onChange={(opt) => {
+                            setCountryIsoCode(opt.isoCode);
+                            setCountryFilter(opt.name);
+                            setStateFilter("");
+                            setCityFilter("");
+                            setStateIsoCode("");
+                        }}
+                        placeholder="Select Country"
+                    />
+                    <PillDropdown 
+                        label="State"
+                        options={countryIsoCode ? State.getStatesOfCountry(countryIsoCode) : []}
+                        value={stateFilter}
+                        onChange={(opt) => {
+                            setStateIsoCode(opt.isoCode);
+                            setStateFilter(opt.name);
+                            setCityFilter("");
+                        }}
+                        placeholder="Select State"
+                        disabled={!countryIsoCode}
+                    />
+                    <PillDropdown 
+                        label="City"
+                        options={(countryIsoCode && stateIsoCode) ? City.getCitiesOfState(countryIsoCode, stateIsoCode) : []}
+                        value={cityFilter}
+                        onChange={(opt) => {
+                            setCityFilter(opt.name);
+                        }}
+                        placeholder="Select City"
+                        disabled={!stateIsoCode}
+                    />
+                    {(countryFilter || stateFilter || cityFilter) && (
+                        <button 
+                            onClick={() => {
+                                setCountryFilter("");
+                                setStateFilter("");
+                                setCityFilter("");
+                                setStateIsoCode("");
+                                setCountryIsoCode("");
+                            }}
+                            className="mt-5 text-[10px] text-[var(--sidebar-active-text)] font-semibold hover:underline font-montserrat"
+                        >
+                            Clear Filters
+                        </button>
+                    )}
                 </div>
             </motion.div>
 
@@ -180,9 +344,9 @@ export default function MarketplacePage() {
 
                                         <div className="p-5">
                                             <h3 className="text-lg font-bold text-[var(--header-text)] mb-1 line-clamp-1">{property.title}</h3>
-                                            <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-xs mb-4">
+                                            <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-xs mb-4 font-montserrat">
                                                 <MapPinIcon className="w-3.5 h-3.5" />
-                                                {property.location}
+                                                {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
                                             </div>
 
                                             <div className="grid grid-cols-2 gap-3 mb-4">
