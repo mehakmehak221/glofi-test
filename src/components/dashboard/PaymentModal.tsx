@@ -168,14 +168,20 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                         />
                     </div>
 
-                    <div className="flex flex-col items-center justify-center p-8 bg-[var(--field-surface)] rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm">
-                        <div className="w-32 h-32 bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-2xl flex items-center justify-center mb-5 shadow-inner">
-                           {/* Simplified Placeholder for QR */}
-                           <div className="w-24 h-24 text-[var(--header-text)]/10">
-                               <svg fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2zm-3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm3-10h2v2h-2V5zm-3 0h2v2h-2V5zm3 3h2v2h-2V8zm-3 0h2v2h-2V8z"/></svg>
-                           </div>
+                    <div className="bg-[var(--field-surface)] rounded-2xl p-5 border border-[var(--sidebar-border)] shadow-sm space-y-4">
+                        <div className="flex justify-between items-center text-sm">
+                            <span className="font-bold text-[var(--color-text-muted)] uppercase tracking-wider">Amount</span>
+                            <span className="font-extrabold text-[var(--header-text)]">{asset.currentValue}</span>
                         </div>
-                        <p className="text-xs font-bold text-[var(--color-text-muted)]">Scan QR code with your UPI app</p>
+                        <div className="flex justify-between items-center text-sm">
+                            <span className="font-bold text-[var(--color-text-muted)] uppercase tracking-wider">Fee (UPI)</span>
+                            <span className="font-extrabold text-[var(--header-text)]">$0.00</span>
+                        </div>
+                        <div className="h-px bg-[var(--sidebar-border)] my-1" />
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm font-black text-[var(--header-text)] uppercase">Total to Pay</span>
+                            <span className="text-xl font-black text-[var(--sidebar-active-text)]">{asset.currentValue}</span>
+                        </div>
                     </div>
                 </div>
             )}
@@ -452,34 +458,34 @@ function StepEscrowStatus({ asset }) {
 }
 
 function StepSuccess({ asset, method, onClose }) {
+    const fractions = asset.fractions || 1;
     return (
         <div className="flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-[2rem] bg-[var(--badge-bg)] flex items-center justify-center mb-8 shadow-sm">
-                <div className="w-10 h-10 flex items-center justify-center text-[var(--sidebar-active-text)]">
-                    <CheckIcon className="w-12 h-12" />
+            <div className="w-16 h-16 rounded-full bg-[var(--color-status-success-bg)] flex items-center justify-center mb-8 shadow-glow-success">
+                <div className="w-10 h-10 flex items-center justify-center text-[var(--color-status-success)]">
+                    <CheckIcon className="w-10 h-10" />
                 </div>
             </div>
-            <h2 className="text-3xl font-black mb-2 text-[var(--header-text)]">Investment Complete!</h2>
-            <p className="text-base font-bold text-[var(--color-text-muted)] mb-10">1 fraction of {asset.name}</p>
+            <h2 className="text-3xl font-black mb-2 text-[var(--header-text)]">Investment Request Sent</h2>
+            <p className="text-base font-bold text-[var(--color-text-muted)] mb-10">
+                {fractions} {fractions === 1 ? 'fraction' : 'fractions'} of {asset.name}
+            </p>
 
-            <div className="w-full space-y-4 mb-10 bg-[var(--background)] p-6 rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm">
-                <div className="flex justify-between text-xs font-bold">
+            <div className="w-full space-y-4 mb-10 bg-[var(--field-surface)] p-6 rounded-2xl border border-[var(--sidebar-border)] shadow-sm text-left">
+                <div className="flex justify-between items-center text-xs font-bold py-1">
                     <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Transaction ID</span>
                     <span className="text-[var(--header-text)] font-mono">TX-MMOZMMIV</span>
                 </div>
-                {method?.id === 'escrow' && (
-                    <div className="flex justify-between text-xs font-bold">
-                        <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Escrow ID</span>
-                        <span className="text-[var(--header-text)] font-mono">ESC-MMOZMMIV</span>
-                    </div>
-                )}
-                <div className="flex justify-between text-xs font-bold">
+                <div className="flex justify-between items-center text-xs font-bold py-1">
                     <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Payment Method</span>
-                    <span className="text-[var(--header-text)]">{method?.label || 'Direct'}</span>
+                    <span className="text-[var(--header-text)]">{method?.label || 'UPI'}</span>
                 </div>
-                <div className="flex justify-between text-xs font-black pt-4 border-t border-[var(--sidebar-border)]">
+                <div className="flex justify-between items-center text-xs font-black pt-4 border-t border-[var(--sidebar-border)]">
                     <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Status</span>
-                    <span className="text-[var(--color-status-success)] bg-[var(--color-status-success-bg)] px-4 py-1.5 rounded-full ring-1 ring-[var(--color-status-success-border)]">✓ COMPLETED</span>
+                    <span className="text-[var(--color-status-success)] bg-[var(--color-status-success-bg)] px-4 py-1.5 rounded-full ring-1 ring-[var(--color-status-success-border)] flex items-center gap-1.5 font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-status-success)]" />
+                        COMPLETED
+                    </span>
                 </div>
             </div>
 

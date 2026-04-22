@@ -784,3 +784,20 @@ export const SunIcon = ({ className = "w-5 h-5" }) => (
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
     </svg>
 );
+export const CalendarIcon = ({ className = "w-4 h-4", style }: { className?: string, style?: any }) => (
+    <svg className={className} style={style} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.6667 2.66669H3.33333C2.59695 2.66669 2 3.26364 2 4.00002V13.3334C2 14.0697 2.59695 14.6667 3.33333 14.6667H12.6667C13.403 14.6667 14 14.0697 14 13.3334V4.00002C14 3.26364 13.403 2.66669 12.6667 2.66669Z" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M10.667 1.33331V4.00002" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M5.33301 1.33331V4.00002" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M2 6.66669H14" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+export const ReceiptIcon = ({ className = "w-4 h-4" }) => (
+    <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.66663 1.33331L4.00002 2.66665L5.33331 1.33331L6.66665 2.66665L7.99994 1.33331L9.33323 2.66665L10.6665 1.33331L11.9998 2.66665L13.3331 1.33331V14.6666L11.9998 13.3333L10.6665 14.6666L9.33323 13.3333L7.99994 14.6666L6.66665 13.3333L5.33331 14.6666L4.00002 13.3333L2.66663 14.6666V1.33331Z" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M5.33301 5.33331H10.6663" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M5.33301 8H10.6663" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M5.33301 10.6667H7.99967" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);

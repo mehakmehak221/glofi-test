@@ -151,7 +151,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                                     Processing...
                                 </div>
                             ) : (
-                                "Verify & Pay"
+                                "Continue to Payment"
                             )}
                         </motion.button>
                     </motion.div>

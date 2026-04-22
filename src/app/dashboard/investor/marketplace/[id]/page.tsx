@@ -10,6 +10,7 @@ import { PROPERTIES } from "@/data/propertyData";
 import InvestModal from "@/components/dashboard/InvestModal";
 import KYCModal from "@/components/dashboard/KYCModal";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
+import PaymentModal from "@/components/dashboard/PaymentModal";
 
 import { useGetAssetByIdQuery } from "@/store/api/assetApi";
 import { useCreateInvestmentMutation, useGetInvestmentsQuery } from "@/store/api/investmentApi";
@@ -40,6 +41,7 @@ export default function PropertyDetailPage() {
     const [investQuantity, setInvestQuantity] = useState(1);
     const [investStatus, setInvestStatus] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [paymentModalOpen, setPaymentModalOpen] = useState(false);
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
 
     const showToast = (message, type = "success") => {
@@ -98,12 +100,16 @@ export default function PropertyDetailPage() {
             return;
         }
 
-        // If KYC is already approved, proceed to investment
+        // If KYC is approved, open Payment Modal
+        setPaymentModalOpen(true);
+    };
+
+    const handleProcessPayment = async () => {
         try {
             setIsSubmitting(true);
             const result = await createInvestment({
                 assetId: params.id,
-                fractions: qty,
+                fractions: investQuantity,
                 paymentMethod: "UPI",
                 currency: "USD",
             }).unwrap();
@@ -112,10 +118,11 @@ export default function PropertyDetailPage() {
             showToast("Investment successful! You can view it in your portfolio.");
             refetchInvestments();
             setInvestStatus(result?.data?.status || result?.status || "PENDING");
-            setConfirmType("confirmed");
+            return true; // Signal success to PaymentModal
         } catch (err) {
             console.error("Investment failed:", err);
             showToast(err?.data?.message || "Investment failed. Please try again.", "error");
+            return false; // Signal failure
         } finally {
             setIsSubmitting(false);
         }
@@ -362,6 +369,17 @@ export default function PropertyDetailPage() {
                 onVerifyPay={handleVerifyPay}
                 isLoading={isSubmitting || isInvesting}
             />
+            <PaymentModal
+                isOpen={paymentModalOpen}
+                onClose={() => setPaymentModalOpen(false)}
+                asset={{
+                    ...property,
+                    name: property.title,
+                    currentValue: `$${(property.fractionPrice * investQuantity).toLocaleString()}`,
+                    fractions: investQuantity
+                }}
+                onProcessPayment={handleProcessPayment}
+            />
             <KYCModal
                 isOpen={kycOpen}
                 onClose={() => setKycOpen(false)}
@@ -373,18 +391,6 @@ export default function PropertyDetailPage() {
                         isOpen={true}
                         onClose={handleKycConfirmClose}
                         type="kyc"
-                    />
-                )
-            }
-            {
-                confirmType === "confirmed" && (
-                    <ConfirmationModal
-                        isOpen={true}
-                        onClose={handleFinalClose}
-                        type="confirmed"
-                        propertyName={property.title}
-                        quantity={investQuantity}
-                        status={investStatus}
                     />
                 )
             }
