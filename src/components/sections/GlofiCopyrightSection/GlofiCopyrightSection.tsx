@@ -44,7 +44,7 @@ export default function GlofiCopyrightSection() {
                             <Link href="#terms" className="text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors duration-200 whitespace-nowrap">
                                 Terms
                             </Link>
-                            <Link href="#privacy" className="text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors duration-200 whitespace-nowrap">
+                            <Link href="/privacy-policy" className="text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors duration-200 whitespace-nowrap">
                                 Privacy
                             </Link>
                             <Link href="#cookies" className="text-xs sm:text-sm lg:text-base text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors duration-200 whitespace-nowrap">
