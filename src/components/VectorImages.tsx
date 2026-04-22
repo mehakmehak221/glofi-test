@@ -297,8 +297,8 @@ export const ChevronLeftIcon = ({ className = "w-4 h-4" }) => (
 );
 
 
-export const BackArrowIcon = ({ className = "w-4 h-4" }) => (
-    <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const BackArrowIcon = ({ className = "w-4 h-4", style, ...props }: any) => (
+    <svg className={className} style={style} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M7.99967 12.6668L3.33301 8.00016L7.99967 3.3335" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M12.6663 8H3.33301" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
     </svg>

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useGetPartnerFinanceQuery, useGetCommissionHistoryQuery, useGetPayoutHistoryQuery } from "@/store/api/partnerApi";
 import { CheckIcon } from "@/components/VectorImages";
 
-const TABS = ["Commissions", "Payouts", "AI Plans"];
+const TABS = [ "Payouts", "AI Plans"];
 
 const STATS = [
     { label: "TOTAL EARNED", value: "$126,450", color: "var(--color-primary-300-alpha-10)" },

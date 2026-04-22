@@ -6,7 +6,7 @@ import { useGetProfileQuery } from "@/store/api/authApi";
 import { useGetMyCertificatesQuery } from "@/store/api/certificatesApi";
 import { API_URL } from "@/constants";
 
-const TABS = ["Profile", "KYC", "Wallet", "Certificates", "Referrals"];
+const TABS = ["Profile", "KYC",  "Certificates", "Referrals"];
 
 const tabContentVariants = {
     hidden: { opacity: 0, y: 10 },

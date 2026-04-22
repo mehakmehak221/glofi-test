@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetProfileQuery } from "@/store/api/authApi";
 
-const TABS = ["Profile", "KYB", "Wallet", "Settings"];
+const TABS = ["Profile", "KYB", "Settings"];
 
 const tabContentVariants = {
     hidden: { opacity: 0, y: 10 },

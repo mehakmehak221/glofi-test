@@ -1,0 +1,198 @@
+"use client";
+
+import { motion, Variants } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { TrendingUpIcon, SecondaryMarketplaceIcon, VerifiedIcon, ChevronLeftIcon } from "@/components/VectorImages";
+
+const CalculatorIcon = ({ className = "w-6 h-6" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+    <line x1="8" y1="6" x2="16" y2="6" />
+    <line x1="16" y1="14" x2="16" y2="14" />
+    <line x1="12" y1="14" x2="12" y2="14" />
+    <line x1="8" y1="14" x2="8" y2="14" />
+    <line x1="16" y1="18" x2="16" y2="18" />
+    <line x1="12" y1="18" x2="12" y2="18" />
+    <line x1="8" y1="18" x2="8" y2="18" />
+  </svg>
+);
+
+export function CommunityStatusBanner() {
+  const router = useRouter();
+  
+  const avatars = [
+    { initials: "R", color: "#00DAAF" },
+    { initials: "M", color: "#FF4D4D" },
+    { initials: "N", color: "#2E86DE" },
+    { initials: "J", color: "#F39C12" },
+  ];
+
+  return (
+    <motion.div
+      whileHover={{ y: -2, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+      whileTap={{ scale: 0.995 }}
+      onClick={() => router.push("/dashboard/investor/community")}
+      className="flex items-center justify-between px-8 py-6 bg-[var(--card-surface)] border border-white/5 rounded-[32px] cursor-pointer shadow-2xl mb-10 backdrop-blur-xl group relative overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10 relative z-10">
+        <div className="flex flex-col">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-muted)] font-bold mb-1 opacity-60">Total Community Depth</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tighter">
+            ₹62.1 Lacs <span className="text-[var(--color-text-muted)] font-medium text-lg">invested</span>
+          </h2>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <div className="flex -space-x-4">
+            {avatars.map((avatar, index) => (
+              <div
+                key={index}
+                className="w-12 h-12 rounded-full border-[3px] border-[var(--background)] flex items-center justify-center text-xs font-black text-white overflow-hidden shadow-2xl transition-all duration-300 group-hover:-translate-y-1"
+                style={{ 
+                  backgroundColor: avatar.color,
+                  zIndex: avatars.length - index,
+                  boxShadow: `0 8px 16px -4px ${avatar.color}40`
+                }}
+              >
+                {avatar.initials}
+              </div>
+            ))}
+            <div className="w-12 h-12 rounded-full border-[3px] border-[var(--background)] bg-[var(--card-surface)] flex items-center justify-center text-[10px] font-black text-[var(--color-text-muted)] z-0 shadow-xl group-hover:-translate-y-1 transition-all duration-300">
+              +12
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-bold text-[var(--foreground)]">Active Investors</span>
+            <span className="text-[10px] text-[var(--color-text-muted)] font-medium">Joined in last 24h</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/10 bg-white/5 group-hover:bg-[var(--foreground)] group-hover:text-[var(--background)] transition-all duration-500 shadow-inner overflow-hidden relative z-10">
+        <svg className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </div>
+    </motion.div>
+  );
+}
+
+export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick }) {
+  return (
+    <motion.div
+      whileHover={{ y: -10, backgroundColor: "rgba(255, 255, 255, 0.04)" }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className="p-8 bg-[var(--card-surface)] border border-white/5 rounded-[32px] cursor-pointer transition-all duration-500 flex flex-col justify-between shadow-2xl backdrop-blur-xl group relative overflow-hidden min-h-[220px]"
+    >
+      <div 
+        className="absolute -right-4 -top-4 w-24 h-24 blur-[60px] rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500"
+        style={{ backgroundColor: color }}
+      />
+      
+      <div className="relative z-10">
+        <div 
+          className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-inner"
+          style={{ 
+            backgroundColor: `${color}15`, 
+            color: color,
+            boxShadow: `0 10px 20px -5px ${color}30`
+          }}
+        >
+          <Icon className="w-7 h-7" />
+        </div>
+        <h3 className="text-lg font-black text-[var(--foreground)] mb-2 leading-[1.1] tracking-tighter group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-white/60 transition-all duration-500">{title}</h3>
+        <p className="text-[11px] text-[var(--color-text-muted)] font-montserrat font-semibold uppercase tracking-widest opacity-50 group-hover:opacity-80 transition-opacity">{subtitle}</p>
+      </div>
+      
+      <div className="mt-6 flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 relative z-10">
+        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/10">
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export function InvestorBanners() {
+  const router = useRouter();
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+  };
+
+  return (
+    <div className="mb-12">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <CommunityStatusBanner />
+      </motion.div>
+
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
+        <motion.div variants={itemVariants}>
+          <FeatureBannerSmall
+            icon={TrendingUpIcon}
+            title="Get over 92% return"
+            subtitle="within 5 years"
+            color="#00DAAF"
+            onClick={() => router.push("/dashboard/investor/returns-calculator")}
+          />
+        </motion.div>
+        
+        <motion.div variants={itemVariants}>
+          <FeatureBannerSmall
+            icon={SecondaryMarketplaceIcon}
+            title="Buy and Sell Anytime"
+            subtitle="Zero lock-in period"
+            color="#2E86DE"
+            onClick={() => {}}
+          />
+        </motion.div>
+        
+        <motion.div variants={itemVariants}>
+          <FeatureBannerSmall
+            icon={CalculatorIcon}
+            title="Return Calculator"
+            subtitle="Estimate your gains"
+            color="#F39C12"
+            onClick={() => router.push("/dashboard/investor/returns-calculator")}
+          />
+        </motion.div>
+        
+        <motion.div variants={itemVariants}>
+          <FeatureBannerSmall
+            icon={VerifiedIcon}
+            title="On-chain Properties"
+            subtitle="Institutional grade"
+            color="#12B76A"
+            onClick={() => {}}
+          />
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}

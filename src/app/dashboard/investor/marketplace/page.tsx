@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { MapPinIcon } from "@/components/VectorImages";
+
+import { InvestorBanners } from "@/components/dashboard/investor/InvestorBanners";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { CATEGORIES } from "@/data/propertyData";
@@ -153,6 +155,7 @@ export default function MarketplacePage() {
     const [cityFilter, setCityFilter] = useState("");
     const [countryIsoCode, setCountryIsoCode] = useState("");
     const [stateIsoCode, setStateIsoCode] = useState("");
+
     const router = useRouter();
 
     const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
@@ -176,11 +179,16 @@ export default function MarketplacePage() {
     return (
         <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)]">
             <style>{DROPDOWN_STYLES}</style>
+            
+            <div className="max-w-6xl mx-auto mb-12 sm:mb-16">
+                <InvestorBanners />
+            </div>
+
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="mb-6 sm:mb-8 p-4 sm:p-6 lg:p-8"
+                className="mb-8 sm:mb-10 p-6 sm:p-8 lg:p-10"
                 style={{
                     borderRadius: '24px',
                     border: '0.667px solid var(--marketplace-card-border)',
