@@ -82,7 +82,7 @@ export default function HeroSection() {
                         variants={itemVariants}
                     >
                         <Link
-                            href=""
+                            href="/explore"
                             className="btn-explore w-full sm:w-auto"
                         >
                             <span className="text-btn-explore text-xs sm:text-sm md:text-base font-Montserrat">EXPLORE PROPERTIES</span>

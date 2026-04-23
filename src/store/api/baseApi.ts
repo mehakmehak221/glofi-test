@@ -8,7 +8,7 @@ export const baseApi = createApi({
     baseUrl: `${API_URL}/`,
     credentials: 'include',
     prepareHeaders: (headers, { endpoint }) => {
-      const publicEndpoints = ['login', 'register'];
+      const publicEndpoints = ['login', 'register', 'getAssets', 'getAssetById'];
 
       if (!publicEndpoints.includes(endpoint)) {
         const token = getCookie('access_token') || localStorage.getItem('access_token');

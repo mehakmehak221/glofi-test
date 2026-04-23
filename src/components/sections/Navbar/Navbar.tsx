@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { LogoIconPng } from '../../VectorImages';
 
 const NAV_LINKS = [
+    { label: 'Explore', href: '/explore' },
     { label: 'Company', href: '#company' },
     { label: 'Product', href: '#product' },
     { label: 'Support', href: '#support' },

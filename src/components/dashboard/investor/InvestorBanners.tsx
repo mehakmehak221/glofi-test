@@ -104,7 +104,7 @@ export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick
         >
           <Icon className="w-7 h-7" />
         </div>
-        <h3 className="text-lg font-black text-[var(--foreground)] mb-2 leading-[1.1] tracking-tighter group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-white/60 transition-all duration-500">{title}</h3>
+        <h3 className="text-lg font-black text-[var(--foreground)] mb-2 leading-[1.1] tracking-tighter group-hover:opacity-80 transition-all duration-500">{title}</h3>
         <p className="text-[11px] text-[var(--color-text-muted)] font-montserrat font-semibold uppercase tracking-widest opacity-50 group-hover:opacity-80 transition-opacity">{subtitle}</p>
       </div>
       
