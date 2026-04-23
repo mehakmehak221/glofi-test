@@ -47,7 +47,7 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
     );
 
     return (
-        <div className="flex flex-col gap-1.5 relative" ref={dropdownRef}>
+        <div className={`flex flex-col gap-1.5 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
             <label className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold px-1 font-Montserrat">{label}</label>
             <div 
                 onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -171,7 +171,7 @@ export default function ExplorePage() {
             <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-28 pb-12 sm:pt-36 sm:pb-16">
 
 
-                <div className="flex flex-col gap-10 mb-16 bg-[var(--color-bg-card)] p-8 sm:p-10 rounded-[32px] border border-white/5 shadow-2xl backdrop-blur-xl">
+                <div className="flex flex-col gap-10 mb-16 bg-[var(--color-bg-card)] p-8 sm:p-10 rounded-[32px] border border-white/5 shadow-2xl backdrop-blur-xl relative z-20">
                     <div className="flex flex-col gap-4">
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter bg-gradient-to-r from-[#00DAAF] to-[#00DAAF]/60 bg-clip-text text-transparent">
                             Discover Assets

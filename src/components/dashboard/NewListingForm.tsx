@@ -51,7 +51,7 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
     );
 
     return (
-        <div className="flex flex-col gap-2 relative" ref={dropdownRef}>
+        <div className={`flex flex-col gap-2 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
             <label className="text-[10px] font-semibold text-[var(--sidebar-text)] opacity-50 tracking-widest uppercase font-montserrat">{label}</label>
             <div 
                 onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -322,7 +322,7 @@ export default function NewListingForm({ onBack, editId }) {
                     <LoadingSpinner />
                 </div>
             ) : (
-                <div className="bg-[var(--form-surface)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 lg:p-10">
+                <div className="bg-[var(--form-surface)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 lg:p-10 relative z-10">
                   
                 <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-[var(--sidebar-border)] pb-2 sm:pb-4 w-full">
                     {CATEGORIES.map((cat) => (

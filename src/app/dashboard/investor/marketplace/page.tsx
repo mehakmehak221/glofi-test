@@ -50,7 +50,7 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
     );
 
     return (
-        <div className="flex flex-col gap-1.5 relative" ref={dropdownRef}>
+        <div className={`flex flex-col gap-1.5 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
             <label className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold px-1 font-montserrat">{label}</label>
             <div 
                 onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -188,7 +188,7 @@ export default function MarketplacePage() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="mb-8 sm:mb-10 p-6 sm:p-8 lg:p-10"
+                className="mb-8 sm:mb-10 p-6 sm:p-8 lg:p-10 relative z-20"
                 style={{
                     borderRadius: '24px',
                     border: '0.667px solid var(--marketplace-card-border)',
