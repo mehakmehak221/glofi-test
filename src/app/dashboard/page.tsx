@@ -10,6 +10,8 @@ export default function DashboardPage() {
         const userType = (localStorage.getItem("userType") || "").toUpperCase();
         if (userType === "PARTNER") {
             router.replace("/dashboard/partner/overview");
+        } else if (userType === "AGENT") {
+            router.replace("/dashboard/agent/overview");
         } else {
             router.replace("/dashboard/investor/marketplace");
         }

@@ -4,8 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { PhoneIcon, ProfileIcon, ArrowRightIcon, LoadingSpinner, CheckIcon, SparkleIcon, ChevronLeftIcon, BackArrowIcon } from "@/components/VectorImages";
+import { PhoneIcon, ProfileIcon, ArrowRightIcon, LoadingSpinner, CheckIcon, SparkleIcon, ChevronLeftIcon, BackArrowIcon, UploadIcon, CalendarIcon } from "@/components/VectorImages";
 import { useSetupProfileMutation } from "@/store/api/authApi";
+import { useSetupAgentKycMutation } from "@/store/api/kycApi";
+import { useUploadFileMutation } from "@/store/api/fileApi";
 
 export default function OnboardingPage() {
     const router = useRouter();
@@ -13,16 +15,36 @@ export default function OnboardingPage() {
     const [phone, setPhone] = useState("");
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [profile, setProfile] = useState({ fullName: "", dateOfBirth: "", nationality: "Indian", residentialAddress: "" });
-    const [userRole, setUserRole] = useState("INVESTOR");
+    const [rera, setRera] = useState({ 
+        registrationNumber: "", 
+        state: "", 
+        expiryDate: "", 
+        certificate: null as File | null,
+        documentType: "PASSPORT",
+        documentFile: null as File | null,
+        selfieFile: null as File | null,
+        addressProofFile: null as File | null
+    });
+    const [userRole, setUserRole] = useState("");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const role = localStorage.getItem("userType");
-        if (role) setUserRole(role.toUpperCase());
+        if (role) {
+            const upperRole = role.toUpperCase();
+            setUserRole(upperRole);
+            if (upperRole === "AGENT" && step === 3) {
+                setStep(4);
+            }
+        } else {
+            setUserRole("INVESTOR");
+        }
     }, []);
     const [errorMsg, setErrorMsg] = useState("");
 
     const [setupProfile, { isLoading: isSettingUp }] = useSetupProfileMutation();
+    const [setupAgentKyc, { isLoading: isSubmittingKyc }] = useSetupAgentKycMutation();
+    const [uploadFile] = useUploadFileMutation();
 
     const otpRefs = useRef([]);
 
@@ -60,6 +82,13 @@ export default function OnboardingPage() {
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
         setErrorMsg("");
+        
+        // For the time being, skip API for Agent role as requested
+        if (userRole === "AGENT") {
+            setStep(4); // Move to KYC
+            return;
+        }
+
         try {
             await setupProfile({
                 fullName: profile.fullName,
@@ -73,21 +102,62 @@ export default function OnboardingPage() {
             setErrorMsg(err?.data?.message || err?.message || "Failed to setup profile. Please try again.");
         }
     };
+    const handleKycSubmit = (e) => {
+        e.preventDefault();
+        setStep(5); 
+    };
+
+    const handleReraSubmit = async (e) => {
+        e.preventDefault();
+        setErrorMsg("");
+        
+        try {
+            const uploadDocument = async (file: File, folder: string) => {
+                const response = await uploadFile({ file, folder }).unwrap();
+                return response.url; 
+            };
+
+            const [docUrl, selfieUrl, addrUrl, reraUrl] = await Promise.all([
+                rera.documentFile ? uploadDocument(rera.documentFile, "kyc") : Promise.resolve(""),
+                rera.selfieFile ? uploadDocument(rera.selfieFile, "kyc") : Promise.resolve(""),
+                rera.addressProofFile ? uploadDocument(rera.addressProofFile, "kyc") : Promise.resolve(""),
+                rera.certificate ? uploadDocument(rera.certificate, "rera") : Promise.resolve("")
+            ]);
+
+            await setupAgentKyc({
+                documentType: rera.documentType,
+                documentUrl: docUrl,
+                selfieUrl: selfieUrl,
+                addressProofUrl: addrUrl,
+                reraDocumentUrl: reraUrl,
+                reraNumber: rera.registrationNumber,
+                expiryDate: rera.expiryDate
+            }).unwrap();
+
+            router.push("/dashboard");
+        } catch (err: any) {
+            console.error("Failed to submit KYC:", err);
+            setErrorMsg(err?.data?.message || err?.message || "Failed to submit verification details. Please try again.");
+        }
+    };
 
     return (
-        <main className="min-h-screen bg-[var(--color-bg-dark)] flex flex-col items-center justify-center p-6 font-sans selection:bg-[var(--color-primary-300)]/30 theme-purple">
-            <div className="mb-12">
-                <Image src="/assets/images/branding/logo.jpeg" alt="Glofi Logo" width={144} height={48} className="h-12 w-auto" priority />
-                 <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap pt-1">
+        <main className="min-h-screen w-full bg-[var(--color-bg-dark)] flex flex-col items-center px-4 py-8 sm:py-20 font-sans selection:bg-[var(--color-primary-300)]/30 theme-purple overflow-x-hidden">
+            <div className="mb-8 sm:mb-12 flex flex-col items-center text-center w-full max-w-full">
+                <Image src="/assets/images/branding/logo.jpeg" alt="Glofi Logo" width={144} height={48} className="h-10 sm:h-12 w-auto mb-2" priority />
+                 <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap">
                         Real Estate
                     </span>
             </div>
 
 
-            <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[var(--color-bg-surface-subtle)] mb-12 shadow-sm">
+
+
+
+            <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[var(--color-bg-surface-subtle)] mb-10 sm:mb-16 shadow-sm max-w-full">
                 <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)]/60" />
-                <span className="text-[12px] font-bold tracking-[0.15em] text-[var(--color-text-muted)] uppercase font-Montserrat">
-                    {userRole === "PARTNER" ? "Partner Panel" : "Investor Setup"}
+                <span className="text-[11px] sm:text-[12px] font-bold tracking-[0.15em] text-[var(--color-text-muted)] uppercase font-Montserrat whitespace-nowrap">
+                    {userRole === "PARTNER" ? "Partner Panel" : userRole === "AGENT" ? "Agent Setup" : "Investor Setup"}
                 </span>
             </div>
 
@@ -188,8 +258,8 @@ export default function OnboardingPage() {
             )} */}
 
 
-            {step === 3 && (
-                <div className="w-full max-w-sm flex flex-col items-start animate-fade-in text-start">
+            {step === 3 && userRole !== "AGENT" && (
+                <div className="w-full max-w-[500px] flex flex-col animate-fade-in p-6 sm:p-10 rounded-[24px] sm:rounded-[32px] border border-white/5 bg-[#0D0D0D] shadow-2xl relative">
                     <h1 className="text-white font-bold text-3xl tracking-tight mb-3 font-Montserrat">Set up your profile</h1>
                     <p className="text-[var(--color-text-muted)] text-md leading-relaxed mb-2 font-Montserrat">
                         Tell us a bit about yourself
@@ -257,6 +327,185 @@ export default function OnboardingPage() {
                                 className="flex-1 h-[50px] rounded-full bg-[var(--color-primary-300)] text-black font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-[0_8px_20px_var(--color-primary-300-alpha-15)] font-Montserrat"
                             >
                                 {isSettingUp ? <LoadingSpinner /> : <>Complete Setup <SparkleIcon /></>}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+            {step === 4 && (
+                <div className="w-full max-w-[560px] flex flex-col animate-fade-in p-6 sm:p-10 rounded-[24px] sm:rounded-[32px] border border-white/5 bg-[#0D0D0D] shadow-2xl relative">
+                    <h1 className="text-white font-semibold text-2xl tracking-tight mb-8 font-Montserrat">Identity Verification</h1>
+                    <p className="text-[var(--color-text-muted)] text-sm leading-relaxed mb-8 font-Montserrat">
+                        Please upload your documents to complete KYC. This is required for agent commission payouts.
+                    </p>
+                    
+                    <form onSubmit={handleKycSubmit} className="w-full space-y-6">
+                        <div className="space-y-2.5">
+                            <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">Document Type</label>
+                            <select
+                                className="w-full h-[56px] rounded-xl px-5 bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00FFCC]/30 transition-all font-medium font-Montserrat appearance-none"
+                                value={rera.documentType} onChange={e => setRera({ ...rera, documentType: e.target.value })}
+                            >
+                                <option value="PASSPORT" className="bg-[#0D0D0D]">Passport</option>
+                                <option value="AADHAR" className="bg-[#0D0D0D]">Aadhar Card</option>
+                                <option value="PAN" className="bg-[#0D0D0D]">PAN Card</option>
+                                <option value="DRIVING_LICENSE" className="bg-[#0D0D0D]">Driving License</option>
+                            </select>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2.5">
+                                <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">Document Front/Full</label>
+                                <div 
+                                    className="relative w-full h-[100px] rounded-xl border-2 border-dashed border-white/10 bg-white/[0.02] flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-[#00FFCC]/20 transition-all overflow-hidden"
+                                    onClick={() => document.getElementById('docFile')?.click()}
+                                >
+                                    <input 
+                                        type="file" id="docFile" className="hidden" accept=".pdf,.jpg,.jpeg,.png"
+                                        onChange={e => setRera({ ...rera, documentFile: e.target.files?.[0] || null })}
+                                    />
+                                    {rera.documentFile ? (
+                                        <span className="text-[11px] text-[#00FFCC] font-medium truncate px-2 w-full text-center">{rera.documentFile.name}</span>
+                                    ) : (
+                                        <>
+                                            <UploadIcon className="w-5 h-5 text-white/30" />
+                                            <span className="text-[10px] text-white/30">Upload ID</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="space-y-2.5">
+                                <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">Selfie Verification</label>
+                                <div 
+                                    className="relative w-full h-[100px] rounded-xl border-2 border-dashed border-white/10 bg-white/[0.02] flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-[#00FFCC]/20 transition-all overflow-hidden"
+                                    onClick={() => document.getElementById('selfieFile')?.click()}
+                                >
+                                    <input 
+                                        type="file" id="selfieFile" className="hidden" accept=".jpg,.jpeg,.png"
+                                        onChange={e => setRera({ ...rera, selfieFile: e.target.files?.[0] || null })}
+                                    />
+                                    {rera.selfieFile ? (
+                                        <span className="text-[11px] text-[#00FFCC] font-medium truncate px-2 w-full text-center">{rera.selfieFile.name}</span>
+                                    ) : (
+                                        <>
+                                            <UploadIcon className="w-5 h-5 text-white/30" />
+                                            <span className="text-[10px] text-white/30">Upload Selfie</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2.5">
+                            <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">Address Proof</label>
+                            <div 
+                                className="relative w-full h-[100px] rounded-xl border-2 border-dashed border-white/10 bg-white/[0.02] flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#00FFCC]/20 transition-all overflow-hidden"
+                                onClick={() => document.getElementById('addressFile')?.click()}
+                            >
+                                <input 
+                                    type="file" id="addressFile" className="hidden" accept=".pdf,.jpg,.jpeg,.png"
+                                    onChange={e => setRera({ ...rera, addressProofFile: e.target.files?.[0] || null })}
+                                />
+                                {rera.addressProofFile ? (
+                                    <span className="text-[11px] text-[#00FFCC] font-medium truncate px-2 w-full text-center">{rera.addressProofFile.name}</span>
+                                ) : (
+                                    <>
+                                        <UploadIcon className="w-5 h-5 text-white/30" />
+                                        <span className="text-[11px] text-white/30">Upload Proof of Address</span>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="w-full h-[60px] rounded-2xl bg-[#00FFCC] text-black font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-[0_8px_20px_rgba(0,255,204,0.2)] font-Montserrat"
+                        >
+                            Next: RERA Details <ArrowRightIcon />
+                        </button>
+                    </form>
+                </div>
+            )}
+
+            {step === 5 && (
+                <div className="w-full max-w-[560px] flex flex-col animate-fade-in p-6 sm:p-10 rounded-[24px] sm:rounded-[32px] border border-white/5 bg-[#0D0D0D] shadow-2xl relative">
+                    <h1 className="text-white font-semibold text-2xl tracking-tight mb-8 font-Montserrat">RERA Registration Details</h1>
+                    
+                    <div className="flex items-center gap-4 p-4 rounded-xl bg-[#00FFCC]/5 border border-[#00FFCC]/10 mb-8 w-full">
+                        <div className="w-6 h-6 rounded-full border border-[#00FFCC]/40 flex items-center justify-center text-[12px] text-[#00FFCC] shrink-0 font-bold">!</div>
+                        <p className="text-[13px] text-white/70 leading-relaxed font-Montserrat">
+                            Your RERA registration will be verified against the official registry. Ensure the details match exactly.
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleReraSubmit} className="w-full space-y-7">
+                        <div className="space-y-2.5">
+                            <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">RERA Registration Number</label>
+                            <input
+                                type="text" placeholder="RERA-MH-2024-001234" required
+                                value={rera.registrationNumber} onChange={e => setRera({ ...rera, registrationNumber: e.target.value })}
+                                className="w-full h-[56px] rounded-xl px-5 bg-white/[0.03] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-[#00FFCC]/30 transition-all font-medium font-Montserrat"
+                            />
+                        </div>
+
+                        <div className="space-y-2.5">
+                            <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">State</label>
+                            <input
+                                type="text" placeholder="Select state" required
+                                value={rera.state} onChange={e => setRera({ ...rera, state: e.target.value })}
+                                className="w-full h-[56px] rounded-xl px-5 bg-white/[0.03] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-[#00FFCC]/30 transition-all font-medium font-Montserrat"
+                            />
+                        </div>
+
+                        <div className="space-y-2.5">
+                            <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">RERA License Expiry Date</label>
+                            <div className="relative">
+                                <input
+                                    type="date" required
+                                    value={rera.expiryDate} onChange={e => setRera({ ...rera, expiryDate: e.target.value })}
+                                    className="w-full h-[56px] rounded-xl px-5 bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00FFCC]/30 transition-all font-medium custom-calendar-picker"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2.5">
+                            <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">Upload RERA Certificate</label>
+                            <div 
+                                className="w-full h-[140px] rounded-2xl border-2 border-dashed border-white/10 bg-white/[0.02] flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-[#00FFCC]/20 hover:bg-white/[0.04] transition-all group overflow-hidden"
+                                onClick={() => document.getElementById('reraFile')?.click()}
+                            >
+                                <input 
+                                    type="file" id="reraFile" className="hidden" accept=".pdf,.jpg,.jpeg,.png"
+                                    onChange={e => setRera({ ...rera, certificate: e.target.files?.[0] || null })}
+                                />
+                                {rera.certificate ? (
+                                    <div className="flex flex-col items-center gap-2">
+                                        <CheckIcon className="w-8 h-8 text-[#00FFCC]" />
+                                        <span className="text-[12px] font-medium text-[#00FFCC] truncate px-4 w-full text-center">{rera.certificate.name}</span>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="w-12 h-12 rounded-full bg-white/[0.05] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <UploadIcon className="w-6 h-6 text-white/40" />
+                                        </div>
+                                        <span className="text-[12px] font-medium text-white/40">Click to upload (PDF, JPG, PNG)</span>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="flex gap-4 pt-6">
+                            <button
+                                type="button" onClick={() => setStep(4)}
+                                className="flex-1 h-[56px] rounded-2xl border border-white/10 text-white font-semibold text-[15px] hover:bg-white/5 transition-all font-Montserrat"
+                            >
+                                Back
+                            </button>
+                            <button
+                                type="submit" disabled={isSubmittingKyc}
+                                className="flex-[2] h-[56px] rounded-2xl bg-[#00FFCC] text-black font-bold text-[15px] flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-[0_4px_24px_rgba(0,255,204,0.3)] font-Montserrat"
+                            >
+                                {isSubmittingKyc ? <LoadingSpinner color="black" /> : "Submit for Verification"}
                             </button>
                         </div>
                     </form>

@@ -35,14 +35,14 @@ export default function SignInPage() {
             const result = await login(payload).unwrap();
 
             console.log('Login Result:', result);
-            const token = result.accessToken || result.token || result.data?.accessToken || result.data?.token;
+            const token = result?.accessToken || result?.token || result?.data?.accessToken || result?.data?.token;
 
             if (token) {
                 setCookie("access_token", token);
                 localStorage.setItem("access_token", token);
             }
 
-            localStorage.setItem("userType", result.role || result.user?.role || userType.toUpperCase());
+            localStorage.setItem("userType", result?.role || result?.user?.role || userType.toUpperCase());
             localStorage.setItem("isLoggedIn", "true");
             setCookie("isLoggedIn", "true");
 
@@ -61,7 +61,7 @@ export default function SignInPage() {
             if (status === 401) {
                 setErrorMsg("Incorrect email or password. Please try again.");
             } else if (status === 403) {
-                setErrorMsg("Access denied. Please check your account type (Investor/Partner).");
+                setErrorMsg("Access denied. Please check your account type (Investor/Partner/Agent).");
             } else if (status === 400) {
                 setErrorMsg(message || "Invalid login request. Please check your credentials.");
             } else if (status === 404) {
