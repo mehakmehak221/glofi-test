@@ -10,6 +10,14 @@ export const kycApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Kyc'],
     }),
+    setupAgentKyc: builder.mutation<any, any>({
+      query: (kycData) => ({
+        url: 'agent/kyc',
+        method: 'POST',
+        body: kycData,
+      }),
+      invalidatesTags: ['Kyc'],
+    }),
     getKycStatus: builder.query<any, void>({
       query: () => ({
         url: 'kyc/status',
@@ -20,4 +28,4 @@ export const kycApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useSubmitKycMutation, useGetKycStatusQuery } = kycApi;
+export const { useSubmitKycMutation, useGetKycStatusQuery, useSetupAgentKycMutation } = kycApi;

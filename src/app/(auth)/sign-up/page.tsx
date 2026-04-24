@@ -6,17 +6,26 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import { ChevronLeftIcon, LoadingSpinner, ArrowRightIcon, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
-import { useRegisterMutation } from "@/store/api/authApi";
+import { useRegisterMutation, useRegisterAgentMutation } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
 
 export default function SignUpPage() {
     const router = useRouter();
     const [userType, setUserType] = useState("Investor");
-    const [form, setForm] = useState({ name: "", email: "", password: "", referredByCode: "" });
+    const [form, setForm] = useState({ 
+        name: "", 
+        email: "", 
+        password: "", 
+        referredByCode: "",
+        reraNumber: "",
+        expiryDate: ""
+    });
     const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
 
-    const [register, { isLoading }] = useRegisterMutation();
+    const [register, { isLoading: isInvestorRegistering }] = useRegisterMutation();
+    const [registerAgent, { isLoading: isAgentRegistering }] = useRegisterAgentMutation();
+    const isLoading = isInvestorRegistering || isAgentRegistering;
 
     const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm((p) => ({ ...p, [k]: e.target.value }));
@@ -27,30 +36,41 @@ export default function SignUpPage() {
         e.preventDefault();
         setErrorMsg("");
         try {
-            const result = await register({
-                fullName: form.name,
-                email: form.email,
-                password: form.password,
-                role: userType.toUpperCase(),
-                referredByCode: form.referredByCode || undefined
-            }).unwrap();
+            let result;
+            if (userType === "Agent") {
+                result = await registerAgent({
+                    fullName: form.name,
+                    email: form.email,
+                    password: form.password,
+                    reraNumber: form.reraNumber,
+                    expiryDate: form.expiryDate
+                }).unwrap();
+            } else {
+                result = await register({
+                    fullName: form.name,
+                    email: form.email,
+                    password: form.password,
+                    role: userType.toUpperCase(),
+                    referredByCode: form.referredByCode || undefined
+                }).unwrap();
+            }
 
             console.log('Register Result:', result);
-            const token = result.accessToken || result.token;
+            const token = result?.accessToken || result?.token || result?.data?.accessToken || result?.data?.token || result?.agent?.token;
 
             if (token) {
                 setCookie("access_token", token);
                 localStorage.setItem("access_token", token);
+                localStorage.setItem("isLoggedIn", "true");
+                setCookie("isLoggedIn", "true");
                 console.log('Token stored in cookie and localStorage');
+                localStorage.setItem("userType", result?.agent?.role || result?.role || userType.toUpperCase());
+                router.push("/onboarding");
             } else {
                 console.warn('No token found in register response');
+                // If no token is found (e.g. Agent signup), redirect to sign-in
+                router.push("/sign-in?message=Registration successful. Please sign in.");
             }
-
-            localStorage.setItem("userType", result.role || userType.toUpperCase());
-            localStorage.setItem("isLoggedIn", "true");
-            setCookie("isLoggedIn", "true");
-
-            router.push("/onboarding");
         } catch (err: any) {
             console.error("Failed to register:", err);
             setErrorMsg(err?.data?.message || err?.message || "Something went wrong. Please try again.");
@@ -122,10 +142,26 @@ export default function SignUpPage() {
                     </button>
                 </div>
 
-                <input
-                    type="text" value={form.referredByCode} onChange={set("referredByCode")} placeholder="Referral Code (Optional)"
-                    className="premium-input w-full"
-                />
+                {userType === "Agent" ? (
+                    <>
+                        <input
+                            type="text" value={form.reraNumber} onChange={set("reraNumber")} placeholder="RERA Number" required
+                            className="premium-input w-full"
+                        />
+                        <div className="flex flex-col gap-2">
+                            <label className="text-[10px] font-bold text-[var(--color-text-muted)]/50 tracking-widest uppercase font-montserrat ml-1">RERA Expiry Date</label>
+                            <input
+                                type="date" value={form.expiryDate} onChange={set("expiryDate")} required
+                                className="premium-input w-full"
+                            />
+                        </div>
+                    </>
+                ) : (
+                    <input
+                        type="text" value={form.referredByCode} onChange={set("referredByCode")} placeholder="Referral Code (Optional)"
+                        className="premium-input w-full"
+                    />
+                )}
 
                 <button
                     type="submit"

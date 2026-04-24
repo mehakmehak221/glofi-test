@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect } from "react";
 import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner, ArrowRightIcon } from "@/components/VectorImages";
 import { useLoginMutation } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
+
 
 export default function SignInPage() {
     const router = useRouter();
@@ -35,14 +37,14 @@ export default function SignInPage() {
             const result = await login(payload).unwrap();
 
             console.log('Login Result:', result);
-            const token = result.accessToken || result.token || result.data?.accessToken || result.data?.token;
+            const token = result?.accessToken || result?.token || result?.data?.accessToken || result?.data?.token;
 
             if (token) {
                 setCookie("access_token", token);
                 localStorage.setItem("access_token", token);
             }
 
-            localStorage.setItem("userType", result.role || result.user?.role || userType.toUpperCase());
+            localStorage.setItem("userType", result?.role || result?.user?.role || userType.toUpperCase());
             localStorage.setItem("isLoggedIn", "true");
             setCookie("isLoggedIn", "true");
 
@@ -61,7 +63,7 @@ export default function SignInPage() {
             if (status === 401) {
                 setErrorMsg("Incorrect email or password. Please try again.");
             } else if (status === 403) {
-                setErrorMsg("Access denied. Please check your account type (Investor/Partner).");
+                setErrorMsg("Access denied. Please check your account type (Investor/Partner/Agent).");
             } else if (status === 400) {
                 setErrorMsg(message || "Invalid login request. Please check your credentials.");
             } else if (status === 404) {
@@ -106,6 +108,9 @@ export default function SignInPage() {
             </div>
 
             <div className="mb-6">
+                <Suspense fallback={<div className="h-10 w-full animate-pulse bg-white/5 rounded-lg" />}>
+                    <SearchParamsHandler setErrorMsg={setErrorMsg} />
+                </Suspense>
                 <UserTypeToggle value={userType} onChange={setUserType} />
             </div>
 
@@ -165,6 +170,32 @@ export default function SignInPage() {
                     Create account
                 </Link>
             </p>
+        </motion.div>
+    );
+}
+function SearchParamsHandler({ setErrorMsg }: { setErrorMsg: (msg: string) => void }) {
+    const searchParams = useSearchParams();
+    const message = searchParams.get("message");
+    const [displayed, setDisplayed] = useState(false);
+
+    useEffect(() => {
+        if (message && !displayed) {
+            // We use a success-styled box even if we call it errorMsg state for simplicity, 
+            // or we could add a successMsg state.
+            // But let's just show it in a green box if possible.
+            setDisplayed(true);
+        }
+    }, [message, displayed]);
+
+    if (!message) return null;
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 p-3 rounded-md bg-green-500/10 border border-green-500/20 text-green-500 text-sm font-medium"
+        >
+            {message}
         </motion.div>
     );
 }

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import NavItem from "./NavItem";
@@ -12,50 +11,38 @@ import { useLogoutMutation } from "@/store/api/authApi";
 import { removeCookie } from "@/utils/cookieUtils";
 
 import {
-    MarketplaceIcon,
-    PortfolioIcon,
-    TransactionsIcon,
-    AccountIcon,
+    OverviewIcon,
+    PropertyIcon,
+    LeadsIcon,
+    DollarIcon,
+    FinancialIcon,
     CollapseIcon,
     SignOutIcon,
     SecondaryMarketplaceIcon,
-    OverviewIcon,
-    LeadIcon,
-    DollarIcon,
+    AccountIcon,
+    ProfileIcon,
 } from "@/components/VectorImages";
 
-const INVESTOR_NAV_ITEMS = [
-    { href: "/dashboard/investor/marketplace", icon: MarketplaceIcon, label: "Marketplace" },
-    { href: "/dashboard/investor/secondary-marketplace", icon: SecondaryMarketplaceIcon, label: "Secondary Marketplace" },
-    { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
-    { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
-    { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
-];
-
-const AGENT_NAV_ITEMS = [
+const NAV_ITEMS = [
     { href: "/dashboard/agent/overview", icon: OverviewIcon, label: "Overview" },
-    { href: "/dashboard/agent/referrals", icon: LeadIcon, label: "Referrals" },
-    { href: "/dashboard/agent/transactions", icon: TransactionsIcon, label: "Transactions" },
+    { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Referrals" },
+    { href: "/dashboard/agent/transactions", icon: LeadsIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
+    { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
 ];
 
-export default function Sidebar() {
+export default function AgentSidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const [isLight, setIsLight] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
-    const [userRole, setUserRole] = useState("INVESTOR");
     const [logout] = useLogoutMutation();
-
-    useEffect(() => {
-        const role = localStorage.getItem("userType");
-        if (role) setUserRole(role.toUpperCase());
-    }, []);
 
     const handleLogout = async () => {
         try {
             await logout().unwrap();
         } catch (err) {
+           
             console.error("Logout error:", err);
         } finally {
             localStorage.removeItem("userType");
@@ -67,26 +54,23 @@ export default function Sidebar() {
     };
 
     useEffect(() => {
-        const checkTheme = () => {
+        setIsLight(document.documentElement.classList.contains('light'));
+        const observer = new MutationObserver(() => {
             setIsLight(document.documentElement.classList.contains('light'));
-        };
-        checkTheme();
-        const observer = new MutationObserver(checkTheme);
+        });
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
         return () => observer.disconnect();
     }, []);
 
-    const navItems = userRole === "AGENT" ? AGENT_NAV_ITEMS : INVESTOR_NAV_ITEMS;
-
     return (
         <motion.aside
             className="hidden lg:flex flex-col h-screen sticky top-0 bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] z-40 overflow-hidden"
-            animate={{ width: collapsed ? 80 : 250 }}
+            animate={{ width: collapsed ? 80 : 220 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
 
-            <div className="flex items-center h-16 px-4 border-b border-[var(--sidebar-border)] overflow-hidden">
-                <Link href={userRole === "AGENT" ? "/dashboard/agent/overview" : userRole === "PARTNER" ? "/dashboard/partner/overview" : "/dashboard/investor/marketplace"} className="flex items-center gap-3 no-underline">
+            <div className="flex items-center h-16 px-4 border-b border-[var(--color-border-subtle)] overflow-hidden">
+                <Link href="/dashboard/agent/overview" className="flex items-center gap-3 no-underline">
                     <motion.div
                         animate={{ 
                             opacity: collapsed ? 0 : 1,
@@ -108,6 +92,7 @@ export default function Sidebar() {
                         </span>
                     </motion.div>
                     
+                    {/* Optional: Add a small mark/icon that shows only when collapsed */}
                     {collapsed && (
                         <motion.div 
                             initial={{ opacity: 0 }}
@@ -133,13 +118,13 @@ export default function Sidebar() {
                 transition={{ duration: 0.2 }}
             >
                 <span className="text-[10px] font-normal text-[var(--badge-text)] tracking-[0.15em] uppercase border border-[var(--badge-border)] font-montserrat bg-[var(--badge-bg)] rounded-full px-3 py-1 inline-block">
-                    {userRole === "AGENT" ? "Agent Panel" : "Investor Panel"}
+                    Agent Panel
                 </span>
             </motion.div>
 
 
             <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto overflow-x-hidden">
-                {navItems.map((item) => (
+                {NAV_ITEMS.map((item) => (
                     <NavItem
                         key={item.href}
                         href={item.href}
@@ -156,7 +141,7 @@ export default function Sidebar() {
 
                 <motion.button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--sidebar-text)] hover:text-[var(--sidebar-text-hover)] hover:bg-[var(--sidebar-active-bg)] transition-all cursor-pointer w-full border-0 bg-transparent"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--sidebar-text)] hover:text-[var(--sidebar-text-hover)] hover:bg-[var(--sidebar-active-bg)] transition-colors cursor-pointer w-full border-0 bg-transparent"
                     whileTap={{ scale: 0.95 }}
                 >
                     <motion.span
@@ -178,7 +163,7 @@ export default function Sidebar() {
 
                 <button 
                     onClick={handleLogout}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-status-error)] hover:bg-[var(--color-status-error-bg)] transition-colors cursor-pointer w-full border-0 bg-transparent group"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--sidebar-text)] hover:text-[var(--color-status-error)] hover:bg-[var(--color-status-error-bg)] transition-colors cursor-pointer w-full border-0 bg-transparent group"
                 >
                     <span className="flex-shrink-0 ml-0.5">
                         <SignOutIcon className="w-5 h-5" />

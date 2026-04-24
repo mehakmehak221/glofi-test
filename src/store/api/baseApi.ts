@@ -8,10 +8,11 @@ export const baseApi = createApi({
     baseUrl: `${API_URL}/`,
     credentials: 'include',
     prepareHeaders: (headers, { endpoint }) => {
-      const publicEndpoints = ['login', 'register'];
+      const publicEndpoints = ['login', 'register', 'registerAgent', 'getAssets', 'getAssetById'];
 
       if (!publicEndpoints.includes(endpoint)) {
-        const token = getCookie('access_token');
+        const token = getCookie('access_token') || localStorage.getItem('access_token');
+        console.log(`[API] Endpoint: ${endpoint}, Token found: ${!!token}`);
         if (token) {
           headers.set('Authorization', `Bearer ${token}`);
         }

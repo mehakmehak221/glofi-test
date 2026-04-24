@@ -18,6 +18,7 @@ import {
     OverviewIcon,
     PropertyIcon,
     LeadsIcon,
+    DollarIcon,
     FinancialIcon
 } from "@/components/VectorImages";
 
@@ -36,6 +37,13 @@ const PARTNER_NAV_ITEMS = [
 
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
     // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
+];
+
+const AGENT_NAV_ITEMS = [
+    { href: "/dashboard/agent/overview", icon: OverviewIcon, label: "Overview" },
+    { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Referrals" },
+    { href: "/dashboard/agent/transactions", icon: LeadsIcon, label: "Transactions" },
+    { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
 ];
 
 const drawerVariants: Variants = {
@@ -68,13 +76,14 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     const pathname = usePathname();
     const router = useRouter();
     const isPartner = pathname.startsWith("/dashboard/partner");
-    const activeNavItems = isPartner ? PARTNER_NAV_ITEMS : NAV_ITEMS;
+    const isAgent = pathname.startsWith("/dashboard/agent");
+    const activeNavItems = isPartner ? PARTNER_NAV_ITEMS : isAgent ? AGENT_NAV_ITEMS : NAV_ITEMS;
     const [logout] = useLogoutMutation();
     const { data: profileData } = useGetProfileQuery();
 
     const profile = profileData?.partnerProfile || profileData?.investorProfile || {};
     const fullName = profile.fullName || profileData?.fullName || profileData?.name || "Guest";
-    const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Partner" : "Investor");
+    const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Partner" : isAgent ? "Agent" : "Investor");
 
     const handleLogout = async () => {
         try {
@@ -139,7 +148,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 
                             >
                                 <span className="text-[10px] font-normal text-[var(--color-primary-200)] tracking-[0.15em] uppercase border border-[var(--color-primary-300)]/30 font-montserrat bg-[var(--color-primary-300)]/5 rounded-full px-3 py-1 inline-block">
-                                    {isPartner ? "Partner Panel" : "Investor Panel"}
+                                    {isPartner ? "Partner Panel" : isAgent ? "Agent Panel" : "Investor Panel"}
                                 </span>
                             </motion.div>
                             {activeNavItems.map((item, i) => {
