@@ -40,7 +40,15 @@ export default function AgentProfilePage() {
 
     if (!agentData) return null;
 
-    const { profile, userStatus, status, kyc, email, referralCode, referralLink } = agentData;
+    const { 
+        profile = {} as any, 
+        userStatus = {} as any, 
+        status = {} as any, 
+        kyc = {} as any, 
+        email = "", 
+        referralCode = "", 
+        referralLink = "" 
+    } = agentData || {};
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen space-y-8 pb-20">
@@ -68,20 +76,20 @@ export default function AgentProfilePage() {
                         
                         <div className="relative inline-block mb-6">
                             <div className="w-24 h-24 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto overflow-hidden">
-                                {profile.avatarUrl ? (
-                                    <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
+                                {profile?.avatarUrl ? (
+                                    <img src={profile.avatarUrl} alt={profile.fullName || "Agent"} className="w-full h-full object-cover" />
                                 ) : (
                                     <ProfileIcon className="w-10 h-10 text-white/20" />
                                 )}
                             </div>
-                            {status.isVerified && (
+                            {status?.isVerified && (
                                 <div className="absolute -bottom-2 -right-2 bg-[#00FFCC] text-black p-1.5 rounded-lg shadow-lg">
                                     <VerifiedIcon className="w-4 h-4" />
                                 </div>
                             )}
                         </div>
 
-                        <h2 className="text-xl font-bold text-white mb-1 font-montserrat">{profile.fullName}</h2>
+                        <h2 className="text-xl font-bold text-white mb-1 font-montserrat">{profile?.fullName || "Agent Name"}</h2>
                         <p className="text-xs text-white/40 font-montserrat mb-6 uppercase tracking-widest font-bold">Registered Agent</p>
                         
                         <div className="space-y-3 pt-6 border-t border-white/5">
@@ -91,7 +99,7 @@ export default function AgentProfilePage() {
                             </div>
                             <div className="flex items-center justify-between text-xs">
                                 <span className="text-white/30 font-montserrat">Member Since</span>
-                                <span className="text-white/80 font-medium font-montserrat">{formatDate(agentData.createdAt)}</span>
+                                <span className="text-white/80 font-medium font-montserrat">{formatDate(agentData?.createdAt)}</span>
                             </div>
                         </div>
                     </div>
@@ -109,15 +117,15 @@ export default function AgentProfilePage() {
                             <div>
                                 <label className="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-2">Referral Code</label>
                                 <div className="bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
-                                    <span className="text-sm font-bold text-white font-mono">{referralCode}</span>
-                                    <button onClick={() => navigator.clipboard.writeText(referralCode)} className="text-[10px] font-bold text-[#00FFCC] uppercase cursor-pointer bg-transparent border-0">Copy</button>
+                                    <span className="text-sm font-bold text-white font-mono">{referralCode || "N/A"}</span>
+                                    <button onClick={() => referralCode && navigator.clipboard.writeText(referralCode)} className="text-[10px] font-bold text-[#00FFCC] uppercase cursor-pointer bg-transparent border-0">Copy</button>
                                 </div>
                             </div>
                             <div>
                                 <label className="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-2">Sign-up Link</label>
                                 <div className="bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
-                                    <span className="text-xs text-white/40 truncate font-mono mr-4">{referralLink}</span>
-                                    <button onClick={() => navigator.clipboard.writeText(referralLink)} className="text-[10px] font-bold text-[#00FFCC] uppercase cursor-pointer bg-transparent border-0">Copy</button>
+                                    <span className="text-xs text-white/40 truncate font-mono mr-4">{referralLink || "N/A"}</span>
+                                    <button onClick={() => referralLink && navigator.clipboard.writeText(referralLink)} className="text-[10px] font-bold text-[#00FFCC] uppercase cursor-pointer bg-transparent border-0">Copy</button>
                                 </div>
                             </div>
                         </div>
@@ -144,38 +152,38 @@ export default function AgentProfilePage() {
                                 </div>
                             </div>
                             <div className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
-                                status.isVerified ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
+                                status?.isVerified ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
                             }`}>
-                                {status.isVerified ? 'ACTIVE' : 'PENDING APPROVAL'}
+                                {status?.isVerified ? 'ACTIVE' : 'PENDING APPROVAL'}
                             </div>
                         </div>
                         
                         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-1">
                                 <p className="text-[11px] font-bold text-white/20 uppercase tracking-widest font-montserrat">RERA Registration</p>
-                                <p className="text-base font-bold text-white font-montserrat">{profile.reraNumber || "Not Provided"}</p>
+                                <p className="text-base font-bold text-white font-montserrat">{profile?.reraNumber || "Not Provided"}</p>
                             </div>
                             <div className="space-y-1">
                                 <p className="text-[11px] font-bold text-white/20 uppercase tracking-widest font-montserrat">License Expiry</p>
-                                <p className={`text-base font-bold font-montserrat ${status.isReraExpired ? 'text-red-500' : 'text-white'}`}>
-                                    {formatDate(profile.expiryDate)}
-                                    {status.isReraExpired && <span className="ml-2 text-[10px] text-red-500/60 uppercase">(Expired)</span>}
+                                <p className={`text-base font-bold font-montserrat ${status?.isReraExpired ? 'text-red-500' : 'text-white'}`}>
+                                    {formatDate(profile?.expiryDate)}
+                                    {status?.isReraExpired && <span className="ml-2 text-[10px] text-red-500/60 uppercase">(Expired)</span>}
                                 </p>
                             </div>
                             <div className="space-y-1">
                                 <p className="text-[11px] font-bold text-white/20 uppercase tracking-widest font-montserrat">Commission Rate</p>
                                 <p className="text-base font-bold text-[#00FFCC] font-montserrat">
-                                    {profile.commissionPercent || 1}% 
-                                    {profile.isEarlyAgent && <span className="ml-2 text-[10px] bg-[#00FFCC]/10 px-2 py-0.5 rounded text-[#00FFCC] font-bold">EARLY AGENT</span>}
+                                    {profile?.commissionPercent || 1}% 
+                                    {profile?.isEarlyAgent && <span className="ml-2 text-[10px] bg-[#00FFCC]/10 px-2 py-0.5 rounded text-[#00FFCC] font-bold">EARLY AGENT</span>}
                                 </p>
                             </div>
                             <div className="space-y-1">
                                 <p className="text-[11px] font-bold text-white/20 uppercase tracking-widest font-montserrat">Total Earnings</p>
-                                <p className="text-base font-bold text-white font-montserrat">{formatCurrency(profile.totalEarnings)}</p>
+                                <p className="text-base font-bold text-white font-montserrat">{formatCurrency(profile?.totalEarnings || 0)}</p>
                             </div>
                         </div>
 
-                        {kyc.status === "REJECTED" && (
+                        {kyc?.status === "REJECTED" && (
                             <div className="m-8 mt-0 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex gap-4 items-start">
                                 <div className="text-red-500 mt-1">
                                     <PendingIcon className="w-4 h-4" />
@@ -194,10 +202,10 @@ export default function AgentProfilePage() {
                         
                         <div className="space-y-4">
                             {[
-                                { label: "Identity Proof", type: kyc.documentType, status: kyc.documentStatus, url: kyc.documentUrl },
-                                { label: "Address Proof", type: kyc.addressProofType || "Utility Bill", status: kyc.addressProofStatus, url: kyc.addressProofUrl },
-                                { label: "Selfie Verification", type: "Facial Match", status: kyc.selfieStatus, url: kyc.selfieUrl },
-                                { label: "RERA Certificate", type: "Professional License", status: status.isVerified ? "APPROVED" : "UNDER_REVIEW", url: profile.reraDocumentUrl }
+                                { label: "Identity Proof", type: kyc?.documentType, status: kyc?.documentStatus, url: kyc?.documentUrl },
+                                { label: "Address Proof", type: kyc?.addressProofType || "Utility Bill", status: kyc?.addressProofStatus, url: kyc?.addressProofUrl },
+                                { label: "Selfie Verification", type: "Facial Match", status: kyc?.selfieStatus, url: kyc?.selfieUrl },
+                                { label: "RERA Certificate", type: "Professional License", status: status?.isVerified ? "APPROVED" : "UNDER_REVIEW", url: profile?.reraDocumentUrl }
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all">
                                     <div className="flex items-center gap-4">
@@ -206,7 +214,7 @@ export default function AgentProfilePage() {
                                         </div>
                                         <div>
                                             <p className="text-sm font-bold text-white font-montserrat">{item.label}</p>
-                                            <p className="text-[10px] text-white/30 font-montserrat uppercase tracking-widest">{item.type?.replace('_', ' ')}</p>
+                                            <p className="text-[10px] text-white/30 font-montserrat uppercase tracking-widest">{item.type?.replace('_', ' ') || "N/A"}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-6">
@@ -214,13 +222,13 @@ export default function AgentProfilePage() {
                                             item.status === 'APPROVED' || item.status === 'VERIFIED' ? 'bg-green-500/10 text-green-500' :
                                             item.status === 'REJECTED' ? 'bg-red-500/10 text-red-500' : 'bg-yellow-500/10 text-yellow-500'
                                         }`}>
-                                            {item.status?.replace('_', ' ')}
+                                            {item.status?.replace('_', ' ') || "PENDING"}
                                         </div>
                                         <a 
-                                            href={item.url?.startsWith('http') ? item.url : `https://api.glofiestate.com/files/${item.url}`} 
-                                            target="_blank" 
+                                            href={item.url?.startsWith('http') ? item.url : item.url ? `https://api.glofiestate.com/files/${item.url}` : "#"} 
+                                            target={item.url ? "_blank" : undefined}
                                             rel="noopener noreferrer"
-                                            className="text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:opacity-70 transition-all no-underline"
+                                            className={`text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:opacity-70 transition-all no-underline ${!item.url ? 'opacity-20 pointer-events-none' : ''}`}
                                         >
                                             View
                                         </a>

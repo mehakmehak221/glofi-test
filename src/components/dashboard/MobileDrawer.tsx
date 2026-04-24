@@ -81,7 +81,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     const [logout] = useLogoutMutation();
     const { data: profileData } = useGetProfileQuery();
 
-    const profile = profileData?.partnerProfile || profileData?.investorProfile || {};
+    const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
     const fullName = profile.fullName || profileData?.fullName || profileData?.name || "Guest";
     const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Partner" : isAgent ? "Agent" : "Investor");
 
