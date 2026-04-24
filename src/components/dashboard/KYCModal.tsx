@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSubmitKycMutation, useGetKycStatusQuery } from "@/store/api/kycApi";
-import { useUploadFileMutation } from "@/store/api/assetApi";
+import { useSubmitKycMutation, useGetKycStatusQuery, useSetupAgentKycMutation } from "@/store/api/kycApi";
+import { useUploadFileMutation } from "@/store/api/fileApi";
+import { useGetProfileQuery } from "@/store/api/authApi";
 
 const overlayVariants = {
     hidden: { opacity: 0 },
@@ -15,7 +16,6 @@ const modalVariants = {
 } as const;
 
 const DOC_TABS = ["Passport", "Aadhaar", "PAN Card", "License"];
-const ADDRESS_TABS = ["Utility Bill", "Bank Statement", "Rental Agreement"];
 
 const TYPE_MAP = {
     "Passport": "PASSPORT",
@@ -28,16 +28,34 @@ const TYPE_MAP = {
 };
 
 export default function KYCModal({ isOpen, onClose, onSubmit }) {
+    const [step, setStep] = useState(1);
     const [activeTab, setActiveTab] = useState("Passport");
-    const [addressTab, setAddressTab] = useState("Utility Bill");
     
     const [idDocKey, setIdDocKey] = useState("");
     const [selfieKey, setSelfieKey] = useState("");
     const [addressKey, setAddressKey] = useState("");
 
-    const { data: kycStatus, isLoading: isStatusLoading } = useGetKycStatusQuery(undefined, { skip: !isOpen });
-    const [submitKyc, { isLoading: isSubmitting }] = useSubmitKycMutation();
+    // Agent specific fields
+    const [reraNumber, setReraNumber] = useState("");
+    const [expiryDate, setExpiryDate] = useState("");
+    const [reraDocKey, setReraDocKey] = useState("");
+
+    const { data: profileData } = useGetProfileQuery(undefined, { skip: !isOpen });
+    const { data: kycStatus, isLoading: isStatusLoading, refetch: refetchStatus } = useGetKycStatusQuery(undefined, { skip: !isOpen });
+    
+    const [submitKyc, { isLoading: isSubmittingInvestor }] = useSubmitKycMutation();
+    const [setupAgentKyc, { isLoading: isSubmittingAgent }] = useSetupAgentKycMutation();
     const [uploadFile, { isLoading: isUploading }] = useUploadFileMutation();
+
+    const isAgent = profileData?.role === "AGENT";
+    const isSubmitting = isSubmittingInvestor || isSubmittingAgent;
+
+    useEffect(() => {
+        if (isOpen) {
+            setStep(1);
+            refetchStatus();
+        }
+    }, [isOpen, refetchStatus]);
 
     if (!isOpen) return null;
 
@@ -46,10 +64,13 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
         if (!file) return;
 
         try {
-            const result = await uploadFile({ file, folder: 'kyc' }).unwrap();
-            if (type === 'id') setIdDocKey(result.key);
-            else if (type === 'selfie') setSelfieKey(result.key);
-            else if (type === 'address') setAddressKey(result.key);
+            const folder = type === 'rera' ? 'rera' : 'kyc';
+            const result = await uploadFile({ file, folder }).unwrap();
+            
+            if (type === 'id') setIdDocKey(result.url || result.key);
+            else if (type === 'selfie') setSelfieKey(result.url || result.key);
+            else if (type === 'address') setAddressKey(result.url || result.key);
+            else if (type === 'rera') setReraDocKey(result.url || result.key);
         } catch (err) {
             console.error('Upload failed:', err);
         }
@@ -57,56 +78,72 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
 
     const handleFormSubmit = async () => {
         if (!idDocKey || !selfieKey || !addressKey) {
-            alert("Please upload all required documents.");
+            alert("Please upload all required identity documents.");
+            return;
+        }
+
+        if (isAgent && (!reraNumber || !expiryDate || !reraDocKey)) {
+            alert("Please provide all RERA details.");
             return;
         }
 
         try {
-            await submitKyc({
-                documentType: TYPE_MAP[activeTab],
-                documentUrl: idDocKey,
-                selfieUrl: selfieKey,
-                addressProofType: TYPE_MAP[addressTab],
-                addressProofUrl: addressKey
-            }).unwrap();
+            if (isAgent) {
+                await setupAgentKyc({
+                    documentType: TYPE_MAP[activeTab],
+                    documentUrl: idDocKey,
+                    selfieUrl: selfieKey,
+                    addressProofUrl: addressKey,
+                    reraDocumentUrl: reraDocKey,
+                    reraNumber,
+                    expiryDate
+                }).unwrap();
+            } else {
+                await submitKyc({
+                    documentType: TYPE_MAP[activeTab],
+                    documentUrl: idDocKey,
+                    selfieUrl: selfieKey,
+                    addressProofType: "UTILITY_BILL", // Default for investor
+                    addressProofUrl: addressKey
+                }).unwrap();
+            }
             if (onSubmit) onSubmit();
         } catch (err) {
             console.error('Submission failed:', err);
+            alert(err?.data?.message || "Verification submission failed. Please check your data.");
         }
     };
 
     const isPending = kycStatus?.status === "UNDER_REVIEW";
-    const isVerified = kycStatus?.status === "VERIFIED";
+    const isVerified = kycStatus?.status === "VERIFIED" || kycStatus?.status === "APPROVED";
     const isRejected = kycStatus?.status === "REJECTED";
 
     return (
         <AnimatePresence>
             {isOpen && (
                 <motion.div
-                    className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-4"
                     variants={overlayVariants}
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
                 >
-                    <div className="absolute inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm" onClick={onClose} />
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
                     <motion.div
-                        className="bg-[var(--card-surface)] w-full max-w-lg p-10 rounded-md shadow-2xl relative border border-[var(--sidebar-border)] max-h-[90vh] overflow-y-auto"
+                        className="bg-[#0D0D0D] w-full max-w-xl p-8 rounded-2xl shadow-2xl relative border border-white/10 max-h-[90vh] overflow-y-auto theme-purple"
                         variants={modalVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                     >
                         <div className="flex items-center justify-between mb-8">
-                            <div className="flex items-center gap-2.5 text-[11px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-bold font-montserrat opacity-80">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--sidebar-active-text)]">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                </svg>
-                                <span>KYC Verification</span>
+                            <div className="flex items-center gap-2.5 text-[11px] uppercase tracking-[1.5px] text-[#00FFCC] font-bold font-montserrat">
+                                <div className="w-2 h-2 rounded-full bg-[#00FFCC] animate-pulse" />
+                                <span>{isAgent ? "Agent Verification" : "KYC Verification"}</span>
                             </div>
                             <button
                                 onClick={onClose}
-                                className="text-[var(--color-text-muted)] hover:text-[var(--foreground)] transition-colors bg-transparent border-0 cursor-pointer p-1"
+                                className="text-white/40 hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-1"
                             >
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -116,179 +153,182 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
 
                         {isStatusLoading ? (
                             <div className="flex items-center justify-center p-12">
-                                <div className="w-8 h-8 border-2 border-[var(--sidebar-active-text)]/20 border-t-[var(--sidebar-active-text)] rounded-full animate-spin" />
+                                <div className="w-10 h-10 border-2 border-[#00FFCC]/20 border-t-[#00FFCC] rounded-full animate-spin" />
                             </div>
                         ) : (isPending || isVerified || (isRejected && !idDocKey && !selfieKey && !addressKey)) ? (
                             <div className="text-center py-8">
-                                <div className={`w-12 h-12 rounded-full mx-auto flex items-center justify-center mb-4 ${
-                                    isVerified ? 'bg-[var(--color-status-success-bg)] text-[var(--color-status-success)]' : 
-                                    isRejected ? 'bg-[var(--color-status-error-bg)] text-[var(--color-status-error)]' :
-                                    'bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)]'}`}>
+                                <div className={`w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6 ${
+                                    isVerified ? 'bg-green-500/10 text-green-500' : 
+                                    isRejected ? 'bg-red-500/10 text-red-500' :
+                                    'bg-yellow-500/10 text-yellow-500'}`}>
                                     {isVerified ? (
-                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                         </svg>
                                     ) : isRejected ? (
-                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     ) : (
-                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     )}
                                 </div>
-                                <h2 className="text-xl font-bold text-[var(--foreground)] mb-2">
-                                    {isVerified ? "Verified" : isRejected ? "KYC Rejected" : "KYC Submitted!"}
+                                <h2 className="text-2xl font-bold text-white mb-2 font-montserrat">
+                                    {isVerified ? "Verified" : isRejected ? "Verification Rejected" : "In Review"}
                                 </h2>
-                                <p className="text-sm text-[var(--color-text-muted)] mb-6">
-                                    {isVerified ? "Your identity has been successfully verified." : 
-                                     isRejected ? (kycStatus?.rejectedNote || "Your submission was rejected. Please review and resubmit.") :
-                                     "Verification takes 24-48 hours. You can now proceed with your investment."}
+                                <p className="text-sm text-white/50 mb-8 font-montserrat px-4 leading-relaxed">
+                                    {isVerified ? "Your identity and credentials have been successfully verified." : 
+                                     isRejected ? (kycStatus?.rejectedNote || "Your submission was rejected. Please review your documents and try again.") :
+                                     "Our compliance team is reviewing your documents. This typically takes 24-48 hours."}
                                 </p>
                                 <button
                                     onClick={onClose}
-                                    className="w-full py-4 rounded-md bg-[var(--color-primary-300)] text-[var(--background)] font-bold text-sm cursor-pointer border-0 transition-all hover:shadow-glow-primary shadow-glow-primary"
+                                    className="w-full h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90"
                                 >
-                                    Continue
+                                    Return to Dashboard
                                 </button>
                             </div>
-                           
                         ) : (
                             <>
-                                <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2 font-montserrat">Identity verification</h2>
-                                <p className="text-sm text-[var(--color-text-muted)] font-medium mb-8 font-montserrat">Upload a government-issued ID to verify your identity</p>
+                                <h2 className="text-2xl font-bold text-white mb-2 font-montserrat">
+                                    {step === 1 ? "Identity Verification" : "RERA Details"}
+                                </h2>
+                                <p className="text-sm text-white/50 mb-8 font-montserrat">
+                                    {step === 1 ? "Upload your government-issued documents for verification." : "Provide your real estate licensing information."}
+                                </p>
 
                                 <div className="space-y-6">
-                                   
-                                    <div>
-                                        <div className="flex flex-wrap gap-2 mb-8">
-                                            {DOC_TABS.map((tab) => (
-                                                <button
-                                                    key={tab}
-                                                    onClick={() => setActiveTab(tab)}
-                                                    className={`px-6 py-2.5 rounded-md text-xs font-bold transition-all duration-200 cursor-pointer border ${activeTab === tab
-                                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
-                                                        : "bg-[var(--field-surface)] text-[var(--color-text-muted)] border-transparent hover:border-[var(--color-text-muted)]/30 opacity-60"
-                                                        }`}
-                                                >
-                                                    {tab}
-                                                </button>
-                                            ))}
-                                        </div>
-
-                                        <label className={`block rounded-md p-5 cursor-pointer transition-all border ${idDocKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-[var(--field-surface)] border-[var(--sidebar-border)]'} mb-4`}>
-                                            <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'id')} />
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${idDocKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-[var(--field-surface)] text-[var(--color-text-muted)]'}`}>
-                                                        {idDocKey ? (
-                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                                            </svg>
-                                                        ) : (
-                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                                                            </svg>
-                                                        )}
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[15px] font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Document — Front</p>
-                                                        <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Clear photo of front side</p>
-                                                        <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG, PDF — MAX 5 MB</p>
-                                                    </div>
-                                                </div>
-                                                {idDocKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-text)]/10 px-3.5 py-1.5 rounded-xl border border-[var(--sidebar-active-text)]/20">DONE</span>}
-                                            </div>
-                                        </label>
-                                    </div>
-
-                                    {/* Address Section */}
-                                    <div>
-                                        <label className={`block rounded-md p-5 cursor-pointer transition-all border ${addressKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-[var(--field-surface)] border-[var(--sidebar-border)]'} mb-4`}>
-                                            <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'address')} />
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${addressKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-[var(--field-surface)] text-[var(--color-text-muted)]'}`}>
-                                                        {addressKey ? (
-                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                                            </svg>
-                                                        ) : (
-                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                                            </svg>
-                                                        )}
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[15px] font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Address Proof</p>
-                                                        <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Utility Bill or Bank Statement</p>
-                                                        <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG, PDF — MAX 5 MB</p>
-                                                    </div>
-                                                </div>
-                                                {addressKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-text)]/10 px-3.5 py-1.5 rounded-xl border border-[var(--sidebar-active-text)]/20">DONE</span>}
-                                            </div>
-                                        </label>
-                                    </div>
-
-                                    {/* Selfie Section */}
-                                    <div>
-                                        <label className={`block rounded-md p-5 cursor-pointer transition-all border ${selfieKey ? 'bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20' : 'bg-[var(--field-surface)] border-[var(--sidebar-border)]'} mb-8`}>
-                                            <input type="file" className="hidden" accept="image/*" capture="user" onChange={(e) => handleFileUpload(e, 'selfie')} />
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-5">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${selfieKey ? 'bg-[var(--sidebar-active-text)]/10 text-[var(--sidebar-active-text)]' : 'bg-[var(--field-surface)] text-[var(--color-text-muted)]'}`}>
-                                                        {selfieKey ? (
-                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                                            </svg>
-                                                        ) : (
-                                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                            </svg>
-                                                        )}
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[15px] font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Selfie Verification</p>
-                                                        <p className="text-[12px] text-[var(--color-text-muted)] font-medium font-montserrat">Selfie holding your ID next to your face</p>
-                                                        <p className="text-[10px] text-[var(--color-text-muted)] opacity-60 font-medium font-montserrat mt-1 uppercase">JPG, PNG — MAX 5 MB</p>
-                                                    </div>
-                                                </div>
-                                                {selfieKey && <span className="text-[10px] font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-text)]/10 px-3.5 py-1.5 rounded-xl border border-[var(--sidebar-active-text)]/20">DONE</span>}
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                 <div className="flex items-start gap-4 p-5 rounded-md bg-[var(--field-surface)] border border-[var(--sidebar-border)] mb-8">
-                                    <div className="shrink-0 mt-0.5 text-[var(--color-text-muted)]">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                                        </svg>
-                                    </div>
-                                    <p className="text-[12px] text-[var(--color-text-muted)] font-medium leading-relaxed font-montserrat">
-                                        Your documents are encrypted and stored securely per UAE AML regulations.
-                                    </p>
-                                </div>
-
-                                <motion.button
-                                    whileHover={{ scale: 1.01 }}
-                                    whileTap={{ scale: 0.99 }}
-                                    onClick={handleFormSubmit}
-                                    disabled={isSubmitting || isUploading}
-                                    className="w-full py-4.5 rounded-md bg-[var(--color-primary-300)] text-[var(--background)] font-bold text-base cursor-pointer border-0 transition-all hover:opacity-90 shadow-glow-primary disabled:opacity-50 disabled:cursor-not-allowed font-montserrat flex items-center justify-center gap-2"
-                                >
-                                    {isSubmitting || isUploading ? "Processing..." : (
+                                    {step === 1 ? (
                                         <>
-                                            Submit KYC
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                <polyline points="12 5 19 12 12 19"></polyline>
-                                            </svg>
+                                            <div className="flex flex-wrap gap-2 mb-2">
+                                                {DOC_TABS.map((tab) => (
+                                                    <button
+                                                        key={tab}
+                                                        onClick={() => setActiveTab(tab)}
+                                                        className={`px-4 py-2 rounded-lg text-[10px] font-bold transition-all cursor-pointer border uppercase tracking-wider ${activeTab === tab
+                                                            ? "bg-[#00FFCC]/10 text-[#00FFCC] border-[#00FFCC]/30"
+                                                            : "bg-white/[0.03] text-white/40 border-transparent hover:border-white/10"
+                                                            }`}
+                                                    >
+                                                        {tab}
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            <label className={`block rounded-xl p-5 cursor-pointer transition-all border-2 border-dashed ${idDocKey ? 'bg-[#00FFCC]/5 border-[#00FFCC]/30' : 'bg-white/[0.02] border-white/10 hover:border-white/20'}`}>
+                                                <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'id')} />
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${idDocKey ? 'bg-[#00FFCC]/10 text-[#00FFCC]' : 'bg-white/5 text-white/20'}`}>
+                                                            {idDocKey ? <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> : <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>}
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm font-bold text-white mb-0.5 font-montserrat">Document — Front</p>
+                                                            <p className="text-[11px] text-white/40 font-montserrat">Clear photo of front side</p>
+                                                        </div>
+                                                    </div>
+                                                    {idDocKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}
+                                                </div>
+                                            </label>
+
+                                            <label className={`block rounded-xl p-5 cursor-pointer transition-all border-2 border-dashed ${addressKey ? 'bg-[#00FFCC]/5 border-[#00FFCC]/30' : 'bg-white/[0.02] border-white/10 hover:border-white/20'}`}>
+                                                <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'address')} />
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${addressKey ? 'bg-[#00FFCC]/10 text-[#00FFCC]' : 'bg-white/5 text-white/20'}`}>
+                                                            {addressKey ? <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> : <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>}
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm font-bold text-white mb-0.5 font-montserrat">Address Proof</p>
+                                                            <p className="text-[11px] text-white/40 font-montserrat">Utility Bill or Bank Statement</p>
+                                                        </div>
+                                                    </div>
+                                                    {addressKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}
+                                                </div>
+                                            </label>
+
+                                            <label className={`block rounded-xl p-5 cursor-pointer transition-all border-2 border-dashed ${selfieKey ? 'bg-[#00FFCC]/5 border-[#00FFCC]/30' : 'bg-white/[0.02] border-white/10 hover:border-white/20'}`}>
+                                                <input type="file" className="hidden" accept="image/*" capture="user" onChange={(e) => handleFileUpload(e, 'selfie')} />
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${selfieKey ? 'bg-[#00FFCC]/10 text-[#00FFCC]' : 'bg-white/5 text-white/20'}`}>
+                                                            {selfieKey ? <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> : <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>}
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm font-bold text-white mb-0.5 font-montserrat">Selfie Verification</p>
+                                                            <p className="text-[11px] text-white/40 font-montserrat">Hold your ID next to your face</p>
+                                                        </div>
+                                                    </div>
+                                                    {selfieKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}
+                                                </div>
+                                            </label>
+
+                                            <button
+                                                onClick={() => isAgent ? setStep(2) : handleFormSubmit()}
+                                                disabled={!idDocKey || !selfieKey || !addressKey || isUploading}
+                                                className="w-full h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 disabled:opacity-50 mt-4"
+                                            >
+                                                {isAgent ? "Next: RERA Details" : (isSubmitting ? "Submitting..." : "Complete Verification")}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <label className="text-[11px] font-bold text-white/40 uppercase tracking-widest ml-1">RERA Number</label>
+                                                    <input
+                                                        type="text" placeholder="RERA-MH-2024-001234"
+                                                        value={reraNumber} onChange={e => setReraNumber(e.target.value)}
+                                                        className="w-full h-14 rounded-xl px-5 bg-white/[0.03] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-[#00FFCC]/30 transition-all font-medium"
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <label className="text-[11px] font-bold text-white/40 uppercase tracking-widest ml-1">License Expiry Date</label>
+                                                    <input
+                                                        type="date"
+                                                        value={expiryDate} onChange={e => setExpiryDate(e.target.value)}
+                                                        className="w-full h-14 rounded-xl px-5 bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00FFCC]/30 transition-all font-medium"
+                                                    />
+                                                </div>
+
+                                                <label className={`block rounded-xl p-5 cursor-pointer transition-all border-2 border-dashed ${reraDocKey ? 'bg-[#00FFCC]/5 border-[#00FFCC]/30' : 'bg-white/[0.02] border-white/10 hover:border-white/20'}`}>
+                                                    <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'rera')} />
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${reraDocKey ? 'bg-[#00FFCC]/10 text-[#00FFCC]' : 'bg-white/5 text-white/20'}`}>
+                                                                {reraDocKey ? <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> : <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>}
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-sm font-bold text-white mb-0.5 font-montserrat">RERA Certificate</p>
+                                                                <p className="text-[11px] text-white/40 font-montserrat">Upload PDF or JPEG</p>
+                                                            </div>
+                                                        </div>
+                                                        {reraDocKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}
+                                                    </div>
+                                                </label>
+                                            </div>
+
+                                            <div className="flex gap-4 mt-6">
+                                                <button
+                                                    onClick={() => setStep(1)}
+                                                    className="flex-1 h-14 rounded-xl border border-white/10 text-white font-bold text-sm hover:bg-white/5 transition-all"
+                                                >
+                                                    Back
+                                                </button>
+                                                <button
+                                                    onClick={handleFormSubmit}
+                                                    disabled={!reraNumber || !expiryDate || !reraDocKey || isSubmitting || isUploading}
+                                                    className="flex-[2] h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 disabled:opacity-50"
+                                                >
+                                                    {isSubmitting ? "Submitting..." : "Complete Verification"}
+                                                </button>
+                                            </div>
                                         </>
                                     )}
-                                </motion.button>
+                                </div>
                             </>
                         )}
                     </motion.div>

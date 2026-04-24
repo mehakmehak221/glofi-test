@@ -56,21 +56,21 @@ export default function SignUpPage() {
             }
 
             console.log('Register Result:', result);
-            const token = result?.accessToken || result?.token || result?.data?.accessToken || result?.data?.token;
+            const token = result?.accessToken || result?.token || result?.data?.accessToken || result?.data?.token || result?.agent?.token;
 
             if (token) {
                 setCookie("access_token", token);
                 localStorage.setItem("access_token", token);
+                localStorage.setItem("isLoggedIn", "true");
+                setCookie("isLoggedIn", "true");
                 console.log('Token stored in cookie and localStorage');
+                localStorage.setItem("userType", result?.agent?.role || result?.role || userType.toUpperCase());
+                router.push("/onboarding");
             } else {
                 console.warn('No token found in register response');
+                // If no token is found (e.g. Agent signup), redirect to sign-in
+                router.push("/sign-in?message=Registration successful. Please sign in.");
             }
-
-            localStorage.setItem("userType", result?.role || userType.toUpperCase());
-            localStorage.setItem("isLoggedIn", "true");
-            setCookie("isLoggedIn", "true");
-
-            router.push("/onboarding");
         } catch (err: any) {
             console.error("Failed to register:", err);
             setErrorMsg(err?.data?.message || err?.message || "Something went wrong. Please try again.");

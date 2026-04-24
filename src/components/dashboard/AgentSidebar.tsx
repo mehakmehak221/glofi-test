@@ -20,6 +20,7 @@ import {
     SignOutIcon,
     SecondaryMarketplaceIcon,
     AccountIcon,
+    ProfileIcon,
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
@@ -27,6 +28,7 @@ const NAV_ITEMS = [
     { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Referrals" },
     { href: "/dashboard/agent/transactions", icon: LeadsIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
+    { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
 ];
 
 export default function AgentSidebar() {

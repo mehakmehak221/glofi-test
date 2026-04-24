@@ -1,14 +1,30 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckIcon } from "@/components/VectorImages";
+import { useGetAgentTransactionsQuery } from "@/store/api/agentApi";
+import { CheckIcon, PendingIcon, LoadingSpinner } from "@/components/VectorImages";
 
-const TRANSACTIONS = [
-    { date: "2026-01-20", user: "Ahmed Al Rashid", asset: "Burj Vista Tower", amount: "$250K", commission: "$3K", status: "Completed" },
-    { date: "2026-02-05", user: "Sarah Chen", asset: "Palm Jumeirah Villa Estate", amount: "$190K", commission: "$2K", status: "Completed" },
-];
+const formatCurrency = (value: number) => {
+    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
+    if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
+    return `$${value}`;
+};
 
 export default function AgentTransactionsPage() {
+    const { data: txData, isLoading } = useGetAgentTransactionsQuery();
+    const transactions = txData?.data || [];
+
+    if (isLoading) {
+        return (
+            <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen flex items-center justify-center">
+                <div className="text-[var(--foreground)] opacity-50 font-montserrat animate-pulse flex items-center gap-3">
+                    <LoadingSpinner />
+                    Loading transactions...
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
             <motion.div
@@ -33,7 +49,7 @@ export default function AgentTransactionsPage() {
                 </div>
                 
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left font-montserrat border-collapse">
+                    <table className="w-full text-left font-montserrat border-collapse min-w-[800px]">
                         <thead>
                             <tr className="text-[11px] uppercase tracking-[0.15em] text-[var(--sidebar-text)] opacity-40 border-b border-[var(--sidebar-border)]">
                                 <th className="px-8 py-6 font-bold">Date</th>
@@ -45,26 +61,42 @@ export default function AgentTransactionsPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[var(--sidebar-border)]/20">
-                            {TRANSACTIONS.map((tx, i) => (
-                                <tr key={i} className="hover:bg-[var(--color-primary-300)]/[0.02] transition-colors group">
-                                    <td className="px-8 py-6 text-sm text-[var(--sidebar-text)] opacity-60">{tx.date}</td>
-                                    <td className="px-8 py-6 text-sm font-bold text-[var(--foreground)]/90">{tx.user}</td>
-                                    <td className="px-8 py-6 text-sm text-[var(--sidebar-text)] opacity-60">{tx.asset}</td>
-                                    <td className="px-8 py-6 text-sm text-right font-medium text-[var(--foreground)] opacity-80">{tx.amount}</td>
-                                    <td className="px-8 py-6 text-sm text-right font-bold text-[var(--color-primary-300)]">{tx.commission}</td>
-                                    <td className="px-8 py-6 text-center">
-                                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--color-primary-300)]/10 border border-[var(--color-primary-300)]/20 text-[var(--color-primary-300)] text-[10px] font-bold uppercase tracking-wider">
-                                            <CheckIcon className="w-3 h-3" />
-                                            {tx.status}
-                                        </div>
+                            {transactions.length > 0 ? (
+                                transactions.map((tx, i) => (
+                                    <tr key={i} className="hover:bg-[var(--color-primary-300)]/[0.02] transition-colors group">
+                                        <td className="px-8 py-6 text-sm text-[var(--sidebar-text)] opacity-60">{tx.date}</td>
+                                        <td className="px-8 py-6 text-sm font-bold text-[var(--foreground)]/90">{tx.referredUser}</td>
+                                        <td className="px-8 py-6 text-sm text-[var(--sidebar-text)] opacity-60">{tx.assetName}</td>
+                                        <td className="px-8 py-6 text-sm text-right font-medium text-[var(--foreground)] opacity-80">{formatCurrency(tx.amount)}</td>
+                                        <td className="px-8 py-6 text-sm text-right font-bold text-[var(--color-primary-300)]">+{formatCurrency(tx.commission)}</td>
+                                        <td className="px-8 py-6 text-center">
+                                            <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                                tx.status === "Completed" || tx.status === "SUCCESS"
+                                                    ? "bg-[var(--color-primary-300)]/10 border border-[var(--color-primary-300)]/20 text-[var(--color-primary-300)]"
+                                                    : "bg-yellow-500/10 border border-yellow-500/20 text-yellow-500"
+                                            }`}>
+                                                {tx.status === "Completed" || tx.status === "SUCCESS" ? (
+                                                    <CheckIcon className="w-3 h-3" />
+                                                ) : (
+                                                    <PendingIcon className="w-3 h-3" />
+                                                )}
+                                                {tx.status}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={6} className="px-8 py-20 text-center text-sm text-[var(--sidebar-text)] opacity-30 font-montserrat italic">
+                                        No transactions found.
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
                
-                <div className="h-64"></div>
+                <div className="h-20"></div>
             </motion.div>
         </div>
     );
