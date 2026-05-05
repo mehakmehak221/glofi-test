@@ -52,10 +52,10 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
 
     return (
         <div className={`flex flex-col gap-2 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
-            <label className="text-[10px] font-semibold text-white tracking-widest uppercase font-montserrat">{label}</label>
+            <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">{label}</label>
             <div 
                 onClick={() => !disabled && setIsOpen(!isOpen)}
-                className={`flex justify-between items-center bg-[var(--field-surface)] border border-white/30 rounded-md px-4 py-3.5 text-sm font-montserrat cursor-pointer transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-white/50'} ${isOpen ? 'border-white ring-1 ring-white/50' : ''}`}
+                className={`flex justify-between items-center bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm font-montserrat cursor-pointer transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[var(--foreground)]/50'} ${isOpen ? 'border-[var(--foreground)] ring-1 ring-[var(--foreground)]/50' : ''}`}
             >
                 <span className={value ? "text-[var(--foreground)]" : "text-[var(--sidebar-text)]/30"}>
                     {value || placeholder}
@@ -71,16 +71,16 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-[100] top-[calc(100%+8px)] left-0 right-0 bg-[var(--form-surface)] border border-white/30 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
+                        className="absolute z-[100] top-[calc(100%+8px)] left-0 right-0 bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
                     >
-                        <div className="p-3 border-b border-white/30">
+                        <div className="p-3 border-b border-[var(--foreground)]/20">
                             <input
                                 type="text"
                                 autoFocus
                                 placeholder="Search..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-[var(--field-surface)] border border-white/30 rounded-lg px-3 py-2 text-xs text-[var(--foreground)] focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 font-montserrat"
+                                className="w-full bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-lg px-3 py-2 text-xs text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 font-montserrat"
                             />
                         </div>
                         <div className="max-h-[250px] overflow-y-auto dropdown-scroll">
@@ -136,7 +136,7 @@ const UploadArea = ({ label, onUpload, value, isUploading }) => {
     return (
         <div 
             onClick={() => !isUploading && fileInputRef.current?.click()}
-            className={`flex-1 min-w-[200px] aspect-[3/2] rounded-md border border-white/30 bg-[var(--background)] hover:shadow-md flex flex-col items-center justify-center p-4 transition-all cursor-pointer group ${
+            className={`flex-1 min-w-[200px] aspect-[3/2] rounded-md border border-[var(--foreground)]/20 bg-[var(--background)] hover:shadow-md flex flex-col items-center justify-center p-4 transition-all cursor-pointer group ${
                 value ? 'border-[var(--sidebar-active-text)]/40 bg-[var(--sidebar-active-bg)]' : 'hover:border-[var(--sidebar-active-text)]/20'
             }`}
         >
@@ -322,9 +322,9 @@ export default function NewListingForm({ onBack, editId }) {
                     <LoadingSpinner />
                 </div>
             ) : (
-                <div className="bg-[var(--form-surface)] border border-white/30 rounded-md p-4 sm:p-6 lg:p-10 relative z-10">
+                <div className="bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-md p-4 sm:p-6 lg:p-10 relative z-10">
                   
-                <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-white/30 pb-2 sm:pb-4 w-full">
+                <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-[var(--foreground)]/20 pb-2 sm:pb-4 w-full">
                     {CATEGORIES.map((cat) => (
                         <button
                             key={cat.value}
@@ -346,23 +346,23 @@ export default function NewListingForm({ onBack, editId }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-white tracking-widest uppercase font-montserrat">Title</label>
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Title</label>
                         <input
                             type="text"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--field-surface)] border border-white/30 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-white tracking-widest uppercase font-montserrat">Location</label>
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Location</label>
                         <input
                             type="text"
                             value={formData.location}
                             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--field-surface)] border border-white/30 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <LocationDropdown
@@ -398,43 +398,43 @@ export default function NewListingForm({ onBack, editId }) {
                         disabled={!stateIsoCode}
                     />
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-white tracking-widest uppercase font-montserrat">Valuation ($)</label>
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Valuation ($)</label>
                         <input
                             type="number"
                             value={formData.valuation}
                             onChange={(e) => setFormData({ ...formData, valuation: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--field-surface)] border border-white/30 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-white tracking-widest uppercase font-montserrat">Total Fractions</label>
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Total Fractions</label>
                         <input
                             type="number"
                             value={formData.totalFractions}
                             onChange={(e) => setFormData({ ...formData, totalFractions: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--field-surface)] border border-white/30 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-1">
-                        <label className="text-[10px] font-semibold text-white tracking-widest uppercase font-montserrat">Annual Yield (%)</label>
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Annual Yield (%)</label>
                         <input
                             type="number"
                             value={formData.expectedYield}
                             onChange={(e) => setFormData({ ...formData, expectedYield: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--field-surface)] border border-white/30 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat md:max-w-[calc(50%-16px)]"
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat md:max-w-[calc(50%-16px)]"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-2">
-                        <label className="text-[10px] font-semibold text-white tracking-widest uppercase font-montserrat">Description</label>
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Description</label>
                         <textarea
                             rows={5}
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--field-surface)] border border-white/30 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
                         />
                     </div>
                 </div>
