@@ -92,7 +92,6 @@ export default function PremiumPropertySection() {
                                     >
                                         <div className="relative premium-card-exact__inner bg-[var(--color-bg-card)] w-full h-48 sm:h-56 md:h-64 lg:h-72 flex items-center justify-center rounded-2xl overflow-hidden
                                             transition-all duration-500
-                                            group-hover:shadow-[0_0_32px_4px_rgba(0,218,175,0.2)]
                                             group-hover:scale-[1.03] border border-white/5">
 
                                             <Image

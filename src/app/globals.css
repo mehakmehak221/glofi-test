@@ -1104,8 +1104,6 @@
 
   .premium-card-exact:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 30px var(--color-primary-300-alpha-30);
-
   }
 
   .premium-card-exact__inner {
