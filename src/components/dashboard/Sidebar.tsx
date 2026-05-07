@@ -103,9 +103,7 @@ export default function Sidebar() {
                             height={40}
                             className="h-7 w-auto object-contain"
                         />
-                        <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap pt-1">
-                            Real Estate
-                        </span>
+                     
                     </motion.div>
                     
                     {collapsed && (

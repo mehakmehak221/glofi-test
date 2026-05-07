@@ -265,7 +265,7 @@ export const LogoIcon = ({ className = "w-8 h-8" }) => (
 
 export const LogoIconPng = ({ className = "w-34 h-62" }) => (
     <Image 
-        src="/assets/images/branding/logo.jpeg" 
+        src="/assets/images/branding/logo.png" 
         alt="Glofi Logo" 
         width={136}
         height={248}

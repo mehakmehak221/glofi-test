@@ -21,9 +21,7 @@ export default function AuthLeftPanel() {
         <div>
           <div className="flex items-baseline gap-3">
             <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={112} height={28} className="h-7 w-auto translate-y-[2px]" priority />
-            <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap pt-1">
-                        Real Estate
-                    </span>
+           
           </div>
         </div>
 

@@ -144,14 +144,9 @@ export default function OnboardingPage() {
     return (
         <main className="min-h-screen w-full bg-[var(--color-bg-dark)] flex flex-col items-center px-4 py-8 sm:py-20 font-sans selection:bg-[var(--color-primary-300)]/30 theme-purple overflow-x-hidden">
             <div className="mb-8 sm:mb-12 flex flex-col items-center text-center w-full max-w-full">
-                <Image src="/assets/images/branding/logo.jpeg" alt="Glofi Logo" width={144} height={48} className="h-10 sm:h-12 w-auto mb-2" priority />
-                 <span className="navbar__logo-text font-montserrat text-[10px] sm:text-xs font-normal text-[var(--color-text-secondary)] uppercase tracking-[1.5px] whitespace-nowrap">
-                        Real Estate
-                    </span>
+                <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={144} height={48} className="h-10 sm:h-12 w-auto mb-2" priority />
+                
             </div>
-
-
-
 
 
             <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[var(--color-bg-surface-subtle)] mb-10 sm:mb-16 shadow-sm max-w-full">

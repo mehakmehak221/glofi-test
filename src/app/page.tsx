@@ -7,6 +7,7 @@ import PropertyInvestmentCategoriesSection from "@/components/sections/PropertyI
 import InvestmentSection from "@/components/sections/InvestmentSection/InvestmentSection";
 import JoinNewGenerationSection from "@/components/sections/JoinNewGenerationSection/JoinNewGenerationSection";
 import GlofiCopyrightSection from "@/components/sections/GlofiCopyrightSection/GlofiCopyrightSection";
+import AppDownloadSection from "@/components/sections/AppDownloadSection/AppDownloadSection";
 import CookieSection from "@/components/sections/CookieSection/CookieSection";
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
         <PropertyInvestmentCategoriesSection />
         <InvestmentSection />
         <JoinNewGenerationSection />
+        <AppDownloadSection />
         <GlofiCopyrightSection />
 
         <div className="h-[88px]">

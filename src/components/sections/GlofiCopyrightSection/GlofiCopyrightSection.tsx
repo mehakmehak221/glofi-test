@@ -20,7 +20,7 @@ export default function GlofiCopyrightSection() {
                         {/* Logo */}
                         <Link href="/" className="flex items-center flex-shrink-0">
                             <Image
-                                src="/assets/images/branding/GloFi.png"
+                                src="/assets/images/branding/logo.png"
                                 alt="GloFi Logo"
                                 width={128}
                                 height={64}
