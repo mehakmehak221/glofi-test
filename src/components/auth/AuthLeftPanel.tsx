@@ -27,9 +27,8 @@ export default function AuthLeftPanel() {
 
         <div>
           <h1 className="text-auth-gradient font-bold text-4xl xl:text-5xl leading-[1.1] tracking-tight mb-6 font-montserrat">
-            Own Any Premium<br />
-            Real Estate,<br />
-            Fraction by Fraction
+            OWN ANY REAL ESTATE,
+            Fraction by Fraction..
           </h1>
           <p className="text-[var(--color-text-secondary)] text-md leading-relaxed max-w-md font-medium font-montserrat">
             Institutional-grade properties, digitally simplified. Invest, manage, and grow all in one platform.
