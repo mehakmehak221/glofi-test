@@ -284,16 +284,16 @@ export default function ReturnsCalculatorPage() {
                 Optimized Asset Allocation
             </h2>
 
-            <div className="flex justify-center mb-12">
-                <div className="flex bg-[var(--foreground)]/5 p-1 rounded-full border border-[var(--dashboard-border)]">
+            <div className="flex justify-start sm:justify-center mb-12 w-full overflow-hidden">
+                <div className="flex bg-[var(--foreground)]/5 p-1 rounded-full border border-[var(--dashboard-border)] max-w-full overflow-x-auto no-scrollbar flex-nowrap">
                     {["Conservative", "Moderate", "Aggressive", "Custom"].map((risk) => (
                         <button
                             key={risk}
                             onClick={() => {
                                 setSelectedRisk(risk);
-                                if (risk !== "Custom") setCustomCAGR(ROIS[risk as keyof typeof ROIS]);
+                                if (risk !== "Custom") setCustomCAGR(ROIS[risk as keyof typeof ROIS] || 0.14);
                             }}
-                            className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                            className={`px-6 py-2.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                                 selectedRisk === risk
                                     ? "bg-[var(--foreground)] text-[var(--background)] shadow-lg border border-[var(--dashboard-border)]"
                                     : "text-[var(--color-text-muted)] hover:text-[var(--foreground)]"
@@ -305,8 +305,8 @@ export default function ReturnsCalculatorPage() {
                 </div>
             </div>
 
-            <div className="relative flex justify-center items-center py-12 min-h-[500px]">
-                <svg width="450" height="450" viewBox="0 0 450 450" className="transform -rotate-90 overflow-visible">
+            <div className="relative flex justify-center items-center py-6 sm:py-12 min-h-[300px] sm:min-h-[500px]">
+                <svg viewBox="0 0 450 450" className="w-full max-w-[450px] aspect-square transform -rotate-90 overflow-visible">
                     {(() => {
                         let currentAngle = 0;
                         const center = 225;

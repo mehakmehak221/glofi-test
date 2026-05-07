@@ -32,24 +32,24 @@ export function CommunityStatusBanner() {
       whileHover={{ y: -2, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
       whileTap={{ scale: 0.995 }}
       onClick={() => router.push("/dashboard/investor/community")}
-      className="flex items-center justify-between px-8 py-6 bg-[var(--card-surface)] border border-white/5 rounded-[32px] cursor-pointer shadow-2xl mb-10 backdrop-blur-xl group relative overflow-hidden"
+      className="flex flex-col sm:flex-row items-center justify-between gap-6 px-6 sm:px-8 py-6 bg-[var(--card-surface)] border border-white/5 rounded-[32px] cursor-pointer shadow-2xl mb-10 backdrop-blur-xl group relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10 relative z-10">
-        <div className="flex flex-col">
+      <div className="flex flex-col md:flex-row items-center md:items-center gap-6 sm:gap-10 relative z-10 w-full sm:w-auto">
+        <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
           <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-muted)] font-bold mb-1 opacity-60">Total Community Depth</span>
           <h2 className="text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tighter">
             ₹62.1 Lacs <span className="text-[var(--color-text-muted)] font-medium text-lg">invested</span>
           </h2>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="flex -space-x-4">
             {avatars.map((avatar, index) => (
               <div
                 key={index}
-                className="w-12 h-12 rounded-full border-[3px] border-[var(--background)] flex items-center justify-center text-xs font-black text-white overflow-hidden shadow-2xl transition-all duration-300 group-hover:-translate-y-1"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[3px] border-[var(--background)] flex items-center justify-center text-[10px] sm:text-xs font-black text-white overflow-hidden shadow-2xl transition-all duration-300 group-hover:-translate-y-1"
                 style={{ 
                   backgroundColor: avatar.color,
                   zIndex: avatars.length - index,
@@ -59,18 +59,18 @@ export function CommunityStatusBanner() {
                 {avatar.initials}
               </div>
             ))}
-            <div className="w-12 h-12 rounded-full border-[3px] border-[var(--background)] bg-[var(--card-surface)] flex items-center justify-center text-[10px] font-black text-[var(--color-text-muted)] z-0 shadow-xl group-hover:-translate-y-1 transition-all duration-300">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[3px] border-[var(--background)] bg-[var(--card-surface)] flex items-center justify-center text-[9px] sm:text-[10px] font-black text-[var(--color-text-muted)] z-0 shadow-xl group-hover:-translate-y-1 transition-all duration-300">
               +12
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col items-center sm:items-start">
             <span className="text-sm font-bold text-[var(--foreground)]">Active Investors</span>
             <span className="text-[10px] text-[var(--color-text-muted)] font-medium">Joined in last 24h</span>
           </div>
         </div>
       </div>
 
-      <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/10 bg-white/5 group-hover:bg-[var(--foreground)] group-hover:text-[var(--background)] transition-all duration-500 shadow-inner overflow-hidden relative z-10">
+      <div className="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center border border-white/10 bg-white/5 group-hover:bg-[var(--foreground)] group-hover:text-[var(--background)] transition-all duration-500 shadow-inner overflow-hidden relative z-10">
         <svg className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
