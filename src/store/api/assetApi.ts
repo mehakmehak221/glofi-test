@@ -75,6 +75,43 @@ export const assetApi = baseApi.injectEndpoints({
         };
       },
     }),
+    updateAssetPublic: builder.mutation<any, { id: string | number; [key: string]: any }>({
+      query: ({ id, ...patch }) => ({
+        url: `assets/${id}`,
+        method: 'PATCH',
+        body: patch,
+      }),
+    }),
+    getAssetReturns: builder.query<any, string | number>({
+      query: (id) => ({
+        url: `assets/${id}/returns`,
+        method: 'GET',
+      }),
+    }),
+    getAssetCashflow: builder.query<any, string | number>({
+      query: (id) => ({
+        url: `assets/${id}/cashflow`,
+        method: 'GET',
+      }),
+    }),
+    getAssetIrrCurve: builder.query<any, string | number>({
+      query: (id) => ({
+        url: `assets/${id}/irr-curve`,
+        method: 'GET',
+      }),
+    }),
+    getAssetRentalSchedule: builder.query<any, string | number>({
+      query: (id) => ({
+        url: `assets/${id}/rental-schedule`,
+        method: 'GET',
+      }),
+    }),
+    getAssetProjectedValuation: builder.query<any, string | number>({
+      query: (id) => ({
+        url: `assets/${id}/projected-valuation`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -88,4 +125,10 @@ export const {
   useGetAssetsQuery,
   useGetAssetByIdQuery,
   useSubmitAssetForReviewMutation,
+  useUpdateAssetPublicMutation,
+  useGetAssetReturnsQuery,
+  useGetAssetCashflowQuery,
+  useGetAssetIrrCurveQuery,
+  useGetAssetRentalScheduleQuery,
+  useGetAssetProjectedValuationQuery,
 } = assetApi;

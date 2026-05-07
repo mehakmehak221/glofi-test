@@ -12,7 +12,14 @@ import KYCModal from "@/components/dashboard/KYCModal";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 import PaymentModal from "@/components/dashboard/PaymentModal";
 
-import { useGetAssetByIdQuery } from "@/store/api/assetApi";
+import { 
+    useGetAssetByIdQuery,
+    useGetAssetReturnsQuery,
+    useGetAssetCashflowQuery,
+    useGetAssetIrrCurveQuery,
+    useGetAssetRentalScheduleQuery,
+    useGetAssetProjectedValuationQuery
+} from "@/store/api/assetApi";
 import { useCreateInvestmentMutation, useGetInvestmentsQuery } from "@/store/api/investmentApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
 
@@ -30,11 +37,20 @@ const formatValuation = (val) => {
 export default function PropertyDetailPage() {
     const params = useParams();
     const router = useRouter();
-    const { data: property, isLoading, isError } = useGetAssetByIdQuery(params.id as string);
+    const assetId = params.id as string;
+    
+    const { data: property, isLoading, isError } = useGetAssetByIdQuery(assetId);
+    const { data: returnsData } = useGetAssetReturnsQuery(assetId);
+    const { data: cashflowData } = useGetAssetCashflowQuery(assetId);
+    const { data: irrData } = useGetAssetIrrCurveQuery(assetId);
+    const { data: rentalData } = useGetAssetRentalScheduleQuery(assetId);
+    const { data: valuationData } = useGetAssetProjectedValuationQuery(assetId);
+
     const { data: kycData } = useGetKycStatusQuery();
     const { data: investmentsData, refetch: refetchInvestments } = useGetInvestmentsQuery();
     const [createInvestment, { isLoading: isInvesting }] = useCreateInvestmentMutation();
 
+    const [activeTab, setActiveTab] = useState("cashflow");
     const [investOpen, setInvestOpen] = useState(false);
     const [kycOpen, setKycOpen] = useState(false);
     const [confirmType, setConfirmType] = useState(null);
@@ -303,6 +319,118 @@ export default function PropertyDetailPage() {
                             </div>
                         </div>
                     )}
+
+                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 mb-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-sm font-bold text-[var(--header-text)]">Projected Performance</h3>
+                        </div>
+
+                        <div className="flex gap-4 border-b border-[var(--sidebar-border)] mb-6 overflow-x-auto no-scrollbar">
+                            {[
+                                { id: "cashflow", label: "Cashflow" },
+                                { id: "rental", label: "Rental Schedule" },
+                                { id: "valuation", label: "Valuation" }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all relative whitespace-nowrap ${
+                                        activeTab === tab.id 
+                                            ? "text-[var(--sidebar-active-text)]" 
+                                            : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
+                                    }`}
+                                >
+                                    {tab.label}
+                                    {activeTab === tab.id && (
+                                        <motion.div 
+                                            layoutId="activePerformanceTab"
+                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--sidebar-active-text)]" 
+                                        />
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="min-h-[200px]">
+                            {activeTab === "cashflow" && (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-3 text-[10px] uppercase font-bold text-[var(--color-text-muted)] pb-2 border-b border-[var(--sidebar-border)]">
+                                        <span>Year</span>
+                                        <span className="text-right">Gross Rent</span>
+                                        <span className="text-right">Net Cashflow</span>
+                                    </div>
+                                    {cashflowData?.data?.length > 0 ? (
+                                        cashflowData.data.map((item, index) => (
+                                            <div key={index} className="grid grid-cols-3 text-xs font-montserrat py-1">
+                                                <span className="text-[var(--color-text-muted)]">Year {item.year}</span>
+                                                <span className="text-right text-[var(--header-text)] font-semibold">${item.grossRent?.toLocaleString()}</span>
+                                                <span className="text-right text-[var(--color-status-success)] font-bold">${item.netCashflow?.toLocaleString()}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
+                                            No projection data available
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {activeTab === "rental" && (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-2 text-[10px] uppercase font-bold text-[var(--color-text-muted)] pb-2 border-b border-[var(--sidebar-border)]">
+                                        <span>Period</span>
+                                        <span className="text-right">Estimated Rent</span>
+                                    </div>
+                                    {rentalData?.data?.length > 0 ? (
+                                        rentalData.data.map((item, index) => (
+                                            <div key={index} className="grid grid-cols-2 text-xs font-montserrat py-1">
+                                                <span className="text-[var(--color-text-muted)]">{item.period || `Year ${item.year}`}</span>
+                                                <span className="text-right text-[var(--header-text)] font-semibold">${item.amount?.toLocaleString() || item.rent?.toLocaleString()}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
+                                            No rental schedule data available
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {activeTab === "valuation" && (
+                                <div className="space-y-6">
+                                    <div className="space-y-4">
+                                        {valuationData?.data?.length > 0 ? (
+                                            valuationData.data.map((item, index) => (
+                                                <div key={index} className="space-y-1.5">
+                                                    <div className="flex justify-between text-xs">
+                                                        <span className="text-[var(--color-text-muted)] font-medium">Year {item.year}</span>
+                                                        <span className="text-[var(--header-text)] font-bold">${item.valuation?.toLocaleString()}</span>
+                                                    </div>
+                                                    <div className="h-1.5 bg-[var(--sidebar-border)] rounded-full overflow-hidden">
+                                                        <motion.div 
+                                                            initial={{ width: 0 }}
+                                                            animate={{ width: `${(item.valuation / valuationData.data[valuationData.data.length - 1].valuation) * 100}%` }}
+                                                            className="h-full bg-gradient-to-r from-[var(--sidebar-active-text)]/40 to-[var(--sidebar-active-text)]"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
+                                                No valuation projections available
+                                            </div>
+                                        )}
+                                    </div>
+                                    {irrData?.data && (
+                                        <div className="p-4 rounded-md bg-[var(--card-surface)] border border-[var(--sidebar-border)] flex items-center justify-between">
+                                            <span className="text-[10px] uppercase font-bold text-[var(--color-text-muted)]">Projected IRR</span>
+                                            <span className="text-lg font-bold text-[var(--sidebar-active-text)]">{irrData.data.irr || irrData.data}%</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </motion.div>
 
 

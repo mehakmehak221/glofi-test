@@ -68,6 +68,12 @@ export const investmentApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Investment'],
     }),
+    getInvestmentReturns: builder.query<any, string | number>({
+      query: (id) => ({
+        url: `investments/${id}/returns`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -81,4 +87,5 @@ export const {
   useGetPendingApprovalsQuery,
   useApproveInvestmentMutation,
   useRejectInvestmentMutation,
+  useGetInvestmentReturnsQuery,
 } = investmentApi;

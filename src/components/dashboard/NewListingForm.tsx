@@ -6,7 +6,7 @@ import {
     useUploadFileMutation, 
     useSubmitAssetForReviewMutation,
     useGetPartnerAssetByIdQuery,
-    useUpdateAssetMutation 
+    useUpdateAssetPublicMutation 
 } from "@/store/api/assetApi";
 import { useGetKybStatusQuery } from "@/store/api/kybApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
@@ -28,6 +28,17 @@ const DROPDOWN_STYLES = `
   }
   .dropdown-scroll::-webkit-scrollbar-thumb:hover {
     background: var(--sidebar-active-text);
+  }
+
+  /* Remove arrows/spinners from number inputs */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 `;
 
@@ -174,6 +185,11 @@ export default function NewListingForm({ onBack, editId }) {
         valuation: "",
         totalFractions: "",
         expectedYield: "",
+        expectedAnnualRent: "",
+        rentalGrowthRate: "",
+        expectedAppreciationRate: "",
+        operatingCostRate: "",
+        holdingPeriod: "",
         description: "",
         riskRating: "MEDIUM",
         category: "DUBAI_SKYSCRAPER",
@@ -195,10 +211,11 @@ export default function NewListingForm({ onBack, editId }) {
     const { data: kybStatus } = useGetKybStatusQuery();
     const { data: kycStatus } = useGetKycStatusQuery();
     const [createAsset, { isLoading: isCreating }] = useCreateAssetMutation();
-    const [updateAsset, { isLoading: isUpdating }] = useUpdateAssetMutation();
+    const [updateAsset, { isLoading: isUpdating }] = useUpdateAssetPublicMutation();
     const [submitAssetForReview] = useSubmitAssetForReviewMutation();
     const [uploadFile] = useUploadFileMutation();
     const [uploadingField, setUploadingField] = useState(null);
+    const [errorMsg, setErrorMsg] = useState("");
 
     const isSubmitting = isCreating || isUpdating;
 
@@ -211,6 +228,11 @@ export default function NewListingForm({ onBack, editId }) {
                 valuation: asset.valuation || "",
                 totalFractions: asset.totalFractions || "",
                 expectedYield: asset.expectedYield || "",
+                expectedAnnualRent: asset.expectedAnnualRent || "",
+                rentalGrowthRate: asset.rentalGrowthRate || "",
+                expectedAppreciationRate: asset.expectedAppreciationRate || "",
+                operatingCostRate: asset.operatingCostRate || "",
+                holdingPeriod: asset.holdingPeriod || "",
                 description: asset.description || "",
                 riskRating: asset.riskRating || "MEDIUM",
                 category: asset.category || "DUBAI_SKYSCRAPER",
@@ -227,6 +249,7 @@ export default function NewListingForm({ onBack, editId }) {
 
     const handleFileUpload = async (file, field) => {
         setUploadingField(field);
+        setErrorMsg("");
         try {
             const result = await uploadFile({ file, folder: 'assets' }).unwrap();
             const url = result.key || result.url || result.path; 
@@ -236,20 +259,25 @@ export default function NewListingForm({ onBack, editId }) {
             } else {
                 setFormData(prev => ({ ...prev, [field]: url }));
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Upload failed:', err);
-            alert('Upload failed. Please try again.');
+            const status = err?.status;
+            if (status === 413) {
+                setErrorMsg("The file is too large for the server. Please upload a smaller file or ask the administrator to increase the limit.");
+            } else {
+                setErrorMsg(err?.data?.message || err?.message || 'Upload failed. Please try again.');
+            }
         } finally {
             setUploadingField(null);
         }
     };
 
     const handleSubmit = async () => {
-      
+        setErrorMsg("");
         const required = ['title', 'location', 'country', 'state', 'city', 'valuation', 'totalFractions', 'expectedYield', 'description', 'titleDeedUrl'];
         for (const field of required) {
             if (!formData[field]) {
-                alert(`Please fill in ${field}`);
+                setErrorMsg(`Please fill in the ${field} field.`);
                 return;
             }
         }
@@ -265,13 +293,18 @@ export default function NewListingForm({ onBack, editId }) {
                 valuation: Number(formData.valuation),
                 totalFractions: Number(formData.totalFractions),
                 expectedYield: Number(formData.expectedYield),
+                expectedAnnualRent: Number(formData.expectedAnnualRent),
+                rentalGrowthRate: Number(formData.rentalGrowthRate),
+                expectedAppreciationRate: Number(formData.expectedAppreciationRate),
+                operatingCostRate: Number(formData.operatingCostRate),
+                holdingPeriod: Number(formData.holdingPeriod),
                 fractionPrice: Number(formData.valuation) / Number(formData.totalFractions),
             };
 
             console.log('Saving asset with payload:', payload);
 
             if (editId) {
-                await updateAsset({ id: editId, data: payload }).unwrap();
+                await updateAsset({ id: editId, ...payload }).unwrap();
                 alert('Asset updated successfully!');
                 onBack();
             } else {
@@ -285,10 +318,9 @@ export default function NewListingForm({ onBack, editId }) {
                     setShowKybModal(true);
                 }
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to save asset. Full error:', err);
-            console.error('Error detail:', JSON.stringify(err, null, 2));
-            alert(err?.data?.message || err?.message || 'Failed to save asset');
+            setErrorMsg(err?.data?.message || err?.message || 'Failed to save asset. Please check all fields and try again.');
         }
     };
 
@@ -323,6 +355,19 @@ export default function NewListingForm({ onBack, editId }) {
                 </div>
             ) : (
                 <div className="bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-md p-4 sm:p-6 lg:p-10 relative z-10">
+                    
+                    {errorMsg && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-medium flex items-center gap-3"
+                        >
+                            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {errorMsg}
+                        </motion.div>
+                    )}
                   
                 <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-[var(--foreground)]/20 pb-2 sm:pb-4 w-full">
                     {CATEGORIES.map((cat) => (
@@ -417,14 +462,64 @@ export default function NewListingForm({ onBack, editId }) {
                             className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
-                    <div className="flex flex-col gap-2 md:col-span-1">
+                    <div className="flex flex-col gap-2">
                         <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Annual Yield (%)</label>
                         <input
                             type="number"
                             value={formData.expectedYield}
                             onChange={(e) => setFormData({ ...formData, expectedYield: e.target.value })}
                             placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat md:max-w-[calc(50%-16px)]"
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Annual Rent ($)</label>
+                        <input
+                            type="number"
+                            value={formData.expectedAnnualRent}
+                            onChange={(e) => setFormData({ ...formData, expectedAnnualRent: e.target.value })}
+                            placeholder="..."
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Rental Growth Rate (%)</label>
+                        <input
+                            type="number"
+                            value={formData.rentalGrowthRate}
+                            onChange={(e) => setFormData({ ...formData, rentalGrowthRate: e.target.value })}
+                            placeholder="..."
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Appreciation Rate (%)</label>
+                        <input
+                            type="number"
+                            value={formData.expectedAppreciationRate}
+                            onChange={(e) => setFormData({ ...formData, expectedAppreciationRate: e.target.value })}
+                            placeholder="..."
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Operating Cost Rate (%)</label>
+                        <input
+                            type="number"
+                            value={formData.operatingCostRate}
+                            onChange={(e) => setFormData({ ...formData, operatingCostRate: e.target.value })}
+                            placeholder="..."
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Holding Period (Years)</label>
+                        <input
+                            type="number"
+                            value={formData.holdingPeriod}
+                            onChange={(e) => setFormData({ ...formData, holdingPeriod: e.target.value })}
+                            placeholder="..."
+                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
                         />
                     </div>
                     <div className="flex flex-col gap-2 md:col-span-2">
