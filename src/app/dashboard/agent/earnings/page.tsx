@@ -7,13 +7,17 @@ import {
     CheckIcon, 
     DollarIcon, 
     TrendingUpIcon, 
-    InfoIcon 
+    InfoIcon,
+    ClockIcon,
+    AnalyticsIcon,
+    LeadsIcon,
+    VerifiedIcon
 } from "@/components/VectorImages";
 
-const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
+const formatCurrency = (val: number) => {
+    if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
+    if (val >= 100000) return `₹${(val / 100000).toFixed(1)} L`;
+    return `₹${val.toLocaleString('en-IN')}`;
 };
 
 export default function AgentEarningsPage() {
@@ -36,20 +40,20 @@ export default function AgentEarningsPage() {
             label: "Total Earnings", 
             value: formatCurrency(earningsData?.totalEarnings || 0), 
             icon: DollarIcon, 
-            bgColor: "bg-[var(--color-primary-300)]/10", 
-            iconColor: "text-[var(--color-primary-300)]" 
+            bgColor: "bg-green-500/10", 
+            iconColor: "text-green-500" 
         },
         { 
             label: "Completed", 
             value: formatCurrency(earningsData?.completedEarnings || 0), 
-            icon: CheckIcon, 
+            icon: VerifiedIcon, 
             bgColor: "bg-blue-500/10", 
             iconColor: "text-blue-500" 
         },
         { 
             label: "Pending", 
             value: formatCurrency(earningsData?.pendingEarnings || 0), 
-            icon: InfoIcon, 
+            icon: ClockIcon, 
             bgColor: "bg-yellow-500/10", 
             iconColor: "text-yellow-500" 
         }
@@ -91,6 +95,7 @@ export default function AgentEarningsPage() {
             </div>
 
             <div className="space-y-6">
+                {/* Commission Breakdown */}
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -100,36 +105,52 @@ export default function AgentEarningsPage() {
                     <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-8">Commission Breakdown</h2>
                     <div className="space-y-8">
                         <div className="flex justify-between items-start">
-                            <div>
-                                <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-30 uppercase tracking-[0.15em] mb-1.5">Commission Rate</p>
-                                <p className="text-base font-bold text-[var(--foreground)]/90">{commissionRate}% per transaction</p>
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                                    <TrendingUpIcon className="w-5 h-5 text-green-500" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-30 uppercase tracking-[0.15em] mb-1.5">Commission Rate</p>
+                                    <p className="text-base font-bold text-[var(--foreground)]/90">{commissionRate}% per transaction</p>
+                                </div>
                             </div>
                             <FinancialIcon className="w-5 h-5 text-[var(--sidebar-text)] opacity-10" />
                         </div>
                         <div className="flex justify-between items-start">
-                            <div>
-                                <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-30 uppercase tracking-[0.15em] mb-1.5">Platform Fee Split</p>
-                                <p className="text-base font-bold text-[var(--foreground)]/90">Agent Commission</p>
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                    <LeadsIcon className="w-5 h-5 text-blue-500" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-30 uppercase tracking-[0.15em] mb-1.5">Custom Commission</p>
+                                    <p className="text-base font-bold text-[var(--foreground)]/90">Not Set</p>
+                                </div>
                             </div>
                             <FinancialIcon className="w-5 h-5 text-[var(--sidebar-text)] opacity-10" />
                         </div>
                         <div className="flex justify-between items-start">
-                            <div>
-                                <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-30 uppercase tracking-[0.15em] mb-1.5">Early Agent Status</p>
-                                <p className="text-base font-bold text-[var(--foreground)]/90">{earningsData?.commissionRate?.isEarlyAgent ? "Active (Higher Rates)" : "Standard"}</p>
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                                    <FinancialIcon className="w-5 h-5 text-yellow-500" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-30 uppercase tracking-[0.15em] mb-1.5">Default / Early Agent Status</p>
+                                    <p className="text-base font-bold text-[var(--foreground)]/90">{commissionRate}% · {earningsData?.commissionRate?.isEarlyAgent ? "Early Agent" : "Standard"}</p>
+                                </div>
                             </div>
                             <TrendingUpIcon className="w-5 h-5 text-[var(--sidebar-text)] opacity-10" />
                         </div>
                     </div>
                 </motion.div>
 
+                {/* Earnings History */}
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.4 }}
                     className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-8"
                 >
-                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-8">Recent Earnings History</h2>
+                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-8">Earnings History</h2>
                     <div className="space-y-8">
                         {commissionsData?.length ? (
                             commissionsData.map((item: any, i: number) => (
@@ -139,11 +160,12 @@ export default function AgentEarningsPage() {
                                         <p className="text-xs text-[var(--sidebar-text)] opacity-40 font-medium">
                                             {item.date} • {item.referredUser || "Referral"}
                                         </p>
-                                        {item.amount && <p className="text-[10px] text-[var(--sidebar-text)] opacity-20 uppercase font-bold tracking-tight">Transaction: ${item.amount}</p>}
                                     </div>
                                     <div className="text-right space-y-1">
                                         <p className="text-lg font-bold text-[var(--color-primary-300)]">+{formatCurrency(item.commission)}</p>
-                                        <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-30 uppercase">{item.status}</p>
+                                        <p className={`text-[10px] font-bold uppercase tracking-widest ${
+                                            item.status === 'Paid' ? 'text-green-500' : 'text-yellow-500'
+                                        }`}>{item.status}</p>
                                     </div>
                                 </div>
                             ))
@@ -156,3 +178,5 @@ export default function AgentEarningsPage() {
         </div>
     );
 }
+
+

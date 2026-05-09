@@ -20,8 +20,18 @@ const containerVariants = {
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 25 } },
-} as const;
+    visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 25 } },
+};
+
+const formatNumber = (val) => {
+    if (val == null) return "₹0";
+    const num = parseFloat(val);
+    if (isNaN(num)) return "₹0";
+    if (num >= 1e7) return `₹${(num / 1e7).toFixed(1)} Cr`;
+    if (num >= 1e5) return `₹${(num / 1e5).toFixed(1)} L`;
+    if (num >= 1e3) return `₹${(num / 1e3).toFixed(1)} K`;
+    return `₹${num.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+};
 
 export default function PortfolioPage() {
     const [selectedAsset, setSelectedAsset] = useState(null);
@@ -64,18 +74,10 @@ export default function PortfolioPage() {
         }
     };
 
-    const formatNumber = (val) => {
-        if (val == null) return "$0";
-        const num = parseFloat(val);
-        if (isNaN(num)) return "$0";
-        if (num >= 1e9) return `$${(num / 1e9).toFixed(2).replace(/\.00$/, '')}B`;
-        if (num >= 1e6) return `$${(num / 1e6).toFixed(2).replace(/\.00$/, '')}M`;
-        if (num >= 1e3) return `$${(num / 1e3).toFixed(2).replace(/\.00$/, '')}K`;
-        return `$${num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-    };
+
 
     const stats = [
-        { label: "Invested", value: formatNumber(portfolioData?.totalInvested), change: "+$0 this month", icon: DollarIcon },
+        { label: "Invested", value: formatNumber(portfolioData?.totalInvested), change: "+₹0 this month", icon: DollarIcon },
         { label: "Current Value", value: formatNumber(portfolioData?.currentValue), change: "+0% overall", icon: TrendingUpIcon },
         { label: "ROI", value: `${portfolioData?.roi || 0}%`, change: "+0% this quarter", icon: TopArrow },
         { label: "Assets Owned", value: portfolioData?.assetsOwned || assetsList.length || 0, change: "Verified assets", icon: Asset },
@@ -305,12 +307,12 @@ function SecondaryListingCard({ item, onDelete }) {
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Invested</p>
-                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">${Number(item.askPrice || item.pricePerFraction || 0).toLocaleString()}K</p>
+                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{formatNumber(item.askPrice || item.pricePerFraction || 0)}</p>
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Value</p>
                                 <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">
-                                    ${Number(((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0)) || 0).toLocaleString()}K
+                                    {formatNumber((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0))}
                                 </p>
                             </div>
                             <div>

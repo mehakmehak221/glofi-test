@@ -13,7 +13,7 @@ export default function Input({
   const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
 
   return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
+    <div className={`flex flex-col gap-1.5 ₹{className}`}>
       {label && (
         <label htmlFor={inputId} className="text-sm font-medium text-[var(--color-gray-100)]">
           {label}

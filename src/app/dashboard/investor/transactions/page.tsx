@@ -37,7 +37,7 @@ function formatDate(dateStr) {
 
 function formatAmount(amount, currency) {
     if (amount === undefined || amount === null) return "-";
-    return `$${parseFloat(amount).toLocaleString()} ${currency || ""}`.trim();
+    return `₹${parseFloat(amount).toLocaleString()} ${currency || ""}`.trim();
 }
 
 export default function TransactionsPage() {

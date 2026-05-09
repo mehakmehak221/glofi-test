@@ -2,12 +2,12 @@
 
 import { motion } from "framer-motion";
 import { useGetAgentTransactionsQuery } from "@/store/api/agentApi";
-import { CheckIcon, PendingIcon, LoadingSpinner } from "@/components/VectorImages";
+import { CheckIcon, PendingIcon, LoadingSpinner, AnalyticsIcon, ChartLineIcon, DocumentIcon } from "@/components/VectorImages";
 
-const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
+const formatCurrency = (val: number) => {
+    if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
+    if (val >= 100000) return `₹${(val / 100000).toFixed(1)} L`;
+    return `₹${val.toLocaleString('en-IN')}`;
 };
 
 export default function AgentTransactionsPage() {
@@ -25,6 +25,12 @@ export default function AgentTransactionsPage() {
         );
     }
 
+    const stats = [
+        { label: "Total Volume", value: "INR 0", icon: DocumentIcon, color: "text-[var(--color-primary-300)]", bg: "bg-[var(--color-primary-300)]/10" },
+        { label: "Commission", value: "INR 0", icon: ChartLineIcon, color: "text-blue-500", bg: "bg-blue-500/10" },
+        { label: "Completed", value: "0 / 0", icon: CheckIcon, color: "text-green-500", bg: "bg-green-500/10" },
+    ];
+
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
             <motion.div
@@ -38,10 +44,30 @@ export default function AgentTransactionsPage() {
                 </h1>
             </motion.div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+                {stats.map((stat, i) => (
+                    <motion.div
+                        key={stat.label}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.35, delay: i * 0.1 }}
+                        className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-6 flex flex-col gap-4"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className={`w-10 h-10 rounded-lg ${stat.bg} flex items-center justify-center`}>
+                                <stat.icon className={`w-5 h-5 ${stat.color}`} />
+                            </div>
+                            <span className="text-xs font-bold text-[var(--sidebar-text)] opacity-40 font-montserrat uppercase tracking-wider">{stat.label}</span>
+                        </div>
+                        <span className="text-3xl font-bold text-[var(--foreground)] font-montserrat">{stat.value}</span>
+                    </motion.div>
+                ))}
+            </div>
+
             <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.1 }}
+                transition={{ duration: 0.35, delay: 0.3 }}
                 className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md overflow-hidden"
             >
                 <div className="p-8 border-b border-[var(--sidebar-border)]">
@@ -56,7 +82,6 @@ export default function AgentTransactionsPage() {
                                 <th className="px-8 py-6 font-bold">User</th>
                                 <th className="px-8 py-6 font-bold">Asset</th>
                                 <th className="px-8 py-6 font-bold text-right">Amount</th>
-                                <th className="px-8 py-6 font-bold text-right">Commission</th>
                                 <th className="px-8 py-6 font-bold text-center">Status</th>
                             </tr>
                         </thead>
@@ -67,8 +92,7 @@ export default function AgentTransactionsPage() {
                                         <td className="px-8 py-6 text-sm text-[var(--sidebar-text)] opacity-60">{tx.date}</td>
                                         <td className="px-8 py-6 text-sm font-bold text-[var(--foreground)]/90">{tx.referredUser}</td>
                                         <td className="px-8 py-6 text-sm text-[var(--sidebar-text)] opacity-60">{tx.assetName}</td>
-                                        <td className="px-8 py-6 text-sm text-right font-medium text-[var(--foreground)] opacity-80">{formatCurrency(tx.amount)}</td>
-                                        <td className="px-8 py-6 text-sm text-right font-bold text-[var(--color-primary-300)]">+{formatCurrency(tx.commission)}</td>
+                                        <td className="px-8 py-6 text-sm text-right font-bold text-[var(--foreground)] opacity-80">{formatCurrency(tx.amount)}</td>
                                         <td className="px-8 py-6 text-center">
                                             <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                                                 tx.status === "Completed" || tx.status === "SUCCESS"
@@ -87,17 +111,17 @@ export default function AgentTransactionsPage() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={6} className="px-8 py-20 text-center text-sm text-[var(--sidebar-text)] opacity-30 font-montserrat italic">
-                                        No transactions found.
+                                    <td colSpan={5} className="px-8 py-20 text-center">
+                                        <p className="text-sm text-[var(--sidebar-text)] opacity-30 font-montserrat italic">No transactions available yet.</p>
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
-               
-                <div className="h-20"></div>
             </motion.div>
         </div>
     );
 }
+
+

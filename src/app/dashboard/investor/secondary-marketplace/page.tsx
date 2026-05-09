@@ -36,6 +36,16 @@ export default function SecondaryMarketplacePage() {
         return `${API_URL}/${imagePath.replace(/^\//, '')}`;
     };
 
+    const formatNumber = (val) => {
+        if (val == null) return "₹0";
+        const num = parseFloat(val);
+        if (isNaN(num)) return "₹0";
+        if (num >= 1e7) return `₹${(num / 1e7).toFixed(1)} Cr`;
+        if (num >= 1e5) return `₹${(num / 1e5).toFixed(1)} L`;
+        if (num >= 1e3) return `₹${(num / 1e3).toFixed(1)} K`;
+        return `₹${num.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+    };
+
     const mapListing = (item) => {
         const isFlattened = !!item.assetTitle;
 
@@ -47,8 +57,8 @@ export default function SecondaryMarketplacePage() {
                 image: getImageUrl(item.assetImages?.[0]),
                 seller: "You",
                 fractions: item.fractionsListed || 0,
-                price: `$${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
-                currentValue: `$${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
+                price: `₹${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
+                currentValue: `₹${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
                 status: item.status,
                 change: "0%",
                 pricePerFraction: parseFloat(item.askPrice || 0)
@@ -65,8 +75,8 @@ export default function SecondaryMarketplacePage() {
                 image: getImageUrl(assetObj.images?.[0]),
                 seller: sellerName,
                 fractions: item.fractions || 0,
-                price: `$${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
-                currentValue: `$${(parseFloat(assetObj.fractionPrice || item.askPrice || 0)).toLocaleString()}`,
+                price: `₹${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
+                currentValue: `₹${(parseFloat(assetObj.fractionPrice || item.askPrice || 0)).toLocaleString()}`,
                 status: item.status,
                 change: `${assetObj.expectedYield || 0}%`,
                 pricePerFraction: parseFloat(item.askPrice || 0)
@@ -101,7 +111,7 @@ export default function SecondaryMarketplacePage() {
         { label: "Total Listings", value: displayAssets.length.toString(), change: "Active listings", icon: TrendingUpIcon },
         {
             label: "Total Value",
-            value: `$${(displayAssets.reduce((acc, item) => acc + (item.pricePerFraction * item.fractions || 0), 0) / 1000).toFixed(1)}K`,
+            value: formatNumber(displayAssets.reduce((acc, item) => acc + (item.pricePerFraction * item.fractions || 0), 0)),
             change: "Market volume",
             icon: TrendingUpIcon
         },
@@ -393,7 +403,7 @@ function DetailModal({ id, onClose, onBuy }) {
                                 <div className="grid grid-cols-2 gap-4 mb-8">
                                     <div className="bg-[var(--card-surface)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
                                         <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Price</p>
-                                        <p className="text-lg font-bold text-[var(--header-text)]">${(parseFloat(listing.askPrice || 0)).toLocaleString()}</p>
+                                        <p className="text-lg font-bold text-[var(--header-text)]">₹{(parseFloat(listing.askPrice || 0)).toLocaleString()}</p>
                                     </div>
                                     <div className="bg-[var(--card-surface)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
                                         <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Fractions</p>

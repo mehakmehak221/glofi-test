@@ -32,14 +32,14 @@ const STAT_CARDS = [
     },
     {
         label: "FUNDS RAISED",
-        value: "$4.2M",
-        delta: "+$850K",
+        value: "₹4.2 Cr",
+        delta: "+₹85 L",
         icon: FinancialIcon,
     },
     {
         label: "COMMISSIONS",
-        value: "$126K",
-        delta: "+$28K",
+        value: "₹1.2 L",
+        delta: "+₹28,000",
         icon: TrendingUpIcon,
     },
 ];
@@ -188,9 +188,9 @@ const getImageUrl = (imagePath) => {
 };
 
 const formatCurrency = (val) => {
-    if (val >= 1e6) return `$${(val / 1e6).toFixed(1)}M`;
-    if (val >= 1e3) return `$${(val / 1e3).toFixed(1)}K`;
-    return `$${val.toLocaleString()}`;
+    if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
+    if (val >= 100000) return `₹${(val / 100000).toFixed(1)} L`;
+    return `₹${val.toLocaleString('en-IN')}`;
 };
 
 export default function PartnerOverviewPage() {

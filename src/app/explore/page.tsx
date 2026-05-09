@@ -117,10 +117,10 @@ const CATEGORY_MAP = {
 const formatValuation = (val) => {
     const num = parseFloat(val);
     if (isNaN(num)) return "N/A";
-    if (num >= 1e9) return `$${(num / 1e9).toFixed(1)}B`;
-    if (num >= 1e6) return `$${(num / 1e6).toFixed(1)}M`;
-    if (num >= 1e3) return `$${(num / 1e3).toFixed(1)}K`;
-    return `$${num.toLocaleString()}`;
+    if (num >= 1e7) return `₹${(num / 1e7).toFixed(1)} Cr`;
+    if (num >= 1e5) return `₹${(num / 1e5).toFixed(1)} L`;
+    if (num >= 1e3) return `₹${(num / 1e3).toFixed(1)} K`;
+    return `₹${num.toLocaleString('en-IN')}`;
 };
 
 const containerVariants: Variants = {
@@ -177,7 +177,7 @@ export default function ExplorePage() {
                             Discover Assets
                         </h1>
                         <p className="text-sm sm:text-base text-[var(--color-text-muted)] max-w-xl font-medium leading-relaxed">
-                            Institutional-grade real estate. Digitally simplified. Invest fractionally starting from $15,000.
+                            Institutional-grade real estate. Digitally simplified. Invest fractionally starting from ₹15,000.
                         </p>
                     </div>
 
@@ -337,7 +337,7 @@ export default function ExplorePage() {
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-text-muted)] font-bold mb-1 opacity-60">Entry Point</p>
-                                                    <p className="text-lg font-black text-white tracking-tighter">${Number(property.fractionPrice).toLocaleString()}</p>
+                                                    <p className="text-lg font-black text-white tracking-tighter">₹{Number(property.fractionPrice).toLocaleString()}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-text-muted)] font-bold mb-1 opacity-60">Expected Yield</p>

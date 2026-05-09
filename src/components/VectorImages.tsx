@@ -457,8 +457,7 @@ export const TrendingUpIcon = ({ className = "w-4 h-4", style, ...props }: any) 
 
 export const DollarIcon = ({ className = "w-4 h-4", style, ...props }: any) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" className={className} style={style} {...props}>
-        <path d="M8 1.33325V14.6666" stroke="var(--color-primary-300)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M11.3333 3.33325H6.33333C5.71449 3.33325 5.121 3.57908 4.68342 4.01667C4.24583 4.45425 4 5.04775 4 5.66659C4 6.28542 4.24583 6.87892 4.68342 7.3165C5.121 7.75409 5.71449 7.99992 6.33333 7.99992H9.66667C10.2855 7.99992 10.879 8.24575 11.3166 8.68334C11.7542 9.12092 12 9.71441 12 10.3333C12 10.9521 11.7542 11.5456 11.3166 11.9832C10.879 12.4208 10.2855 12.6666 9.66667 12.6666H4" stroke="var(--color-primary-300)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M3.5 4H12.5M3.5 6.5H12.5M10.5 4C10.5 9 4.5 9 4.5 9M7 9L11.5 14" stroke="var(--color-primary-300)" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
 
@@ -572,8 +571,7 @@ export const LeadsIcon = ({className = "w-4 h-4" }) => (
 
 export const FinancialIcon = ({className = "w-4 h-4", style, ...props }: any) => (
 <svg className={className} style={style} width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-<path d="M9 1.5V16.5" stroke="var(--color-primary-300)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M12.75 3.75H7.125C6.42881 3.75 5.76113 4.02656 5.26884 4.51884C4.77656 5.01113 4.5 5.67881 4.5 6.375C4.5 7.07119 4.77656 7.73887 5.26884 8.23116C5.76113 8.72344 6.42881 9 7.125 9H10.875C11.5712 9 12.2389 9.27656 12.7312 9.76884C13.2234 10.2611 13.5 10.9288 13.5 11.625C13.5 12.3212 13.2234 12.9889 12.7312 13.4812C12.2389 13.9734 11.5712 14.25 10.875 14.25H4.5" stroke="var(--color-primary-300)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M4 4.5H14M4 7.5H14M11.5 4.5C11.5 11 4.5 11 4.5 11M7.5 11L12.5 16" stroke="var(--color-primary-300)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 );
 
@@ -841,3 +839,60 @@ export const CopyIcon = ({ className = "w-4 h-4" }) => (
         <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
     </svg>
 );
+
+export const LinkIcon = ({ className = "w-4 h-4" }) => (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+    </svg>
+);
+
+export const AnalyticsIcon = ({ className = "w-4 h-4" }) => (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="6" y1="20" x2="6" y2="14" />
+    </svg>
+);
+
+export const GuideIcon = ({ className = "w-4 h-4" }) => (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+    </svg>
+);
+
+export const UserPlusIcon = ({ className = "w-4 h-4" }) => (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+        <circle cx="8.5" cy="7" r="4" />
+        <line x1="20" y1="8" x2="20" y2="14" />
+        <line x1="23" y1="11" x2="17" y2="11" />
+    </svg>
+);
+
+export const UserGroupIcon = ({ className = "w-4 h-4" }) => (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 00-3-3.87" />
+        <path d="M16 3.13a4 4 0 010 7.75" />
+    </svg>
+);
+
+export const ChartLineIcon = ({ className = "w-4 h-4" }) => (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+    </svg>
+);
+
+export const ShareIcon = ({ className = "w-4 h-4" }) => (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="18" cy="5" r="3" />
+        <circle cx="6" cy="12" r="3" />
+        <circle cx="18" cy="19" r="3" />
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+    </svg>
+);
+

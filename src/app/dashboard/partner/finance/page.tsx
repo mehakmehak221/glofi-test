@@ -5,57 +5,34 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useGetPartnerFinanceQuery, useGetCommissionHistoryQuery, useGetPayoutHistoryQuery } from "@/store/api/partnerApi";
 import { CheckIcon } from "@/components/VectorImages";
 
-const TABS = [ "Payouts", "AI Plans"];
+const TABS = ["Commissions", "Payouts"];
 
 const STATS = [
-    { label: "TOTAL EARNED", value: "$126,450", color: "var(--color-primary-300-alpha-10)" },
-    { label: "PENDING PAYOUT", value: "$18,200", color: "var(--color-bg-surface-subtle)" },
-    { label: "THIS MONTH", value: "$28,750", color: "var(--color-primary-300-alpha-10)" },
+    { label: "TOTAL EARNED", value: "₹1.2 L", color: "var(--color-primary-300-alpha-10)" },
+    { label: "PENDING PAYOUT", value: "₹18,200", color: "var(--color-bg-surface-subtle)" },
+    { label: "THIS MONTH", value: "₹28,750", color: "var(--color-primary-300-alpha-10)" },
 ];
 
 const COMMISSIONS = [
-    { name: "Burj Vista Tower", detail: "Sale · Feb 10", amount: "$12,500", status: "Paid", color: "var(--color-primary-300)" },
-    { name: "Marina Walk", detail: "Referral · Feb 8", amount: "$3,200", status: "Paid", color: "var(--color-primary-300)" },
-    { name: "Palm Villa", detail: "Sale · Feb 5", amount: "$8,750", status: "Pending", color: "var(--color-status-warning)" },
-    { name: "DIFC Tower", detail: "Sale · Jan 28", amount: "$15,800", status: "Paid", color: "var(--color-primary-300)" },
+    { name: "Burj Vista Tower", detail: "Sale · Feb 10", amount: "₹12,500", status: "Paid", color: "var(--color-primary-300)" },
+    { name: "Marina Walk", detail: "Referral · Feb 8", amount: "₹3,200", status: "Paid", color: "var(--color-primary-300)" },
+    { name: "Palm Villa", detail: "Sale · Feb 5", amount: "₹8,750", status: "Pending", color: "var(--color-status-warning)" },
+    { name: "DIFC Tower", detail: "Sale · Jan 28", amount: "₹15,800", status: "Paid", color: "var(--color-primary-300)" },
 ];
 
 const PAYOUTS = [
-    { name: "Burj Vista Tower", detail: "Feb 10 · Bank Transfer", amount: "$125,000", status: "Completed", color: "var(--color-primary-300)" },
-    { name: "Marina Walk", detail: "Feb 5 · Bank Transfer", amount: "$89,400", status: "Completed", color: "var(--color-primary-300)" },
-    { name: "Palm Villa", detail: "Feb 28 · Bank Transfer", amount: "$67,200", status: "Scheduled", color: "var(--color-status-warning)" },
+    { name: "Burj Vista Tower", detail: "Feb 10 · Bank Transfer", amount: "₹1.2 L", status: "Completed", color: "var(--color-primary-300)" },
+    { name: "Marina Walk", detail: "Feb 5 · Bank Transfer", amount: "₹89,400", status: "Completed", color: "var(--color-primary-300)" },
+    { name: "Palm Villa", detail: "Feb 28 · Bank Transfer", amount: "₹67,200", status: "Scheduled", color: "var(--color-status-warning)" },
 ];
 
-const PLANS = [
-    {
-        name: "Preemium",
-        price: "Free",
-        features: ["1 day access", "Up to 5 calls/user", "Max 50 free calls", "Basic analytics"],
-        button: "Select",
-        popular: false
-    },
-    {
-        name: "Basic",
-        price: "$10/mo",
-        features: ["30-day access", "Up to 50 calls/user", "500 total calls", "Lead scoring", "Basic analytics"],
-        button: "Select",
-        popular: false
-    },
-    {
-        name: "Pro",
-        price: "$25/mo",
-        features: ["30-day access", "Unlimited calls/user", "2000 total calls", "Advanced lead scoring", "Priority support", "Custom scripts"],
-        button: "Select",
-        popular: true
-    },
-    {
-        name: "Enterprise",
-        price: "Custom",
-        features: ["Annual contract", "Unlimited calls", "Custom AI training", "Dedicated account manager", "API access", "White-label option"],
-        button: "Contact",
-        popular: false
-    }
-];
+
+
+const formatCurrency = (val) => {
+    if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
+    if (val >= 100000) return `₹${(val / 100000).toFixed(1)} L`;
+    return `₹${val.toLocaleString('en-IN')}`;
+};
 
 export default function FinancePage() {
     const [activeTab, setActiveTab] = useState("Commissions");
@@ -119,7 +96,7 @@ export default function FinancePage() {
                             {stat.label}
                         </p>
                         <p className="text-2xl font-semibold text-[var(--foreground)] opacity-90 font-montserrat tracking-tight">
-                            ${(stat.value || 0).toLocaleString()}
+                            {formatCurrency(stat.value || 0)}
                         </p>
                     </motion.div>
                 ))}
@@ -163,7 +140,7 @@ export default function FinancePage() {
                                                 </p>
                                             </div>
                                             <div className="text-left sm:text-right">
-                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">${(item.amount || 0).toLocaleString()}</p>
+                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">{formatCurrency(item.amount || 0)}</p>
                                                 <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                     {item.status}
                                                 </p>
@@ -203,7 +180,7 @@ export default function FinancePage() {
                                                 </p>
                                             </div>
                                             <div className="text-left sm:text-right">
-                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">${(item.amount || 0).toLocaleString()}</p>
+                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">{formatCurrency(item.amount || 0)}</p>
                                                 <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                     {item.status}
                                                 </p>
@@ -217,44 +194,7 @@ export default function FinancePage() {
 
 
 
-                    {activeTab === "AI Plans" && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {PLANS.map((plan, i) => (
-                                <motion.div
-                                    key={plan.name}
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    whileHover={{ scale: 1.02 }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className={`bg-[var(--card-surface)] p-7 rounded-md border ${plan.popular ? 'border-[var(--sidebar-active-text)]/30' : 'border-[var(--sidebar-border)]'} flex flex-col items-start relative overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300`}
-                                >
-                                    {plan.popular && (
-                                        <div className="absolute top-4 right-4 bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-[9px] font-bold px-2.5 py-1 rounded-full border border-[var(--sidebar-active-text)]/10">
-                                            POPULAR
-                                        </div>
-                                    )}
-                                    <h3 className="text-xs font-semibold text-[var(--sidebar-text)] opacity-50 font-montserrat mb-2 uppercase tracking-widest">{plan.name}</h3>
-                                    <p className="text-2xl font-bold text-[var(--foreground)] opacity-90 font-montserrat mb-8">{plan.price}</p>
 
-                                    <ul className="space-y-4 mb-10 w-full">
-                                        {plan.features.map((feature, fidx) => (
-                                            <li key={fidx} className="flex items-center gap-3 text-[11px] text-[var(--foreground)] opacity-60 font-montserrat">
-                                                <CheckIcon className="w-3.5 h-3.5 text-[var(--sidebar-active-text)]" />
-                                                {feature}
-                                            </li>
-                                        ))}
-                                    </ul>
-
-                                    <button className={`w-full py-3.5 rounded-md text-[11px] font-bold font-montserrat transition-all ${plan.popular
-                                        ? 'bg-[var(--sidebar-active-text)] text-white hover:opacity-90 shadow-md'
-                                        : 'bg-black/5 dark:bg-white/5 text-[var(--foreground)] opacity-70 hover:opacity-100 border border-[var(--sidebar-border)]'
-                                        }`}>
-                                        {plan.button}
-                                    </button>
-                                </motion.div>
-                            ))}
-                        </div>
-                    )}
                 </motion.div>
             </AnimatePresence>
         </div>

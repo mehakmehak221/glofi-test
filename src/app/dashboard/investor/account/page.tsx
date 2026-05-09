@@ -184,7 +184,7 @@ export default function AccountPage() {
                             >
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                                 <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-black/40 mb-1.5 sm:mb-2.5">USD BALANCE</p>
-                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-black text-black mb-5 sm:mb-8">${profileData?.usdBalance || "0.00"}</p>
+                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-black text-black mb-5 sm:mb-8">₹{profileData?.usdBalance || "0.00"}</p>
                                 <div className="flex gap-2 text-black">
                                     <button className="px-3 py-1 bg-black/10 text-black text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-black/5 hover:bg-black/20">Deposit</button>
                                     <button className="px-3 py-1 bg-black/10 text-black text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-black/5 transition-colors cursor-pointer hover:bg-black/20">Withdraw</button>
@@ -255,20 +255,29 @@ export default function AccountPage() {
                                                     </span>
                                                 </div>
                                             )}
-                                        </div>
-
-                                        <div className="flex items-center gap-2 sm:gap-3 w-full">
+                                        </div>                                        <div className="flex items-center gap-2 sm:gap-3 w-full">
                                             <button
                                                 onClick={() => cert.pdfUrl && window.open(cert.pdfUrl.startsWith('http') ? cert.pdfUrl : `${API_URL}/${cert.pdfUrl.replace(/^\//, '')}`, '_blank')}
                                                 disabled={!cert.pdfUrl}
-                                                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-[var(--color-primary-300)]/10 hover:bg-[var(--color-primary-300)]/15 text-[var(--color-primary-300)] text-[10px] sm:text-[11px] font-bold tracking-widest uppercase rounded-full flex justify-center items-center gap-1.5 sm:gap-2 border-0 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-[var(--color-primary-300)]/10 hover:bg-[var(--color-primary-300)]/15 text-[var(--color-primary-300)] text-[9px] sm:text-[11px] font-bold tracking-widest uppercase rounded-full flex justify-center items-center gap-1.5 sm:gap-2 border-0 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
-                                                <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                                PDF
+                                                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+                                                    <polyline points="7 11 12 16 17 11" />
+                                                    <line x1="12" y1="4" x2="12" y2="16" />
+                                                </svg>
+                                                Download Docs
                                             </button>
-                                            <button className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-transparent hover:bg-[var(--sidebar-active-bg)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] text-[10px] sm:text-[11px] font-bold tracking-widest uppercase rounded-full flex justify-center items-center gap-1.5 sm:gap-2 border border-[var(--sidebar-border)] transition-all cursor-pointer">
-                                                <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                                                NFT
+                                            <button
+                                                onClick={() => cert.pdfUrl && window.open(cert.pdfUrl.startsWith('http') ? cert.pdfUrl : `${API_URL}/${cert.pdfUrl.replace(/^\//, '')}`, '_blank')}
+                                                disabled={!cert.pdfUrl}
+                                                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-transparent hover:bg-[var(--sidebar-active-bg)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] text-[9px] sm:text-[11px] font-bold tracking-widest uppercase rounded-full flex justify-center items-center gap-1.5 sm:gap-2 border border-[var(--sidebar-border)] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                </svg>
+                                                View Docs
                                             </button>
                                         </div>
                                     </div>
@@ -286,7 +295,7 @@ export default function AccountPage() {
                     {activeTab === "Referrals" && (
                         <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10 max-w-[900px] shadow-sm">
                             <h2 className="text-base sm:text-[22px] font-bold text-[var(--header-text)] mb-1">Invite & Earn</h2>
-                            <p className="text-xs sm:text-sm text-[var(--color-text-muted)] mb-5 sm:mb-8 font-medium">Earn $250 for every referred investor</p>
+                            <p className="text-xs sm:text-sm text-[var(--color-text-muted)] mb-5 sm:mb-8 font-medium">Earn ₹250 for every referred investor</p>
 
                             <div className="flex items-center bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-full p-1 sm:p-1.5 mb-6 sm:mb-10 w-full max-w-[800px]">
                                 <input

@@ -28,10 +28,10 @@ import { API_URL } from "@/constants";
 const formatValuation = (val) => {
     const num = parseFloat(val);
     if (isNaN(num)) return "N/A";
-    if (num >= 1e9) return `$${(num / 1e9).toFixed(1)}B`;
-    if (num >= 1e6) return `$${(num / 1e6).toFixed(1)}M`;
-    if (num >= 1e3) return `$${(num / 1e3).toFixed(1)}K`;
-    return `$${num.toLocaleString()}`;
+    if (num >= 1e7) return `₹${(num / 1e7).toFixed(1)} Cr`;
+    if (num >= 1e5) return `₹${(num / 1e5).toFixed(1)} L`;
+    if (num >= 1e3) return `₹${(num / 1e3).toFixed(1)} K`;
+    return `₹${num.toLocaleString('en-IN')}`;
 };
 
 export default function PropertyDetailPage() {
@@ -363,8 +363,8 @@ export default function PropertyDetailPage() {
                                         cashflowData.data.map((item, index) => (
                                             <div key={index} className="grid grid-cols-3 text-xs font-montserrat py-1">
                                                 <span className="text-[var(--color-text-muted)]">Year {item.year}</span>
-                                                <span className="text-right text-[var(--header-text)] font-semibold">${item.grossRent?.toLocaleString()}</span>
-                                                <span className="text-right text-[var(--color-status-success)] font-bold">${item.netCashflow?.toLocaleString()}</span>
+                                                <span className="text-right text-[var(--header-text)] font-semibold">₹{item.grossRent?.toLocaleString()}</span>
+                                                <span className="text-right text-[var(--color-status-success)] font-bold">₹{item.netCashflow?.toLocaleString()}</span>
                                             </div>
                                         ))
                                     ) : (
@@ -385,7 +385,7 @@ export default function PropertyDetailPage() {
                                         rentalData.data.map((item, index) => (
                                             <div key={index} className="grid grid-cols-2 text-xs font-montserrat py-1">
                                                 <span className="text-[var(--color-text-muted)]">{item.period || `Year ${item.year}`}</span>
-                                                <span className="text-right text-[var(--header-text)] font-semibold">${item.amount?.toLocaleString() || item.rent?.toLocaleString()}</span>
+                                                <span className="text-right text-[var(--header-text)] font-semibold">₹{item.amount?.toLocaleString() || item.rent?.toLocaleString()}</span>
                                             </div>
                                         ))
                                     ) : (
@@ -404,7 +404,7 @@ export default function PropertyDetailPage() {
                                                 <div key={index} className="space-y-1.5">
                                                     <div className="flex justify-between text-xs">
                                                         <span className="text-[var(--color-text-muted)] font-medium">Year {item.year}</span>
-                                                        <span className="text-[var(--header-text)] font-bold">${item.valuation?.toLocaleString()}</span>
+                                                        <span className="text-[var(--header-text)] font-bold">₹{item.valuation?.toLocaleString()}</span>
                                                     </div>
                                                     <div className="h-1.5 bg-[var(--sidebar-border)] rounded-full overflow-hidden">
                                                         <motion.div 
@@ -445,7 +445,7 @@ export default function PropertyDetailPage() {
                     >
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">Per Fraction</p>
                         <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">
-                            ${Number(property.fractionPrice)?.toLocaleString()}
+                            ₹{Number(property.fractionPrice)?.toLocaleString()}
                         </p>
 
                         <div className="space-y-3 mb-6">
@@ -503,7 +503,7 @@ export default function PropertyDetailPage() {
                 asset={{
                     ...property,
                     name: property.title,
-                    currentValue: `$${(property.fractionPrice * investQuantity).toLocaleString()}`,
+                    currentValue: `₹${(property.fractionPrice * investQuantity).toLocaleString()}`,
                     fractions: investQuantity
                 }}
                 onProcessPayment={handleProcessPayment}

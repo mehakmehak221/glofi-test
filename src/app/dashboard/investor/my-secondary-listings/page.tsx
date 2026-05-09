@@ -129,12 +129,12 @@ export default function MySecondaryListingsPage() {
                                                             </div>
                                                             <div>
                                                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Price Per Fraction</p>
-                                                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">${Number(item.askPrice || item.pricePerFraction || 0).toLocaleString()}</p>
+                                                                <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">₹{Number(item.askPrice || item.pricePerFraction || 0).toLocaleString()}</p>
                                                             </div>
                                                             <div>
                                                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Total Expected</p>
                                                                 <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">
-                                                                    ${((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0)).toLocaleString()}
+                                                                    ₹{((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0)).toLocaleString()}
                                                                 </p>
                                                             </div>
                                                         </div>

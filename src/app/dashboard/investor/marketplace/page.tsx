@@ -120,10 +120,10 @@ const CATEGORY_MAP = {
 const formatValuation = (val) => {
     const num = parseFloat(val);
     if (isNaN(num)) return "N/A";
-    if (num >= 1e9) return `$${(num / 1e9).toFixed(1)}B`;
-    if (num >= 1e6) return `$${(num / 1e6).toFixed(1)}M`;
-    if (num >= 1e3) return `$${(num / 1e3).toFixed(1)}K`;
-    return `$${num.toLocaleString()}`;
+    if (num >= 1e7) return `₹${(num / 1e7).toFixed(1)} Cr`;
+    if (num >= 1e5) return `₹${(num / 1e5).toFixed(1)} L`;
+    if (num >= 1e3) return `₹${(num / 1e3).toFixed(1)} K`;
+    return `₹${num.toLocaleString('en-IN')}`;
 };
 
 const containerVariants: Variants = {
@@ -209,7 +209,7 @@ export default function MarketplacePage() {
                 <p
                     className="text-xs sm:text-base lg:text-lg max-w-xl font-montserrat text-[var(--color-text-muted)] font-normal tracking-tight"
                 >
-                    Institutional-grade real estate. Digitally simplified. Invest fractionally starting from $15,000.
+                    Institutional-grade real estate. Digitally simplified. Invest fractionally starting from ₹15,000.
                 </p>
 
                 <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-4 sm:mt-5">
@@ -364,7 +364,7 @@ export default function MarketplacePage() {
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Per Fraction</p>
-                                                    <p className="text-base font-bold text-[var(--header-text)]">${Number(property.fractionPrice).toLocaleString()}</p>
+                                                    <p className="text-base font-bold text-[var(--header-text)]">₹{Number(property.fractionPrice).toLocaleString()}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Yield</p>

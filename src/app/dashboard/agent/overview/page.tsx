@@ -17,10 +17,10 @@ import {
 import { useGetAgentDashboardQuery } from "@/store/api/agentApi";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
 
-const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
+const formatCurrency = (val: number) => {
+    if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
+    if (val >= 100000) return `₹${(val / 100000).toFixed(1)} L`;
+    return `₹${val.toLocaleString('en-IN')}`;
 };
 
 export default function AgentOverviewPage() {
