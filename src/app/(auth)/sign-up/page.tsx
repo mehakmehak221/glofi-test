@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
-import { ChevronLeftIcon, LoadingSpinner, ArrowRightIcon, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
+import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
+import { ChevronLeftIcon, LoadingSpinner, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
 import { useRegisterMutation, useRegisterAgentMutation } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
 
@@ -87,15 +88,20 @@ export default function SignUpPage() {
 
             <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-xs transition-colors mb-8 group"
+                className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group"
             >
-                <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform w-3.5 h-3.5" />
+                <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
                 Back to home
             </Link>
 
             <div className="mb-8">
-                <h2 className="text-white font-semibold text-[32px] tracking-tight mb-2 font-montserrat">Create account</h2>
-                <p className="text-[var(--color-text-secondary)] text-md font-montserrat">Join the next generation of property investors</p>
+                <h2 className="text-white font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
+                <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">
+                    Already have an account?{" "}
+                    <Link href="/sign-in" className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors">
+                        Sign in
+                    </Link>
+                </p>
                 {errorMsg && (
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
@@ -108,82 +114,134 @@ export default function SignUpPage() {
             </div>
 
 
-            <div className="mb-8">
+            <div className="mb-4 space-y-4">
                 <UserTypeToggle value={userType} onChange={setUserType} />
+                <RoleInsightCallout role={userType} />
             </div>
 
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                <input
-                    type="text" value={form.name} onChange={set("name")} placeholder="Full name" required
-                    className="premium-input w-full"
-                />
-                <input
-                    type="email" value={form.email} onChange={set("email")} placeholder="Email address" required
-                    className="premium-input w-full"
-                />
-
-                <div className="relative">
+            <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
+            >
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="sign-up-name" className="text-sm font-medium text-white font-montserrat">
+                        Full Name
+                    </label>
                     <input
-                        type={showPassword ? "text" : "password"}
-                        value={form.password}
-                        onChange={set("password")}
-                        placeholder="Password"
+                        id="sign-up-name"
+                        type="text"
+                        value={form.name}
+                        onChange={set("name")}
+                        placeholder="John Doe"
                         required
-                        minLength={8}
-                        className="premium-input w-full pr-12"
+                        autoComplete="name"
+                        className="premium-input w-full"
                     />
-                    <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
-                    >
-                        {showPassword ? <EyeOpenIcon className="w-5 h-5" /> : <EyeClosedIcon className="w-5 h-5" />}
-                    </button>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="sign-up-email" className="text-sm font-medium text-white font-montserrat">
+                        Email Address
+                    </label>
+                    <input
+                        id="sign-up-email"
+                        type="email"
+                        value={form.email}
+                        onChange={set("email")}
+                        placeholder="example@gmail.com"
+                        required
+                        autoComplete="email"
+                        className="premium-input w-full"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="sign-up-password" className="text-sm font-medium text-white font-montserrat">
+                        Password
+                    </label>
+                    <div className="relative">
+                        <input
+                            id="sign-up-password"
+                            type={showPassword ? "text" : "password"}
+                            value={form.password}
+                            onChange={set("password")}
+                            required
+                            minLength={8}
+                            autoComplete="new-password"
+                            className="premium-input w-full pr-12"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                            {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                        </button>
+                    </div>
                 </div>
 
                 {userType === "Agent" ? (
                     <>
-                        <input
-                            type="text" value={form.reraNumber} onChange={set("reraNumber")} placeholder="RERA Number" required
-                            className="premium-input w-full"
-                        />
                         <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-bold text-[var(--color-text-muted)]/50 tracking-widest uppercase font-montserrat ml-1">RERA Expiry Date</label>
+                            <label htmlFor="sign-up-rera" className="text-sm font-medium text-white font-montserrat">
+                                RERA Number
+                            </label>
                             <input
-                                type="date" value={form.expiryDate} onChange={set("expiryDate")} required
+                                id="sign-up-rera"
+                                type="text"
+                                value={form.reraNumber}
+                                onChange={set("reraNumber")}
+                                placeholder="Enter your RERA registration number"
+                                required
+                                className="premium-input w-full"
+                            />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="sign-up-rera-expiry" className="text-sm font-medium text-white font-montserrat">
+                                RERA Expiry Date
+                            </label>
+                            <input
+                                id="sign-up-rera-expiry"
+                                type="date"
+                                value={form.expiryDate}
+                                onChange={set("expiryDate")}
+                                required
                                 className="premium-input w-full"
                             />
                         </div>
                     </>
                 ) : (
-                    <input
-                        type="text" value={form.referredByCode} onChange={set("referredByCode")} placeholder="Referral Code (Optional)"
-                        className="premium-input w-full"
-                    />
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="sign-up-referral" className="text-sm font-medium text-white font-montserrat">
+                            Referral Code <span className="text-[var(--color-text-secondary)] font-normal">(Optional)</span>
+                        </label>
+                        <input
+                            id="sign-up-referral"
+                            type="text"
+                            value={form.referredByCode}
+                            onChange={set("referredByCode")}
+                            placeholder="Enter code if you have one"
+                            className="premium-input w-full"
+                        />
+                    </div>
                 )}
 
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="btn-primary w-full mt-4"
-                >
-                    {isLoading ? (
-                        <LoadingSpinner />
-                    ) : (
-                        <>
-                            Create Account
-                            <ArrowRightIcon className="w-4 h-4 ml-1" />
-                        </>
-                    )}
+                <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
+                    {isLoading ? <LoadingSpinner /> : "Create Account"}
                 </button>
             </form>
 
-            <p className="text-center text-sm text-[var(--color-text-muted)] mt-10 font-montserrat">
-                Have an account?{" "}
-                <Link href="/sign-in" className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors">
-                    Sign in
+            <p className="text-center text-xs text-[var(--color-text-muted)] mt-8 font-montserrat leading-relaxed px-1">
+                By clicking Create Account you agree to GloFi Estate&apos;s{" "}
+                <Link href="/#terms" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                    Terms &amp; Conditions
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy-policy" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                    Privacy Policy
                 </Link>
+                .
             </p>
         </motion.div>
     );

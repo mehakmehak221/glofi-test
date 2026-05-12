@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AuthLeftPanel() {
   return (
-    <div className="auth-left-panel relative hidden lg:flex h-full overflow-hidden bg-[var(--color-bg-dark-alt)]">
+    <div className="auth-left-panel relative hidden min-h-0 overflow-hidden bg-[var(--color-bg-dark-alt)] lg:flex lg:h-full">
      
       <div className="absolute inset-0 z-0">
           <div

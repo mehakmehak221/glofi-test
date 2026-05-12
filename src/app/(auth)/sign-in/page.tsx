@@ -6,7 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
-import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner, ArrowRightIcon } from "@/components/VectorImages";
+import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
+import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner } from "@/components/VectorImages";
 import { useLoginMutation } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
 
@@ -94,8 +95,13 @@ export default function SignInPage() {
 
 
             <div className="mb-8">
-                <h2 className="text-white font-bold text-3xl mb-1.5 font-montserrat">Welcome back</h2>
-                <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">Sign in to your dashboard</p>
+                <h2 className="text-white font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
+                <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">
+                    Don&apos;t have an account?{" "}
+                    <Link href="/sign-up" className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors">
+                        Sign up
+                    </Link>
+                </p>
                 {errorMsg && (
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
@@ -107,77 +113,89 @@ export default function SignInPage() {
                 )}
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4 space-y-4">
                 <Suspense fallback={<div className="h-10 w-full animate-pulse bg-white/5 rounded-lg" />}>
                     <SearchParamsHandler setErrorMsg={setErrorMsg} />
                 </Suspense>
                 <UserTypeToggle value={userType} onChange={setUserType} />
+                <RoleInsightCallout role={userType} />
             </div>
 
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 font-montserrat">
-
-                <div className="relative">
+            <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
+            >
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="sign-in-email" className="text-sm font-medium text-white font-montserrat">
+                        Email Address
+                    </label>
                     <input
+                        id="sign-in-email"
                         type="email"
                         value={email}
-                        onChange={(e) => { setEmail(e.target.value); setErrorMsg(""); }}
-                        placeholder="Email address"
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setErrorMsg("");
+                        }}
+                        placeholder="example@gmail.com"
                         required
+                        autoComplete="email"
                         className="premium-input w-full"
                     />
                 </div>
 
-
-                <div className="relative">
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); }}
-                        placeholder="Password"
-                        required
-                        className="premium-input w-full pr-12"
-                    />
-                    <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
-                    >
-                        {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
-                    </button>
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="sign-in-password" className="text-sm font-medium text-white font-montserrat">
+                        Password
+                    </label>
+                    <div className="relative">
+                        <input
+                            id="sign-in-password"
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setErrorMsg("");
+                            }}
+                            required
+                            autoComplete="current-password"
+                            className="premium-input w-full pr-12"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                            {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                        </button>
+                    </div>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-end -mt-1">
                     <Link
                         href="/forgot-password"
-                        className="text-sm text-[var(--color-text-secondary)] hover:text-white transition-colors"
+                        className="text-sm text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors"
                     >
-                        Forgot password?
+                        Forgot Password?
                     </Link>
                 </div>
 
-
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="btn-primary w-full mt-2"
-                >
-                    {isLoading ? (
-                        <LoadingSpinner />
-                    ) : (
-                        <>
-                            Sign In
-                            <ArrowRightIcon />
-                        </>
-                    )}
+                <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
+                    {isLoading ? <LoadingSpinner /> : "Login"}
                 </button>
             </form>
 
-            <p className="text-center text-sm text-[var(--color-text-secondary)] mt-8 font-montserrat">
-                New here?{" "}
-                <Link href="/sign-up" className="text-[var(--color-primary-300)] font-medium hover:text-[var(--color-primary-100)] transition-colors font-montserrat">
-                    Create account
+            <p className="text-center text-xs text-[var(--color-text-muted)] mt-8 font-montserrat leading-relaxed px-1">
+                By clicking Login you agree to GloFi Estate&apos;s{" "}
+                <Link href="/#terms" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                    Terms &amp; Conditions
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy-policy" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                    Privacy Policy
                 </Link>
+                .
             </p>
         </motion.div>
     );
