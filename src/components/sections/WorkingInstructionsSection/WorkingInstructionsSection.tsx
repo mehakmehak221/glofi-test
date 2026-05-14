@@ -59,10 +59,10 @@ export default function WorkingInstructionsSection() {
 
     return (
         <section className="w-full flex justify-center bg-[var(--color-bg-dark)]">
-            <div className="hiw-section-wrapper w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-16 sm:py-20 lg:py-24 xl:py-32 2xl:py-40">
+            <div className="hiw-section-wrapper w-full mx-auto">
                 <div className="flex flex-col items-center w-full">
                     <motion.div 
-                        className="flex flex-col items-center text-center justify-center mb-12 sm:mb-16 lg:mb-20"
+                        className="flex flex-col items-center text-center justify-center mb-8 sm:mb-10 lg:mb-12"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}

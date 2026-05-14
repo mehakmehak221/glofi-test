@@ -10,7 +10,7 @@ import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
 import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner } from "@/components/VectorImages";
 import { useLoginMutation } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
-
+import { applySignInApiErrors, FIELD_ERROR_CLASSES, validateSignInFields } from "@/utils/authFormErrors";
 
 export default function SignInPage() {
     const router = useRouter();
@@ -19,12 +19,32 @@ export default function SignInPage() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
     const [login, { isLoading }] = useLoginMutation();
+
+    const handleUserTypeChange = (next: string) => {
+        if (next === userType) return;
+        setUserType(next);
+        setEmail("");
+        setPassword("");
+        setEmailError("");
+        setPasswordError("");
+        setErrorMsg("");
+        setShowPassword(false);
+    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMsg("");
+        const { emailError: nextEmailErr, passwordError: nextPassErr } = validateSignInFields(email, password);
+        setEmailError(nextEmailErr);
+        setPasswordError(nextPassErr);
+        if (nextEmailErr || nextPassErr) {
+            return;
+        }
+
         try {
             const trimmedEmail = email.trim();
             const payload = {
@@ -51,29 +71,25 @@ export default function SignInPage() {
 
             router.push("/dashboard");
         } catch (err: any) {
-            const status = err?.status;
             const errorBody = err?.data;
-            const message = errorBody?.message || errorBody?.error || err?.message;
-
-            console.error("Login Error Details:", JSON.stringify({
-                status: status || 'Unknown Status',
-                data: errorBody || 'No Data',
-                message: message || 'No Message'
-            }, null, 2));
-
-            if (status === 401) {
-                setErrorMsg("Incorrect email or password. Please try again.");
-            } else if (status === 403) {
-                setErrorMsg("Access denied. Please check your account type (Investor/Partner/Agent).");
-            } else if (status === 400) {
-                setErrorMsg(message || "Invalid login request. Please check your credentials.");
-            } else if (status === 404) {
-                setErrorMsg("Account not found. Please check your email or sign up.");
-            } else if (status === 'FETCH_ERROR') {
-                setErrorMsg("Connecting to server failed. Please check your internet connection.");
-            } else {
-                setErrorMsg(message || "An unexpected error occurred. Please try again later.");
-            }
+            const message = errorBody?.message ?? errorBody?.error ?? err?.message;
+            console.error(
+                "Login Error Details:",
+                JSON.stringify(
+                    {
+                        status: err?.status || "Unknown Status",
+                        data: errorBody || "No Data",
+                        message: message || "No Message",
+                    },
+                    null,
+                    2
+                )
+            );
+            applySignInApiErrors(err, {
+                setEmailError,
+                setPasswordError,
+                setErrorMsg,
+            });
         }
     };
 
@@ -98,17 +114,25 @@ export default function SignInPage() {
                 <h2 className="text-white font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
                 <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">
                     Don&apos;t have an account?{" "}
-                    <Link href="/sign-up" className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors">
-                        Sign up
+                    <Link
+                        href={`/sign-up?role=${encodeURIComponent(userType)}`}
+                        className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors"
+                    >
+                        Create Account
                     </Link>
                 </p>
                 {errorMsg && (
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="mt-4 p-3 rounded-md bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-medium"
+                        className="mt-4 p-3 rounded-md bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium space-y-2"
+                        role="alert"
                     >
-                        {errorMsg}
+                        {errorMsg.split(/\n\n+/).map((block, idx) => (
+                            <p key={idx} className="leading-relaxed">
+                                {block}
+                            </p>
+                        ))}
                     </motion.div>
                 )}
             </div>
@@ -117,11 +141,12 @@ export default function SignInPage() {
                 <Suspense fallback={<div className="h-10 w-full animate-pulse bg-white/5 rounded-lg" />}>
                     <SearchParamsHandler setErrorMsg={setErrorMsg} />
                 </Suspense>
-                <UserTypeToggle value={userType} onChange={setUserType} />
+                <UserTypeToggle value={userType} onChange={handleUserTypeChange} />
                 <RoleInsightCallout role={userType} />
             </div>
 
             <form
+                noValidate
                 onSubmit={handleSubmit}
                 className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
             >
@@ -132,16 +157,26 @@ export default function SignInPage() {
                     <input
                         id="sign-in-email"
                         type="email"
+                        inputMode="email"
+                        autoCapitalize="none"
+                        autoCorrect="off"
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
                             setErrorMsg("");
+                            setEmailError("");
                         }}
                         placeholder="example@gmail.com"
-                        required
                         autoComplete="email"
-                        className="premium-input w-full"
+                        aria-invalid={Boolean(emailError)}
+                        aria-describedby={emailError ? "sign-in-email-error" : undefined}
+                        className={`premium-input w-full ${emailError ? "border-red-500/60 focus:border-red-400" : ""}`}
                     />
+                    {emailError ? (
+                        <p id="sign-in-email-error" className={FIELD_ERROR_CLASSES} role="alert">
+                            {emailError}
+                        </p>
+                    ) : null}
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -156,20 +191,27 @@ export default function SignInPage() {
                             onChange={(e) => {
                                 setPassword(e.target.value);
                                 setErrorMsg("");
+                                setPasswordError("");
                             }}
-                            required
                             autoComplete="current-password"
-                            className="premium-input w-full pr-12"
+                            aria-invalid={Boolean(passwordError)}
+                            aria-describedby={passwordError ? "sign-in-password-error" : undefined}
+                            className={`premium-input w-full pr-12 ${passwordError ? "border-red-500/60 focus:border-red-400" : ""}`}
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors cursor-pointer"
                             aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                             {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
                         </button>
                     </div>
+                    {passwordError ? (
+                        <p id="sign-in-password-error" className={FIELD_ERROR_CLASSES} role="alert">
+                            {passwordError}
+                        </p>
+                    ) : null}
                 </div>
 
                 <div className="flex justify-end -mt-1">

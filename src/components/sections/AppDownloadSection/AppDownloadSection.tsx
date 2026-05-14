@@ -8,7 +8,7 @@ export default function AppDownloadSection() {
     const APP_LINK = "https://apps.apple.com/in/app/glofi-estate/id6764258977"; 
 
     return (
-        <section className="w-full bg-black py-16 sm:py-24 border-t border-white/10">
+        <section className="w-full bg-black py-12 sm:py-16 lg:py-20 border-t border-white/10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                     

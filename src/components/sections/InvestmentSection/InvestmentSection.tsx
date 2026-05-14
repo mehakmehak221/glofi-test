@@ -39,7 +39,7 @@ export default function InvestmentSection() {
                     backgroundRepeat: 'no-repeat'
                 }}
             />
-            <div className="investment-section-wrapper w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 z-10 relative py-16 sm:py-20 lg:py-24">
+            <div className="investment-section-wrapper w-full z-10 relative">
                 <div className="w-full mx-auto flex flex-col items-center">
 
                     {/* Top Button */}

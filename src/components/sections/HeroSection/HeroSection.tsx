@@ -60,7 +60,7 @@ export default function HeroSection() {
                 </motion.div>
 
                 <motion.div
-                    className="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 flex flex-col items-center justify-center text-center py-12 sm:py-16 lg:py-20 xl:py-28"
+                    className="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 flex flex-col items-center justify-center text-center py-10 sm:py-12 lg:py-16 xl:py-20"
                     initial="hidden"
                     animate="visible"
                     variants={containerVariants}

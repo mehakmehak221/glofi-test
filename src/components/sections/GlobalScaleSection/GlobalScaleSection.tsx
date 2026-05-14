@@ -7,7 +7,7 @@ import { GlobalScaleGlobeImage } from '../../VectorImages';
 export default function GlobalScaleSection() {
     return (
         <section id="company" className="bg-[#021411] w-full flex justify-center overflow-hidden border-t border-b border-[#00F4C4]/30">
-            <div className="global-scale-section-wrapper w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative py-20 sm:py-24 lg:py-32 xl:py-40">
+            <div className="global-scale-section-wrapper w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative py-12 sm:py-14 lg:py-16 xl:py-20">
                 {/* Text Content — left side */}
                 <motion.div 
                     className="flex flex-col justify-center text-left w-full lg:max-w-xl xl:max-w-2xl z-10 relative"

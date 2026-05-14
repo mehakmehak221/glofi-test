@@ -273,7 +273,13 @@ export default function ExplorePage() {
                             initial="hidden"
                             animate="visible"
                             exit="hidden"
-                            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+                            className={
+                                assets.length === 1
+                                    ? "grid grid-cols-1 gap-6 sm:gap-8 max-w-lg w-full justify-items-stretch"
+                                    : assets.length === 2
+                                      ? "grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl w-full justify-items-stretch"
+                                      : "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 w-full"
+                            }
                         >
                             {assets.map((property) => {
                                 const propertyImage = property.images?.[0];
@@ -286,15 +292,25 @@ export default function ExplorePage() {
                                 const total = property.totalFractions || 1;
                                 const available = property.availableFractions || 0;
                                 const fundedPercentage = Math.max(0, Math.min(100, Math.round(((total - available) / total) * 100)));
+                                const riskLevel = (property.riskRating || "MEDIUM").toString().toUpperCase();
+
+                                const detailHref = `/dashboard/investor/marketplace/${property.id}`;
 
                                 return (
                                     <motion.div
                                         key={property.id}
                                         variants={cardVariants}
-                                        whileHover={{ y: -8 }}
-                                        className="bg-[var(--color-bg-card)] border border-white/5 rounded-[32px] overflow-hidden hover:border-[var(--color-primary-300)]/30 transition-all duration-500 group cursor-pointer shadow-2xl relative"
+                                        whileHover={{ y: -6 }}
+                                        className="bg-[var(--color-bg-card)] border border-white/5 rounded-2xl sm:rounded-3xl overflow-hidden hover:border-[var(--color-primary-300)]/30 transition-all duration-500 group shadow-xl relative"
                                     >
-                                        <div className="relative h-64 overflow-hidden">
+                                        <Link
+                                            href={detailHref}
+                                            className="absolute inset-0 z-[1] rounded-2xl sm:rounded-3xl cursor-pointer outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-primary-300)]"
+                                            aria-label={`View details for ${property.title}`}
+                                            prefetch={false}
+                                        />
+                                        <div className="relative z-[2] pointer-events-none flex flex-col">
+                                        <div className="relative h-44 sm:h-48 md:h-52 overflow-hidden shrink-0">
                                             <Image
                                                 src={imageUrl}
                                                 alt={property.title}
@@ -304,55 +320,79 @@ export default function ExplorePage() {
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                                             
-                                            <div className="absolute top-4 left-4 flex gap-2">
-                                                <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 text-white border border-white/10 backdrop-blur-md">
+                                            <div className="absolute top-3 left-3 flex gap-2 sm:top-4 sm:left-4">
+                                                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-md ring-2 ring-black/60 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-black/75 text-white border border-white/20">
                                                     {property.category.replace('_', ' ')}
                                                 </span>
                                             </div>
 
-                                            <div className="absolute top-4 right-4">
-                                                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                                                    property.riskRating === 'LOW' ? 'text-[#00DAAF] bg-[#00DAAF]/20 border border-[#00DAAF]/30' :
-                                                    property.riskRating === 'HIGH' ? 'text-[#FF4D4D] bg-[#FF4D4D]/20 border border-[#FF4D4D]/30' :
-                                                    'text-[#F39C12] bg-[#F39C12]/20 border border-[#F39C12]/30'
-                                                } backdrop-blur-md`}>
-                                                    {property.riskRating} RISK
+                                            <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
+                                                <span
+                                                    className={`inline-flex items-center px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-lg ring-2 ring-black/70 ${
+                                                        riskLevel === "LOW"
+                                                            ? "text-[#B8FFF0] bg-[#041512] border border-[#00DAAF]/80"
+                                                            : riskLevel === "HIGH"
+                                                              ? "text-[#FFB4B4] bg-[#1a0808] border border-[#FF5C5C]/80"
+                                                              : "text-[#FFD699] bg-[#1a1206] border border-[#E8940C]/90"
+                                                    }`}
+                                                >
+                                                    {riskLevel} risk
                                                 </span>
                                             </div>
 
-                                            <div className="absolute bottom-4 left-4 right-4">
-                                                <h3 className="text-xl font-black text-white mb-1 tracking-tight">{property.title}</h3>
-                                                <div className="flex items-center gap-1.5 text-white/70 text-xs font-medium">
+                                            <div className="absolute bottom-3 left-3 right-3 text-left sm:bottom-4 sm:left-4 sm:right-4">
+                                                <h3 className="text-base sm:text-lg font-black text-white mb-0.5 sm:mb-1 tracking-tight leading-tight">{property.title}</h3>
+                                                <div className="flex items-center gap-1.5 text-white/70 text-[11px] sm:text-xs font-medium">
                                                     <MapPinIcon className="w-3.5 h-3.5" />
                                                     {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="p-6">
-                                            <div className="grid grid-cols-2 gap-6 mb-8">
-                                                <div>
-                                                    <p className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-text-muted)] font-bold mb-1 opacity-60">Asset Valuation</p>
-                                                    <p className="text-lg font-black text-white tracking-tighter">{formatValuation(property.valuation)}</p>
+                                        <div className="p-4 sm:p-5 pt-4">
+                                            <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-4 mb-4 sm:mb-5 text-left items-start">
+                                                <div className="min-w-0">
+                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                        Asset valuation
+                                                    </p>
+                                                    <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug">
+                                                        {formatValuation(property.valuation)}
+                                                    </p>
                                                 </div>
-                                                <div>
-                                                    <p className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-text-muted)] font-bold mb-1 opacity-60">Entry Point</p>
-                                                    <p className="text-lg font-black text-white tracking-tighter">₹{Number(property.fractionPrice).toLocaleString()}</p>
+                                                <div className="min-w-0">
+                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                        Entry point
+                                                    </p>
+                                                    <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug break-words">
+                                                        ₹{Number(property.fractionPrice).toLocaleString()}
+                                                    </p>
                                                 </div>
-                                                <div>
-                                                    <p className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-text-muted)] font-bold mb-1 opacity-60">Expected Yield</p>
-                                                    <p className="text-lg font-black text-[var(--color-primary-300)] tracking-tighter">{formattedYield}% p.a.</p>
+                                                <div className="min-w-0">
+                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                        Expected yield
+                                                    </p>
+                                                    <p className="text-sm sm:text-base font-black text-[var(--color-primary-300)] tracking-tight tabular-nums leading-snug">
+                                                        {formattedYield}% p.a.
+                                                    </p>
                                                 </div>
-                                                <div>
-                                                    <p className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-text-muted)] font-bold mb-1 opacity-60">Available</p>
-                                                    <p className="text-lg font-black text-white tracking-tighter">{property.availableFractions?.toLocaleString()}</p>
+                                                <div className="min-w-0">
+                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                        Available
+                                                    </p>
+                                                    <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug">
+                                                        {property.availableFractions?.toLocaleString()}
+                                                    </p>
                                                 </div>
                                             </div>
 
-                                            <div className="mb-8">
-                                                <div className="flex justify-between items-end mb-2">
-                                                    <p className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-text-muted)] font-bold opacity-60">Funding Progress</p>
-                                                    <p className="text-xs font-black text-[var(--color-primary-300)]">{fundedPercentage}%</p>
+                                            <div className="mb-4 sm:mb-5">
+                                                <div className="flex justify-between items-baseline gap-4 mb-1.5 sm:mb-2">
+                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold leading-tight shrink-0">
+                                                        Funding progress
+                                                    </p>
+                                                    <p className="text-[11px] sm:text-xs font-black text-[var(--color-primary-300)] tabular-nums shrink-0">
+                                                        {fundedPercentage}%
+                                                    </p>
                                                 </div>
                                                 <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
                                                     <motion.div
@@ -365,15 +405,14 @@ export default function ExplorePage() {
                                                 </div>
                                             </div>
 
-                                            <Link href={`/sign-in`} className="block">
-                                                <motion.button
-                                                    whileHover={{ scale: 1.02, backgroundColor: "#00DAAF", color: "#000" }}
-                                                    whileTap={{ scale: 0.98 }}
-                                                    className="w-full py-4 rounded-2xl bg-white/5 text-white font-black text-sm cursor-pointer border border-white/10 transition-all duration-300 shadow-xl group-hover:border-[var(--color-primary-300)]/50"
-                                                >
-                                                    Start Investing
-                                                </motion.button>
+                                            <Link
+                                                href="/sign-in"
+                                                prefetch={false}
+                                                className="relative z-[3] block pointer-events-auto w-full py-3 rounded-xl bg-white/5 text-white font-bold text-xs sm:text-sm text-center border border-white/10 transition-all duration-300 shadow-lg hover:scale-[1.01] hover:bg-[#00DAAF] hover:text-black hover:border-[var(--color-primary-300)]/50 active:scale-[0.99]"
+                                            >
+                                                Start Investing
                                             </Link>
+                                        </div>
                                         </div>
                                     </motion.div>
                                 );

@@ -43,6 +43,7 @@ export default function ForgotPasswordPage() {
             setSuccessMsg("OTP sent successfully to your email.");
             setStep("OTP");
         } catch (err: any) {
+            setSuccessMsg("");
             setErrorMsg(err?.data?.message || "Failed to send OTP. Please try again.");
         }
     };
@@ -55,6 +56,7 @@ export default function ForgotPasswordPage() {
             setStep("RESET");
             setSuccessMsg("");
         } catch (err: any) {
+            setSuccessMsg("");
             setErrorMsg(err?.data?.message || "Invalid OTP. Please try again.");
         }
     };
@@ -62,6 +64,7 @@ export default function ForgotPasswordPage() {
     const handleResetSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMsg("");
+        setSuccessMsg("");
         
         if (password !== confirmPassword) {
             setErrorMsg("Passwords do not match.");
@@ -77,6 +80,7 @@ export default function ForgotPasswordPage() {
             await resetPassword({ email, otp, newPassword: password }).unwrap();
             setStep("SUCCESS");
         } catch (err: any) {
+            setSuccessMsg("");
             setErrorMsg(err?.data?.message || "Failed to reset password. Please try again.");
         }
     };
@@ -108,28 +112,29 @@ export default function ForgotPasswordPage() {
                 </p>
 
                 <AnimatePresence mode="wait">
-                    {errorMsg && (
+                    {errorMsg ? (
                         <motion.div
                             key="error"
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             className="mt-4 p-3 rounded-md bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-medium"
+                            role="alert"
                         >
                             {errorMsg}
                         </motion.div>
-                    )}
-                    {successMsg && (
+                    ) : successMsg ? (
                         <motion.div
                             key="success"
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             className="mt-4 p-3 rounded-md bg-green-500/10 border border-green-500/20 text-green-500 text-sm font-medium"
+                            role="status"
                         >
                             {successMsg}
                         </motion.div>
-                    )}
+                    ) : null}
                 </AnimatePresence>
             </div>
 

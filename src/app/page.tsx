@@ -25,9 +25,7 @@ export default function Home() {
         <AppDownloadSection />
         <GlofiCopyrightSection />
 
-        <div className="h-[88px]">
-
-        </div>
+        <div className="h-16 sm:h-20" />
         <CookieSection />
         <div className="h-[28px]" />
       </main>

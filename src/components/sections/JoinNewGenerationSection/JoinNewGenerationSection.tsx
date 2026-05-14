@@ -33,7 +33,7 @@ export default function JoinNewGenerationSection() {
     } as const;
 
     return (
-        <section id="learn" className="w-full flex justify-center py-12 sm:py-16 lg:py-20 xl:py-24 2xl:py-32 bg-black">
+        <section id="learn" className="w-full flex justify-center py-10 sm:py-12 lg:py-14 xl:py-16 bg-black">
             <div className="join-new-gen-wrapper w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
                 <motion.div 
                     className="join-new-gen-inner w-full p-6 sm:p-8 lg:p-12 xl:p-16 relative overflow-hidden"

@@ -3,25 +3,45 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LogoIconPng } from '../../VectorImages';
+import { usePathname, useRouter } from 'next/navigation';
 
 const NAV_LINKS = [
     { label: 'Explore', href: '/explore' },
-    { label: 'Company', href: '#company' },
-    { label: 'Product', href: '#product' },
-    { label: 'Support', href: '#support' },
-    { label: 'Learn', href: '#learn' },
+    // Root-relative hashes so in-app routes (e.g. /explore) still navigate to homepage sections
+    { label: 'Company', href: '/#company' },
+    { label: 'Product', href: '/#product' },
+    { label: 'Support', href: '/#support' },
+    { label: 'Learn', href: '/#learn' },
 ];
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const goHome = () => {
+        if (pathname === '/') {
+            window.location.assign('/');
+            return;
+        }
+        router.push('/');
+    };
 
     return (
-        <header className="navbar fixed top-0 left-0 right-0 z-50 bg-black border-b border-[#A4A7AE]">
+        <header className="navbar fixed top-0 left-0 right-0 z-(--z-nav) bg-black border-b border-[#A4A7AE]">
             <div className="navbar__inner flex items-center justify-between h-16 lg:h-20 px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-10 max-w-7xl mx-auto">
-                <Link href="/" className="navbar__logo flex items-center gap-3 no-underline flex-shrink-0">
+                <Link
+                    href="/"
+                    className="navbar__logo flex items-center gap-3 no-underline flex-shrink-0 cursor-pointer"
+                    onClick={(e) => {
+                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                            return;
+                        }
+                        e.preventDefault();
+                        goHome();
+                    }}
+                >
                     <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={144} height={48} className="h-8 sm:h-10 lg:h-[42px] xl:h-[48px] w-auto object-contain" priority />
-                   
                 </Link>
 
                 <nav aria-label="Main navigation" className="hidden lg:block">

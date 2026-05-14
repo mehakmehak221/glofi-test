@@ -35,7 +35,7 @@ export default function PremiumPropertySection() {
 
     if (isLoading) {
         return (
-            <section className="premium-section-wrapper py-8 sm:py-12 lg:py-16 xl:py-20 2xl:py-24">
+            <section className="premium-section-wrapper py-8 sm:py-10 lg:py-12 xl:py-14">
                 <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
                     <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
                         {[1, 2, 3, 4, 5].map((i) => (
@@ -50,7 +50,7 @@ export default function PremiumPropertySection() {
     if (assets.length === 0) return null;
 
     return (
-        <section className="premium-section-wrapper py-8 sm:py-12 lg:py-16 xl:py-20 2xl:py-24">
+        <section className="premium-section-wrapper py-8 sm:py-10 lg:py-12 xl:py-14">
             <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
 
                 {/* Header — fades up on scroll */}

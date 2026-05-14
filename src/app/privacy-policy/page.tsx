@@ -13,7 +13,11 @@ export default function PrivacyPolicyPage() {
         transition: { duration: 0.6 }
     };
 
-    const sections = [
+    const sections: {
+        title: string;
+        content: React.ReactNode;
+        anchorId?: string;
+    }[] = [
         {
             title: "1. Introduction",
             content: "At Bhai Finance, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services, including GloFi and all related products."
@@ -110,6 +114,7 @@ export default function PrivacyPolicyPage() {
         },
         {
             title: "7. Cookies and Tracking Technologies",
+            anchorId: "cookies",
             content: "We use cookies and similar tracking technologies to enhance your experience. You can control cookie settings through your browser preferences. However, disabling cookies may limit your ability to use certain features of our services."
         },
         {
@@ -180,7 +185,14 @@ export default function PrivacyPolicyPage() {
                     >
                         <div className="space-y-12">
                             {sections.map((section, index) => (
-                                <div key={index} className="space-y-4">
+                                <div
+                                    key={index}
+                                    id={section.anchorId}
+                                    className={[
+                                        "space-y-4",
+                                        section.anchorId ? "scroll-mt-28 md:scroll-mt-32" : "",
+                                    ].join(" ")}
+                                >
                                     <h2 className="heading-md text-[#00F4C4]">{section.title}</h2>
                                     <div className="text-body leading-relaxed text-white/70">
                                         {section.content}

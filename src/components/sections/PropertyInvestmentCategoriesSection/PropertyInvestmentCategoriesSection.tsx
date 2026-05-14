@@ -34,11 +34,11 @@ export default function PropertyInvestmentCategoriesSection() {
     };
 
     return (
-        <section className="property-categories-section w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-16 sm:py-20 lg:py-24 xl:py-32 2xl:py-40">
+        <section className="property-categories-section w-full">
             <div className="w-full mx-auto flex flex-col items-start">
                 {/* Header / Text Content */}
                 <motion.div 
-                    className="flex flex-col items-start text-left max-w-4xl w-full mb-8 sm:mb-12 lg:mb-16"
+                    className="flex flex-col items-start text-left max-w-4xl w-full mb-6 sm:mb-8 lg:mb-10"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-100px" }}
