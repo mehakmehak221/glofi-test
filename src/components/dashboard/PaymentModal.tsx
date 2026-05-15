@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckIcon, LoadingSpinner, LockIcon, BackArrowIcon, SellerIcon, DocumentIcon, DueDiligenceIcon, TrendingUpIcon, PropertyIcon, ClockIcon, VerifiedIcon } from "@/components/VectorImages";
+import { CheckIcon, LoadingSpinner, LockIcon, BackArrowIcon, DocumentIcon, TrendingUpIcon, ClockIcon, VerifiedIcon } from "@/components/VectorImages";
+import { useCreateInvestmentMutation, useVerifyInvestmentPaymentMutation } from "@/store/api/investmentApi";
+import { useBuySecondaryListingMutation, useVerifySecondaryPurchaseMutation } from "@/store/api/secondaryMarketApi";
+import { openRazorpayCheckout } from "@/utils/razorpay";
+import { formatInrAmount, toApiPaymentMethod } from "@/utils/paymentMethods";
 
 
 const PAYMENTS = [
@@ -24,28 +29,169 @@ const modalVariants = {
     exit: { opacity: 0, scale: 0.95, y: 20 },
 } as const;
 
-export default function PaymentModal({ isOpen, onClose, asset, onProcessPayment }) {
-    const [step, setStep] = useState(1); 
-    const [selectedMethod, setSelectedMethod] = useState(null);
+export type PaymentFlow = "primary" | "secondary";
+
+export type PaymentModalAsset = {
+    name: string;
+    currentValue: string;
+    fractions: number;
+    assetId?: string;
+    listingId?: string;
+};
+
+type PaymentModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    flow: PaymentFlow;
+    asset: PaymentModalAsset | null;
+    onSuccess?: (result: unknown) => void;
+};
+
+export default function PaymentModal({ isOpen, onClose, flow, asset, onSuccess }: PaymentModalProps) {
+    const router = useRouter();
+    const [step, setStep] = useState(1);
+    const [selectedMethod, setSelectedMethod] = useState<(typeof PAYMENTS)[number] | null>(null);
+    const [paymentError, setPaymentError] = useState("");
+    const [transactionId, setTransactionId] = useState("");
+    const [escrowId, setEscrowId] = useState("");
+    const [verifyResult, setVerifyResult] = useState<Record<string, unknown> | null>(null);
+
+    const [createInvestment] = useCreateInvestmentMutation();
+    const [verifyInvestmentPayment] = useVerifyInvestmentPaymentMutation();
+    const [buySecondaryListing] = useBuySecondaryListingMutation();
+    const [verifySecondaryPurchase] = useVerifySecondaryPurchaseMutation();
+
+    const resetModal = useCallback(() => {
+        setStep(1);
+        setSelectedMethod(null);
+        setPaymentError("");
+        setTransactionId("");
+        setEscrowId("");
+        setVerifyResult(null);
+    }, []);
 
     useEffect(() => {
-        if (isOpen) setStep(1);
-    }, [isOpen]);
+        if (isOpen) resetModal();
+    }, [isOpen, resetModal]);
 
     if (!isOpen || !asset) return null;
 
     const handleConfirmPayment = async () => {
-        setStep(3); 
+        if (!selectedMethod || !asset) return;
 
-        if (onProcessPayment) {
-            const success = await onProcessPayment();
-            if (!success) {
-                onClose();
-                return;
+        setPaymentError("");
+        setStep(3);
+
+        const paymentMethod = toApiPaymentMethod(selectedMethod.id);
+        const fractions = asset.fractions || 1;
+        const currency = "INR";
+
+        try {
+            let orderResponse: Record<string, unknown>;
+
+            if (flow === "primary") {
+                if (!asset.assetId) throw new Error("Asset ID is required for investment.");
+                orderResponse = (await createInvestment({
+                    assetId: asset.assetId,
+                    fractions,
+                    paymentMethod,
+                    currency,
+                }).unwrap()) as Record<string, unknown>;
+            } else {
+                const listingId = asset.listingId;
+                if (!listingId) throw new Error("Listing ID is required for purchase.");
+                orderResponse = (await buySecondaryListing({
+                    id: listingId,
+                    fractions,
+                    paymentMethod,
+                    currency,
+                }).unwrap()) as Record<string, unknown>;
             }
+
+            const keyId = String(orderResponse.keyId ?? "");
+            const order = orderResponse.order as { id?: string; amount?: number; currency?: string } | undefined;
+            if (!keyId || !order?.id || order.amount == null) {
+                throw new Error("Invalid payment order response from server.");
+            }
+
+            await new Promise<void>((resolve, reject) => {
+                openRazorpayCheckout({
+                    key: keyId,
+                    amount: order.amount!,
+                    currency: order.currency ?? currency,
+                    order_id: order.id!,
+                    name: "GloFi Estate",
+                    description: asset.name,
+                    theme: { color: "#00DAAF" },
+                    handler: async (razorpayResponse) => {
+                        try {
+                            let verified: Record<string, unknown>;
+                            if (flow === "primary") {
+                                verified = (await verifyInvestmentPayment({
+                                    razorpayOrderId: razorpayResponse.razorpay_order_id,
+                                    razorpayPaymentId: razorpayResponse.razorpay_payment_id,
+                                    razorpaySignature: razorpayResponse.razorpay_signature,
+                                }).unwrap()) as Record<string, unknown>;
+                            } else {
+                                verified = (await verifySecondaryPurchase({
+                                    id: asset.listingId!,
+                                    razorpayOrderId: razorpayResponse.razorpay_order_id,
+                                    razorpayPaymentId: razorpayResponse.razorpay_payment_id,
+                                    razorpaySignature: razorpayResponse.razorpay_signature,
+                                }).unwrap()) as Record<string, unknown>;
+                            }
+
+                            const txId = String(
+                                verified.transactionId ??
+                                    razorpayResponse.razorpay_payment_id ??
+                                    ""
+                            );
+                            setTransactionId(txId);
+                            setEscrowId(
+                                selectedMethod.id === "escrow"
+                                    ? `ESC-${txId.replace(/^TX-?/i, "").slice(-8).toUpperCase()}`
+                                    : ""
+                            );
+                            setVerifyResult(verified);
+                            onSuccess?.(verified);
+
+                            const status = String(verified.status ?? "SUCCESS").toUpperCase();
+                            if (selectedMethod.id === "escrow") {
+                                setStep(4);
+                            } else if (flow === "secondary" && status === "PROCESSING") {
+                                setStep(4);
+                            } else {
+                                setStep(5);
+                            }
+                            resolve();
+                        } catch (verifyErr: unknown) {
+                            const err = verifyErr as { data?: { message?: string }; message?: string };
+                            reject(
+                                new Error(
+                                    err?.data?.message ??
+                                        err?.message ??
+                                        "Payment verification failed."
+                                )
+                            );
+                        }
+                    },
+                    modal: {
+                        ondismiss: () => reject(new Error("Payment was cancelled.")),
+                    },
+                }).catch(reject);
+            });
+        } catch (err: unknown) {
+            const e = err as { data?: { message?: string }; message?: string };
+            const message =
+                e?.data?.message ?? e?.message ?? "Payment could not be completed. Please try again.";
+            setPaymentError(message);
+            setStep(2);
         }
-        
-        setTimeout(() => setStep(5), 2000); 
+    };
+
+    const handleViewPortfolio = () => {
+        onClose();
+        router.push("/dashboard/investor/portfolio");
     };
 
     return (
@@ -76,16 +222,45 @@ export default function PaymentModal({ isOpen, onClose, asset, onProcessPayment 
                                 />
                             )}
                             {step === 2 && (
-                                <StepDetails 
-                                    asset={asset} 
-                                    method={selectedMethod} 
-                                    onBack={() => setStep(1)} 
-                                    onConfirm={handleConfirmPayment} 
+                                <StepDetails
+                                    asset={asset}
+                                    method={selectedMethod}
+                                    error={paymentError}
+                                    onBack={() => {
+                                        setPaymentError("");
+                                        setStep(1);
+                                    }}
+                                    onConfirm={handleConfirmPayment}
                                 />
                             )}
-                            {step === 3 && <StepProcessing />}
-                            {step === 4 && <StepSuccess asset={asset} method={selectedMethod} onClose={onClose} />}
-                            {step === 5 && <StepSuccess asset={asset} method={selectedMethod} onClose={onClose} />}
+                            {step === 3 && (
+                                <StepProcessing methodLabel={selectedMethod?.label ?? "payment"} />
+                            )}
+                            {step === 4 &&
+                                (selectedMethod?.id === "escrow" ? (
+                                    <StepEscrowStatus
+                                        asset={asset}
+                                        transactionId={transactionId}
+                                        escrowId={escrowId}
+                                        onContinue={() => setStep(5)}
+                                    />
+                                ) : (
+                                    <StepAwaitingApproval
+                                        transactionId={transactionId}
+                                        onContinue={() => setStep(5)}
+                                    />
+                                ))}
+                            {step === 5 && (
+                                <StepSuccess
+                                    asset={asset}
+                                    method={selectedMethod}
+                                    transactionId={transactionId}
+                                    escrowId={escrowId}
+                                    verifyResult={verifyResult}
+                                    onViewPortfolio={handleViewPortfolio}
+                                    onClose={onClose}
+                                />
+                            )}
                         </div>
                     </motion.div>
                 </motion.div>
@@ -146,7 +321,19 @@ function StepSelection({ asset, onSelect, onClose }) {
     );
 }
 
-function StepDetails({ asset, method, onBack, onConfirm }) {
+function StepDetails({
+    asset,
+    method,
+    error,
+    onBack,
+    onConfirm,
+}: {
+    asset: PaymentModalAsset;
+    method: (typeof PAYMENTS)[number];
+    error?: string;
+    onBack: () => void;
+    onConfirm: () => void;
+}) {
     const [selectedCrypto, setSelectedCrypto] = useState('BTC');
     const cryptos = ['BTC', 'ETH', 'USDT', 'USDC'];
 
@@ -282,7 +469,14 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
                 </div>
             </div>
 
-            <button 
+            {error ? (
+                <p className="mt-4 rounded-md bg-red-500/10 border border-red-500/20 px-3 py-2 text-sm font-medium text-red-400" role="alert">
+                    {error}
+                </p>
+            ) : null}
+
+            <button
+                type="button"
                 onClick={onConfirm}
                 className="w-full py-4 mt-6 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-[var(--shadow-glow-primary)]"
             >
@@ -292,24 +486,42 @@ function StepDetails({ asset, method, onBack, onConfirm }) {
     );
 }
 
-function StepProcessing() {
+function StepProcessing({ methodLabel }: { methodLabel: string }) {
     return (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="w-20 h-20 rounded-[2rem] bg-[var(--badge-bg)] flex items-center justify-center mb-8 shadow-sm">
+        <motion.div className="flex flex-col items-center justify-center py-16 text-center">
+            <motion.div className="w-20 h-20 rounded-[2rem] bg-[var(--badge-bg)] flex items-center justify-center mb-8 shadow-sm">
                 <LoadingSpinner className="w-10 h-10 text-[var(--sidebar-active-text)]" />
-            </div>
+            </motion.div>
             <h2 className="text-2xl font-bold mb-3 text-[var(--header-text)]">Processing Payment</h2>
-            <p className="text-sm font-medium text-[var(--color-text-muted)]">Verifying your payment details...</p>
+            <p className="text-sm font-medium text-[var(--color-text-muted)]">
+                Verifying your {methodLabel} payment…
+            </p>
             <div className="flex gap-1.5 mt-6">
-                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-bounce" style={{ animationDelay: "0ms" }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-bounce" style={{ animationDelay: "150ms" }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)] animate-bounce" style={{ animationDelay: "300ms" }} />
             </div>
-        </div>
+        </motion.div>
     );
 }
 
-function StepStatus({ onFinalize }: { onFinalize?: () => void }) {
+function StepAwaitingApproval({
+    transactionId,
+    onContinue,
+}: {
+    transactionId: string;
+    onContinue: () => void;
+}) {
+    const displayId = transactionId
+        ? transactionId.startsWith("pay_")
+            ? `TX-${transactionId.slice(-8).toUpperCase()}`
+            : transactionId
+        : "TX-PENDING";
+
+    const copyTxId = () => {
+        if (transactionId) navigator.clipboard.writeText(transactionId);
+    };
+
     return (
         <div className="flex flex-col items-center gap-8 w-full">
             <div className="text-center w-full">
@@ -324,9 +536,13 @@ function StepStatus({ onFinalize }: { onFinalize?: () => void }) {
                 <div className="p-6 bg-[var(--background)] rounded-[2rem] flex justify-between items-center border border-[var(--sidebar-border)] shadow-sm">
                     <div className="space-y-2">
                         <p className="text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest">Transaction ID</p>
-                        <p className="text-sm font-mono font-bold text-[var(--header-text)]">TX-MMOZWAGT</p>
+                        <p className="text-sm font-mono font-bold text-[var(--header-text)]">{displayId}</p>
                     </div>
-                    <button className="text-xs font-bold text-[var(--sidebar-active-text)] flex items-center gap-2 hover:opacity-80 transition-opacity bg-[var(--sidebar-active-bg)] px-4 py-2 rounded-xl border-0 cursor-pointer">
+                    <button
+                        type="button"
+                        onClick={copyTxId}
+                        className="text-xs font-bold text-[var(--sidebar-active-text)] flex items-center gap-2 hover:opacity-80 transition-opacity bg-[var(--sidebar-active-bg)] px-4 py-2 rounded-xl border-0 cursor-pointer"
+                    >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         Copy
                     </button>
@@ -372,17 +588,38 @@ function StepStatus({ onFinalize }: { onFinalize?: () => void }) {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5 text-[var(--color-status-info)]">
                     <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
-                <span className="text-[13px] font-medium text-[var(--color-status-info)]">This process typically takes 24-48 hours. You'll receive email updates at each stage.</span>
+                <span className="text-[13px] font-medium text-[var(--color-status-info)]">This process typically takes 24–48 hours. You&apos;ll receive email updates at each stage.</span>
             </div>
+
+            <button
+                type="button"
+                onClick={onContinue}
+                className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0"
+            >
+                Continue
+            </button>
         </div>
     );
 }
 
-function StatusItem({ icon, label, status, active }) {
-    return null;
-}
+function StepEscrowStatus({
+    asset,
+    transactionId,
+    escrowId,
+    onContinue,
+}: {
+    asset: PaymentModalAsset;
+    transactionId: string;
+    escrowId: string;
+    onContinue: () => void;
+}) {
+    const displayTx = transactionId
+        ? transactionId.startsWith("pay_")
+            ? `TX-${transactionId.slice(-8).toUpperCase()}`
+            : transactionId
+        : "TX-PENDING";
+    const displayEscrow = escrowId || displayTx.replace("TX-", "ESC-");
 
-function StepEscrowStatus({ asset }) {
     return (
         <div className="flex flex-col items-center gap-8">
             <div className="text-center">
@@ -399,11 +636,11 @@ function StepEscrowStatus({ asset }) {
                 <div className="p-6 bg-[var(--background)] rounded-[2rem] border border-[var(--sidebar-border)] shadow-sm space-y-4">
                     <div className="flex justify-between text-xs font-bold">
                         <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Escrow ID</span>
-                        <span className="text-[var(--header-text)] font-mono">ESC-MMOZZMIV</span>
+                        <span className="text-[var(--header-text)] font-mono">{displayEscrow}</span>
                     </div>
                     <div className="flex justify-between text-xs font-bold">
                         <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Transaction ID</span>
-                        <span className="text-[var(--header-text)] font-mono">TX-MMOZZMIV</span>
+                        <span className="text-[var(--header-text)] font-mono">{displayTx}</span>
                     </div>
                     <div className="flex justify-between text-base font-black pt-4 border-t border-[var(--sidebar-border)]">
                         <span className="text-[var(--header-text)]">Escrow Amount</span>
@@ -450,15 +687,46 @@ function StepEscrowStatus({ asset }) {
                 </div>
             </div>
 
-            <button className="w-full py-3.5 sm:py-4 mt-1 sm:mt-2 rounded-xl bg-[var(--color-bg-surface-subtle)] text-[var(--color-text-muted)] text-xs sm:text-sm font-medium cursor-not-allowed transition-colors hover:bg-[var(--color-bg-surface-elevated)]">
-                Pending Verification
+            <button
+                type="button"
+                onClick={onContinue}
+                className="w-full py-4 mt-2 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0"
+            >
+                Continue
             </button>
         </div>
     );
 }
 
-function StepSuccess({ asset, method, onClose }) {
+function StepSuccess({
+    asset,
+    method,
+    transactionId,
+    escrowId,
+    verifyResult,
+    onViewPortfolio,
+}: {
+    asset: PaymentModalAsset;
+    method: (typeof PAYMENTS)[number] | null;
+    transactionId: string;
+    escrowId: string;
+    verifyResult: Record<string, unknown> | null;
+    onViewPortfolio: () => void;
+    onClose: () => void;
+}) {
     const fractions = asset.fractions || 1;
+    const displayTx = transactionId
+        ? transactionId.startsWith("pay_")
+            ? `TX-${transactionId.slice(-8).toUpperCase()}`
+            : transactionId
+        : "—";
+    const totalPaid =
+        verifyResult?.totalAmount != null
+            ? formatInrAmount(Number(verifyResult.totalAmount))
+            : verifyResult?.totalPaid != null
+              ? formatInrAmount(Number(verifyResult.totalPaid))
+              : asset.currentValue;
+
     return (
         <div className="flex flex-col items-center text-center">
             <div className="w-16 h-16 rounded-full bg-[var(--color-status-success-bg)] flex items-center justify-center mb-8 shadow-glow-success">
@@ -466,7 +734,7 @@ function StepSuccess({ asset, method, onClose }) {
                     <CheckIcon className="w-10 h-10" />
                 </div>
             </div>
-            <h2 className="text-3xl font-black mb-2 text-[var(--header-text)]">Investment Request Sent</h2>
+            <h2 className="text-3xl font-black mb-2 text-[var(--header-text)]">Investment Complete!</h2>
             <p className="text-base font-bold text-[var(--color-text-muted)] mb-10">
                 {fractions} {fractions === 1 ? 'fraction' : 'fractions'} of {asset.name}
             </p>
@@ -474,12 +742,24 @@ function StepSuccess({ asset, method, onClose }) {
             <div className="w-full space-y-4 mb-10 bg-[var(--field-surface)] p-6 rounded-2xl border border-[var(--sidebar-border)] shadow-sm text-left">
                 <div className="flex justify-between items-center text-xs font-bold py-1">
                     <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Transaction ID</span>
-                    <span className="text-[var(--header-text)] font-mono">TX-MMOZMMIV</span>
+                    <span className="text-[var(--header-text)] font-mono">{displayTx}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs font-bold py-1">
                     <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Payment Method</span>
-                    <span className="text-[var(--header-text)]">{method?.label || 'UPI'}</span>
+                    <span className="text-[var(--header-text)]">{method?.label || "UPI"}</span>
                 </div>
+                {escrowId ? (
+                    <div className="flex justify-between items-center text-xs font-bold py-1">
+                        <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Escrow ID</span>
+                        <span className="text-[var(--header-text)] font-mono">{escrowId}</span>
+                    </div>
+                ) : null}
+                {totalPaid ? (
+                    <div className="flex justify-between items-center text-xs font-bold py-1">
+                        <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Total Paid</span>
+                        <span className="text-[var(--header-text)]">{totalPaid}</span>
+                    </div>
+                ) : null}
                 <div className="flex justify-between items-center text-xs font-black pt-4 border-t border-[var(--sidebar-border)]">
                     <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Status</span>
                     <span className="text-[var(--color-status-success)] bg-[var(--color-status-success-bg)] px-4 py-1.5 rounded-full ring-1 ring-[var(--color-status-success-border)] flex items-center gap-1.5 font-bold">
@@ -514,8 +794,9 @@ function StepSuccess({ asset, method, onClose }) {
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                     Receipt
                 </button>
-                <button 
-                    onClick={onClose}
+                <button
+                    type="button"
+                    onClick={onViewPortfolio}
                     className="flex-1 py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-sm font-black hover:opacity-90 transition-all shadow-[var(--shadow-glow-primary)] border-0 cursor-pointer"
                 >
                     View Portfolio

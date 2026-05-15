@@ -35,13 +35,32 @@ export const secondaryMarketApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['PendingApprovals', 'SecondaryMarketplace'],
     }),
-    buySecondaryListing: builder.mutation<any, { id: string | number; fractions: number }>({
-      query: ({ id, fractions }) => ({
+    buySecondaryListing: builder.mutation<
+      any,
+      { id: string | number; fractions: number; paymentMethod: string; currency: string }
+    >({
+      query: ({ id, fractions, paymentMethod, currency }) => ({
         url: `secondary-marketplace/listings/${id}/buy`,
         method: 'POST',
-        body: { fractions },
+        body: { fractions, paymentMethod, currency },
       }),
-      invalidatesTags: ['SecondaryMarketplace'],
+      invalidatesTags: ['SecondaryMarketplace', 'Investment'],
+    }),
+    verifySecondaryPurchase: builder.mutation<
+      any,
+      {
+        id: string | number;
+        razorpayOrderId: string;
+        razorpayPaymentId: string;
+        razorpaySignature: string;
+      }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `secondary-marketplace/listings/${id}/buy/verify`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['SecondaryMarketplace', 'Investment'],
     }),
     rejectSecondaryListing: builder.mutation<any, { id: string | number; reason: string }>({
       query: ({ id, reason }) => ({
@@ -74,6 +93,7 @@ export const {
   useDeleteSecondaryListingMutation,
   useApproveSecondaryListingMutation,
   useBuySecondaryListingMutation,
+  useVerifySecondaryPurchaseMutation,
   useRejectSecondaryListingMutation,
   useGetMySecondaryListingsQuery,
   useGetSecondaryPendingApprovalsQuery,

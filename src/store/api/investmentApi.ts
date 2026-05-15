@@ -16,13 +16,27 @@ export const investmentApi = baseApi.injectEndpoints({
       }),
       providesTags: ['Investment'],
     }),
-    createInvestment: builder.mutation<any, any>({
+    createInvestment: builder.mutation<
+      any,
+      { assetId: string; fractions: number; paymentMethod: string; currency: string }
+    >({
       query: (investmentData) => ({
         url: 'investments',
         method: 'POST',
         body: investmentData,
       }),
-      invalidatesTags: ['Investment'],
+      invalidatesTags: ['Investment', 'Asset'],
+    }),
+    verifyInvestmentPayment: builder.mutation<
+      any,
+      { razorpayOrderId: string; razorpayPaymentId: string; razorpaySignature: string }
+    >({
+      query: (body) => ({
+        url: 'investments/verify-payment',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Investment', 'Asset', 'Certificates'],
     }),
     getInvestmentById: builder.query<any, string | number>({
       query: (id) => ({
@@ -81,6 +95,7 @@ export const {
   useGetInvestmentsQuery,
   useGetPortfolioQuery,
   useCreateInvestmentMutation,
+  useVerifyInvestmentPaymentMutation,
   useGetInvestmentByIdQuery,
   useSellInvestmentMutation,
   useGetTransactionsQuery,

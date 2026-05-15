@@ -20,7 +20,7 @@ import {
     useGetAssetRentalScheduleQuery,
     useGetAssetProjectedValuationQuery
 } from "@/store/api/assetApi";
-import { useCreateInvestmentMutation, useGetInvestmentsQuery } from "@/store/api/investmentApi";
+import { useGetInvestmentsQuery } from "@/store/api/investmentApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
 
 import { API_URL } from "@/constants";
@@ -48,15 +48,12 @@ export default function PropertyDetailPage() {
 
     const { data: kycData } = useGetKycStatusQuery();
     const { data: investmentsData, refetch: refetchInvestments } = useGetInvestmentsQuery();
-    const [createInvestment, { isLoading: isInvesting }] = useCreateInvestmentMutation();
-
     const [activeTab, setActiveTab] = useState("cashflow");
     const [investOpen, setInvestOpen] = useState(false);
     const [kycOpen, setKycOpen] = useState(false);
     const [confirmType, setConfirmType] = useState(null);
     const [investQuantity, setInvestQuantity] = useState(1);
     const [investStatus, setInvestStatus] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [paymentModalOpen, setPaymentModalOpen] = useState(false);
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
 
@@ -120,28 +117,10 @@ export default function PropertyDetailPage() {
         setPaymentModalOpen(true);
     };
 
-    const handleProcessPayment = async () => {
-        try {
-            setIsSubmitting(true);
-            const result = await createInvestment({
-                assetId: params.id,
-                fractions: investQuantity,
-                paymentMethod: "UPI",
-                currency: "USD",
-            }).unwrap();
-
-            console.log("Investment successful:", result);
-            showToast("Investment successful! You can view it in your portfolio.");
-            refetchInvestments();
-            setInvestStatus(result?.data?.status || result?.status || "PENDING");
-            return true; // Signal success to PaymentModal
-        } catch (err) {
-            console.error("Investment failed:", err);
-            showToast(err?.data?.message || "Investment failed. Please try again.", "error");
-            return false; // Signal failure
-        } finally {
-            setIsSubmitting(false);
-        }
+    const handlePaymentSuccess = () => {
+        showToast("Investment successful! You can view it in your portfolio.");
+        refetchInvestments();
+        setInvestStatus("SUCCESS");
     };
 
     const handleKycSubmit = () => {
@@ -478,10 +457,9 @@ export default function PropertyDetailPage() {
                                     onClick={handleInvestNow}
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    disabled={isSubmitting || isInvesting}
-                                    className="w-full py-4 rounded-md bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-glow-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full py-4 rounded-md bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-glow-primary"
                                 >
-                                    {isSubmitting || isInvesting ? "Processing..." : "Invest Now"}
+                                    Invest Now
                                 </motion.button>
                             )}
                         </div>
@@ -495,18 +473,18 @@ export default function PropertyDetailPage() {
                 onClose={() => setInvestOpen(false)}
                 property={property}
                 onVerifyPay={handleVerifyPay}
-                isLoading={isSubmitting || isInvesting}
             />
             <PaymentModal
                 isOpen={paymentModalOpen}
                 onClose={() => setPaymentModalOpen(false)}
+                flow="primary"
                 asset={{
-                    ...property,
+                    assetId: params.id as string,
                     name: property.title,
-                    currentValue: `₹${(property.fractionPrice * investQuantity).toLocaleString()}`,
-                    fractions: investQuantity
+                    currentValue: `₹${(property.fractionPrice * investQuantity).toLocaleString("en-IN")}`,
+                    fractions: investQuantity,
                 }}
-                onProcessPayment={handleProcessPayment}
+                onSuccess={handlePaymentSuccess}
             />
             <KYCModal
                 isOpen={kycOpen}

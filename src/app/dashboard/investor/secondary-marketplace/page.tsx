@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrendingUpIcon, SearchIcon, EyeOpenIcon, DownloadIcon, AboutIcon } from "@/components/VectorImages";
 import PaymentModal from "@/components/dashboard/PaymentModal";
-import { useGetSecondaryListingsQuery, useBuySecondaryListingMutation, useGetMySecondaryListingsQuery, useGetSecondaryListingByIdQuery } from "@/store/api/secondaryMarketApi";
+import { useGetSecondaryListingsQuery, useGetMySecondaryListingsQuery, useGetSecondaryListingByIdQuery } from "@/store/api/secondaryMarketApi";
 import { API_URL } from "@/constants";
 
 const containerVariants = {
@@ -28,8 +28,6 @@ export default function SecondaryMarketplacePage() {
 
     const { data: marketplaceResponse, isLoading: isLoadingMarketplace } = useGetSecondaryListingsQuery(undefined);
     const { data: myListingsResponse, isLoading: isLoadingMyListings } = useGetMySecondaryListingsQuery();
-    const [buySecondaryListing] = useBuySecondaryListingMutation();
-
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "/assets/images/marketplace/Burj.png";
         if (imagePath.startsWith('http')) return imagePath;
@@ -231,21 +229,24 @@ export default function SecondaryMarketplacePage() {
                 <PaymentModal
                     isOpen={isPaymentModalOpen}
                     onClose={() => setIsPaymentModalOpen(false)}
-                    asset={selectedAsset}
-                    onProcessPayment={async () => {
-                        try {
-                            const fractions = selectedAsset?.fractions ? parseFloat(selectedAsset.fractions) : 1;
-                            console.log("Buying listing", selectedAsset.id, "with fractions", fractions);
-                            const result = await buySecondaryListing({ id: selectedAsset.id, fractions }).unwrap();
-                            console.log("Purchase result:", result);
-                            return true;
-                        } catch (err) {
-                            console.error("Failed to buy fractions:", err);
-                            const errorMessage = err?.data?.message || err?.message || JSON.stringify(err) || "Unknown error occurred";
-                            alert("Failed to purchase: " + errorMessage);
-                            return false;
-                        }
-                    }}
+                    flow="secondary"
+                    asset={
+                        selectedAsset
+                            ? {
+                                  listingId: selectedAsset.id,
+                                  name: selectedAsset.name,
+                                  currentValue:
+                                      selectedAsset.pricePerFraction != null &&
+                                      selectedAsset.fractions != null
+                                          ? `₹${(
+                                                selectedAsset.pricePerFraction *
+                                                parseFloat(String(selectedAsset.fractions))
+                                            ).toLocaleString("en-IN")}`
+                                          : selectedAsset.price || selectedAsset.currentValue,
+                                  fractions: parseFloat(String(selectedAsset.fractions)) || 1,
+                              }
+                            : null
+                    }
                 />
 
                 <DetailModal
