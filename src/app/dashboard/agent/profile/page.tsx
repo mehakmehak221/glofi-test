@@ -230,7 +230,7 @@ export default function AgentProfilePage() {
                                             {item.status?.replace('_', ' ') || "PENDING"}
                                         </div>
                                         <a 
-                                            href={item.url?.startsWith('http') ? item.url : item.url ? `https://api.glofiestate.com/files/${item.url}` : "#"} 
+                                            href={item.url?.startsWith('http') ? item.url : item.url ? `https://api.glofiestates.com/files/${item.url}` : "#"} 
                                             target={item.url ? "_blank" : undefined}
                                             rel="noopener noreferrer"
                                             className={`text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:opacity-70 transition-all no-underline ${!item.url ? 'opacity-20 pointer-events-none' : ''}`}
