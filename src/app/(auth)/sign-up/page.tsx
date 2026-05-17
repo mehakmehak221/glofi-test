@@ -7,12 +7,26 @@ import { motion } from "framer-motion";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
 import { ChevronLeftIcon, LoadingSpinner, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
-import { useRegisterMutation, useRegisterAgentMutation } from "@/store/api/authApi";
+import {
+    useRegisterMutation,
+    useRegisterAgentMutation,
+    useSendRegistrationOtpMutation,
+    useVerifyRegistrationOtpMutation,
+} from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
-import { applySignUpApiErrors, FIELD_ERROR_CLASSES, getSignUpPasswordCriteria, validateSignUpFields } from "@/utils/authFormErrors";
+import {
+    applySignUpApiErrors,
+    FIELD_ERROR_CLASSES,
+    formatResendCooldownMessage,
+    getSignUpPasswordCriteria,
+    isValidOtp,
+    normalizeOtpInput,
+    validateSignUpFields,
+} from "@/utils/authFormErrors";
 
 const SIGNUP_ROLES = ["Investor", "Partner", "Agent"] as const;
 type SignupRole = (typeof SIGNUP_ROLES)[number];
+type SignUpStep = "DETAILS" | "OTP";
 
 function parseRoleQuery(raw: string | null): SignupRole | null {
     if (!raw) return null;
@@ -25,6 +39,10 @@ function SignUpPageContent() {
     const searchParams = useSearchParams();
     const roleParam = searchParams.get("role");
     const [userType, setUserType] = useState<SignupRole>(() => parseRoleQuery(roleParam) ?? "Investor");
+    const [step, setStep] = useState<SignUpStep>("DETAILS");
+    const [otp, setOtp] = useState("");
+    const [otpError, setOtpError] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
 
     useEffect(() => {
         const next = parseRoleQuery(roleParam);
@@ -50,9 +68,11 @@ function SignUpPageContent() {
     const [expiryError, setExpiryError] = useState("");
     const [referralError, setReferralError] = useState("");
 
-    const [register, { isLoading: isInvestorRegistering }] = useRegisterMutation();
+    const [sendRegistrationOtp, { isLoading: isSendingOtp }] = useSendRegistrationOtpMutation();
+    const [verifyRegistrationOtp, { isLoading: isVerifyingOtp }] = useVerifyRegistrationOtpMutation();
+    const [register, { isLoading: isRegistering }] = useRegisterMutation();
     const [registerAgent, { isLoading: isAgentRegistering }] = useRegisterAgentMutation();
-    const isLoading = isInvestorRegistering || isAgentRegistering;
+    const isLoading = isSendingOtp || isVerifyingOtp || isRegistering || isAgentRegistering;
 
     const handleUserTypeChange = (next: string) => {
         const nextRole = SIGNUP_ROLES.includes(next as SignupRole) ? (next as SignupRole) : null;
@@ -77,6 +97,10 @@ function SignUpPageContent() {
         setReferralError("");
         setShowPassword(false);
         setShowConfirmPassword(false);
+        setStep("DETAILS");
+        setOtp("");
+        setOtpError("");
+        setSuccessMsg("");
     };
 
     const clearFieldError = (k: keyof typeof form) => {
@@ -114,9 +138,75 @@ function SignUpPageContent() {
         clearFieldError(k);
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const completeRegistration = (result: Record<string, unknown>) => {
+        const token =
+            (result?.accessToken as string | undefined) ||
+            (result?.token as string | undefined) ||
+            ((result?.data as Record<string, unknown> | undefined)?.accessToken as string | undefined) ||
+            ((result?.data as Record<string, unknown> | undefined)?.token as string | undefined) ||
+            ((result?.agent as Record<string, unknown> | undefined)?.token as string | undefined);
+
+        if (token) {
+            setCookie("access_token", token);
+            localStorage.setItem("access_token", token);
+            localStorage.setItem("isLoggedIn", "true");
+            setCookie("isLoggedIn", "true");
+            const role =
+                ((result?.agent as Record<string, unknown> | undefined)?.role as string | undefined) ||
+                (result?.role as string | undefined) ||
+                userType.toUpperCase();
+            localStorage.setItem("userType", role);
+            router.push("/onboarding");
+        } else {
+            router.push("/sign-in?message=Registration successful. Please sign in.");
+        }
+    };
+
+    const sendOtpForRegistration = async () => {
+        const trimmedEmail = form.email.trim();
+        await sendRegistrationOtp({
+            fullName: form.name.trim(),
+            email: trimmedEmail,
+            password: form.password,
+            role: userType.toUpperCase(),
+            ...(form.referredByCode.trim() ? { referralCode: form.referredByCode.trim() } : {}),
+        }).unwrap();
+        setOtp("");
+        setOtpError("");
+        setSuccessMsg(`We sent a 6-digit code to ${trimmedEmail}.`);
+        setStep("OTP");
+    };
+
+    const handleResendOtp = async () => {
+        setErrorMsg("");
+        setOtpError("");
+        setSuccessMsg("");
+        try {
+            await sendOtpForRegistration();
+        } catch (err: unknown) {
+            const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
+            if (apiErr?.status === 429) {
+                setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
+            } else {
+                applySignUpApiErrors(apiErr, {
+                    setNameError,
+                    setEmailError,
+                    setPasswordError,
+                    setReraError,
+                    setExpiryError,
+                    setReferralError,
+                    setConfirmPasswordError,
+                    setOtpError,
+                    setErrorMsg,
+                });
+            }
+        }
+    };
+
+    const handleDetailsSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMsg("");
+        setSuccessMsg("");
         setNameError("");
         setEmailError("");
         setPasswordError("");
@@ -124,6 +214,7 @@ function SignUpPageContent() {
         setReraError("");
         setExpiryError("");
         setReferralError("");
+        setOtpError("");
 
         const {
             nameError: nextNameErr,
@@ -146,44 +237,61 @@ function SignUpPageContent() {
         }
 
         try {
-            let result;
             if (userType === "Agent") {
-                result = await registerAgent({
+                const result = await registerAgent({
                     fullName: form.name,
                     email: form.email,
                     password: form.password,
                     reraNumber: form.reraNumber,
-                    expiryDate: form.expiryDate
+                    expiryDate: form.expiryDate,
                 }).unwrap();
-            } else {
-                result = await register({
-                    fullName: form.name,
-                    email: form.email,
-                    password: form.password,
-                    role: userType.toUpperCase(),
-                    referredByCode: form.referredByCode || undefined
-                }).unwrap();
+                completeRegistration(result);
+                return;
             }
 
-            console.log('Register Result:', result);
-            const token = result?.accessToken || result?.token || result?.data?.accessToken || result?.data?.token || result?.agent?.token;
-
-            if (token) {
-                setCookie("access_token", token);
-                localStorage.setItem("access_token", token);
-                localStorage.setItem("isLoggedIn", "true");
-                setCookie("isLoggedIn", "true");
-                console.log('Token stored in cookie and localStorage');
-                localStorage.setItem("userType", result?.agent?.role || result?.role || userType.toUpperCase());
-                router.push("/onboarding");
+            await sendOtpForRegistration();
+        } catch (err: unknown) {
+            const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
+            if (apiErr?.status === 429) {
+                setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
-                console.warn('No token found in register response');
-                // If no token is found (e.g. Agent signup), redirect to sign-in
-                router.push("/sign-in?message=Registration successful. Please sign in.");
+                applySignUpApiErrors(apiErr, {
+                    setNameError,
+                    setEmailError,
+                    setPasswordError,
+                    setReraError,
+                    setExpiryError,
+                    setReferralError,
+                    setConfirmPasswordError,
+                    setOtpError,
+                    setErrorMsg,
+                });
             }
-        } catch (err: any) {
-            console.error("Failed to register:", err);
-            applySignUpApiErrors(err, {
+        }
+    };
+
+    const handleOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setErrorMsg("");
+        setOtpError("");
+        setSuccessMsg("");
+
+        const normalizedOtp = normalizeOtpInput(otp);
+        setOtp(normalizedOtp);
+
+        if (!isValidOtp(normalizedOtp)) {
+            setOtpError("Please enter the 6-digit code from your email.");
+            return;
+        }
+
+        const trimmedEmail = form.email.trim();
+
+        try {
+            await verifyRegistrationOtp({ email: trimmedEmail, otp: normalizedOtp }).unwrap();
+            const result = await register({ email: trimmedEmail, otp: normalizedOtp }).unwrap();
+            completeRegistration(result);
+        } catch (err: unknown) {
+            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, {
                 setNameError,
                 setEmailError,
                 setPasswordError,
@@ -191,6 +299,7 @@ function SignUpPageContent() {
                 setExpiryError,
                 setReferralError,
                 setConfirmPasswordError,
+                setOtpError,
                 setErrorMsg,
             });
         }
@@ -233,17 +342,91 @@ function SignUpPageContent() {
                         ))}
                     </motion.div>
                 )}
+                {successMsg && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-4 p-3 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium"
+                        role="status"
+                    >
+                        {successMsg}
+                    </motion.div>
+                )}
             </div>
 
 
-            <div className="mb-4 space-y-4">
+            <motion.div className="mb-4 space-y-4">
                 <UserTypeToggle value={userType} onChange={handleUserTypeChange} />
                 <RoleInsightCallout role={userType} />
-            </div>
+            </motion.div>
 
+            {step === "OTP" ? (
+                <form
+                    noValidate
+                    onSubmit={handleOtpSubmit}
+                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
+                >
+                    <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                        Enter the verification code sent to{" "}
+                        <span className="text-white font-medium">{form.email.trim()}</span>
+                    </p>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="sign-up-otp" className="text-sm font-medium text-white font-montserrat">
+                            Verification code
+                        </label>
+                        <input
+                            id="sign-up-otp"
+                            type="text"
+                            inputMode="numeric"
+                            autoComplete="one-time-code"
+                            value={otp}
+                            onChange={(e) => {
+                                setOtp(normalizeOtpInput(e.target.value));
+                                setOtpError("");
+                                setErrorMsg("");
+                            }}
+                            placeholder="000000"
+                            maxLength={6}
+                            aria-invalid={Boolean(otpError)}
+                            aria-describedby={otpError ? "sign-up-otp-error" : undefined}
+                            className={`premium-input w-full text-center tracking-[0.4em] text-lg ${otpError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                        />
+                        {otpError ? (
+                            <p id="sign-up-otp-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                {otpError}
+                            </p>
+                        ) : null}
+                    </div>
+                    <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
+                        {isLoading ? <LoadingSpinner /> : "Verify & Create Account"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        disabled={isLoading}
+                        className="text-sm text-[var(--color-text-secondary)] hover:text-white transition-colors text-center disabled:opacity-50"
+                    >
+                        Didn&apos;t receive a code? Resend
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setStep("DETAILS");
+                            setOtp("");
+                            setOtpError("");
+                            setSuccessMsg("");
+                            setErrorMsg("");
+                        }}
+                        disabled={isLoading}
+                        className="text-sm text-[var(--color-primary-300)] hover:text-[var(--color-primary-100)] transition-colors text-center disabled:opacity-50"
+                    >
+                        Back to account details
+                    </button>
+                </form>
+            ) : (
             <form
                 noValidate
-                onSubmit={handleSubmit}
+                onSubmit={handleDetailsSubmit}
                 className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
             >
                 <div className="flex flex-col gap-2">
@@ -440,9 +623,10 @@ function SignUpPageContent() {
                 )}
 
                 <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
-                    {isLoading ? <LoadingSpinner /> : "Create Account"}
+                    {isLoading ? <LoadingSpinner /> : userType === "Agent" ? "Create Account" : "Continue"}
                 </button>
             </form>
+            )}
 
             <p className="text-center text-xs text-[var(--color-text-muted)] mt-8 font-montserrat leading-relaxed px-1">
                 By clicking Create Account you agree to GloFi Estate&apos;s{" "}

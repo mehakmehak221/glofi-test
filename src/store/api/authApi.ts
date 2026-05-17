@@ -1,12 +1,39 @@
 import { baseApi } from './baseApi';
 
+export type SendRegistrationOtpBody = {
+  fullName: string;
+  email: string;
+  password: string;
+  role: string;
+  referralCode?: string;
+};
+
+export type RegistrationOtpBody = {
+  email: string;
+  otp: string;
+};
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation<any, any>({
-      query: (userData) => ({
+    sendRegistrationOtp: builder.mutation<{ message?: string }, SendRegistrationOtpBody>({
+      query: (body) => ({
+        url: 'auth/register/send-otp',
+        method: 'POST',
+        body,
+      }),
+    }),
+    verifyRegistrationOtp: builder.mutation<{ message?: string }, RegistrationOtpBody>({
+      query: (body) => ({
+        url: 'auth/register/verify-otp',
+        method: 'POST',
+        body,
+      }),
+    }),
+    register: builder.mutation<any, RegistrationOtpBody>({
+      query: (body) => ({
         url: 'auth/register',
         method: 'POST',
-        body: userData,
+        body,
       }),
     }),
     registerAgent: builder.mutation<any, any>({
@@ -68,6 +95,8 @@ export const authApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useSendRegistrationOtpMutation,
+  useVerifyRegistrationOtpMutation,
   useRegisterMutation,
   useRegisterAgentMutation,
   useLoginMutation,

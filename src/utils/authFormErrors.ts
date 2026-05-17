@@ -107,6 +107,21 @@ export function isMachineEmailValidationMessage(text: string): boolean {
     );
 }
 
+export const OTP_PATTERN = /^\d{6}$/;
+
+export function normalizeOtpInput(value: string): string {
+    return value.replace(/\D/g, "").slice(0, 6);
+}
+
+export function isValidOtp(otp: string): boolean {
+    return OTP_PATTERN.test(otp);
+}
+
+export function isMachineOtpValidationMessage(text: string): boolean {
+    const t = text.toLowerCase();
+    return t.includes("otp") && (t.includes("match") || t.includes("digit") || t.includes("regular expression"));
+}
+
 export function isMachinePasswordLengthMessage(text: string): boolean {
     const t = text.toLowerCase();
     return (
@@ -122,6 +137,7 @@ export function isMachinePasswordLengthMessage(text: string): boolean {
 }
 
 export function humanizeValidationLine(line: string, minPasswordLen: number): string {
+    if (isMachineOtpValidationMessage(line)) return "Please enter the 6-digit code from your email.";
     if (isMachineEmailValidationMessage(line)) return "Please enter a valid email address.";
     if (isMachinePasswordComplexityMessage(line)) {
         return "Password must include upper and lowercase letters, a number, a special character, and be at least 8 characters long.";
@@ -179,6 +195,7 @@ export function partitionSignUpValidationLines(lines: string[], minPasswordLen: 
     let nameLine = "";
     let emailLine = "";
     let passwordLine = "";
+    let otpLine = "";
     let reraLine = "";
     let expiryLine = "";
     let referralLine = "";
@@ -186,7 +203,8 @@ export function partitionSignUpValidationLines(lines: string[], minPasswordLen: 
     for (const raw of lines) {
         const friendly = humanizeApiValidationLine(raw, minPasswordLen);
         const low = raw.toLowerCase();
-        if (low.includes("email")) emailLine = friendly;
+        if (low.includes("otp")) otpLine = friendly;
+        else if (low.includes("email")) emailLine = friendly;
         else if (low.includes("password")) passwordLine = friendly;
         else if (low.includes("rera")) reraLine = friendly;
         else if (low.includes("expiry") || low.includes("expire")) expiryLine = friendly;
@@ -195,7 +213,7 @@ export function partitionSignUpValidationLines(lines: string[], minPasswordLen: 
             nameLine = friendly;
         else generalLines.push(friendly);
     }
-    return { nameLine, emailLine, passwordLine, reraLine, expiryLine, referralLine, generalLines };
+    return { nameLine, emailLine, passwordLine, otpLine, reraLine, expiryLine, referralLine, generalLines };
 }
 
 export function validateSignInFields(email: string, password: string, minPasswordLen = MIN_PASSWORD_SIGNIN_LEN) {
@@ -366,6 +384,7 @@ export function applySignUpApiErrors(
         setExpiryError: (s: string) => void;
         setReferralError: (s: string) => void;
         setConfirmPasswordError: (s: string) => void;
+        setOtpError?: (s: string) => void;
         setErrorMsg: (s: string) => void;
     }
 ) {
@@ -377,6 +396,7 @@ export function applySignUpApiErrors(
         setExpiryError,
         setReferralError,
         setConfirmPasswordError,
+        setOtpError,
         setErrorMsg,
     } = setters;
     const status = err?.status;
@@ -396,7 +416,19 @@ export function applySignUpApiErrors(
         setExpiryError("");
         setReferralError("");
         setConfirmPasswordError("");
+        setOtpError?.("");
     };
+
+    const invalidOtp =
+        status === 401 &&
+        (flatMessage.toLowerCase().includes("invalid") || flatMessage.toLowerCase().includes("expired"));
+
+    if (invalidOtp) {
+        clearFields();
+        if (setOtpError) setOtpError("Invalid or expired code. Please try again or request a new one.");
+        else setErrorMsg("Invalid or expired code. Please try again or request a new one.");
+        return;
+    }
 
     if (status === 400 || status === 422) {
         if (validationLines.length > 0) {
@@ -405,6 +437,7 @@ export function applySignUpApiErrors(
             setNameError(p.nameLine);
             setEmailError(p.emailLine);
             setPasswordError(p.passwordLine);
+            setOtpError?.(p.otpLine);
             setReraError(p.reraLine);
             setExpiryError(p.expiryLine);
             setReferralError(p.referralLine);
@@ -441,6 +474,7 @@ export function applySignUpApiErrors(
             setNameError(p.nameLine);
             setEmailError(p.emailLine);
             setPasswordError(p.passwordLine);
+            setOtpError?.(p.otpLine);
             setReraError(p.reraLine);
             setExpiryError(p.expiryLine);
             setReferralError(p.referralLine);
@@ -449,4 +483,15 @@ export function applySignUpApiErrors(
             setErrorMsg(flatMessage || "Something went wrong. Please try again.");
         }
     }
+}
+
+export function formatResendCooldownMessage(retryAfterSeconds?: number): string {
+    if (!retryAfterSeconds || retryAfterSeconds <= 0) {
+        return "Please wait a moment before requesting another code.";
+    }
+    if (retryAfterSeconds < 60) {
+        return `Please wait ${retryAfterSeconds} seconds before requesting another code.`;
+    }
+    const minutes = Math.ceil(retryAfterSeconds / 60);
+    return `Please wait ${minutes} minute${minutes === 1 ? "" : "s"} before requesting another code.`;
 }

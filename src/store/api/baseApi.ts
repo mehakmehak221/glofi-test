@@ -10,6 +10,8 @@ export const baseApi = createApi({
     prepareHeaders: (headers, { endpoint }) => {
       const publicEndpoints = [
         'login',
+        'sendRegistrationOtp',
+        'verifyRegistrationOtp',
         'register',
         'registerAgent',
         'getAssets',
