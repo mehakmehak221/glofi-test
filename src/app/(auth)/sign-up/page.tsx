@@ -158,7 +158,7 @@ function SignUpPageContent() {
             localStorage.setItem("userType", role);
             router.push("/onboarding");
         } else {
-            router.push("/sign-in?message=Registration successful. Please sign in.");
+            router.push(`/sign-in?message=Registration successful. Please sign in.&role=${encodeURIComponent(userType)}`);
         }
     };
 
@@ -233,6 +233,7 @@ function SignUpPageContent() {
         setExpiryError(nextExpiryErr);
         setReferralError(nextReferralErr);
         if (nextNameErr || nextEmailErr || nextPassErr || nextConfirmErr || nextReraErr || nextExpiryErr || nextReferralErr) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
             return;
         }
 
@@ -267,6 +268,7 @@ function SignUpPageContent() {
                     setErrorMsg,
                 });
             }
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
     };
 
@@ -281,6 +283,7 @@ function SignUpPageContent() {
 
         if (!isValidOtp(normalizedOtp)) {
             setOtpError("Please enter the 6-digit code from your email.");
+            window.scrollTo({ top: 0, behavior: "smooth" });
             return;
         }
 
@@ -302,6 +305,7 @@ function SignUpPageContent() {
                 setOtpError,
                 setErrorMsg,
             });
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
     };
 
@@ -324,7 +328,7 @@ function SignUpPageContent() {
                 <h2 className="text-white font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
                 <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">
                     Already have an account?{" "}
-                    <Link href="/sign-in" className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors">
+                    <Link href={`/sign-in?role=${encodeURIComponent(userType)}`} className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors">
                         Sign in
                     </Link>
                 </p>

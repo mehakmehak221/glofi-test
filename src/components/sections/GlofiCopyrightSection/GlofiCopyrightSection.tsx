@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import {
     InstagramIcon,
     XIcon,
@@ -11,6 +12,17 @@ import {
 } from '../../VectorImages';
 
 export default function GlofiCopyrightSection() {
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const goHome = () => {
+        if (pathname === '/') {
+            window.location.assign('/');
+            return;
+        }
+        router.push('/');
+    };
+
     return (
         <section id="support" className="w-full bg-black ">
             <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-16 xl:px-24 2xl:px-32 py-10 sm:py-14 lg:py-16">
@@ -19,8 +31,15 @@ export default function GlofiCopyrightSection() {
                     <div className="flex flex-col items-start flex-shrink-0">
                         <Link
                             href="/"
-                            className="flex items-center flex-shrink-0 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-300)]"
+                            className="flex items-center flex-shrink-0 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-300)] cursor-pointer"
                             aria-label="GloFi Estate — Go to homepage"
+                            onClick={(e) => {
+                                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                                    return;
+                                }
+                                e.preventDefault();
+                                goHome();
+                            }}
                         >
                             <Image
                                 src="/assets/images/branding/logo.png"

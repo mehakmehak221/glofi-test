@@ -47,10 +47,22 @@ export default function PremiumPropertySection() {
         );
     }
 
+    const isFew = assets.length <= 2;
+    const isSingle = assets.length === 1;
+    const isDouble = assets.length === 2;
+
+    const listWrapperClasses = isFew
+        ? "premium-list-section !block !h-auto !overflow-visible"
+        : "premium-list-section overflow-x-auto scrollbar-hide";
+
+    const containerClasses = isFew
+        ? `grid w-full gap-4 sm:gap-6 pb-4 ${isSingle ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`
+        : "flex gap-3 sm:gap-4 lg:gap-6 pb-4";
+
     if (assets.length === 0) return null;
 
     return (
-        <section className="premium-section-wrapper py-8 sm:py-10 lg:py-12 xl:py-14">
+        <section className={`premium-section-wrapper py-8 sm:py-10 lg:py-12 xl:py-14 ${isFew ? '!px-0' : ''}`}>
             <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
 
                 {/* Header — fades up on scroll */}
@@ -70,9 +82,9 @@ export default function PremiumPropertySection() {
                 </motion.div>
 
                 {/* Cards — staggered slide-in on scroll */}
-                <div className="premium-list-section overflow-x-auto scrollbar-hide">
+                <div className={listWrapperClasses}>
                     <motion.div 
-                        className="flex gap-3 sm:gap-4 lg:gap-6 pb-4"
+                        className={containerClasses}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}
@@ -84,15 +96,23 @@ export default function PremiumPropertySection() {
                                 ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
                                 : "/assets/images/content/img_ext_0.jpeg";
 
+                            const cardClasses = isFew
+                                ? "premium-card-exact group !w-full !max-w-none !h-auto"
+                                : "premium-card-exact group flex-shrink-0 w-56 sm:w-64 md:w-72 lg:w-80 xl:w-[320px] 2xl:w-[360px]";
+
+                            const innerClasses = isFew
+                                ? `relative premium-card-exact__inner bg-[var(--color-bg-card)] w-full flex items-center justify-center rounded-2xl overflow-hidden transition-all duration-500 group-hover:scale-[1.03] border border-white/5 ${
+                                    isSingle ? 'h-64 sm:h-72 md:h-80 lg:h-96 xl:h-[375px]' : 'h-48 sm:h-56 md:h-64 lg:h-72 xl:h-[375px]'
+                                  }`
+                                : "relative premium-card-exact__inner bg-[var(--color-bg-card)] w-full h-48 sm:h-56 md:h-64 lg:h-72 flex items-center justify-center rounded-2xl overflow-hidden transition-all duration-500 group-hover:scale-[1.03] border border-white/5";
+
                             return (
-                                <Link key={asset.id} href="/explore">
+                                <Link key={asset.id} href="/explore" className={isFew ? "w-full block" : ""}>
                                     <motion.div
                                         variants={itemVariants}
-                                        className="premium-card-exact group flex-shrink-0 w-56 sm:w-64 md:w-72 lg:w-80 xl:w-[320px] 2xl:w-[360px]"
+                                        className={cardClasses}
                                     >
-                                        <div className="relative premium-card-exact__inner bg-[var(--color-bg-card)] w-full h-48 sm:h-56 md:h-64 lg:h-72 flex items-center justify-center rounded-2xl overflow-hidden
-                                            transition-all duration-500
-                                            group-hover:scale-[1.03] border border-white/5">
+                                        <div className={innerClasses}>
 
                                             <Image
                                                 src={imageUrl}

@@ -12,9 +12,20 @@ import { useLoginMutation } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
 import { applySignInApiErrors, FIELD_ERROR_CLASSES, validateSignInFields } from "@/utils/authFormErrors";
 
-export default function SignInPage() {
+const SIGNIN_ROLES = ["Investor", "Partner", "Agent"] as const;
+type SigninRole = (typeof SIGNIN_ROLES)[number];
+
+function parseRoleQuery(raw: string | null): SigninRole | null {
+    if (!raw) return null;
+    const t = raw.trim();
+    return SIGNIN_ROLES.find((r) => r.toLowerCase() === t.toLowerCase()) ?? null;
+}
+
+function SignInPageContent() {
     const router = useRouter();
-    const [userType, setUserType] = useState("Investor");
+    const searchParams = useSearchParams();
+    const roleParam = searchParams.get("role");
+    const [userType, setUserType] = useState<string>(() => parseRoleQuery(roleParam) ?? "Investor");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +34,11 @@ export default function SignInPage() {
     const [passwordError, setPasswordError] = useState("");
 
     const [login, { isLoading }] = useLoginMutation();
+
+    useEffect(() => {
+        const next = parseRoleQuery(roleParam);
+        if (next) setUserType(next);
+    }, [roleParam]);
 
     const handleUserTypeChange = (next: string) => {
         if (next === userType) return;
@@ -42,6 +58,7 @@ export default function SignInPage() {
         setEmailError(nextEmailErr);
         setPasswordError(nextPassErr);
         if (nextEmailErr || nextPassErr) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
             return;
         }
 
@@ -90,6 +107,7 @@ export default function SignInPage() {
                 setPasswordError,
                 setErrorMsg,
             });
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
     };
 
@@ -266,5 +284,23 @@ function SearchParamsHandler({ setErrorMsg }: { setErrorMsg: (msg: string) => vo
         >
             {message}
         </motion.div>
+    );
+}
+
+function SignInPageFallback() {
+    return (
+        <div className="flex flex-col gap-6 min-h-[40vh] justify-center font-montserrat" aria-hidden>
+            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-10 w-40 animate-pulse" />
+            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-24 w-full max-w-md animate-pulse" />
+            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-56 w-full max-w-md animate-pulse" />
+        </div>
+    );
+}
+
+export default function SignInPage() {
+    return (
+        <Suspense fallback={<SignInPageFallback />}>
+            <SignInPageContent />
+        </Suspense>
     );
 }

@@ -182,11 +182,19 @@ export function partitionSignInValidationLines(lines: string[], minPasswordLen: 
     let passwordLine = "";
     const generalLines: string[] = [];
     for (const raw of lines) {
-        const friendly = humanizeApiValidationLine(raw, minPasswordLen);
         const low = raw.toLowerCase();
-        if (low.includes("email")) emailLine = friendly;
-        else if (low.includes("password")) passwordLine = friendly;
-        else generalLines.push(friendly);
+        if (low.includes("email")) {
+            if (low.includes("empty") || low.includes("require") || low.includes("blank")) {
+                emailLine = "Please enter email ID";
+            } else {
+                emailLine = "Please enter a valid email address.";
+            }
+        } else if (low.includes("password")) {
+            passwordLine = "Please enter valid password";
+        } else {
+            const friendly = humanizeApiValidationLine(raw, minPasswordLen);
+            generalLines.push(friendly);
+        }
     }
     return { emailLine, passwordLine, generalLines };
 }
@@ -222,15 +230,13 @@ export function validateSignInFields(email: string, password: string, minPasswor
     let passwordError = "";
 
     if (!trimmedEmail) {
-        emailError = "Please enter your email address.";
+        emailError = "Please enter email ID";
     } else if (!EMAIL_PATTERN.test(trimmedEmail)) {
         emailError = "Please enter a valid email address.";
     }
 
     if (!password.trim()) {
-        passwordError = "Please enter your password.";
-    } else if (password.length < minPasswordLen) {
-        passwordError = `Password must be at least ${minPasswordLen} characters.`;
+        passwordError = "Please enter valid password";
     }
 
     return { emailError, passwordError };
@@ -314,11 +320,11 @@ export function applySignInApiErrors(
     if (status === 401) {
         setEmailError("");
         setPasswordError("");
-        setErrorMsg("Incorrect email or password. Please try again.");
+        setErrorMsg("Invalid email or password");
     } else if (status === 403) {
         setEmailError("");
         setPasswordError("");
-        setErrorMsg("Access denied. Please check your account type (Investor/Partner/Agent).");
+        setErrorMsg("Incorrect credentials");
     } else if (status === 400) {
         if (validationLines.length > 0) {
             const { emailLine, passwordLine, generalLines } = partitionSignInValidationLines(
@@ -334,12 +340,12 @@ export function applySignInApiErrors(
             setErrorMsg("");
         } else if (isMachinePasswordLengthMessage(flatMessage)) {
             setEmailError("");
-            setPasswordError(`Password must be at least ${MIN_PASSWORD_SIGNIN_LEN} characters.`);
+            setPasswordError("Please enter valid password");
             setErrorMsg("");
         } else {
             setEmailError("");
             setPasswordError("");
-            setErrorMsg(flatMessage || "We couldn't sign you in. Please check your details and try again.");
+            setErrorMsg(flatMessage || "Invalid email or password");
         }
     } else if (status === 404) {
         setEmailError("");
@@ -364,7 +370,7 @@ export function applySignInApiErrors(
             setErrorMsg("");
         } else if (isMachinePasswordLengthMessage(flatMessage)) {
             setEmailError("");
-            setPasswordError(`Password must be at least ${MIN_PASSWORD_SIGNIN_LEN} characters.`);
+            setPasswordError("Please enter valid password");
             setErrorMsg("");
         } else {
             setEmailError("");
