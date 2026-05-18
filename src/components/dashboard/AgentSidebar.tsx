@@ -85,7 +85,7 @@ export default function AgentSidebar() {
                             alt="Glofi Logo"
                             width={120}
                             height={40}
-                            className="h-7 w-auto object-contain"
+                            className="h-10 w-auto object-contain"
                         />
                        
                     </motion.div>

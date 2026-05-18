@@ -20,7 +20,7 @@ export default function AuthLeftPanel() {
         
         <div>
           <div className="flex items-baseline gap-3">
-            <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={112} height={28} className="h-7 w-auto translate-y-[2px]" priority />
+            <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={135} height={45} className="h-9 w-auto translate-y-[2px]" priority />
            
           </div>
         </div>

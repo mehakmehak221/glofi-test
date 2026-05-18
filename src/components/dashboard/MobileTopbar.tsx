@@ -30,9 +30,9 @@ export default function MobileTopbar() {
                     <Image
                         src={isLight ? "/assets/images/branding/light-logo.png" : "/assets/images/branding/logo.png"}
                         alt="Glofi Logo"
-                        width={80}
-                        height={24}
-                        className="h-6 w-auto object-contain flex-shrink-0"
+                        width={107}
+                        height={32}
+                        className="h-8 w-auto object-contain flex-shrink-0"
                     />
                    
                 </Link>
