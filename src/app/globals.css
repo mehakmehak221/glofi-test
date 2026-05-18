@@ -948,8 +948,6 @@
     margin: 0 auto;
     padding: 48px 24px 40px;
     background: linear-gradient(180deg, #030A08 0%, #031D18 100%);
-    border-bottom: 1px solid var(--color-primary-200);
-    border-top: 1px solid var(--color-primary-200);
   }
 
   @media (min-width: 768px) {
@@ -974,9 +972,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 141px;
+    width: auto;
+    min-width: 200px;
     height: 42px;
-    padding: 8px 16px;
+    padding: 8px 20px;
     border-radius: 50px;
     background: var(--color-gray-900);
     border: 1px solid var(--color-primary-100);
@@ -986,6 +985,7 @@
     line-height: 24px;
     text-align: center;
     color: var(--color-primary-100);
+    white-space: nowrap;
   }
 
   .how-it-works-title {

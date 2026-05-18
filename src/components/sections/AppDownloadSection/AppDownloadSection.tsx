@@ -30,20 +30,21 @@ export default function AppDownloadSection() {
                           
                             
                             <div className="flex flex-wrap justify-center md:justify-start gap-4">
-                               
+                                
                                 <Link 
                                     href="https://apps.apple.com/in/app/glofi-estate/id6764258977" 
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="transition-transform hover:scale-105 active:scale-95"
                                 >
-                                    <div className="bg-white/5 border border-white/10 rounded-xl px-5 py-2.5 flex items-center gap-3 backdrop-blur-sm">
-                                        <svg className="w-8 h-8 text-white" viewBox="0 0 384 512" fill="currentColor">
-                                            <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
+                                    <div className="bg-black border border-white/20 rounded-[14px] px-5 py-2.5 flex items-center gap-3.5 h-[64px] min-w-[190px] shadow-lg">
+                                        <svg width="24" height="29" viewBox="0 0 24 29" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                                            <path d="M20.0454 15.316C20.06 14.2121 20.3603 13.1297 20.9185 12.1696C21.4766 11.2095 22.2745 10.4028 23.2378 9.82464C22.6258 8.97138 21.8185 8.26918 20.8799 7.77381C19.9414 7.27845 18.8975 7.00356 17.8311 6.97099C15.5563 6.73786 13.3509 8.29993 12.1917 8.29993C11.0101 8.29993 9.22531 6.99413 7.30339 7.03273C6.06025 7.07194 4.84871 7.42487 3.78682 8.05713C2.72493 8.68939 1.8489 9.57942 1.24408 10.6405C-1.37578 15.069 0.578406 21.5773 3.08806 25.157C4.3437 26.9099 5.81117 28.8678 7.73135 28.7984C9.61036 28.7223 10.3121 27.6286 12.5802 27.6286C14.8273 27.6286 15.4857 28.7984 17.4448 28.7543C19.4611 28.7223 20.7314 26.9936 21.943 25.2242C22.8452 23.9752 23.5394 22.5948 24 21.1342C22.8286 20.6505 21.829 19.8408 21.1257 18.8062C20.4225 17.7715 20.0468 16.5577 20.0454 15.316Z" fill="white"/>
+                                            <path d="M16.3452 4.61656C17.4446 3.32811 17.9862 1.67203 17.8551 0C16.1755 0.172223 14.6241 0.955915 13.5099 2.19493C12.9651 2.80022 12.5479 3.50439 12.282 4.26721C12.0162 5.03002 11.9069 5.83651 11.9605 6.64056C12.8006 6.649 13.6317 6.47124 14.3912 6.12064C15.1507 5.77005 15.8188 5.25578 16.3452 4.61656Z" fill="white"/>
                                         </svg>
-                                        <div className="text-left">
-                                            <div className="text-[10px] uppercase tracking-wider text-gray-400">Download on the</div>
-                                            <div className="text-lg font-semibold leading-none">App Store</div>
+                                        <div className="text-left flex flex-col justify-center">
+                                            <span className="text-[10px] tracking-wide text-white/90 font-Montserrat font-normal leading-tight">Download on the</span>
+                                            <span className="text-xl font-semibold leading-tight text-white font-Montserrat mt-0.5">App Store</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -55,13 +56,16 @@ export default function AppDownloadSection() {
                                     rel="noopener noreferrer"
                                     className="transition-transform hover:scale-105 active:scale-95"
                                 >
-                                    <div className="bg-white/5 border border-white/10 rounded-xl px-5 py-2.5 flex items-center gap-3 backdrop-blur-sm">
-                                        <svg className="w-8 h-8 text-white" viewBox="0 0 512 512" fill="currentColor">
-                                            <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z" />
+                                    <div className="bg-black border border-white/20 rounded-[14px] px-5 py-2.5 flex items-center gap-3.5 h-[64px] min-w-[190px] shadow-lg">
+                                        <svg width="26" height="29" viewBox="0 0 26 29" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                                            <path d="M11.7657 13.7543L0.107422 26.4074C0.108517 26.4096 0.108517 26.413 0.109612 26.4152C0.46767 27.7892 1.69405 28.8003 3.15037 28.8003C3.7329 28.8003 4.2793 28.6391 4.74795 28.3569L4.78518 28.3345L17.9074 20.5915L11.7657 13.7543Z" fill="#EA4335"/>
+                                            <path d="M23.559 11.5994L23.5481 11.5916L17.8826 8.23348L11.5 14.0416L17.9056 20.5898L23.5404 17.2653C24.5281 16.7189 25.1993 15.654 25.1993 14.4268C25.1993 13.2063 24.5379 12.147 23.559 11.5994Z" fill="#FBBC04"/>
+                                            <path d="M0.107308 2.39209C0.0372293 2.65635 0 2.93405 0 3.2207V25.5797C0 25.8664 0.0372293 26.1441 0.108403 26.4072L12.1663 14.0777L0.107308 2.39209Z" fill="#4285F4"/>
+                                            <path d="M11.8522 14.4001L17.8855 8.23148L4.77861 0.460464C4.30229 0.168211 3.74604 0.000250816 3.15147 0.000250816C1.69514 0.000250816 0.466575 1.01362 0.108516 2.38866C0.108516 2.38978 0.107422 2.3909 0.107422 2.39202L11.8522 14.4001Z" fill="#34A853"/>
                                         </svg>
-                                        <div className="text-left">
-                                            <div className="text-[10px] uppercase tracking-wider text-gray-400">Get it on</div>
-                                            <div className="text-lg font-semibold leading-none">Google Play</div>
+                                        <div className="text-left flex flex-col justify-center">
+                                            <span className="text-[10px] tracking-[0.08em] text-white/90 font-Montserrat font-normal leading-tight uppercase">GET IT ON</span>
+                                            <span className="text-xl font-semibold leading-tight text-white font-Montserrat mt-0.5">Google Play</span>
                                         </div>
                                     </div>
                                 </Link>

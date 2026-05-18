@@ -22,7 +22,7 @@ export default function Home() {
         <PropertyInvestmentCategoriesSection />
         <InvestmentSection />
         <JoinNewGenerationSection />
-        <AppDownloadSection />
+        {/* <AppDownloadSection /> */}
         <GlofiCopyrightSection />
 
         <div className="h-16 sm:h-20" />
