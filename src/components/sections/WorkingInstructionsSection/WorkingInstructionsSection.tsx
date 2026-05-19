@@ -72,7 +72,7 @@ export default function WorkingInstructionsSection() {
                             How It Works
                         </div>
 
-                        <h2 className="how-it-works-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white font-Montserrat font-bold">
+                        <h2 className="how-it-works-title text-2xl sm:text-3xl md:text-4xl lg:text-4xl text-white font-Montserrat font-bold">
                             Get GloFi-Ready In Just 3 Steps
                         </h2>
                     </motion.div>

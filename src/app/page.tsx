@@ -1,5 +1,6 @@
 import Navbar from "@/components/sections/Navbar/Navbar";
 import HeroSection from "@/components/sections/HeroSection/HeroSection";
+import AssetPartnersSection from "@/components/sections/AssetPartnersSection/AssetPartnersSection";
 import WorkingInstructionsSection from "@/components/sections/WorkingInstructionsSection/WorkingInstructionsSection";
 import PremiumPropertySection from "@/components/sections/PremiumPropertySection/PremiumPropertySection";
 import GlobalScaleSection from "@/components/sections/GlobalScaleSection/GlobalScaleSection";
@@ -16,6 +17,7 @@ export default function Home() {
       <Navbar />
       <main className="w-full">
         <HeroSection />
+        <AssetPartnersSection />
         <WorkingInstructionsSection />
         <PremiumPropertySection />
         <GlobalScaleSection />
@@ -32,3 +34,4 @@ export default function Home() {
     </div>
   );
 }
+
