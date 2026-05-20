@@ -5,12 +5,12 @@ import {
     useCreateAssetMutation, 
     useUploadFileMutation, 
     useSubmitAssetForReviewMutation,
-    useGetPartnerAssetByIdQuery,
-    useUpdateAssetPublicMutation 
+    useGetAssetByIdQuery,
+    useUpdateAssetByIdMutation,
 } from "@/store/api/assetApi";
 import { useGetKybStatusQuery } from "@/store/api/kybApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
-import { validateFileUpload } from "@/utils/assetUtils";
+import { validateFileUpload, unwrapAssetResponse, type UpdateAssetPayload } from "@/utils/assetUtils";
 import { Country, State, City } from "country-state-city";
 import KYBModal from "./KYBModal";
 import KYCModal from "./KYCModal";
@@ -129,6 +129,82 @@ const CATEGORIES = [
     { label: "Residential", value: "RESIDENTIAL" }
 ];
 
+function toFormString(value: unknown): string {
+    if (value == null || value === "") return "";
+    return String(value);
+}
+
+function resolveLocationIsoCodes(countryName: string, stateName: string) {
+    let countryIso = "";
+    let stateIso = "";
+    if (!countryName) return { countryIso, stateIso };
+
+    const country = Country.getAllCountries().find(
+        (c) => c.name === countryName || c.isoCode === countryName
+    );
+    if (!country) return { countryIso, stateIso };
+
+    countryIso = country.isoCode;
+    if (!stateName) return { countryIso, stateIso };
+
+    const state = State.getStatesOfCountry(country.isoCode).find(
+        (s) => s.name === stateName || s.isoCode === stateName
+    );
+    if (state) stateIso = state.isoCode;
+
+    return { countryIso, stateIso };
+}
+
+function assetToFormData(asset: Record<string, unknown>) {
+    return {
+        title: toFormString(asset.title),
+        location: toFormString(asset.location),
+        valuation: toFormString(asset.valuation),
+        totalFractions: toFormString(asset.totalFractions),
+        expectedYield: toFormString(asset.expectedYield),
+        expectedAnnualRent: toFormString(asset.expectedAnnualRent),
+        rentalGrowthRate: toFormString(asset.rentalGrowthRate),
+        expectedAppreciationRate: toFormString(asset.expectedAppreciationRate),
+        operatingCostRate: toFormString(asset.operatingCostRate),
+        holdingPeriod: toFormString(asset.holdingPeriod),
+        description: toFormString(asset.description),
+        riskRating: toFormString(asset.riskRating) || "MEDIUM",
+        category: toFormString(asset.category) || "DUBAI_SKYSCRAPER",
+        country: toFormString(asset.country),
+        state: toFormString(asset.state),
+        city: toFormString(asset.city),
+        titleDeedUrl: toFormString(asset.titleDeedUrl),
+        valuationReportUrl: toFormString(asset.valuationReportUrl),
+        legalOpinionUrl: toFormString(asset.legalOpinionUrl),
+        images: Array.isArray(asset.images) ? (asset.images as string[]) : [],
+    };
+}
+
+function formDataToUpdatePayload(formData: ReturnType<typeof assetToFormData>): UpdateAssetPayload {
+    return {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        location: formData.location,
+        city: formData.city,
+        state: formData.state,
+        country: formData.country,
+        valuation: Number(formData.valuation),
+        totalFractions: Number(formData.totalFractions),
+        expectedYield: Number(formData.expectedYield),
+        expectedAnnualRent: Number(formData.expectedAnnualRent),
+        rentalGrowthRate: Number(formData.rentalGrowthRate),
+        expectedAppreciationRate: Number(formData.expectedAppreciationRate),
+        operatingCostRate: Number(formData.operatingCostRate),
+        holdingPeriod: Number(formData.holdingPeriod),
+        riskRating: formData.riskRating,
+        titleDeedUrl: formData.titleDeedUrl,
+        valuationReportUrl: formData.valuationReportUrl,
+        legalOpinionUrl: formData.legalOpinionUrl,
+        images: formData.images,
+    };
+}
+
 const UploadArea = ({ label, onUpload, value, isUploading }) => {
     const fileInputRef = useRef(null);
 
@@ -178,7 +254,7 @@ const UploadArea = ({ label, onUpload, value, isUploading }) => {
     );
 };
 
-export default function NewListingForm({ onBack, editId }) {
+export default function NewListingForm({ onBack, editId, initialProperty = null }) {
     const [formData, setFormData] = useState({
         title: "",
         location: "",
@@ -207,11 +283,15 @@ export default function NewListingForm({ onBack, editId }) {
     const [showKybModal, setShowKybModal] = useState(false);
     const [showKycModal, setShowKycModal] = useState(false);
 
-    const { data: assetData, isLoading: isLoadingAsset } = useGetPartnerAssetByIdQuery(editId, { skip: !editId });
+    const {
+        data: assetData,
+        isLoading: isLoadingAsset,
+        isError: isAssetLoadError,
+    } = useGetAssetByIdQuery(editId, { skip: !editId });
     const { data: kybStatus } = useGetKybStatusQuery();
     const { data: kycStatus } = useGetKycStatusQuery();
     const [createAsset, { isLoading: isCreating }] = useCreateAssetMutation();
-    const [updateAsset, { isLoading: isUpdating }] = useUpdateAssetPublicMutation();
+    const [updateAssetById, { isLoading: isUpdating }] = useUpdateAssetByIdMutation();
     const [submitAssetForReview] = useSubmitAssetForReviewMutation();
     const [uploadFile] = useUploadFileMutation();
     const [uploadingField, setUploadingField] = useState(null);
@@ -220,32 +300,18 @@ export default function NewListingForm({ onBack, editId }) {
     const isSubmitting = isCreating || isUpdating;
 
     useEffect(() => {
-        if (assetData?.data) {
-            const asset = assetData.data;
-            setFormData({
-                title: asset.title || "",
-                location: asset.location || "",
-                valuation: asset.valuation || "",
-                totalFractions: asset.totalFractions || "",
-                expectedYield: asset.expectedYield || "",
-                expectedAnnualRent: asset.expectedAnnualRent || "",
-                rentalGrowthRate: asset.rentalGrowthRate || "",
-                expectedAppreciationRate: asset.expectedAppreciationRate || "",
-                operatingCostRate: asset.operatingCostRate || "",
-                holdingPeriod: asset.holdingPeriod || "",
-                description: asset.description || "",
-                riskRating: asset.riskRating || "MEDIUM",
-                category: asset.category || "DUBAI_SKYSCRAPER",
-                country: asset.country || "",
-                state: asset.state || "",
-                city: asset.city || "",
-                titleDeedUrl: asset.titleDeedUrl || "",
-                valuationReportUrl: asset.valuationReportUrl || "",
-                legalOpinionUrl: asset.legalOpinionUrl || "",
-                images: asset.images || []
-            });
-        }
-    }, [assetData]);
+        if (!editId) return;
+
+        const asset = unwrapAssetResponse(assetData) ?? unwrapAssetResponse(initialProperty);
+        if (!asset) return;
+
+        const nextForm = assetToFormData(asset);
+        setFormData(nextForm);
+
+        const { countryIso, stateIso } = resolveLocationIsoCodes(nextForm.country, nextForm.state);
+        setCountryIsoCode(countryIso);
+        setStateIsoCode(stateIso);
+    }, [assetData, editId, initialProperty]);
 
     const handleFileUpload = async (file, field) => {
         setUploadingField(field);
@@ -288,6 +354,14 @@ export default function NewListingForm({ onBack, editId }) {
         }
 
         try {
+            if (editId) {
+                const updatePayload = formDataToUpdatePayload(formData);
+                await updateAssetById({ id: editId, ...updatePayload }).unwrap();
+                alert('Asset updated successfully!');
+                onBack();
+                return;
+            }
+
             const payload = {
                 ...formData,
                 valuation: Number(formData.valuation),
@@ -301,22 +375,13 @@ export default function NewListingForm({ onBack, editId }) {
                 fractionPrice: Number(formData.valuation) / Number(formData.totalFractions),
             };
 
-            console.log('Saving asset with payload:', payload);
+            await createAsset(payload).unwrap();
+            alert('Asset created and saved as draft!');
 
-            if (editId) {
-                await updateAsset({ id: editId, ...payload }).unwrap();
-                alert('Asset updated successfully!');
+            if (kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED' || kybStatus?.status === 'PENDING' || kybStatus?.status === 'UNDER_REVIEW') {
                 onBack();
             } else {
-                await createAsset(payload).unwrap();
-                alert('Asset created and saved as draft!');
-                
-
-                if (kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED' || kybStatus?.status === 'PENDING' || kybStatus?.status === 'UNDER_REVIEW') {
-                    onBack();
-                } else {
-                    setShowKybModal(true);
-                }
+                setShowKybModal(true);
             }
         } catch (err: any) {
             console.error('Failed to save asset. Full error:', err);
@@ -349,9 +414,13 @@ export default function NewListingForm({ onBack, editId }) {
                 </button>
             </div>
 
-            {isLoadingAsset ? (
+            {editId && isLoadingAsset && !initialProperty && !unwrapAssetResponse(assetData) ? (
                 <div className="flex items-center justify-center p-20">
                     <LoadingSpinner />
+                </div>
+            ) : isAssetLoadError && editId && !initialProperty ? (
+                <div className="rounded-md border border-red-500/20 bg-red-500/10 p-6 text-center text-red-500 text-sm font-montserrat">
+                    Could not load property details. Go back and try again.
                 </div>
             ) : (
                 <div className="bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-md p-4 sm:p-6 lg:p-10 relative z-10">

@@ -1,4 +1,5 @@
 import { baseApi } from './baseApi';
+import { unwrapAssetResponse, type UpdateAssetPayload } from '@/utils/assetUtils';
 
 export const assetApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -29,6 +30,7 @@ export const assetApi = baseApi.injectEndpoints({
         url: `assets/${id}`,
         method: 'GET',
       }),
+      transformResponse: (response: unknown) => unwrapAssetResponse(response) ?? response,
     }),
     getMyListings: builder.query<any, { limit?: number; page?: number } | void>({
       query: (arg) => {
@@ -75,12 +77,16 @@ export const assetApi = baseApi.injectEndpoints({
         };
       },
     }),
-    updateAssetPublic: builder.mutation<any, { id: string | number; [key: string]: any }>({
+    updateAssetById: builder.mutation<
+      unknown,
+      { id: string | number } & UpdateAssetPayload
+    >({
       query: ({ id, ...patch }) => ({
         url: `assets/${id}`,
         method: 'PATCH',
         body: patch,
       }),
+      invalidatesTags: ['Asset'],
     }),
     getAssetReturns: builder.query<any, string | number>({
       query: (id) => ({
@@ -125,7 +131,7 @@ export const {
   useGetAssetsQuery,
   useGetAssetByIdQuery,
   useSubmitAssetForReviewMutation,
-  useUpdateAssetPublicMutation,
+  useUpdateAssetByIdMutation,
   useGetAssetReturnsQuery,
   useGetAssetCashflowQuery,
   useGetAssetIrrCurveQuery,

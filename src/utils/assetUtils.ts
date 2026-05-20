@@ -1,4 +1,46 @@
 
+export function unwrapAssetResponse(response: unknown): Record<string, unknown> | null {
+  if (!response || typeof response !== "object") return null;
+  const r = response as Record<string, unknown>;
+
+  if (typeof r.title === "string" || r.id != null) {
+    return r;
+  }
+
+  if (r.asset && typeof r.asset === "object") {
+    return unwrapAssetResponse(r.asset);
+  }
+
+  if (r.data && typeof r.data === "object") {
+    return unwrapAssetResponse(r.data);
+  }
+
+  return null;
+}
+
+export type UpdateAssetPayload = {
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  city: string;
+  state: string;
+  country: string;
+  valuation: number;
+  totalFractions: number;
+  expectedYield: number;
+  expectedAnnualRent: number;
+  rentalGrowthRate: number;
+  expectedAppreciationRate: number;
+  operatingCostRate: number;
+  holdingPeriod: number;
+  riskRating: string;
+  titleDeedUrl: string;
+  valuationReportUrl: string;
+  legalOpinionUrl: string;
+  images: string[];
+};
+
 export const validateFileUpload = (file: File): boolean => {
   const MAX_SIZE = 10 * 1024 * 1024; // 10MB
   const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];

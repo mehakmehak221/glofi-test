@@ -23,9 +23,15 @@ const formatValuation = (val) => {
     return `₹${num.toLocaleString('en-IN')}`;
 };
 
+const EDITABLE_STATUSES = new Set(["DRAFT", "LIVE", "SUSPENDED", "REJECTED", "UNDER_REVIEW", "PENDING_REVIEW"]);
+
 function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) {
     const propertyImage = property.images && property.images.length > 0 ? property.images[0] : null;
-    const isDraft = property.status === 'DRAFT';
+    const status = (property.status || "").toUpperCase();
+    const isDraft = status === "DRAFT";
+    const canEdit = EDITABLE_STATUSES.has(status);
+    const isLive = status === "LIVE";
+    const isSuspended = status === "SUSPENDED";
 
     return (
         <motion.div
@@ -53,8 +59,24 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                     <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1 flex-wrap">
                             <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
-                            <span className="flex items-center gap-1.5 text-[9px] font-bold tracking-[0.1em] text-[var(--sidebar-active-text)] font-montserrat uppercase bg-[var(--sidebar-active-bg)] rounded-md px-2.5 py-1 whitespace-nowrap">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--sidebar-active-text)] animate-pulse" />
+                            <span
+                                className={`flex items-center gap-1.5 text-[9px] font-bold tracking-[0.1em] font-montserrat uppercase rounded-md px-2.5 py-1 whitespace-nowrap ${
+                                    isLive
+                                        ? "text-emerald-600 bg-emerald-500/10"
+                                        : isSuspended
+                                          ? "text-red-500/90 bg-red-500/10"
+                                          : "text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)]"
+                                }`}
+                            >
+                                <span
+                                    className={`w-1.5 h-1.5 rounded-full ${
+                                        isLive
+                                            ? "bg-emerald-500"
+                                            : isSuspended
+                                              ? "bg-red-500/80"
+                                              : "bg-[var(--sidebar-active-text)] animate-pulse"
+                                    }`}
+                                />
                                 {property.status}
                             </span>
                         </div>
@@ -64,26 +86,35 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                         </p>
                     </div>
 
-                    {isDraft && (
+                    {(canEdit || isDraft) && (
                         <div className="flex items-center gap-2 flex-shrink-0">
-                            <button
-                                onClick={() => onSubmitForReview(property.id)}
-                                className="px-3 py-1.5 rounded-lg bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] text-[10px] font-bold uppercase transition-all hover:bg-[var(--color-primary-300)]/20"
-                            >
-                                Submit
-                            </button>
-                            {/* <button
-                                onClick={() => onEdit(property.id)}
-                                className="px-3 py-1.5 rounded-lg bg-[var(--color-bg-surface-subtle)] text-[var(--color-text-muted)] text-[10px] font-bold uppercase transition-all hover:text-white"
-                            >
-                                Edit
-                            </button> */}
-                            <button
-                                onClick={() => onDelete(property.id)}
-                                className="px-3 py-1.5 rounded-lg bg-red-500/5 text-red-500/70 text-[10px] font-bold uppercase transition-all hover:bg-red-500/10 hover:text-red-500"
-                            >
-                                Delete
-                            </button>
+                            {isDraft && (
+                                <button
+                                    type="button"
+                                    onClick={() => onSubmitForReview(property.id)}
+                                    className="px-3 py-1.5 rounded-lg bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] text-[10px] font-bold uppercase transition-all hover:bg-[var(--color-primary-300)]/20"
+                                >
+                                    Submit
+                                </button>
+                            )}
+                            {canEdit && (
+                                <button
+                                    type="button"
+                                    onClick={() => onEdit(property.id)}
+                                    className="px-3 py-1.5 rounded-lg bg-[var(--color-bg-surface-subtle)] border border-[var(--sidebar-border)] text-[var(--color-text-secondary)] text-[10px] font-bold uppercase transition-all hover:text-white hover:border-[var(--color-primary-300)]/30"
+                                >
+                                    Edit
+                                </button>
+                            )}
+                            {isDraft && (
+                                <button
+                                    type="button"
+                                    onClick={() => onDelete(property.id)}
+                                    className="px-3 py-1.5 rounded-lg bg-red-500/5 text-red-500/70 text-[10px] font-bold uppercase transition-all hover:bg-red-500/10 hover:text-red-500"
+                                >
+                                    Delete
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -163,8 +194,11 @@ export default function PartnerPropertiesPage() {
             <AnimatePresence mode="wait">
                 {isAddingNew || editId ? (
                     <NewListingForm
-                        key="form"
+                        key={editId ? `edit-${editId}` : "new"}
                         editId={editId}
+                        initialProperty={
+                            editId ? data?.data?.find((p) => String(p.id) === String(editId)) ?? null : null
+                        }
                         onBack={() => {
                             setIsAddingNew(false);
                             setEditId(null);
