@@ -1,10 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function CookieSection() {
-    const [isVisible, setIsVisible] = useState(true);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const consent = localStorage.getItem('cookie_consent');
+        if (!consent) {
+            setIsVisible(true);
+        }
+    }, []);
+
+    const handleConsent = (value: 'accepted' | 'rejected') => {
+        localStorage.setItem('cookie_consent', value);
+        setIsVisible(false);
+    };
 
     if (!isVisible) return null;
 
@@ -28,13 +40,13 @@ export default function CookieSection() {
                 <div className="cookie-actions flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
                     <button
                         className="btn-cookie-reject h-8 sm:h-10 min-w-16 sm:min-w-20 px-3 sm:px-4 rounded border border-[var(--color-border-subtle)] bg-transparent flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80 text-xs sm:text-sm text-[var(--color-text-muted)]"
-                        onClick={() => setIsVisible(false)}
+                        onClick={() => handleConsent('rejected')}
                     >
                         <span className="text-cookie-reject">Reject</span>
                     </button>
                     <button
                         className="btn-cookie-accept h-8 sm:h-10 min-w-20 sm:min-w-24 px-3 sm:px-4 rounded border border-[var(--color-primary-200)] bg-transparent flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80 text-xs sm:text-sm text-[var(--color-primary-200)]"
-                        onClick={() => setIsVisible(false)}
+                        onClick={() => handleConsent('accepted')}
                     >
                         <span className="text-cookie-accept">Accept All</span>
                     </button>
