@@ -17,6 +17,10 @@ import {
     useVerifyForgotPasswordOtpMutation, 
     useResetPasswordMutation 
 } from "@/store/api/authApi";
+import { 
+    passwordMeetsSignUpStrength, 
+    getSignUpPasswordCriteria 
+} from "@/utils/authFormErrors";
 
 type Step = "EMAIL" | "OTP" | "RESET" | "SUCCESS";
 
@@ -71,8 +75,8 @@ export default function ForgotPasswordPage() {
             return;
         }
 
-        if (password.length < 6) {
-            setErrorMsg("Password must be at least 6 characters long.");
+        if (!passwordMeetsSignUpStrength(password)) {
+            setErrorMsg("Password must meet all requirements below.");
             return;
         }
 
@@ -211,6 +215,21 @@ export default function ForgotPasswordPage() {
                                 {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
                             </button>
                         </div>
+                        <ul
+                            id="reset-password-requirements"
+                            className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 space-y-1.5 text-xs text-[var(--color-text-secondary)] list-none"
+                            aria-label="Password requirements"
+                            aria-live="polite"
+                        >
+                            {getSignUpPasswordCriteria(password).map(({ id, label, met }) => (
+                                <li key={id} className={`flex items-start gap-2 ${met ? "text-emerald-400/95" : ""}`}>
+                                    <span className="mt-0.5 w-3.5 shrink-0 text-center" aria-hidden>
+                                        {met ? "✓" : "○"}
+                                    </span>
+                                    <span>{label}</span>
+                                </li>
+                            ))}
+                        </ul>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}

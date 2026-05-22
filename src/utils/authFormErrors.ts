@@ -1,6 +1,8 @@
 /** Shared validation + API error formatting for auth forms (sign-in / sign-up). */
 
-export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+export const NAME_PATTERN = /^[\p{L}\s.'\-]+$/u;
+export const RERA_PATTERN = /^[A-Z0-9\/\-\s]{8,50}$/i;
 
 export const MIN_PASSWORD_SIGNIN_LEN = 6;
 export const MIN_PASSWORD_SIGNUP_LEN = 8;
@@ -267,6 +269,8 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
         nameError = "Please enter your full name.";
     } else if (trimmedName.length < 2) {
         nameError = "Please enter a name that is at least 2 characters.";
+    } else if (!NAME_PATTERN.test(trimmedName)) {
+        nameError = "Name should only contain letters, spaces, hyphens, or apostrophes.";
     }
 
     if (!trimmedEmail) {
@@ -288,11 +292,24 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
     }
 
     if (userType === "Agent") {
-        if (!form.reraNumber.trim()) {
+        const trimmedRera = form.reraNumber.trim();
+        if (!trimmedRera) {
             reraError = "Please enter your RERA registration number.";
+        } else if (!RERA_PATTERN.test(trimmedRera)) {
+            reraError = "Please enter a valid RERA registration number containing only letters, numbers, slashes, hyphens, and spaces (minimum 8 characters).";
         }
+
         if (!form.expiryDate.trim()) {
             expiryError = "Please select your RERA expiry date.";
+        } else {
+            const expiry = new Date(form.expiryDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (isNaN(expiry.getTime())) {
+                expiryError = "Please enter a valid RERA expiry date.";
+            } else if (expiry <= today) {
+                expiryError = "RERA expiry date must be in the future.";
+            }
         }
     }
 
