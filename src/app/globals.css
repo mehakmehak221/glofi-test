@@ -346,7 +346,7 @@
 
 @utility btn-primary {
   background: var(--color-gradient-Glofi);
-  color: white;
+  color: black;
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-full);
   font-weight: 600;

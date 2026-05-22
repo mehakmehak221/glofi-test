@@ -93,13 +93,26 @@ export default function ForgotPasswordPage() {
 
     return (
         <div className="flex flex-col">
-            <Link
-                href="/sign-in"
-                className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group"
-            >
-                <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
-                Back to Sign In
-            </Link>
+            {step === "EMAIL" || step === "SUCCESS" ? (
+                <Link
+                    href="/sign-in"
+                    className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group"
+                >
+                    <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
+                    Back to Sign In
+                </Link>
+            ) : (
+                <button
+                    onClick={() => {
+                        if (step === "OTP") setStep("EMAIL");
+                        if (step === "RESET") setStep("OTP");
+                    }}
+                    className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group bg-transparent border-none cursor-pointer p-0"
+                >
+                    <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
+                    Back
+                </button>
+            )}
 
             <div className="mb-8">
                 <h2 className="text-white font-bold text-3xl mb-1.5 font-montserrat">

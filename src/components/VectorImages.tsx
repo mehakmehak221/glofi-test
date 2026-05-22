@@ -273,7 +273,7 @@ export const LogoIconPng = ({ className = "w-34 h-62" }) => (
     />
 );
 
-export const LoadingSpinner = ({ className = "h-5 w-5", color = "var(--color-primary-300)" }: { className?: string, color?: string }) => (
+export const LoadingSpinner = ({ className = "h-5 w-5", color = "currentColor" }: { className?: string, color?: string }) => (
  <svg className={`animate-spin ${className}`} width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clipPath="url(#clip0_386_1508)">
 <path d="M13.6945 28.1869C11.3441 26.6935 9.68309 24.3276 9.07702 21.6095C8.47096 18.8915 8.96945 16.0441 10.4628 13.6936C12.0463 11.2219 14.524 9.45803 17.3778 8.77081L21.0173 7.95929" stroke={color} strokeOpacity="0.8" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>

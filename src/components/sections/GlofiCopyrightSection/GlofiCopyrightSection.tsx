@@ -58,7 +58,7 @@ export default function GlofiCopyrightSection() {
                     </div>
 
                     {/* Right: Link Columns */}
-                    <div className="flex flex-row flex-wrap gap-12 sm:gap-20 lg:gap-28 xl:gap-36">
+                    <div className="flex flex-row flex-wrap gap-12 sm:gap-20 lg:gap-28 xl:gap-36 pt-2 lg:pt-3">
                         {/* Column 1: Short links */}
                         <div className="flex flex-col gap-4 min-w-[140px]">
                             <h3 className="text-[#00F4C6] font-montserrat font-bold text-sm sm:text-base uppercase tracking-wider">
