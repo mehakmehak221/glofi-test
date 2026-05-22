@@ -133,9 +133,17 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                         </span>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Yield</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Potential Annual Return</span>
                         <span className="text-sm font-bold text-[var(--color-text-secondary)] font-montserrat">
-                            {property.expectedYield}%
+                            {
+                                (
+                                    parseFloat(property.expectedYield || 0) +
+                                    parseFloat(property.expectedAnnualRent || 0) +
+                                    parseFloat(property.rentalGrowthRate || 0) +
+                                    parseFloat(property.expectedAppreciationRate || 0) -
+                                    parseFloat(property.operatingCostRate || 0)
+                                ).toFixed(2)
+                            }%
                         </span>
                     </div>
                     <div className="flex flex-col gap-1">

@@ -309,7 +309,13 @@ export default function MarketplacePage() {
                                 const imageUrl = propertyImage
                                     ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
                                     : "/assets/images/content/img_ext_0.jpeg";
-                                const rawYield = parseFloat(property.expectedYield || 0);
+                                const expectedYield = parseFloat(property.expectedYield || 0);
+                                const expectedAnnualRent = parseFloat(property.expectedAnnualRent || 0);
+                                const rentalGrowthRate = parseFloat(property.rentalGrowthRate || 0);
+                                const expectedAppreciationRate = parseFloat(property.expectedAppreciationRate || 0);
+                                const operatingCostRate = parseFloat(property.operatingCostRate || 0);
+
+                                const rawYield = expectedYield + expectedAnnualRent + rentalGrowthRate + expectedAppreciationRate - operatingCostRate;
                                 const formattedYield = rawYield.toFixed(2).replace(/\.?0+$/, '');
 
                                 const total = property.totalFractions || 1;

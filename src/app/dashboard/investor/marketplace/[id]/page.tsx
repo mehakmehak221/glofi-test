@@ -240,8 +240,16 @@ export default function PropertyDetailPage() {
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                             >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Yield</p>
-                                <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)] truncate">{Number(property.expectedYield).toFixed(2)}%</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Potential Annual Return</p>
+                                <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)] truncate">{
+                                    (
+                                        parseFloat(property.expectedYield || 0) + 
+                                        parseFloat(property.expectedAnnualRent || 0) + 
+                                        parseFloat(property.rentalGrowthRate || 0) + 
+                                        parseFloat(property.expectedAppreciationRate || 0) - 
+                                        parseFloat(property.operatingCostRate || 0)
+                                    ).toFixed(2)
+                                }%</p>
                             </div>
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
