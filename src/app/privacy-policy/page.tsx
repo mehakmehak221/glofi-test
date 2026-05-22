@@ -2,11 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/sections/Navbar/Navbar';
 import GlofiCopyrightSection from '@/components/sections/GlofiCopyrightSection/GlofiCopyrightSection';
 
 export default function PrivacyPolicyPage() {
+    const router = useRouter();
+
     const fadeIn = {
         initial: { opacity: 0, y: 20 },
         animate: { opacity: 1, y: 0 },
@@ -161,6 +164,18 @@ export default function PrivacyPolicyPage() {
                 </div>
 
                 <div className="container-main relative z-10">
+                    <div className="mb-8">
+                        <button
+                            onClick={() => {
+                                router.back();
+                                setTimeout(() => window.scrollTo(0, 0), 100);
+                            }}
+                            className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-white transition-colors cursor-pointer bg-transparent border-none font-montserrat text-sm p-0"
+                        >
+                            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+                            Go Back
+                        </button>
+                    </div>
                     <motion.div 
                         {...fadeIn}
                         className="text-center max-w-3xl mx-auto"

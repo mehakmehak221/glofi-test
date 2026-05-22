@@ -248,7 +248,7 @@ function SignInPageContent() {
 
             <p className="text-center text-xs text-[var(--color-text-muted)] mt-8 font-montserrat leading-relaxed px-1">
                 By clicking Login you agree to GloFi Estate&apos;s{" "}
-                <Link href="/#terms" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                <Link href="/terms" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
                     Terms &amp; Conditions
                 </Link>{" "}
                 and{" "}

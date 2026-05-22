@@ -100,7 +100,7 @@ export default function GlofiCopyrightSection() {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="#terms" className="text-[#8F8F9F] hover:text-white transition-colors duration-200 text-xs sm:text-sm lg:text-base font-medium">
+                                    <Link href="/terms" className="text-[#8F8F9F] hover:text-white transition-colors duration-200 text-xs sm:text-sm lg:text-base font-medium">
                                         Terms & conditions
                                     </Link>
                                 </li>
