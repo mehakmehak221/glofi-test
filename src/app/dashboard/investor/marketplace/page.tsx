@@ -198,7 +198,7 @@ export default function MarketplacePage() {
                 <h1
                     className="text-xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2"
                     style={{
-                        background: 'var(--color-gradient-text-hero)',
+                        background: 'var(--marketplace-hero-text)',
                         backgroundClip: 'text',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
@@ -367,7 +367,7 @@ export default function MarketplacePage() {
                                                     <p className="text-base font-bold text-[var(--header-text)]">₹{Number(property.fractionPrice).toLocaleString()}</p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Yield</p>
+                                                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-0.5">Potential Annual Return</p>
                                                     <p className="text-base font-bold text-[var(--sidebar-active-text)] truncate">{formattedYield}%</p>
                                                 </div>
                                                 <div>

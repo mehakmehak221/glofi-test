@@ -243,6 +243,9 @@
   --marketplace-hero-text: var(--color-gradient-text-hero);
   --marketplace-card-bg: var(--color-bg-card-alt);
   --marketplace-card-border: var(--color-border-subtle);
+  --marketplace-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --color-text-muted: #9CA3AF;
+  --color-text-secondary: #A1A1AA;
   --marketplace-card-progress-fill-start: #00FFCD;
   --marketplace-card-progress-fill-end: #009976;
   --marketplace-card-progress-text: var(--color-text-muted);
