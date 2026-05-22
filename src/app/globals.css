@@ -331,6 +331,17 @@
   &::placeholder {
     color: var(--color-text-muted);
   }
+
+  &[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(1);
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+  }
+
+  &[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
 }
 
 @utility btn-primary {
