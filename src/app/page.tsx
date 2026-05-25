@@ -10,26 +10,30 @@ import JoinNewGenerationSection from "@/components/sections/JoinNewGenerationSec
 import GlofiCopyrightSection from "@/components/sections/GlofiCopyrightSection/GlofiCopyrightSection";
 import AppDownloadSection from "@/components/sections/AppDownloadSection/AppDownloadSection";
 import CookieSection from "@/components/sections/CookieSection/CookieSection";
+import ValuesSection from "@/components/sections/ValueSection/ValueSection";
+import HowItWorksSection from "@/components/HowItWorksSection/HowItWorksSection";
 
 export default function Home() {
   return (
-    <div className="max-w-[1440px] mx-auto w-full overflow-x-hidden border-x border-white/5 bg-black  shadow-2xl">
+    <div className="landing-page max-w-[1440px] mx-auto w-full overflow-x-hidden bg-white shadow-2xl">
       <Navbar />
       <main className="w-full">
         <HeroSection />
         <AssetPartnersSection />
+        <ValuesSection />
         <WorkingInstructionsSection />
+        <HowItWorksSection />
         <PremiumPropertySection />
-        <GlobalScaleSection />
-        <PropertyInvestmentCategoriesSection />
-        <InvestmentSection />
+        {/* <GlobalScaleSection /> */}
+        {/* <PropertyInvestmentCategoriesSection /> */}
+        {/* <InvestmentSection /> */}
         <JoinNewGenerationSection />
         {/* <AppDownloadSection /> */}
         <GlofiCopyrightSection />
 
-        <div className="h-16 sm:h-20" />
+    
         <CookieSection />
-        <div className="h-[28px]" />
+     
       </main>
     </div>
   );

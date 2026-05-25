@@ -7,6 +7,9 @@ import { motion, Variants } from 'framer-motion';
 import { useGetAssetsQuery } from '@/store/api/assetApi';
 import { API_URL } from '@/constants';
 
+const PREMIUM_SECTION_BG =
+    'radial-gradient(ellipse 90% 80% at 50% 55%, #155f63 0%, #0a2f32 38%, #02060a 100%)';
+
 export default function PremiumPropertySection() {
     const { data: assetsData, isLoading } = useGetAssetsQuery({ limit: 5 });
     const assets = assetsData?.data || [];
@@ -35,7 +38,10 @@ export default function PremiumPropertySection() {
 
     if (isLoading) {
         return (
-            <section className="premium-section-wrapper py-8 sm:py-10 lg:py-12 xl:py-14">
+            <section
+                className="premium-section-wrapper w-full py-8 sm:py-10 lg:py-12 xl:py-14"
+                style={{ background: PREMIUM_SECTION_BG }}
+            >
                 <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
                     <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
                         {[1, 2, 3, 4, 5].map((i) => (
@@ -62,7 +68,10 @@ export default function PremiumPropertySection() {
     if (assets.length === 0) return null;
 
     return (
-        <section className={`premium-section-wrapper py-8 sm:py-10 lg:py-12 xl:py-14 ${isFew ? '!px-0' : ''}`}>
+        <section
+            className={`premium-section-wrapper w-full py-8 sm:py-10 lg:py-12 xl:py-14 ${isFew ? '!px-0' : ''}`}
+            style={{ background: PREMIUM_SECTION_BG }}
+        >
             <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
 
                 {/* Header — fades up on scroll */}

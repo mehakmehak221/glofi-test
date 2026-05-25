@@ -168,12 +168,13 @@ export default function ReturnsCalculatorPage() {
             <span className="text-[10px] font-bold uppercase tracking-[3px] text-[var(--color-text-muted)]">
               Net Performance
             </span>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
               <input
                 type="number"
                 value={Math.round(totalReturnPercent)}
                 onChange={(e) => handlePercentChange(e.target.value)}
-                className="bg-transparent border-none outline-none text-4xl font-black text-[var(--foreground)] w-32 tracking-tighter"
+                className="bg-transparent border-none outline-none text-4xl font-black text-[var(--foreground)] tracking-tighter"
+                style={{ width: `${Math.max(1, String(Math.round(totalReturnPercent)).length) + 0.5}ch` }}
               />
               <span className="text-3xl font-black text-[var(--color-text-muted)]">%</span>
             </div>

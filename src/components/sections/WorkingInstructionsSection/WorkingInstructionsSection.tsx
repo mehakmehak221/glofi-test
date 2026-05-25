@@ -1,137 +1,104 @@
-
 'use client';
 
-import React from 'react';
-import { motion, Variants } from 'framer-motion';
+import { useState } from 'react';
+import Image from 'next/image';
 
-const STEPS = [
+const FEATURES = [
     {
-        number: '01',
-        title: 'BROWSE CURATED PROPERTIES',
-        description: 'Explore premium residential and commercial real estate opportunities.',
+        title: 'Curated Properties',
+        description:
+            'Explore Professionally vetted real estate opportunities across premium global markets.',
     },
     {
-        number: '02',
-        title: 'INVEST FRACTIONALLY OR WHOLE',
-        description: 'Purchase ownership shares at accessible investment levels.',
+        title: 'Fractional Ownership',
+        description: 'Own shares in high-value properties without purchasing the entire asset.',
     },
     {
-        number: '03',
-        title: 'EARN & EXIT',
-        description: 'Generate rental income and exit through the marketplace when ready.',
+        title: 'Portfolio Tracking',
+        description: 'Monitor returns, growth and asset allocation in real-time.',
     },
 ];
 
+function FlameIcon() {
+    return (
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <path
+                d="M7 1C7 1 4.5 3.5 4.5 6.25C4.5 7.35 5.15 8.25 6 8.75V10.5C6 11.05 6.45 11.5 7 11.5C7.55 11.5 8 11.05 8 10.5V8.75C8.85 8.25 9.5 7.35 9.5 6.25C9.5 3.5 7 1 7 1Z"
+                fill="#E85D2C"
+            />
+            <path
+                d="M7 12.25C6.45 12.25 6 12.7 6 13.25H8C8 12.7 7.55 12.25 7 12.25Z"
+                fill="#E85D2C"
+            />
+        </svg>
+    );
+}
+
 export default function WorkingInstructionsSection() {
-    const containerVariants: Variants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2,
-            },
-        },
-    };
-
-    const cardVariants: Variants = {
-        hidden: { opacity: 0, y: 40 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.6,
-                ease: 'easeOut',
-            },
-        },
-    };
-
-    const headerVariants: Variants = {
-        hidden: { opacity: 0, y: -20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.6,
-                ease: 'easeOut',
-            },
-        },
-    };
+    const [activeIndex, setActiveIndex] = useState(0);
 
     return (
-        <section className="w-full flex flex-col items-center bg-[var(--color-bg-dark)]">
-            <div className="hiw-section-wrapper w-full mx-auto">
-                <div className="flex flex-col items-center w-full">
-                    <motion.div 
-                        className="flex flex-col items-center text-center justify-center mb-10 sm:mb-12 lg:mb-16"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                        variants={headerVariants}
-                    >
-                        <div className="how-it-works-pill mb-6 px-4 py-1.5 bg-[#030A08] border border-[#00F4C4] rounded-full text-[#00F4C4] text-sm sm:text-base font-Montserrat font-medium">
-                            How It Works
+        <section className="about-platform-section w-full bg-white">
+            <div className="about-platform-section__inner">
+                <div className="about-platform-section__visual">
+                    <Image
+                        src="/assets/images/backgrounds/works.png"
+                        alt="GloFi platform dashboard showing portfolio growth and dividends"
+                        width={640}
+                        height={560}
+                        className="about-platform-section__image"
+                        sizes="(max-width: 1023px) 100vw, 50vw"
+                        priority={false}
+                    />
+                </div>
+
+                <div className="about-platform-section__content">
+                    <span className="about-platform-badge">
+                        <FlameIcon />
+                        ABOUT US
+                    </span>
+
+                    <h2 className="about-platform-heading">
+                        All Your Real Estate Investments In One Platform
+                    </h2>
+
+                    <div className="about-platform-features">
+                        <div className="about-platform-features__rail" aria-hidden>
+                            {FEATURES.map((_, index) => (
+                                <span
+                                    key={index}
+                                    className={`about-platform-features__rail-segment ${
+                                        index === activeIndex ? 'is-active' : ''
+                                    }`}
+                                />
+                            ))}
                         </div>
 
-                        <h2 className="how-it-works-title text-2xl sm:text-3xl md:text-4xl lg:text-4xl text-white font-Montserrat font-bold">
-                            Get GloFi-Ready In Just 3 Steps
-                        </h2>
-                    </motion.div>
+                        <ul className="about-platform-features__list">
+                            {FEATURES.map((feature, index) => {
+                                const isActive = index === activeIndex;
 
-                    <motion.div 
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 w-full max-w-6xl"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                        variants={containerVariants}
-                    >
-                        {STEPS.map((step, index) => (
-                            <motion.div
-                                key={index}
-                                className="bg-black/70 border border-[#00F4C4]/30 shadow-[0_0_25px_rgba(0,244,196,0.12)] p-6 sm:p-8 rounded-[18px] backdrop-blur-md transition-all duration-500 hover:translate-y-[-4px] hover:border-[#00F4C4]/60 hover:shadow-[0_0_35px_rgba(0,244,196,0.22)] min-h-[280px] flex flex-col justify-between"
-                                variants={cardVariants}
-                            >
-                                <span className="text-4xl sm:text-5xl lg:text-6xl font-Montserrat font-bold text-[#00F4C4] mb-4">
-                                    {step.number}
-                                </span>
-
-                                <h3 className="text-lg sm:text-xl font-Montserrat font-bold text-white mb-3 uppercase tracking-wide">
-                                    {step.title}
-                                </h3>
-
-                                <p className="text-sm sm:text-base text-[#8F8F9F] font-Montserrat leading-relaxed">
-                                    {step.description}
-                                </p>
-                            </motion.div>
-                        ))}
-                    </motion.div>
-                </div>
-            </div>
-
-            {/* Stats Bar Section */}
-            <div className="w-full bg-[#030706] py-10 sm:py-12 z-10">
-                <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-around gap-8 md:gap-4">
-                    {/* Stat 1 */}
-                    <div className="flex flex-col items-center text-center">
-                        <span className="text-4xl sm:text-5xl font-Montserrat font-bold text-white tracking-tight">11</span>
-                        <span className="text-sm sm:text-base text-[#8F8F9F] font-Montserrat mt-2 font-medium">Premium Assets</span>
-                    </div>
-
-                    {/* Separator Dot 1 */}
-                    <div className="hidden md:block w-2.5 h-2.5 rounded-full bg-[#00F4C4] shadow-[0_0_12px_#00F4C4]" />
-
-                    {/* Stat 2 */}
-                    <div className="flex flex-col items-center text-center">
-                        <span className="text-4xl sm:text-5xl font-Montserrat font-bold text-white tracking-tight">₹28.5k Cr +</span>
-                        <span className="text-sm sm:text-base text-[#8F8F9F] font-Montserrat mt-2 font-medium">Assets of Worth</span>
-                    </div>
-
-                    {/* Separator Dot 2 */}
-                    <div className="hidden md:block w-2.5 h-2.5 rounded-full bg-[#00F4C4] shadow-[0_0_12px_#00F4C4]" />
-
-                    {/* Stat 3 */}
-                    <div className="flex flex-col items-center text-center">
-                        <span className="text-4xl sm:text-5xl font-Montserrat font-bold text-white tracking-tight">850+</span>
-                        <span className="text-sm sm:text-base text-[#8F8F9F] font-Montserrat mt-2 font-medium">Investors Across India</span>
+                                return (
+                                    <li key={feature.title}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setActiveIndex(index)}
+                                            className={`about-platform-feature ${
+                                                isActive ? 'is-active' : ''
+                                            }`}
+                                            aria-expanded={isActive}
+                                        >
+                                            <h3 className="about-platform-feature__title">
+                                                {feature.title}
+                                            </h3>
+                                            <p className="about-platform-feature__description">
+                                                {feature.description}
+                                            </p>
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Montserrat, Poppins } from "next/font/google";
+import "./satoshi.css";
 import "./globals.css";
 import { StoreProvider } from "@/store/StoreProvider";
 
