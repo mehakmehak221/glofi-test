@@ -15,7 +15,7 @@ import HowItWorksSection from "@/components/HowItWorksSection/HowItWorksSection"
 
 export default function Home() {
   return (
-    <div className="landing-page max-w-[1440px] mx-auto w-full overflow-x-hidden bg-white shadow-2xl">
+    <div className="landing-page max-w-[1440px] mx-auto w-full overflow-x-hidden bg-white">
       <Navbar />
       <main className="w-full">
         <HeroSection />

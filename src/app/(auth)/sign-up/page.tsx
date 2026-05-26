@@ -51,10 +51,10 @@ function SignUpPageContent() {
             setUserType((current) => (current === next ? current : next));
         });
     }, [roleParam]);
-    const [form, setForm] = useState({ 
-        name: "", 
-        email: "", 
-        password: "", 
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        password: "",
         confirmPassword: "",
         referredByCode: "",
         reraNumber: "",
@@ -434,212 +434,212 @@ function SignUpPageContent() {
                     </button>
                 </form>
             ) : (
-            <form
-                noValidate
-                onSubmit={handleDetailsSubmit}
-                className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
-            >
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="sign-up-name" className="text-sm font-medium text-white font-montserrat">
-                        Full Name
-                    </label>
-                    <input
-                        id="sign-up-name"
-                        type="text"
-                        value={form.name}
-                        onChange={set("name")}
-                        placeholder="John Doe"
-                        autoComplete="name"
-                        aria-invalid={Boolean(nameError)}
-                        aria-describedby={nameError ? "sign-up-name-error" : undefined}
-                        className={`premium-input w-full ${nameError ? "border-red-500/60 focus:border-red-400" : ""}`}
-                    />
-                    {nameError ? (
-                        <p id="sign-up-name-error" className={FIELD_ERROR_CLASSES} role="alert">
-                            {nameError}
-                        </p>
-                    ) : null}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="sign-up-email" className="text-sm font-medium text-white font-montserrat">
-                        Email Address
-                    </label>
-                    <input
-                        id="sign-up-email"
-                        type="email"
-                        inputMode="email"
-                        autoCapitalize="none"
-                        autoCorrect="off"
-                        value={form.email}
-                        onChange={set("email")}
-                        placeholder="example@gmail.com"
-                        autoComplete="email"
-                        aria-invalid={Boolean(emailError)}
-                        aria-describedby={emailError ? "sign-up-email-error" : undefined}
-                        className={`premium-input w-full ${emailError ? "border-red-500/60 focus:border-red-400" : ""}`}
-                    />
-                    {emailError ? (
-                        <p id="sign-up-email-error" className={FIELD_ERROR_CLASSES} role="alert">
-                            {emailError}
-                        </p>
-                    ) : null}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="sign-up-password" className="text-sm font-medium text-white font-montserrat">
-                        Password
-                    </label>
-                    <div className="relative">
-                        <input
-                            id="sign-up-password"
-                            type={showPassword ? "text" : "password"}
-                            value={form.password}
-                            onChange={set("password")}
-                            autoComplete="new-password"
-                            aria-invalid={Boolean(passwordError)}
-                            aria-describedby={
-                                [passwordError ? "sign-up-password-error" : null, "sign-up-password-requirements"]
-                                    .filter(Boolean)
-                                    .join(" ") || undefined
-                            }
-                            className={`premium-input w-full pr-12 ${passwordError ? "border-red-500/60 focus:border-red-400" : ""}`}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
-                            aria-label={showPassword ? "Hide password" : "Show password"}
-                        >
-                            {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
-                        </button>
-                    </div>
-                    <ul
-                        id="sign-up-password-requirements"
-                        className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 space-y-1.5 text-xs text-[var(--color-text-secondary)] list-none"
-                        aria-label="Password requirements"
-                        aria-live="polite"
-                    >
-                        {getSignUpPasswordCriteria(form.password).map(({ id, label, met }) => (
-                            <li key={id} className={`flex items-start gap-2 ${met ? "text-emerald-400/95" : ""}`}>
-                                <span className="mt-0.5 w-3.5 shrink-0 text-center" aria-hidden>
-                                    {met ? "✓" : "○"}
-                                </span>
-                                <span>{label}</span>
-                            </li>
-                        ))}
-                    </ul>
-                    {passwordError ? (
-                        <p id="sign-up-password-error" className={FIELD_ERROR_CLASSES} role="alert">
-                            {passwordError}
-                        </p>
-                    ) : null}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="sign-up-confirm-password" className="text-sm font-medium text-white font-montserrat">
-                        Confirm Password
-                    </label>
-                    <div className="relative">
-                        <input
-                            id="sign-up-confirm-password"
-                            type={showConfirmPassword ? "text" : "password"}
-                            value={form.confirmPassword}
-                            onChange={set("confirmPassword")}
-                            autoComplete="new-password"
-                            aria-invalid={Boolean(confirmPasswordError)}
-                            aria-describedby={confirmPasswordError ? "sign-up-confirm-password-error" : undefined}
-                            className={`premium-input w-full pr-12 ${confirmPasswordError ? "border-red-500/60 focus:border-red-400" : ""}`}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
-                            aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                        >
-                            {showConfirmPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
-                        </button>
-                    </div>
-                    {confirmPasswordError ? (
-                        <p id="sign-up-confirm-password-error" className={FIELD_ERROR_CLASSES} role="alert">
-                            {confirmPasswordError}
-                        </p>
-                    ) : null}
-                </div>
-
-                {userType === "Agent" ? (
-                    <>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="sign-up-rera" className="text-sm font-medium text-white font-montserrat">
-                                RERA Number
-                            </label>
-                            <input
-                                id="sign-up-rera"
-                                type="text"
-                                value={form.reraNumber}
-                                onChange={set("reraNumber")}
-                                placeholder="RERA-MH-2024-001234"
-                                aria-invalid={Boolean(reraError)}
-                                aria-describedby={reraError ? "sign-up-rera-error" : undefined}
-                                className={`premium-input w-full ${reraError ? "border-red-500/60 focus:border-red-400" : ""}`}
-                            />
-                            {reraError ? (
-                                <p id="sign-up-rera-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                    {reraError}
-                                </p>
-                            ) : null}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="sign-up-rera-expiry" className="text-sm font-medium text-white font-montserrat">
-                                RERA Expiry Date
-                            </label>
-                            <input
-                                id="sign-up-rera-expiry"
-                                type="date"
-                                value={form.expiryDate}
-                                onChange={set("expiryDate")}
-                                aria-invalid={Boolean(expiryError)}
-                                aria-describedby={expiryError ? "sign-up-rera-expiry-error" : undefined}
-                                className={`premium-input w-full ${expiryError ? "border-red-500/60 focus:border-red-400" : ""}`}
-                            />
-                            {expiryError ? (
-                                <p id="sign-up-rera-expiry-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                    {expiryError}
-                                </p>
-                            ) : null}
-                        </div>
-                    </>
-                ) : (
+                <form
+                    noValidate
+                    onSubmit={handleDetailsSubmit}
+                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
+                >
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="sign-up-referral" className="text-sm font-medium text-white font-montserrat">
-                            Referral Code <span className="text-[var(--color-text-secondary)] font-normal">(Optional)</span>
+                        <label htmlFor="sign-up-name" className="text-sm font-medium text-white font-montserrat">
+                            Full Name
                         </label>
                         <input
-                            id="sign-up-referral"
+                            id="sign-up-name"
                             type="text"
-                            value={form.referredByCode}
-                            onChange={set("referredByCode")}
-                            placeholder="Enter code if you have one"
-                            aria-invalid={Boolean(referralError)}
-                            aria-describedby={referralError ? "sign-up-referral-error" : undefined}
-                            className={`premium-input w-full ${referralError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                            value={form.name}
+                            onChange={set("name")}
+                            placeholder="John Doe"
+                            autoComplete="name"
+                            aria-invalid={Boolean(nameError)}
+                            aria-describedby={nameError ? "sign-up-name-error" : undefined}
+                            className={`premium-input w-full ${nameError ? "border-red-500/60 focus:border-red-400" : ""}`}
                         />
-                        {referralError ? (
-                            <p id="sign-up-referral-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                {referralError}
+                        {nameError ? (
+                            <p id="sign-up-name-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                {nameError}
                             </p>
                         ) : null}
                     </div>
-                )}
 
-                <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
-                    {isLoading ? <LoadingSpinner /> : userType === "Agent" ? "Create Account" : "Continue"}
-                </button>
-            </form>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="sign-up-email" className="text-sm font-medium text-white font-montserrat">
+                            Email Address
+                        </label>
+                        <input
+                            id="sign-up-email"
+                            type="email"
+                            inputMode="email"
+                            autoCapitalize="none"
+                            autoCorrect="off"
+                            value={form.email}
+                            onChange={set("email")}
+                            placeholder="example@gmail.com"
+                            autoComplete="email"
+                            aria-invalid={Boolean(emailError)}
+                            aria-describedby={emailError ? "sign-up-email-error" : undefined}
+                            className={`premium-input w-full ${emailError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                        />
+                        {emailError ? (
+                            <p id="sign-up-email-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                {emailError}
+                            </p>
+                        ) : null}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="sign-up-password" className="text-sm font-medium text-white font-montserrat">
+                            Password
+                        </label>
+                        <div className="relative">
+                            <input
+                                id="sign-up-password"
+                                type={showPassword ? "text" : "password"}
+                                value={form.password}
+                                onChange={set("password")}
+                                autoComplete="new-password"
+                                aria-invalid={Boolean(passwordError)}
+                                aria-describedby={
+                                    [passwordError ? "sign-up-password-error" : null, "sign-up-password-requirements"]
+                                        .filter(Boolean)
+                                        .join(" ") || undefined
+                                }
+                                className={`premium-input w-full pr-12 ${passwordError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                            >
+                                {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                            </button>
+                        </div>
+                        <ul
+                            id="sign-up-password-requirements"
+                            className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 space-y-1.5 text-xs text-[var(--color-text-secondary)] list-none"
+                            aria-label="Password requirements"
+                            aria-live="polite"
+                        >
+                            {getSignUpPasswordCriteria(form.password).map(({ id, label, met }) => (
+                                <li key={id} className={`flex items-start gap-2 ${met ? "text-emerald-400/95" : ""}`}>
+                                    <span className="mt-0.5 w-3.5 shrink-0 text-center" aria-hidden>
+                                        {met ? "✓" : "○"}
+                                    </span>
+                                    <span>{label}</span>
+                                </li>
+                            ))}
+                        </ul>
+                        {passwordError ? (
+                            <p id="sign-up-password-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                {passwordError}
+                            </p>
+                        ) : null}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="sign-up-confirm-password" className="text-sm font-medium text-white font-montserrat">
+                            Confirm Password
+                        </label>
+                        <div className="relative">
+                            <input
+                                id="sign-up-confirm-password"
+                                type={showConfirmPassword ? "text" : "password"}
+                                value={form.confirmPassword}
+                                onChange={set("confirmPassword")}
+                                autoComplete="new-password"
+                                aria-invalid={Boolean(confirmPasswordError)}
+                                aria-describedby={confirmPasswordError ? "sign-up-confirm-password-error" : undefined}
+                                className={`premium-input w-full pr-12 ${confirmPasswordError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
+                                aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                            >
+                                {showConfirmPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                            </button>
+                        </div>
+                        {confirmPasswordError ? (
+                            <p id="sign-up-confirm-password-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                {confirmPasswordError}
+                            </p>
+                        ) : null}
+                    </div>
+
+                    {userType === "Agent" ? (
+                        <>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="sign-up-rera" className="text-sm font-medium text-white font-montserrat">
+                                    RERA Number
+                                </label>
+                                <input
+                                    id="sign-up-rera"
+                                    type="text"
+                                    value={form.reraNumber}
+                                    onChange={set("reraNumber")}
+                                    placeholder="RERA-MH-2024-001234"
+                                    aria-invalid={Boolean(reraError)}
+                                    aria-describedby={reraError ? "sign-up-rera-error" : undefined}
+                                    className={`premium-input w-full ${reraError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                                />
+                                {reraError ? (
+                                    <p id="sign-up-rera-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                        {reraError}
+                                    </p>
+                                ) : null}
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="sign-up-rera-expiry" className="text-sm font-medium text-white font-montserrat">
+                                    RERA Expiry Date
+                                </label>
+                                <input
+                                    id="sign-up-rera-expiry"
+                                    type="date"
+                                    value={form.expiryDate}
+                                    onChange={set("expiryDate")}
+                                    aria-invalid={Boolean(expiryError)}
+                                    aria-describedby={expiryError ? "sign-up-rera-expiry-error" : undefined}
+                                    className={`premium-input w-full ${expiryError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                                />
+                                {expiryError ? (
+                                    <p id="sign-up-rera-expiry-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                        {expiryError}
+                                    </p>
+                                ) : null}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="sign-up-referral" className="text-sm font-medium text-white font-montserrat">
+                                Referral Code <span className="text-[var(--color-text-secondary)] font-normal">(Optional)</span>
+                            </label>
+                            <input
+                                id="sign-up-referral"
+                                type="text"
+                                value={form.referredByCode}
+                                onChange={set("referredByCode")}
+                                placeholder="Enter code if you have one"
+                                aria-invalid={Boolean(referralError)}
+                                aria-describedby={referralError ? "sign-up-referral-error" : undefined}
+                                className={`premium-input w-full ${referralError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                            />
+                            {referralError ? (
+                                <p id="sign-up-referral-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                    {referralError}
+                                </p>
+                            ) : null}
+                        </div>
+                    )}
+
+                    <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
+                        {isLoading ? <LoadingSpinner /> : userType === "Agent" ? "Create Account" : "Continue"}
+                    </button>
+                </form>
             )}
 
             <p className="text-center text-xs text-[var(--color-text-muted)] mt-8 font-montserrat leading-relaxed px-1">
-                By clicking Create Account you agree to GloFi Estate&apos;s{" "}
+                By clicking Create Account you agree to GloFi Estates{" "}
                 <Link href="/terms" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
                     Terms &amp; Conditions
                 </Link>{" "}
