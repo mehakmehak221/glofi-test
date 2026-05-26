@@ -20,8 +20,9 @@ export default function Home() {
       <main className="w-full">
         <HeroSection />
         <AssetPartnersSection />
-        <ValuesSection />
+
         <WorkingInstructionsSection />
+        <ValuesSection />
         <HowItWorksSection />
         <PremiumPropertySection />
         {/* <GlobalScaleSection /> */}
@@ -31,9 +32,9 @@ export default function Home() {
         {/* <AppDownloadSection /> */}
         <GlofiCopyrightSection />
 
-    
+
         <CookieSection />
-     
+
       </main>
     </div>
   );

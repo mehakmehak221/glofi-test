@@ -1,27 +1,39 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { heroItem, heroStagger, LANDING_EASE, useLandingMotion } from '@/lib/landingAnimations';
 
 export default function HeroSection() {
+    const { reduceMotion, loadProps } = useLandingMotion();
+
     return (
         <section className="hero-section">
             <div className="hero-section__bg" aria-hidden />
             <div className="hero-section__grid" aria-hidden />
 
             <div className="hero-section__inner">
-                <div className="hero-section__content">
-                    <span className="hero-badge">100% TRUSTED PLATFORM</span>
+                <motion.div
+                    className="hero-section__content"
+                    {...loadProps}
+                    variants={heroStagger}
+                >
+                    <motion.span className="hero-badge" variants={heroItem}>
+                        100% TRUSTED PLATFORM
+                    </motion.span>
 
-                    <h1 className="hero-headline">
-                        <span className="hero-headline__white">Own Any Real Estate</span>
+                    <motion.h1 className="hero-headline" variants={heroItem}>
+                        <span className="hero-headline__white">{'Own\u00A0Any\u00A0Real\u00A0Estate'}</span>
                         <span className="hero-headline__teal">Fraction By Fraction</span>
-                    </h1>
+                    </motion.h1>
 
-                    <p className="hero-description">
+                    <motion.p className="hero-description" variants={heroItem}>
                         No-Fee Checking Account With Cash Back Rewards. Enjoy Fee-Free Banking And Earn
                         Cash Back On Your Everyday Purchases.
-                    </p>
+                    </motion.p>
 
-                    <div className="hero-cta-row">
+                    <motion.div className="hero-cta-row" variants={heroItem}>
                         <Link href="/sign-in" className="hero-btn-start">
                             Start Investing
                         </Link>
@@ -36,9 +48,9 @@ export default function HeroSection() {
                                 />
                             </svg>
                         </Link>
-                    </div>
+                    </motion.div>
 
-                    <div className="hero-app-buttons">
+                    <motion.div className="hero-app-buttons" variants={heroItem}>
                         <Link
                             href="https://apps.apple.com/in/app/glofi-estate/id6764258977"
                             target="_blank"
@@ -78,19 +90,42 @@ export default function HeroSection() {
                                 <span className="hero-app-btn__store">Google Play</span>
                             </span>
                         </Link>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
 
-                <div className="hero-section__visual">
+                <motion.figure
+                    className="hero-section__visual"
+                    initial={{ opacity: 0, scale: 0.92, y: 28 }}
+                    animate={
+                        reduceMotion
+                            ? { opacity: 1, scale: 1, y: 0 }
+                            : { opacity: 1, scale: 1, y: [0, -10, 0] }
+                    }
+                    transition={
+                        reduceMotion
+                            ? { duration: 0.65, ease: LANDING_EASE, delay: 0.35 }
+                            : {
+                                  opacity: { duration: 0.65, ease: LANDING_EASE, delay: 0.35 },
+                                  scale: { duration: 0.65, ease: LANDING_EASE, delay: 0.35 },
+                                  y: {
+                                      duration: 5,
+                                      repeat: Infinity,
+                                      ease: 'easeInOut',
+                                      delay: 1.2,
+                                  },
+                              }
+                    }
+                >
                     <Image
-                        src="/assets/images/backgrounds/homebg.png"
-                        alt="Fractional real estate building illustration"
+                        src="/assets/images/how-it-works/homebg.png"
+                        alt="Modern fractional real estate building with digital voxel effects"
                         width={652}
                         height={848}
                         className="hero-section__building"
+                        sizes="(max-width: 479px) 90vw, (max-width: 767px) 85vw, (max-width: 1023px) 65vw, 50vw"
                         priority
                     />
-                </div>
+                </motion.figure>
             </div>
         </section>
     );

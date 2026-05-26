@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
+import { LANDING_EASE } from '@/lib/landingAnimations';
 
 const NAV_LINKS = [
     { label: 'Company', href: '/#company' },
@@ -37,7 +39,6 @@ export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
-
     const goHome = () => {
         if (pathname === '/') {
             window.location.assign('/');
@@ -47,7 +48,12 @@ export default function Navbar() {
     };
 
     return (
-        <header className="navbar">
+        <motion.header
+            className="navbar"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: LANDING_EASE }}
+        >
             <div className="navbar__inner">
                 <Link
                     href="/"
@@ -102,32 +108,50 @@ export default function Navbar() {
                 </div>
             </div>
 
-            <div
-                className={`navbar__mobile-menu ${mobileOpen ? 'is-open' : ''}`}
-                aria-hidden={!mobileOpen}
-            >
-                {NAV_LINKS.map((link) => (
-                    <Link
-                        key={link.label}
-                        href={link.href}
-                        className="navbar__mobile-link"
-                        onClick={() => setMobileOpen(false)}
+            <AnimatePresence>
+                {mobileOpen && (
+                    <motion.div
+                        className="navbar__mobile-menu is-open !flex flex-col"
+                        aria-hidden={false}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.35, ease: LANDING_EASE }}
                     >
-                        {link.label}
-                    </Link>
-                ))}
+                        {NAV_LINKS.map((link, index) => (
+                            <motion.div
+                                key={link.label}
+                                initial={{ opacity: 0, x: -12 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.05 * index, duration: 0.3 }}
+                            >
+                                <Link
+                                    href={link.href}
+                                    className="navbar__mobile-link"
+                                    onClick={() => setMobileOpen(false)}
+                                >
+                                    {link.label}
+                                </Link>
+                            </motion.div>
+                        ))}
 
-                <div className="navbar__mobile-actions">
-                    <Link
-                        href="/sign-in"
-                        className="btn-get-Glofi"
-                        onClick={() => setMobileOpen(false)}
-                    >
-                         Login
-                    </Link>
-                   
-                </div>
-            </div>
-        </header>
+                        <motion.div
+                            className="navbar__mobile-actions"
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.3 }}
+                        >
+                            <Link
+                                href="/sign-in"
+                                className="btn-get-Glofi"
+                                onClick={() => setMobileOpen(false)}
+                            >
+                                Login
+                            </Link>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.header>
     );
 }
