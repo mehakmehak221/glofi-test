@@ -1,8 +1,15 @@
 /** Shared validation + API error formatting for auth forms (sign-in / sign-up). */
 
-export const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-export const NAME_PATTERN = /^[\p{L}\s.'\-]+$/u;
-export const RERA_PATTERN = /^[A-Z0-9\/\-\s]{8,50}$/i;
+export const EMAIL_PATTERN =
+    /^(?!.*\.\.)(?!.*\.$)[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
+export const NAME_PATTERN = /^(?=.{2,100}$)(?=.*\p{L})[\p{L}]+(?:[ .'-][\p{L}]+)*$/u;
+export const RERA_PATTERN = /^(?=.{8,50}$)(?=.*[A-Za-z])(?=.*\d)[A-Za-z0-9]+(?:[\/ -][A-Za-z0-9]+)*$/;
+
+export const NAME_FORMAT_ERROR =
+    "Please enter a valid full name using letters. Spaces, periods, apostrophes, and hyphens are allowed.";
+export const EMAIL_FORMAT_ERROR = "Please enter a valid email address.";
+export const RERA_FORMAT_ERROR =
+    "Please enter a valid RERA registration number, such as RERA-MH-2024-001234.";
 
 export const MIN_PASSWORD_SIGNIN_LEN = 6;
 export const MIN_PASSWORD_SIGNUP_LEN = 8;
@@ -109,6 +116,34 @@ export function isMachineEmailValidationMessage(text: string): boolean {
     );
 }
 
+export function isMachineNameValidationMessage(text: string): boolean {
+    const t = text.toLowerCase();
+    if (!t) return false;
+    const isNameField =
+        t.includes("fullname") ||
+        t.includes("full name") ||
+        t.includes("full_name") ||
+        (t.includes("name") && !t.includes("username") && !t.includes("user name"));
+    if (!isNameField) return false;
+    return (
+        t.includes("must match") ||
+        t.includes("regular expression") ||
+        t.includes("only letters") ||
+        t.includes("invalid")
+    );
+}
+
+export function isMachineReraValidationMessage(text: string): boolean {
+    const t = text.toLowerCase();
+    if (!t.includes("rera")) return false;
+    return (
+        t.includes("must match") ||
+        t.includes("regular expression") ||
+        t.includes("invalid") ||
+        t.includes("format")
+    );
+}
+
 export const OTP_PATTERN = /^\d{6}$/;
 
 export function normalizeOtpInput(value: string): string {
@@ -140,7 +175,9 @@ export function isMachinePasswordLengthMessage(text: string): boolean {
 
 export function humanizeValidationLine(line: string, minPasswordLen: number): string {
     if (isMachineOtpValidationMessage(line)) return "Please enter the 6-digit code from your email.";
-    if (isMachineEmailValidationMessage(line)) return "Please enter a valid email address.";
+    if (isMachineEmailValidationMessage(line)) return EMAIL_FORMAT_ERROR;
+    if (isMachineNameValidationMessage(line)) return NAME_FORMAT_ERROR;
+    if (isMachineReraValidationMessage(line)) return RERA_FORMAT_ERROR;
     if (isMachinePasswordComplexityMessage(line)) {
         return "Password must include upper and lowercase letters, a number, a special character, and be at least 8 characters long.";
     }
@@ -234,7 +271,7 @@ export function validateSignInFields(email: string, password: string, minPasswor
     if (!trimmedEmail) {
         emailError = "Please enter email ID";
     } else if (!EMAIL_PATTERN.test(trimmedEmail)) {
-        emailError = "Please enter a valid email address.";
+        emailError = EMAIL_FORMAT_ERROR;
     }
 
     if (!password.trim()) {
@@ -270,13 +307,13 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
     } else if (trimmedName.length < 2) {
         nameError = "Please enter a name that is at least 2 characters.";
     } else if (!NAME_PATTERN.test(trimmedName)) {
-        nameError = "Name should only contain letters, spaces, hyphens, or apostrophes.";
+        nameError = NAME_FORMAT_ERROR;
     }
 
     if (!trimmedEmail) {
         emailError = "Please enter your email address.";
     } else if (!EMAIL_PATTERN.test(trimmedEmail)) {
-        emailError = "Please enter a valid email address.";
+        emailError = EMAIL_FORMAT_ERROR;
     }
 
     if (!form.password.trim()) {
@@ -296,7 +333,7 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
         if (!trimmedRera) {
             reraError = "Please enter your RERA registration number.";
         } else if (!RERA_PATTERN.test(trimmedRera)) {
-            reraError = "Please enter a valid RERA registration number containing only letters, numbers, slashes, hyphens, and spaces (minimum 8 characters).";
+            reraError = RERA_FORMAT_ERROR;
         }
 
         if (!form.expiryDate.trim()) {

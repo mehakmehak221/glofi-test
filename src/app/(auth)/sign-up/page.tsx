@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { startTransition, Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -46,7 +46,10 @@ function SignUpPageContent() {
 
     useEffect(() => {
         const next = parseRoleQuery(roleParam);
-        if (next) setUserType(next);
+        if (!next) return;
+        startTransition(() => {
+            setUserType((current) => (current === next ? current : next));
+        });
     }, [roleParam]);
     const [form, setForm] = useState({ 
         name: "", 
@@ -216,6 +219,10 @@ function SignUpPageContent() {
         setReferralError("");
         setOtpError("");
 
+        const trimmedName = form.name.trim();
+        const trimmedEmail = form.email.trim();
+        const trimmedReraNumber = form.reraNumber.trim();
+
         const {
             nameError: nextNameErr,
             emailError: nextEmailErr,
@@ -240,10 +247,10 @@ function SignUpPageContent() {
         try {
             if (userType === "Agent") {
                 const result = await registerAgent({
-                    fullName: form.name,
-                    email: form.email,
+                    fullName: trimmedName,
+                    email: trimmedEmail,
                     password: form.password,
-                    reraNumber: form.reraNumber,
+                    reraNumber: trimmedReraNumber,
                     expiryDate: form.expiryDate,
                 }).unwrap();
                 completeRegistration(result);
@@ -572,7 +579,7 @@ function SignUpPageContent() {
                                 type="text"
                                 value={form.reraNumber}
                                 onChange={set("reraNumber")}
-                                placeholder="Enter your RERA registration number"
+                                placeholder="RERA-MH-2024-001234"
                                 aria-invalid={Boolean(reraError)}
                                 aria-describedby={reraError ? "sign-up-rera-error" : undefined}
                                 className={`premium-input w-full ${reraError ? "border-red-500/60 focus:border-red-400" : ""}`}
