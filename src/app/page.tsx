@@ -33,7 +33,7 @@ export default function Home() {
         <GlofiCopyrightSection />
 
 
-        <CookieSection />
+        {/* <CookieSection /> */}
 
       </main>
     </div>
