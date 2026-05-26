@@ -22,7 +22,7 @@ export const authApi = baseApi.injectEndpoints({
         body,
       }),
     }),
-    verifyRegistrationOtp: builder.mutation<{ message?: string }, RegistrationOtpBody>({
+    verifyRegistrationOtp: builder.mutation<any, RegistrationOtpBody>({
       query: (body) => ({
         url: 'auth/register/verify-otp',
         method: 'POST',
@@ -49,6 +49,7 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: credentials,
       }),
+      invalidatesTags: ['User'],
     }),
     setupProfile: builder.mutation<any, any>({
       query: (profileData) => ({
@@ -62,6 +63,7 @@ export const authApi = baseApi.injectEndpoints({
         url: 'auth/logout',
         method: 'POST',
       }),
+      invalidatesTags: ['User'],
     }),
     getProfile: builder.query<any, void>({
       query: () => ({

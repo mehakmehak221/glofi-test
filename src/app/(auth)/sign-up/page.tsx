@@ -297,8 +297,7 @@ function SignUpPageContent() {
         const trimmedEmail = form.email.trim();
 
         try {
-            await verifyRegistrationOtp({ email: trimmedEmail, otp: normalizedOtp }).unwrap();
-            const result = await register({ email: trimmedEmail, otp: normalizedOtp }).unwrap();
+            const result = await verifyRegistrationOtp({ email: trimmedEmail, otp: normalizedOtp }).unwrap();
             completeRegistration(result);
         } catch (err: unknown) {
             applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, {
