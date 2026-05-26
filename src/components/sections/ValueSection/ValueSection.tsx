@@ -11,7 +11,7 @@ import {
 
 const STATS = [
     { value: '20', label: 'Premium Assets' },
-    { value: '₹5k Cr +', label: 'Assets of Worth' },
+    { value: '₹5,000 Cr+', label: 'Assets of Worth' },
     { value: '100k+', label: 'Registered Investors' },
 ] as const;
 
