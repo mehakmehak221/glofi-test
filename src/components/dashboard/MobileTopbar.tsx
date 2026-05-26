@@ -58,13 +58,7 @@ export default function MobileTopbar() {
                         </button>
                     )}
 
-                    <button
-                        className="relative p-2 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)] transition-colors bg-transparent border-0 cursor-pointer"
-                        aria-label="Notifications"
-                    >
-                        <BellIcon className="w-5 h-5" />
-                        <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[var(--sidebar-active-text)] rounded-full border-2 border-[var(--header-bg)]" />
-                    </button>
+            
 
                     <button
                         onClick={() => setDrawerOpen(true)}

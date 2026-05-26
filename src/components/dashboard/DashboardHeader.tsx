@@ -56,10 +56,7 @@ export default function DashboardHeader() {
                     </div>
                 </button>
             
-                <button className="relative p-2 rounded-lg text-[var(--sidebar-text)] hover:opacity-80 transition-opacity cursor-pointer bg-transparent border-0">
-                    <BellIcon className="w-5 h-5" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--sidebar-active-text)] rounded-full" />
-                </button>
+            
 
               
                 <div className="flex items-center gap-3 pl-3 border-l border-[var(--header-border)]">
