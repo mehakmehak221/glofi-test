@@ -128,8 +128,8 @@
 }
 
 :root {
-  --background: #030403;
-  --foreground: var(--color-text-primary);
+  --background: #FFFFFF;
+  --foreground: #1A1F1C;
   --primary: var(--color-brand-green);
 
   /* Semantic Theme Variables - DARK (Default) */
