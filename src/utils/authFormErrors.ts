@@ -7,7 +7,7 @@ export const RERA_PATTERN = /^(?=.{8,50}$)(?=.*[A-Za-z])(?=.*\d)[A-Za-z0-9]+(?:[
 
 export const NAME_FORMAT_ERROR =
     "Please enter a valid full name using letters. Spaces, periods, apostrophes, and hyphens are allowed.";
-export const EMAIL_FORMAT_ERROR = "Please enter a valid email address.";
+export const EMAIL_FORMAT_ERROR = "Email format is invalid";
 export const RERA_FORMAT_ERROR =
     "Please enter a valid RERA registration number, such as RERA-MH-2024-001234.";
 
@@ -226,7 +226,7 @@ export function partitionSignInValidationLines(lines: string[], minPasswordLen: 
             if (low.includes("empty") || low.includes("require") || low.includes("blank")) {
                 emailLine = "Please enter email ID";
             } else {
-                emailLine = "Please enter a valid email address.";
+                emailLine = "Email format is invalid";
             }
         } else if (low.includes("password")) {
             passwordLine = "Please enter valid password";
@@ -275,6 +275,8 @@ export function validateSignInFields(email: string, password: string, minPasswor
     }
 
     if (!password.trim()) {
+        passwordError = "Please enter valid password";
+    } else if (password.trim().length < minPasswordLen) {
         passwordError = "Please enter valid password";
     }
 
@@ -389,7 +391,7 @@ export function applySignInApiErrors(
             setPasswordError(passwordLine);
             setErrorMsg(generalLines.length > 0 ? generalLines.join("\n\n") : "");
         } else if (isMachineEmailValidationMessage(flatMessage)) {
-            setEmailError("Please enter a valid email address.");
+            setEmailError("Email format is invalid");
             setPasswordError("");
             setErrorMsg("");
         } else if (isMachinePasswordLengthMessage(flatMessage)) {
@@ -419,7 +421,7 @@ export function applySignInApiErrors(
             setPasswordError(passwordLine);
             setErrorMsg(generalLines.length > 0 ? generalLines.join("\n\n") : "");
         } else if (isMachineEmailValidationMessage(flatMessage)) {
-            setEmailError("Please enter a valid email address.");
+            setEmailError("Email format is invalid");
             setPasswordError("");
             setErrorMsg("");
         } else if (isMachinePasswordLengthMessage(flatMessage)) {
