@@ -185,11 +185,14 @@ export default function AgentOverviewPage() {
                 >
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">Live Assets</h2>
-                        <button className="text-[10px] font-bold text-[var(--color-primary-300)] uppercase tracking-widest">Marketplace</button>
+                        <span className="text-[10px] font-bold text-[var(--color-primary-300)] uppercase tracking-widest opacity-70">Marketplace</span>
                     </div>
                     <div className="space-y-4">
                         {assetsData?.data?.slice(0, 3).map((asset: any) => (
-                            <div key={asset.id} className="flex gap-4 p-3 rounded-lg hover:bg-[var(--background)] transition-all cursor-pointer border border-transparent hover:border-[var(--sidebar-border)]">
+                            <div
+                                key={asset.id}
+                                className="flex gap-4 p-3 rounded-lg border border-[var(--sidebar-border)]/60 bg-[var(--background)]/35 cursor-default"
+                            >
                                 <div className="w-16 h-16 rounded-md overflow-hidden bg-[var(--background)] flex-shrink-0 relative">
                                     <Image 
                                         src={asset.images?.[0] || "/placeholder-asset.jpg"} 

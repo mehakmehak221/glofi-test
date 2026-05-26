@@ -141,9 +141,9 @@ export default function AgentProfilePage() {
                 >
                     {/* Professional Credentials */}
                     <div className="bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl overflow-hidden">
-                        <div className="p-8 border-b border-[var(--dashboard-border)] flex items-center justify-between">
+                        <div className="p-8 border-b border-[var(--dashboard-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-[#00FFCC]/10 flex items-center justify-center text-[#00FFCC]">
+                                <div className="w-10 h-10 rounded-xl bg-[#00FFCC]/10 flex items-center justify-center text-[#00FFCC] flex-shrink-0">
                                     <DocumentIcon className="w-5 h-5" />
                                 </div>
                                 <div>
@@ -151,7 +151,7 @@ export default function AgentProfilePage() {
                                     <p className="text-xs text-[var(--color-text-muted)] font-montserrat">Validated real estate licensing information</p>
                                 </div>
                             </div>
-                            <div className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
+                            <div className={`inline-flex items-center justify-center text-center whitespace-nowrap px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border self-start sm:self-center ${
                                 status?.isVerified 
                                     ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]' 
                                     : 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
@@ -187,7 +187,7 @@ export default function AgentProfilePage() {
 
                         {kyc?.status === "REJECTED" && (
                             <div className="m-8 mt-0 p-4 rounded-xl bg-[var(--color-status-error-bg)] border border-[var(--color-status-error-border)] flex gap-4 items-start">
-                                <div className="text-[var(--color-status-error)] mt-1">
+                                <div className="text-[var(--color-status-error)] mt-1 flex-shrink-0">
                                     <PendingIcon className="w-4 h-4" />
                                 </div>
                                 <div>
@@ -209,9 +209,9 @@ export default function AgentProfilePage() {
                                 { label: "Selfie Verification", type: "Facial Match", status: kyc?.selfieStatus, url: kyc?.selfieUrl },
                                 { label: "RERA Certificate", type: "Professional License", status: status?.isVerified ? "APPROVED" : "UNDER_REVIEW", url: profile?.reraDocumentUrl }
                             ].map((item, i) => (
-                                <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] hover:bg-[var(--badge-bg)] transition-all">
+                                <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] hover:bg-[var(--badge-bg)] gap-4 transition-all">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-lg bg-[var(--badge-bg)] flex items-center justify-center text-[var(--color-text-muted)]">
+                                        <div className="w-10 h-10 rounded-lg bg-[var(--badge-bg)] flex items-center justify-center text-[var(--color-text-muted)] flex-shrink-0">
                                             <DocumentIcon className="w-5 h-5" />
                                         </div>
                                         <div>
@@ -219,8 +219,8 @@ export default function AgentProfilePage() {
                                             <p className="text-[10px] text-[var(--color-text-muted)] font-montserrat uppercase tracking-widest">{item.type?.replace('_', ' ') || "N/A"}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-6">
-                                        <div className={`text-[9px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider ${
+                                    <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
+                                        <div className={`inline-flex items-center justify-center text-center text-[9px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider whitespace-nowrap min-w-[80px] ${
                                             item.status === 'APPROVED' || item.status === 'VERIFIED' || item.status === 'ACTIVE' 
                                                 ? 'bg-[var(--color-status-success-bg)] text-[var(--color-status-success)]' :
                                             item.status === 'REJECTED' 

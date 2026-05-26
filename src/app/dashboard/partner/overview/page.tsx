@@ -137,7 +137,7 @@ function ListingBar({ listing, index }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.3 + index * 0.06 }}
-            className="flex items-center gap-3 p-2 rounded-md bg-black/[0.02] dark:bg-white/[0.02]"
+            className="flex items-center gap-3 p-2 rounded-md bg-black/[0.02] dark:bg-white/[0.02] cursor-default"
         >
 
             <div className="w-10 h-10 rounded-lg bg-[var(--sidebar-active-bg)]  flex-shrink-0 overflow-hidden flex items-center justify-center relative">
@@ -162,14 +162,15 @@ function ListingBar({ listing, index }) {
                     <p className="text-[12px] text-[var(--foreground)] font-montserrat font-medium truncate pr-2 opacity-80">{listing.name}</p>
                     <span className="text-[var(--sidebar-active-text)] text-[11px] font-bold font-montserrat flex-shrink-0">{listing.pct}%</span>
                 </div>
-                <div className="h-[2px] w-full bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full rounded-full overflow-hidden bg-[var(--marketplace-card-border)]">
                     <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${listing.pct}%` }}
                         transition={{ duration: 0.7, delay: 0.4 + index * 0.06, ease: "easeOut" }}
                         className="h-full rounded-full"
                         style={{
-                            background: "var(--color-gradient-Glofi)",
+                            background:
+                                "linear-gradient(90deg, var(--marketplace-card-progress-fill-start) 0%, var(--marketplace-card-progress-fill-end) 100%)",
                         }}
                     />
                 </div>
