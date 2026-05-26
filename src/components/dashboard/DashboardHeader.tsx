@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import SearchBar from "./SearchBar";
 import Avatar from "@/components/ui/Avatar";
+import { usePathname } from "next/navigation";
 import { BellIcon, MoonIcon, SunIcon } from "@/components/VectorImages";
 import { useGetProfileQuery } from "@/store/api/authApi";
 
 export default function DashboardHeader() {
     const [mounted, setMounted] = useState(false);
     const [isLight, setIsLight] = useState(false);
+    const pathname = usePathname();
     const { data: profileData } = useGetProfileQuery();
 
     useEffect(() => {
@@ -35,14 +37,29 @@ export default function DashboardHeader() {
 
     const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
     const fullName = profile.fullName || profileData?.name || "Guest";
-    const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : "User";
+
+    let displayRole = "Investor";
+    if (pathname.startsWith("/dashboard/partner")) {
+        displayRole = "Partner";
+    } else if (pathname.startsWith("/dashboard/agent")) {
+        displayRole = "Agent";
+    } else if (pathname.startsWith("/dashboard/investor")) {
+        displayRole = "Investor";
+    } else {
+        const storedRole = typeof window !== "undefined" ? localStorage.getItem("userType") : null;
+        if (storedRole) {
+            displayRole = storedRole.charAt(0).toUpperCase() + storedRole.slice(1).toLowerCase();
+        } else if (profileData?.role) {
+            displayRole = profileData.role.charAt(0).toUpperCase() + profileData.role.slice(1).toLowerCase();
+        }
+    }
 
     return (
         <header className="hidden lg:flex items-center justify-between px-6 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-30">
             <SearchBar placeholder="Search..." className="w-full max-w-md" />
 
             <div className="flex items-center gap-4 ml-4">
-                <button 
+                <button
                     onClick={() => setIsLight(!isLight)}
                     className="flex items-center w-14 h-8 p-1 rounded-full transition-colors cursor-pointer bg-[var(--search-bg)] border border-[var(--search-border)] relative outline-none"
                     title={isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
@@ -55,15 +72,13 @@ export default function DashboardHeader() {
                         )}
                     </div>
                 </button>
-            
-            
 
-              
+
                 <div className="flex items-center gap-3 pl-3 border-l border-[var(--header-border)]">
                     <Avatar name={fullName} size="sm" />
                     <div className="flex flex-col">
                         <span className="text-sm font-semibold text-[var(--header-text)] leading-tight">{fullName}</span>
-                        <span className="text-[10px] text-[var(--header-text)] opacity-60 uppercase tracking-wider">{role}</span>
+                        <span className="text-[10px] text-[var(--header-text)] opacity-60 uppercase tracking-wider">{displayRole}</span>
                     </div>
                 </div>
             </div>
