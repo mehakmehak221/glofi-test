@@ -90,10 +90,10 @@ export default function Navbar() {
 
                 <div className="navbar__actions">
                     <Link href="/sign-in" className="btn-get-Glofi">
-                    Login
+                        Login
                     </Link>
 
-                  
+
                     <button
                         type="button"
                         className="navbar__hamburger"
@@ -134,16 +134,6 @@ export default function Navbar() {
                                 </Link>
                             </motion.div>
                         ))}
-
-                        <div className="navbar__mobile-login-row">
-                            <Link
-                                href="/sign-in"
-                                className="navbar__mobile-login-btn"
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                Login
-                            </Link>
-                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
