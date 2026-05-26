@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { PhoneIcon, ProfileIcon, ArrowRightIcon, LoadingSpinner, CheckIcon, SparkleIcon, ChevronLeftIcon, BackArrowIcon, UploadIcon, CalendarIcon } from "@/components/VectorImages";
 import { useSetupProfileMutation } from "@/store/api/authApi";
 import { useSetupAgentKycMutation } from "@/store/api/kycApi";
@@ -144,8 +145,9 @@ export default function OnboardingPage() {
     return (
         <main className="min-h-screen w-full bg-[var(--color-bg-dark)] flex flex-col items-center px-4 py-8 sm:py-20 font-sans selection:bg-[var(--color-primary-300)]/30 theme-purple overflow-x-hidden">
             <div className="mb-8 sm:mb-12 flex flex-col items-center text-center w-full max-w-full">
-                <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={144} height={48} className="h-10 sm:h-12 w-auto mb-2" priority />
-                
+                <Link href="/" className="cursor-pointer">
+                    <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={144} height={48} className="h-10 sm:h-12 w-auto mb-2" priority />
+                </Link>
             </div>
 
 
