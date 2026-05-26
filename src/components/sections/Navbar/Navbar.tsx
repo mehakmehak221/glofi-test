@@ -135,6 +135,15 @@ export default function Navbar() {
                             </motion.div>
                         ))}
 
+                        <div className="navbar__mobile-login-row">
+                            <Link
+                                href="/sign-in"
+                                className="navbar__mobile-login-btn"
+                                onClick={() => setMobileOpen(false)}
+                            >
+                                Login
+                            </Link>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
