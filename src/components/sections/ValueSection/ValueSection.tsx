@@ -10,7 +10,7 @@ import {
 } from '@/lib/landingAnimations';
 
 const STATS = [
-    { value: '11', label: 'Premium Assets' },
+    { value: '20', label: 'Premium Assets' },
     { value: '₹5k Cr +', label: 'Assets of Worth' },
     { value: '100k+', label: 'Registered Investors' },
 ] as const;
