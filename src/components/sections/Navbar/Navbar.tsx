@@ -135,20 +135,6 @@ export default function Navbar() {
                             </motion.div>
                         ))}
 
-                        <motion.div
-                            className="navbar__mobile-actions"
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2, duration: 0.3 }}
-                        >
-                            <Link
-                                href="/sign-in"
-                                className="btn-get-Glofi"
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                Login
-                            </Link>
-                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>

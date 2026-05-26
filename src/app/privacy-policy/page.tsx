@@ -32,8 +32,8 @@ export default function PrivacyPolicyPage() {
                     <p>We collect several types of information to provide and improve our services:</p>
                     <div className="space-y-4">
                         <div>
-                            <h3 className="text-white font-semibold mb-2">Personal Information</h3>
-                            <ul className="list-disc pl-5 space-y-2 text-white/70">
+                            <h3 className="text-neutral-900 font-semibold mb-2">Personal Information</h3>
+                            <ul className="list-disc pl-5 space-y-2 text-neutral-600">
                                 <li>Name, email address, and contact information</li>
                                 <li>Identity verification documents (as required by law)</li>
                                 <li>Financial information for transaction processing</li>
@@ -41,8 +41,8 @@ export default function PrivacyPolicyPage() {
                             </ul>
                         </div>
                         <div>
-                            <h3 className="text-white font-semibold mb-2">Usage Information</h3>
-                            <ul className="list-disc pl-5 space-y-2 text-white/70">
+                            <h3 className="text-neutral-900 font-semibold mb-2">Usage Information</h3>
+                            <ul className="list-disc pl-5 space-y-2 text-neutral-600">
                                 <li>Device information and IP addresses</li>
                                 <li>Browser type and operating system</li>
                                 <li>Transaction history and activity logs</li>
@@ -58,7 +58,7 @@ export default function PrivacyPolicyPage() {
             content: (
                 <div className="space-y-4">
                     <p>We use the collected information for the following purposes:</p>
-                    <ul className="list-disc pl-5 space-y-2 text-white/70">
+                    <ul className="list-disc pl-5 space-y-2 text-neutral-600">
                         <li>To provide, maintain, and improve our services</li>
                         <li>To process transactions and send related information</li>
                         <li>To comply with legal obligations and regulatory requirements</li>
@@ -74,11 +74,11 @@ export default function PrivacyPolicyPage() {
             content: (
                 <div className="space-y-4">
                     <p>We do not sell your personal information. We may share your information with:</p>
-                    <ul className="list-disc pl-5 space-y-3 text-white/70">
-                        <li><strong className="text-white">Service Providers:</strong> Third-party vendors who assist in operating our services</li>
-                        <li><strong className="text-white">Legal Authorities:</strong> When required by law or to protect our rights</li>
-                        <li><strong className="text-white">Business Transfers:</strong> In connection with mergers, acquisitions, or asset sales</li>
-                        <li><strong className="text-white">Blockchain Networks:</strong> Transaction data is inherently public on blockchain networks</li>
+                    <ul className="list-disc pl-5 space-y-3 text-neutral-600">
+                        <li><strong className="text-neutral-900">Service Providers:</strong> Third-party vendors who assist in operating our services</li>
+                        <li><strong className="text-neutral-900">Legal Authorities:</strong> When required by law or to protect our rights</li>
+                        <li><strong className="text-neutral-900">Business Transfers:</strong> In connection with mergers, acquisitions, or asset sales</li>
+                        <li><strong className="text-neutral-900">Blockchain Networks:</strong> Transaction data is inherently public on blockchain networks</li>
                     </ul>
                 </div>
             )
@@ -88,7 +88,7 @@ export default function PrivacyPolicyPage() {
             content: (
                 <div className="space-y-4">
                     <p>We implement industry-standard security measures to protect your personal information, including:</p>
-                    <ul className="list-disc pl-5 space-y-2 text-white/70">
+                    <ul className="list-disc pl-5 space-y-2 text-neutral-600">
                         <li>Encryption of sensitive data in transit and at rest</li>
                         <li>Multi-factor authentication options</li>
                         <li>Regular security audits and assessments</li>
@@ -104,12 +104,12 @@ export default function PrivacyPolicyPage() {
             content: (
                 <div className="space-y-4">
                     <p>You have the following rights regarding your personal information:</p>
-                    <ul className="list-disc pl-5 space-y-2 text-white/70">
-                        <li><strong className="text-white">Access:</strong> Request access to your personal information</li>
-                        <li><strong className="text-white">Correction:</strong> Request correction of inaccurate information</li>
-                        <li><strong className="text-white">Deletion:</strong> Request deletion of your personal information (subject to legal requirements)</li>
-                        <li><strong className="text-white">Opt-Out:</strong> Unsubscribe from marketing communications</li>
-                        <li><strong className="text-white">Data Portability:</strong> Request a copy of your data in a portable format</li>
+                    <ul className="list-disc pl-5 space-y-2 text-neutral-600">
+                        <li><strong className="text-neutral-900">Access:</strong> Request access to your personal information</li>
+                        <li><strong className="text-neutral-900">Correction:</strong> Request correction of inaccurate information</li>
+                        <li><strong className="text-neutral-900">Deletion:</strong> Request deletion of your personal information (subject to legal requirements)</li>
+                        <li><strong className="text-neutral-900">Opt-Out:</strong> Unsubscribe from marketing communications</li>
+                        <li><strong className="text-neutral-900">Data Portability:</strong> Request a copy of your data in a portable format</li>
                     </ul>
                     <p className="pt-2">To exercise these rights, please contact us at Info@bhaifinance.com.</p>
                 </div>
@@ -145,8 +145,8 @@ export default function PrivacyPolicyPage() {
             content: (
                 <div className="space-y-4">
                     <p>If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:</p>
-                    <div className="space-y-2 text-white/70">
-                        <p>Email: <a href="mailto:Info@bhaifinance.com" className="text-[#00F4C4] hover:underline">Info@bhaifinance.com</a></p>
+                    <div className="space-y-2 text-neutral-600">
+                        <p>Email: <a href="mailto:Info@bhaifinance.com" className="text-[#00876D] hover:underline">Info@bhaifinance.com</a></p>
                         <p>Phone: +1 (716) 907-5786</p>
                     </div>
                 </div>
@@ -155,12 +155,12 @@ export default function PrivacyPolicyPage() {
     ];
 
     return (
-        <main className="min-h-screen bg-[#030403] text-white selection:bg-[#00F4C4] selection:text-black">
+        <main className="min-h-screen bg-white text-neutral-900 selection:bg-[#00F4C4] selection:text-black">
             <Navbar />
             
             <section className="relative pt-32 pb-20 overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] opacity-20 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#00F4C4]/20 to-transparent blur-[120px]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#00F4C4]/10 to-transparent blur-[120px]" />
                 </div>
 
                 <div className="container-main relative z-10">
@@ -170,7 +170,7 @@ export default function PrivacyPolicyPage() {
                                 router.back();
                                 setTimeout(() => window.scrollTo(0, 0), 100);
                             }}
-                            className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-white transition-colors cursor-pointer bg-transparent border-none font-montserrat text-sm p-0"
+                            className="inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer bg-transparent border-none font-montserrat text-sm p-0"
                         >
                             <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
                             Go Back
@@ -180,8 +180,8 @@ export default function PrivacyPolicyPage() {
                         {...fadeIn}
                         className="text-center max-w-3xl mx-auto"
                     >
-                        <h1 className="heading-display mb-4">Privacy Policy</h1>
-                        <div className="text-body text-lg text-white/70 space-y-2">
+                        <h1 className="heading-display mb-4 text-neutral-900">Privacy Policy</h1>
+                        <div className="text-body text-lg text-neutral-600 space-y-2">
                             <p>Last Updated: October 2025</p>
                             <p>GloFi is a flagship product of Bhai Finance. This privacy policy applies to all Bhai Finance products and services.</p>
                         </div>
@@ -196,7 +196,7 @@ export default function PrivacyPolicyPage() {
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2, duration: 0.8 }}
-                        className="glass p-8 md:p-12 rounded-3xl"
+                        className="bg-neutral-50 border border-neutral-200/60 shadow-lg shadow-neutral-100 p-8 md:p-12 rounded-3xl"
                     >
                         <div className="space-y-12">
                             {sections.map((section, index) => (
@@ -208,20 +208,20 @@ export default function PrivacyPolicyPage() {
                                         section.anchorId ? "scroll-mt-28 md:scroll-mt-32" : "",
                                     ].join(" ")}
                                 >
-                                    <h2 className="heading-md text-[#00F4C4]">{section.title}</h2>
-                                    <div className="text-body leading-relaxed text-white/70">
+                                    <h2 className="heading-md text-[#00876D]">{section.title}</h2>
+                                    <div className="text-body leading-relaxed text-neutral-600">
                                         {section.content}
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="mt-16 pt-16 border-t border-white/10 flex flex-col items-center gap-8">
+                        <div className="mt-16 pt-16 border-t border-neutral-200 flex flex-col items-center gap-8">
                             <div className="text-center space-y-4">
-                                <p className="text-body text-white/60">
+                                <p className="text-body text-neutral-500">
                                     Bhai Finance is the parent company of GloFi and other innovative financial technology solutions.
                                 </p>
-                                <p className="text-body-sm italic text-white/40">
+                                <p className="text-body-sm italic text-neutral-400">
                                     © 2025 Bhai Finance. All rights reserved.
                                 </p>
                             </div>

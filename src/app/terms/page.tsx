@@ -38,7 +38,7 @@ export default function TermsAndConditionsPage() {
             content: (
                 <div className="space-y-4">
                     <p>You agree to use our services only for lawful purposes. You are prohibited from:</p>
-                    <ul className="list-disc pl-5 space-y-2 text-white/70">
+                    <ul className="list-disc pl-5 space-y-2 text-neutral-600">
                         <li>Violating any local, state, national, or international law</li>
                         <li>Interfering with the security-related features of the service</li>
                         <li>Transmitting unauthorized commercial communications</li>
@@ -68,8 +68,8 @@ export default function TermsAndConditionsPage() {
             content: (
                 <div className="space-y-4">
                     <p>If you have any questions about these Terms, please contact us at:</p>
-                    <div className="space-y-2 text-white/70">
-                        <p>Email: <a href="mailto:Info@bhaifinance.com" className="text-[#00F4C4] hover:underline">Info@bhaifinance.com</a></p>
+                    <div className="space-y-2 text-neutral-600">
+                        <p>Email: <a href="mailto:Info@bhaifinance.com" className="text-[#00876D] hover:underline">Info@bhaifinance.com</a></p>
                         <p>Phone: +1 (716) 907-5786</p>
                     </div>
                 </div>
@@ -78,12 +78,12 @@ export default function TermsAndConditionsPage() {
     ];
 
     return (
-        <main className="min-h-screen bg-[#030403] text-white selection:bg-[#00F4C4] selection:text-black">
+        <main className="min-h-screen bg-white text-neutral-900 selection:bg-[#00F4C4] selection:text-black">
             <Navbar />
             
             <section className="relative pt-32 pb-20 overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] opacity-20 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#00F4C4]/20 to-transparent blur-[120px]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#00F4C4]/10 to-transparent blur-[120px]" />
                 </div>
 
                 <div className="container-main relative z-10">
@@ -93,7 +93,7 @@ export default function TermsAndConditionsPage() {
                                 router.back();
                                 setTimeout(() => window.scrollTo(0, 0), 100);
                             }}
-                            className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-white transition-colors cursor-pointer bg-transparent border-none font-montserrat text-sm p-0"
+                            className="inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer bg-transparent border-none font-montserrat text-sm p-0"
                         >
                             <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
                             Go Back
@@ -103,8 +103,8 @@ export default function TermsAndConditionsPage() {
                         {...fadeIn}
                         className="text-center max-w-3xl mx-auto"
                     >
-                        <h1 className="heading-display mb-4">Terms & Conditions</h1>
-                        <div className="text-body text-lg text-white/70 space-y-2">
+                        <h1 className="heading-display mb-4 text-neutral-900">Terms & Conditions</h1>
+                        <div className="text-body text-lg text-neutral-600 space-y-2">
                             <p>Last Updated: October 2025</p>
                             <p>GloFi is a flagship product of Bhai Finance. These terms apply to all Bhai Finance products and services.</p>
                         </div>
@@ -119,7 +119,7 @@ export default function TermsAndConditionsPage() {
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2, duration: 0.8 }}
-                        className="glass p-8 md:p-12 rounded-3xl"
+                        className="bg-neutral-50 border border-neutral-200/60 shadow-lg shadow-neutral-100 p-8 md:p-12 rounded-3xl"
                     >
                         <div className="space-y-12">
                             {sections.map((section, index) => (
@@ -131,20 +131,20 @@ export default function TermsAndConditionsPage() {
                                         section.anchorId ? "scroll-mt-28 md:scroll-mt-32" : "",
                                     ].join(" ")}
                                 >
-                                    <h2 className="heading-md text-[#00F4C4]">{section.title}</h2>
-                                    <div className="text-body leading-relaxed text-white/70">
+                                    <h2 className="heading-md text-[#00876D]">{section.title}</h2>
+                                    <div className="text-body leading-relaxed text-neutral-600">
                                         {section.content}
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="mt-16 pt-16 border-t border-white/10 flex flex-col items-center gap-8">
+                        <div className="mt-16 pt-16 border-t border-neutral-200 flex flex-col items-center gap-8">
                             <div className="text-center space-y-4">
-                                <p className="text-body text-white/60">
+                                <p className="text-body text-neutral-500">
                                     Bhai Finance is the parent company of GloFi and other innovative financial technology solutions.
                                 </p>
-                                <p className="text-body-sm italic text-white/40">
+                                <p className="text-body-sm italic text-neutral-400">
                                     © 2025 Bhai Finance. All rights reserved.
                                 </p>
                             </div>

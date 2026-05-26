@@ -48,25 +48,11 @@ export default function JoinNewGenerationSection() {
                         />
                     </motion.div>
 
-                    <motion.div
-                        className="join-new-gen__image-wrap"
-                        variants={fadeUpSubtle}
-                        aria-hidden="true"
-                    >
-                        <Image
-                            src="/assets/images/backgrounds/footer.png"
-                            alt="Building Real Estate Portfolio"
-                            fill
-                            style={{ objectFit: 'contain', objectPosition: 'right center' }}
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            priority
-                        />
-                    </motion.div>
-
                     <div className="join-new-gen__content">
                         <motion.h2 className="join-new-gen__title" variants={fadeUp}>
                             Start Building Real Estate
-                            <br />
+                        </motion.h2>
+                        <motion.h2 className="join-new-gen__title" variants={fadeUp}>
                             Portfolio
                         </motion.h2>
 
@@ -100,6 +86,21 @@ export default function JoinNewGenerationSection() {
                             </motion.div>
                         </motion.div>
                     </div>
+
+                    <motion.div
+                        className="join-new-gen__image-wrap"
+                        variants={fadeUpSubtle}
+                        aria-hidden="true"
+                    >
+                        <Image
+                            src="/assets/images/backgrounds/footer.png"
+                            alt="Building Real Estate Portfolio"
+                            fill
+                            style={{ objectFit: 'contain', objectPosition: 'right center' }}
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            priority
+                        />
+                    </motion.div>
                 </motion.div>
             </div>
         </section>
