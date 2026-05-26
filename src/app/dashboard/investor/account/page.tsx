@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetProfileQuery } from "@/store/api/authApi";
 import { useGetMyCertificatesQuery } from "@/store/api/certificatesApi";
+import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { API_URL } from "@/constants";
 
 const TABS = ["Profile", "KYC",  "Certificates", "Referrals"];
@@ -20,8 +21,9 @@ export default function AccountPage() {
 
     const { data: profileData, isLoading: profileLoading } = useGetProfileQuery();
     const { data: certsResponse, isLoading: certsLoading } = useGetMyCertificatesQuery();
+    const { data: kycData, isLoading: kycLoading } = useGetKycStatusQuery();
 
-    const isLoading = profileLoading || (activeTab === "Certificates" && certsLoading);
+    const isLoading = profileLoading || (activeTab === "Certificates" && certsLoading) || (activeTab === "KYC" && kycLoading);
     const certificates = certsResponse?.data || [];
 
     const PROFILE_FIELDS = useMemo(() => {
@@ -128,51 +130,88 @@ export default function AccountPage() {
 
                     {activeTab === "KYC" && (
                         <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
-                            <div className="flex items-center gap-3 sm:gap-5 mb-5 sm:mb-8">
-                                <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-md bg-[var(--color-primary-300)]/10 flex items-center justify-center flex-shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-7 sm:h-7 text-[var(--color-primary-300)]">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                    </svg>
+                            {kycLoading ? (
+                                <div className="flex justify-center py-12">
+                                    <div className="animate-spin rounded-md h-8 w-8 border-b-2 border-[var(--color-primary-300)]"></div>
                                 </div>
-                                <div>
-                                    <h2 className="text-base sm:text-xl font-bold text-[var(--header-text)] mb-0.5 sm:mb-1.5">Verified</h2>
-                                    <p className="text-[11px] sm:text-[13px] text-[var(--color-text-muted)] font-medium">Identity verified successfully</p>
-                                </div>
-                            </div>
+                            ) : kycData?.status === "VERIFIED" || kycData?.status === "APPROVED" ? (
+                                <>
+                                    <div className="flex items-center gap-3 sm:gap-5 mb-5 sm:mb-8">
+                                        <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-md bg-[var(--color-primary-300)]/10 flex items-center justify-center flex-shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-7 sm:h-7 text-[var(--color-primary-300)]">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-base sm:text-xl font-bold text-[var(--header-text)] mb-0.5 sm:mb-1.5">Verified</h2>
+                                            <p className="text-[11px] sm:text-[13px] text-[var(--color-text-muted)] font-medium">Identity verified successfully</p>
+                                        </div>
+                                    </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-                                <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-3.5 sm:p-5 flex items-start gap-2.5 sm:gap-3.5 hover:border-[var(--sidebar-active-text)]/20 transition-colors">
-                                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary-300)] mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                    </svg>
-                                    <div>
-                                        <p className="text-[11px] sm:text-[13px] font-semibold text-[var(--header-text)] mb-0.5 sm:mb-1">Document Upload</p>
-                                        <p className="text-[10px] sm:text-[11px] text-[var(--color-text-muted)] font-medium">Passport verified</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+                                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-3.5 sm:p-5 flex items-start gap-2.5 sm:gap-3.5 hover:border-[var(--sidebar-active-text)]/20 transition-colors">
+                                            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary-300)] mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                            </svg>
+                                            <div>
+                                                <p className="text-[11px] sm:text-[13px] font-semibold text-[var(--header-text)] mb-0.5 sm:mb-1">Document Upload</p>
+                                                <p className="text-[10px] sm:text-[11px] text-[var(--color-text-muted)] font-medium">Passport verified</p>
+                                            </div>
+                                        </div>
+                                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-3.5 sm:p-5 flex items-start gap-2.5 sm:gap-3.5 hover:border-[var(--sidebar-active-text)]/20 transition-colors">
+                                            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary-300)] mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                            </svg>
+                                            <div>
+                                                <p className="text-[11px] sm:text-[13px] font-semibold text-[var(--header-text)] mb-0.5 sm:mb-1">Selfie Check</p>
+                                                <p className="text-[10px] sm:text-[11px] text-[var(--color-text-muted)] font-medium">Liveness passed</p>
+                                            </div>
+                                        </div>
+                                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-3.5 sm:p-5 flex items-start gap-2.5 sm:gap-3.5 hover:border-[var(--color-primary-300)]/20 transition-colors">
+                                            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary-300)] mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                            </svg>
+                                            <div>
+                                                <p className="text-[11px] sm:text-[13px] font-semibold text-[var(--header-text)] mb-0.5 sm:mb-1">Address Proof</p>
+                                                <p className="text-[10px] sm:text-[11px] text-[var(--color-text-muted)] font-medium">Utility bill verified</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-3.5 sm:p-5 flex items-start gap-2.5 sm:gap-3.5 hover:border-[var(--sidebar-active-text)]/20 transition-colors">
-                                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary-300)] mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                    </svg>
-                                    <div>
-                                        <p className="text-[11px] sm:text-[13px] font-semibold text-[var(--header-text)] mb-0.5 sm:mb-1">Selfie Check</p>
-                                        <p className="text-[10px] sm:text-[11px] text-[var(--color-text-muted)] font-medium">Liveness passed</p>
+                                </>
+                            ) : kycData?.status === "UNDER_REVIEW" ? (
+                                <div className="flex flex-col items-center justify-center py-8 text-center">
+                                    <div className="w-16 h-16 rounded-full bg-[var(--color-status-warning-bg)] flex items-center justify-center mb-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-status-warning)]">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
                                     </div>
+                                    <h2 className="text-xl font-bold text-[var(--header-text)] mb-2">Verification Under Review</h2>
+                                    <p className="text-sm text-[var(--color-text-muted)] max-w-md">Your identity verification is currently being processed. You will be notified once it is approved.</p>
                                 </div>
-                                <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md sm:rounded-md p-3.5 sm:p-5 flex items-start gap-2.5 sm:gap-3.5 hover:border-[var(--color-primary-300)]/20 transition-colors">
-                                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary-300)] mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                    </svg>
-                                    <div>
-                                        <p className="text-[11px] sm:text-[13px] font-semibold text-[var(--header-text)] mb-0.5 sm:mb-1">Address Proof</p>
-                                        <p className="text-[10px] sm:text-[11px] text-[var(--color-text-muted)] font-medium">Utility bill verified</p>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-8 text-center">
+                                    <div className="w-16 h-16 rounded-full bg-[var(--color-status-error-bg)] flex items-center justify-center mb-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-status-error)]">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                        </svg>
                                     </div>
+                                    <h2 className="text-xl font-bold text-[var(--header-text)] mb-2">Unverified</h2>
+                                    <p className="text-sm text-[var(--color-text-muted)] max-w-md mb-6">You need to complete your identity verification before you can start investing.</p>
+                                    <button
+                                        onClick={() => window.dispatchEvent(new CustomEvent('open-kyc-modal'))}
+                                        className="px-6 py-2.5 rounded-lg bg-[var(--color-status-error)] text-white text-sm font-bold uppercase transition-all hover:opacity-90 border-0 cursor-pointer shadow-sm"
+                                    >
+                                        Verify Now
+                                    </button>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     )}
 
