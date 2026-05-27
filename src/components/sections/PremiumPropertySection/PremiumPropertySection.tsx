@@ -33,9 +33,40 @@ const PROPERTIES = [
 export default function PremiumPropertySection() {
     const { reduceMotion, viewProps } = useLandingMotion();
 
+    const reveal3D = {
+        hidden: { 
+            opacity: 0, 
+            y: 50,
+            rotateX: 12,
+            z: -40,
+            transformPerspective: 1200
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            z: 0,
+            transition: {
+                type: "spring" as const,
+                stiffness: 60,
+                damping: 18,
+                mass: 0.8
+            }
+        }
+    };
+
     return (
-        <section id="product" className="premium-section-wrapper" aria-labelledby="premium-properties-heading">
-            <div className="premium-section__inner">
+        <section id="product" className="premium-section-wrapper relative overflow-hidden" aria-labelledby="premium-properties-heading">
+            <div
+                className="absolute inset-0 z-0 pointer-events-none"
+                style={{
+                    backgroundImage: "url('/assets/images/backgrounds/benefitsbg.png')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                }}
+            />
+            <div className="premium-section__inner relative z-10">
                 <motion.header className="premium-header-container" {...viewProps} variants={fadeUp}>
                     <h2 id="premium-properties-heading" className="premium-title">
                         Premium Properties. Structured Access.
@@ -49,11 +80,12 @@ export default function PremiumPropertySection() {
                     className="premium-properties-grid"
                     {...viewProps}
                     variants={staggerContainer(0.1, 0.08)}
+                    style={{ transformStyle: "preserve-3d" }}
                 >
                     {PROPERTIES.map((property, index) => (
                         <motion.div
                             key={property.src}
-                            variants={scaleIn}
+                            variants={reveal3D}
                             whileHover={reduceMotion ? undefined : cardLift}
                         >
                             <Link href="/explore" className="premium-property-card group block">

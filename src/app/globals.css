@@ -611,11 +611,9 @@
     right: 0;
     z-index: var(--z-nav);
     width: 100%;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: #ffffff;
     border-bottom: 1px solid rgba(0, 32, 53, 0.05);
-    transition: background-color var(--transition-fast), backdrop-filter var(--transition-fast);
+
   }
 
   .navbar__inner {

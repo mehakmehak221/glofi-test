@@ -15,19 +15,20 @@ import HowItWorksSection from "@/components/HowItWorksSection/HowItWorksSection"
 
 export default function Home() {
   return (
-    <div className="landing-page w-full overflow-x-hidden bg-white">
+    <div className="landing-page w-full bg-white">
       <Navbar />
-      <main className="w-full">
+      <main className="w-full overflow-x-hidden">
         <HeroSection />
         <AssetPartnersSection />
-
         <WorkingInstructionsSection />
         <ValuesSection />
         <HowItWorksSection />
+        <InvestmentSection />
+        <GlobalScaleSection />
         <PremiumPropertySection />
-        {/* <GlobalScaleSection /> */}
+
         {/* <PropertyInvestmentCategoriesSection /> */}
-        {/* <InvestmentSection /> */}
+
         <JoinNewGenerationSection />
         {/* <AppDownloadSection /> */}
         <GlofiCopyrightSection />
