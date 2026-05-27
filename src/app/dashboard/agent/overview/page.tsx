@@ -105,7 +105,7 @@ export default function AgentOverviewPage() {
                     </div>
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-1">First 100 Agent</h2>
-                        <p className="text-sm text-[var(--sidebar-text)] font-montserrat opacity-60">
+                        <p className="text-sm text-[var(--sidebar-text)] font-montserrat opacity-80">
                             You&apos;re earning higher commission rates as one of our first 100 verified agents!
                         </p>
                         <div className="flex flex-wrap items-center gap-6 mt-4">
@@ -117,7 +117,7 @@ export default function AgentOverviewPage() {
                                 <CheckIcon className="w-3.5 h-3.5" />
                                 RERA: {dashboardData?.reraStatus || "Active"}
                             </div>
-                            <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--sidebar-text)] opacity-40 uppercase tracking-wider">
+                            <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-wider">
                                 <CalendarIcon className="w-3.5 h-3.5" />
                                 Expires: {dashboardData?.expiryDate || "2027-12-31"}
                             </div>
@@ -138,7 +138,7 @@ export default function AgentOverviewPage() {
                     >
                         <stat.icon className={`w-5 h-5 ${stat.iconColor} mb-6`} />
                         <p className="text-3xl font-bold text-[var(--foreground)] font-montserrat mb-1">{stat.value}</p>
-                        <p className="text-xs font-medium text-[var(--sidebar-text)] font-montserrat opacity-40 mb-3">{stat.label}</p>
+                        <p className="text-xs font-medium text-[var(--sidebar-text)] font-montserrat opacity-60 mb-3">{stat.label}</p>
                         <p className="text-[10px] font-bold text-[var(--color-primary-300)] uppercase tracking-wider">
                             {stat.delta}
                         </p>
@@ -157,7 +157,7 @@ export default function AgentOverviewPage() {
                     <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-8">Your Referral Code</h2>
                     <div className="flex flex-col items-center justify-between gap-6 p-1 bg-[var(--background)] rounded-md border border-[var(--sidebar-border)] pr-4">
                         <div className="px-6 py-4 w-full">
-                            <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-40 uppercase tracking-[0.15em] mb-1.5">Referral Code</p>
+                            <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-[0.15em] mb-1.5">Referral Code</p>
                             <p className="text-2xl font-bold text-[var(--color-primary-300)] font-montserrat tracking-wider">{referralCode}</p>
                         </div>
                         <button 
@@ -168,7 +168,7 @@ export default function AgentOverviewPage() {
                             {copied ? "COPIED" : "COPY CODE"}
                         </button>
                     </div>
-                    <div className="flex items-start gap-3 mt-8 text-[var(--sidebar-text)] opacity-40">
+                    <div className="flex items-start gap-3 mt-8 text-[var(--sidebar-text)] opacity-60">
                         <InfoIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-[var(--color-primary-300)]" />
                         <p className="text-xs leading-relaxed font-montserrat">
                             Investors using your code earn you 1% commission on their purchases.
@@ -203,7 +203,7 @@ export default function AgentOverviewPage() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-bold text-[var(--foreground)] truncate">{asset.title}</p>
-                                    <div className="flex items-center gap-1 text-[10px] text-[var(--sidebar-text)] opacity-50 mt-1 uppercase font-bold tracking-tight">
+                                    <div className="flex items-center gap-1 text-[10px] text-[var(--sidebar-text)] opacity-70 mt-1 uppercase font-bold tracking-tight">
                                         <LocationIcon className="w-3 h-3" />
                                         {asset.location}, {asset.city}
                                     </div>
@@ -226,7 +226,7 @@ export default function AgentOverviewPage() {
             >
                 <div className="flex items-center justify-between mb-10">
                     <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">Recent Referral Transactions</h2>
-                    <button className="text-[11px] font-bold text-[var(--sidebar-text)] opacity-40 hover:opacity-100 hover:text-[var(--foreground)] transition-all uppercase tracking-widest font-montserrat">View All</button>
+                    <button className="text-[11px] font-bold text-[var(--sidebar-text)] opacity-60 hover:opacity-100 hover:text-[var(--foreground)] transition-all uppercase tracking-widest font-montserrat">View All</button>
                 </div>
                 <div className="space-y-10">
                     {dashboardData?.recentTransactions?.length ? (
@@ -234,18 +234,18 @@ export default function AgentOverviewPage() {
                             <div key={i} className="flex justify-between items-center group">
                                 <div className="space-y-1.5">
                                     <p className="text-base font-bold text-[var(--foreground)] font-montserrat">{tx.assetName}</p>
-                                    <p className="text-xs text-[var(--sidebar-text)] opacity-40 font-medium font-montserrat">
+                                    <p className="text-xs text-[var(--sidebar-text)] opacity-70 font-medium font-montserrat">
                                         Referred: {tx.referredUser} • {tx.date}
                                     </p>
                                 </div>
                                 <div className="text-right space-y-1">
                                     <p className="text-lg font-bold text-[var(--color-primary-300)] font-montserrat">+{formatCurrency(tx.commission)}</p>
-                                    <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-20 uppercase tracking-widest">{tx.status}</p>
+                                    <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-50 uppercase tracking-widest">{tx.status}</p>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <div className="text-sm text-[var(--sidebar-text)] opacity-30 font-montserrat italic">No recent transactions found.</div>
+                        <div className="text-sm text-[var(--sidebar-text)] opacity-60 font-montserrat italic">No recent transactions found.</div>
                     )}
                 </div>
             </motion.div>

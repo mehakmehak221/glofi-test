@@ -57,7 +57,7 @@ export default function AgentTransactionsPage() {
                             <div className={`w-10 h-10 rounded-lg ${stat.bg} flex items-center justify-center`}>
                                 <stat.icon className={`w-5 h-5 ${stat.color}`} />
                             </div>
-                            <span className="text-xs font-bold text-[var(--sidebar-text)] opacity-40 font-montserrat uppercase tracking-wider">{stat.label}</span>
+                            <span className="text-xs font-bold text-[var(--sidebar-text)] opacity-60 font-montserrat uppercase tracking-wider">{stat.label}</span>
                         </div>
                         <span className="text-3xl font-bold text-[var(--foreground)] font-montserrat">{stat.value}</span>
                     </motion.div>
@@ -77,7 +77,7 @@ export default function AgentTransactionsPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left font-montserrat border-collapse min-w-[800px]">
                         <thead>
-                            <tr className="text-[11px] uppercase tracking-[0.15em] text-[var(--sidebar-text)] opacity-40 border-b border-[var(--sidebar-border)]">
+                            <tr className="text-[11px] uppercase tracking-[0.15em] text-[var(--sidebar-text)] opacity-60 border-b border-[var(--sidebar-border)]">
                                 <th className="px-8 py-6 font-bold">Date</th>
                                 <th className="px-8 py-6 font-bold">User</th>
                                 <th className="px-8 py-6 font-bold">Asset</th>
@@ -90,7 +90,7 @@ export default function AgentTransactionsPage() {
                                 transactions.map((tx, i) => (
                                     <tr key={i} className="hover:bg-[var(--color-primary-300)]/[0.02] transition-colors group">
                                         <td className="px-8 py-6 text-sm text-[var(--sidebar-text)] opacity-60">{tx.date}</td>
-                                        <td className="px-8 py-6 text-sm font-bold text-[var(--foreground)]/90">{tx.referredUser}</td>
+                                        <td className="px-8 py-6 text-sm font-bold text-[var(--foreground)] opacity-90">{tx.referredUser}</td>
                                         <td className="px-8 py-6 text-sm text-[var(--sidebar-text)] opacity-60">{tx.assetName}</td>
                                         <td className="px-8 py-6 text-sm text-right font-bold text-[var(--foreground)] opacity-80">{formatCurrency(tx.amount)}</td>
                                         <td className="px-8 py-6 text-center">
@@ -112,7 +112,7 @@ export default function AgentTransactionsPage() {
                             ) : (
                                 <tr>
                                     <td colSpan={5} className="px-8 py-20 text-center">
-                                        <p className="text-sm text-[var(--sidebar-text)] opacity-30 font-montserrat italic">No transactions available yet.</p>
+                                        <p className="text-sm text-[var(--sidebar-text)] opacity-60 font-montserrat italic">No transactions available yet.</p>
                                     </td>
                                 </tr>
                             )}

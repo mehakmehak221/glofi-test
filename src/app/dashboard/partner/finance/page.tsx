@@ -61,7 +61,7 @@ export default function FinancePage() {
                             onClick={() => setActiveTab(tab)}
                             className={`flex-shrink-0 px-4 sm:px-6 py-2 rounded-md text-[11px] sm:text-[12px] font-medium font-montserrat transition-all relative ${activeTab === tab
                                 ? "text-[var(--sidebar-active-text)]"
-                                : "text-[var(--sidebar-text)] opacity-40 hover:opacity-80"
+                                : "text-[var(--sidebar-text)] opacity-60 hover:opacity-90"
                                 }`}
                         >
                             {activeTab === tab && (
@@ -92,7 +92,7 @@ export default function FinancePage() {
                         className="rounded-md p-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-[var(--sidebar-active-text)] opacity-[0.03] pointer-events-none" />
-                        <p className="text-[10px] font-bold tracking-[1.2px] text-[var(--sidebar-text)] opacity-30 font-montserrat mb-4 uppercase">
+                        <p className="text-[10px] font-bold tracking-[1.2px] text-[var(--sidebar-text)] opacity-60 font-montserrat mb-4 uppercase">
                             {stat.label}
                         </p>
                         <p className="text-2xl font-semibold text-[var(--foreground)] opacity-90 font-montserrat tracking-tight">
@@ -115,12 +115,12 @@ export default function FinancePage() {
                     {activeTab === "Commissions" && (
                         <div>
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat">Commission History</h2>
+                                <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-90 font-montserrat">Commission History</h2>
                                 {isLoadingCommissions && <div className="w-4 h-4 border-2 border-[var(--sidebar-active-text)]/20 border-t-[var(--sidebar-active-text)] rounded-full animate-spin" />}
                             </div>
 
                             {!commissionHistory?.data?.length ? (
-                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-md">
+                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-60 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-md">
                                     No commissions found.
                                 </div>
                             ) : (
@@ -134,14 +134,14 @@ export default function FinancePage() {
                                             className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
                                         >
                                             <div>
-                                                <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.asset?.title || "Commission Payment"}</h3>
-                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-30 font-montserrat mt-1">
-                                                    {item.type || 'Sale'} · {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                                <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-90 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.asset?.title || "Commission Payment"}</h3>
+                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-70 font-montserrat mt-1">
+                                                    {item.type || 'Sale'} · {(item.date || item.createdAt) ? new Date(item.date || item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : "-"}
                                                 </p>
                                             </div>
                                             <div className="text-left sm:text-right">
-                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">{formatCurrency(item.amount || 0)}</p>
-                                                <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
+                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] font-montserrat">{formatCurrency(item.amount || 0)}</p>
+                                                <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-80`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                     {item.status}
                                                 </p>
                                             </div>
@@ -155,12 +155,12 @@ export default function FinancePage() {
                     {activeTab === "Payouts" && (
                         <div>
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-70 font-montserrat">Payout History</h2>
+                                <h2 className="text-[13px] font-medium text-[var(--foreground)] opacity-90 font-montserrat">Payout History</h2>
                                 {isLoadingPayouts && <div className="w-4 h-4 border-2 border-[var(--sidebar-active-text)]/20 border-t-[var(--sidebar-active-text)] rounded-full animate-spin" />}
                             </div>
 
                             {!payoutHistory?.data?.length ? (
-                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-40 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-md">
+                                <div className="py-12 text-center text-[var(--sidebar-text)] opacity-60 font-montserrat text-sm border border-dashed border-[var(--sidebar-border)] rounded-md">
                                     No payouts found.
                                 </div>
                             ) : (
@@ -174,14 +174,14 @@ export default function FinancePage() {
                                             className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
                                         >
                                             <div>
-                                                <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-70 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.method || "Bank Transfer"}</h3>
-                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-30 font-montserrat mt-1">
-                                                    {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} · {item.reference || "Completed"}
+                                                <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-90 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.method || "Bank Transfer"}</h3>
+                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-70 font-montserrat mt-1">
+                                                    {(item.payoutDate || item.createdAt) ? new Date(item.payoutDate || item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "-"} · {item.reference || "Completed"}
                                                 </p>
                                             </div>
                                             <div className="text-left sm:text-right">
-                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] opacity-80 font-montserrat">{formatCurrency(item.amount || 0)}</p>
-                                                <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-50`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
+                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] font-montserrat">{formatCurrency(item.amount || 0)}</p>
+                                                <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-80`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                     {item.status}
                                                 </p>
                                             </div>
