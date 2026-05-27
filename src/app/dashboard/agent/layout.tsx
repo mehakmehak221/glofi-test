@@ -13,10 +13,10 @@ export default function AgentDashboardLayout({ children }) {
     const [showKycModal, setShowKycModal] = useState(false);
 
     return (
-        <div className="flex min-h-screen bg-[var(--background)] theme-purple">
+        <div className="flex h-screen bg-[var(--background)] theme-purple overflow-hidden">
 
             <AgentSidebar />
-            <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
+            <div className="flex-1 flex flex-col h-screen overflow-hidden">
 
                 <MobileTopbar />
 

@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }) {
     };
 
     return (
-        <div className="flex min-h-screen bg-[var(--background)] theme-purple">
+        <div className="flex h-screen bg-[var(--background)] theme-purple overflow-hidden">
             <AnimatePresence>
                 {toast.show && (
                     <motion.div
@@ -45,7 +45,7 @@ export default function DashboardLayout({ children }) {
             <Sidebar />
 
 
-            <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
+            <div className="flex-1 flex flex-col h-screen overflow-hidden">
 
                 <MobileTopbar />
 

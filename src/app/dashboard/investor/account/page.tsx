@@ -222,7 +222,7 @@ export default function AccountPage() {
                                 style={{ background: 'var(--color-gradient-Glofi)' }}
                             >
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-black/40 mb-1.5 sm:mb-2.5">USD BALANCE</p>
+                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-black/40 mb-1.5 sm:mb-2.5">INR BALANCE</p>
                                 <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-black text-black mb-5 sm:mb-8">₹{profileData?.usdBalance || "0.00"}</p>
                                 <div className="flex gap-2 text-black">
                                     <button className="px-3 py-1 bg-black/10 text-black text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-black/5 hover:bg-black/20">Deposit</button>

@@ -119,7 +119,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="relative w-full max-w-md mx-auto rounded-md overflow-hidden bg-[var(--background)] border border-[var(--sidebar-border)] shadow-2xl"
+                    className="relative w-full max-w-md mx-auto rounded-md flex flex-col max-h-[90vh] bg-[var(--background)] border border-[var(--sidebar-border)] shadow-2xl overflow-hidden"
                 >
                     <div className="p-4 sm:p-6 border-b border-[var(--sidebar-border)] flex-shrink-0">
                         <div className="flex items-center justify-between mb-2">
@@ -144,7 +144,7 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
                         )}
                     </div>
 
-                    <div className="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
+                    <div className="flex-1 p-4 sm:p-6 overflow-y-auto custom-scrollbar min-h-0">
                         <AnimatePresence mode="wait">
                             {step === 1 && (
                                 <StepOne 
@@ -307,18 +307,18 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
             <div className="space-y-6">
                 <div className="bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 rounded-2xl p-6 shadow-inner">
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-black mb-2">Current Market Value / Fraction</p>
-                    <p className="text-3xl font-black text-[var(--sidebar-active-text)] font-Montserrat">$ {Math.round(marketValueNum).toLocaleString()}</p>
+                    <p className="text-3xl font-black text-[var(--sidebar-active-text)] font-Montserrat">₹ {Math.round(marketValueNum).toLocaleString()}</p>
                 </div>
 
                 <div className="space-y-3">
                     <label className="text-[11px] font-black text-[var(--header-text)] uppercase tracking-widest">Set Your Asking Price</label>
                     <div className="relative">
-                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[var(--sidebar-active-text)] font-black text-lg">$</div>
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--sidebar-active-text)] font-black text-lg pointer-events-none select-none z-10">₹</div>
                         <input 
                             type="number"
                             value={formData.pricePerFraction}
                             onChange={(e) => setFormData({...formData, pricePerFraction: Number(e.target.value)})}
-                            className="w-full rounded-md bg-[var(--dashboard-border)] border border-[var(--sidebar-border)] p-4 focus:outline-none focus:border-[var(--color-primary-300)]/50 text-[var(--header-text)] font-montserrat text-lg font-bold transition-all focus:border-[var(--sidebar-active-text)]/40 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 shadow-md"
+                            className="w-full rounded-md bg-[var(--dashboard-border)] border border-[var(--sidebar-border)] py-4 pl-9 pr-4 focus:outline-none focus:border-[var(--color-primary-300)]/50 text-[var(--header-text)] font-montserrat text-lg font-bold transition-all focus:border-[var(--sidebar-active-text)]/40 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 shadow-md"
                         />
                     </div>
                 </div>
@@ -350,8 +350,8 @@ function StepTwo({ asset, formData, setFormData, marketValue }) {
                 <div className="bg-[var(--background)] border border-[var(--sidebar-border)] rounded-[2rem] p-8 shadow-inner relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--sidebar-active-text)]/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-[var(--sidebar-active-text)]/10 transition-colors" />
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-black mb-3">Total Listing Value</p>
-                    <p className="text-[36px] font-black text-[var(--header-text)] leading-none tracking-tight mb-2">$ {(formData.fractionsToSell * formData.pricePerFraction).toLocaleString()}</p>
-                    <p className="text-[11px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-widest">{formData.fractionsToSell} Assets × $ {parseFloat(formData.pricePerFraction).toLocaleString()}</p>
+                    <p className="text-[36px] font-black text-[var(--header-text)] leading-none tracking-tight mb-2">₹ {(formData.fractionsToSell * formData.pricePerFraction).toLocaleString()}</p>
+                    <p className="text-[11px] text-[var(--sidebar-active-text)] font-bold uppercase tracking-widest">{formData.fractionsToSell} Assets × ₹ {parseFloat(formData.pricePerFraction).toLocaleString()}</p>
                 </div>
             </div>
         </motion.div>
@@ -373,7 +373,7 @@ function StepThree({ formData, setFormData, totalPrice }) {
                 </div>
                 <div className="text-right">
                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Total Price</p>
-                    <p className="text-sm sm:text-base font-bold text-[var(--sidebar-active-text)]">$ {totalPrice}</p>
+                    <p className="text-sm sm:text-base font-bold text-[var(--sidebar-active-text)]">₹ {totalPrice}</p>
                 </div>
             </div>
             <div className="space-y-4 sm:space-y-6">
@@ -413,8 +413,8 @@ function StepFour({ asset, formData, setFormData }) {
     const items = [
         { label: "Property", value: asset.name },
         { label: "Fractions for Sale", value: `${formData.fractionsToSell} of ${asset.fractions || 100}` },
-        { label: "Price per Fraction", value: `$${parseFloat(formData.pricePerFraction).toLocaleString()}`, color: "text-[var(--color-primary-300)]" },
-        { label: "Total Asking Price", value: `$${(formData.fractionsToSell * formData.pricePerFraction).toLocaleString()}`, color: "text-[var(--color-primary-300)]", bold: true },
+        { label: "Price per Fraction", value: `₹${parseFloat(formData.pricePerFraction).toLocaleString()}`, color: "text-[var(--color-primary-300)]" },
+        { label: "Total Asking Price", value: `₹${(formData.fractionsToSell * formData.pricePerFraction).toLocaleString()}`, color: "text-[var(--color-primary-300)]", bold: true },
         { label: "Minimum Purchase", value: `${formData.minPurchase} fraction` },
     ];
 
