@@ -23,7 +23,7 @@ export default function ValueSection() {
             id="values"
             className="bg-[#004852] w-full flex justify-center overflow-hidden border-t border-b border-[#00F4C4]/30"
         >
-            <div className="w-full bg-[#004852] py-10 sm:py-12 z-10">
+            <div className="w-full bg-[#004852] py-20 sm:py-24 md:py-32 z-10">
                 <motion.div
                     className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-around gap-8 md:gap-4"
                     {...viewProps}

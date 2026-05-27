@@ -12,7 +12,7 @@ import KYCModal from "@/components/dashboard/KYCModal";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 import PaymentModal from "@/components/dashboard/PaymentModal";
 
-import { 
+import {
     useGetAssetByIdQuery,
     useGetAssetReturnsQuery,
     useGetAssetCashflowQuery,
@@ -25,20 +25,14 @@ import { useGetKycStatusQuery } from "@/store/api/kycApi";
 
 import { API_URL } from "@/constants";
 
-const formatValuation = (val) => {
-    const num = parseFloat(val);
-    if (isNaN(num)) return "N/A";
-    if (num >= 1e7) return `₹${(num / 1e7).toFixed(1)} Cr`;
-    if (num >= 1e5) return `₹${(num / 1e5).toFixed(1)} L`;
-    if (num >= 1e3) return `₹${(num / 1e3).toFixed(1)} K`;
-    return `₹${num.toLocaleString('en-IN')}`;
-};
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 export default function PropertyDetailPage() {
+    const { formatPrice, currency } = useCurrency();
     const params = useParams();
     const router = useRouter();
     const assetId = params.id as string;
-    
+
     const { data: property, isLoading, isError } = useGetAssetByIdQuery(assetId);
     const { data: returnsData } = useGetAssetReturnsQuery(assetId);
     const { data: cashflowData } = useGetAssetCashflowQuery(assetId);
@@ -235,7 +229,7 @@ export default function PropertyDetailPage() {
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                             >
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Valuation</p>
-                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{formatValuation(property.valuation)}</p>
+                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{formatPrice(property.valuation, true)}</p>
                             </div>
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
@@ -243,10 +237,10 @@ export default function PropertyDetailPage() {
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Potential Annual Return</p>
                                 <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)] truncate">{
                                     (
-                                        parseFloat(property.expectedYield || 0) + 
-                                        parseFloat(property.expectedAnnualRent || 0) + 
-                                        parseFloat(property.rentalGrowthRate || 0) + 
-                                        parseFloat(property.expectedAppreciationRate || 0) - 
+                                        parseFloat(property.expectedYield || 0) +
+                                        parseFloat(property.expectedAnnualRent || 0) +
+                                        parseFloat(property.rentalGrowthRate || 0) +
+                                        parseFloat(property.expectedAppreciationRate || 0) -
                                         parseFloat(property.operatingCostRate || 0)
                                     ).toFixed(2)
                                 }%</p>
@@ -321,17 +315,16 @@ export default function PropertyDetailPage() {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all relative whitespace-nowrap ${
-                                        activeTab === tab.id 
-                                            ? "text-[var(--sidebar-active-text)]" 
-                                            : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
-                                    }`}
+                                    className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all relative whitespace-nowrap ${activeTab === tab.id
+                                        ? "text-[var(--sidebar-active-text)]"
+                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
+                                        }`}
                                 >
                                     {tab.label}
                                     {activeTab === tab.id && (
-                                        <motion.div 
+                                        <motion.div
                                             layoutId="activePerformanceTab"
-                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--sidebar-active-text)]" 
+                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--sidebar-active-text)]"
                                         />
                                     )}
                                 </button>
@@ -350,8 +343,8 @@ export default function PropertyDetailPage() {
                                         cashflowData.data.map((item, index) => (
                                             <div key={index} className="grid grid-cols-3 text-xs font-montserrat py-1">
                                                 <span className="text-[var(--color-text-muted)]">Year {item.year}</span>
-                                                <span className="text-right text-[var(--header-text)] font-semibold">₹{item.grossRent?.toLocaleString()}</span>
-                                                <span className="text-right text-[var(--color-status-success)] font-bold">₹{item.netCashflow?.toLocaleString()}</span>
+                                                <span className="text-right text-[var(--header-text)] font-semibold">{formatPrice(item.grossRent)}</span>
+                                                <span className="text-right text-[var(--color-status-success)] font-bold">{formatPrice(item.netCashflow)}</span>
                                             </div>
                                         ))
                                     ) : (
@@ -372,7 +365,7 @@ export default function PropertyDetailPage() {
                                         rentalData.data.map((item, index) => (
                                             <div key={index} className="grid grid-cols-2 text-xs font-montserrat py-1">
                                                 <span className="text-[var(--color-text-muted)]">{item.period || `Year ${item.year}`}</span>
-                                                <span className="text-right text-[var(--header-text)] font-semibold">₹{item.amount?.toLocaleString() || item.rent?.toLocaleString()}</span>
+                                                <span className="text-right text-[var(--header-text)] font-semibold">{formatPrice(item.amount || item.rent)}</span>
                                             </div>
                                         ))
                                     ) : (
@@ -391,10 +384,10 @@ export default function PropertyDetailPage() {
                                                 <div key={index} className="space-y-1.5">
                                                     <div className="flex justify-between text-xs">
                                                         <span className="text-[var(--color-text-muted)] font-medium">Year {item.year}</span>
-                                                        <span className="text-[var(--header-text)] font-bold">₹{item.valuation?.toLocaleString()}</span>
+                                                        <span className="text-[var(--header-text)] font-bold">{formatPrice(item.valuation)}</span>
                                                     </div>
                                                     <div className="h-1.5 bg-[var(--sidebar-border)] rounded-full overflow-hidden">
-                                                        <motion.div 
+                                                        <motion.div
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${(item.valuation / valuationData.data[valuationData.data.length - 1].valuation) * 100}%` }}
                                                             className="h-full bg-gradient-to-r from-[var(--sidebar-active-text)]/40 to-[var(--sidebar-active-text)]"
@@ -432,7 +425,7 @@ export default function PropertyDetailPage() {
                     >
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">Per Fraction</p>
                         <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">
-                            ₹{Number(property.fractionPrice)?.toLocaleString()}
+                            {formatPrice(property.fractionPrice)}
                         </p>
 
                         <div className="space-y-3 mb-6">
@@ -489,7 +482,7 @@ export default function PropertyDetailPage() {
                 asset={{
                     assetId: params.id as string,
                     name: property.title,
-                    currentValue: `₹${(property.fractionPrice * investQuantity).toLocaleString("en-IN")}`,
+                    currentValue: formatPrice(property.fractionPrice * investQuantity),
                     fractions: investQuantity,
                 }}
                 onSuccess={handlePaymentSuccess}

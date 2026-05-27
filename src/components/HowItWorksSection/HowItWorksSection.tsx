@@ -148,13 +148,15 @@ function StepCopy({
 }) {
     return (
         <motion.div
-            className={`how-it-works__copy ${variant === 'dark' ? 'how-it-works__copy--on-dark' : ''
+            className={`how-it-works__copy flex flex-col gap-4 md:gap-6 ${variant === 'dark' ? 'how-it-works__copy--on-dark' : ''
                 }`}
             variants={copyVariants}
         >
             <StepNumber value={number} variant={variant} />
-            <h3 className="how-it-works__step-title">{title}</h3>
-            <p className="how-it-works__step-desc">{description}</p>
+            <div className="flex flex-col gap-2 md:gap-3">
+                <h3 className="how-it-works__step-title !mb-0">{title}</h3>
+                <p className="how-it-works__step-desc leading-relaxed opacity-90">{description}</p>
+            </div>
         </motion.div>
     );
 }

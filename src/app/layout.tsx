@@ -26,13 +26,17 @@ export const metadata = {
   },
 };
 
+import { CurrencyProvider } from "@/providers/CurrencyProvider";
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={`${montserrat.variable} antialiased bg-[var(--background)] theme-purple`}>
-        <StoreProvider>
-          {children}
-        </StoreProvider>
+        <CurrencyProvider>
+          <StoreProvider>
+            {children}
+          </StoreProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

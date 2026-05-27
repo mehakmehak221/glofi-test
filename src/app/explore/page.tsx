@@ -11,6 +11,8 @@ import { API_URL } from "@/constants";
 import { MapPinIcon, TrendingUpIcon, VerifiedIcon, SecondaryMarketplaceIcon } from "@/components/VectorImages";
 import Link from "next/link";
 
+import { useCurrency } from "@/providers/CurrencyProvider";
+
 const DROPDOWN_STYLES = `
   .dropdown-scroll::-webkit-scrollbar {
     width: 4px;
@@ -42,14 +44,14 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const filteredOptions = options.filter(opt => 
+    const filteredOptions = options.filter(opt =>
         opt.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
         <div className={`flex flex-col gap-1.5 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
             <label className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold px-1 font-Montserrat">{label}</label>
-            <div 
+            <div
                 onClick={() => !disabled && setIsOpen(!isOpen)}
                 className={`flex justify-between items-center bg-[var(--color-bg-card)] border border-white/10 rounded-full px-4 py-1.5 text-xs font-Montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-white/20'} ${isOpen ? 'border-white/30 shadow-sm' : ''}`}
             >
@@ -114,15 +116,6 @@ const CATEGORY_MAP = {
     "Residential": "RESIDENTIAL"
 };
 
-const formatValuation = (val) => {
-    const num = parseFloat(val);
-    if (isNaN(num)) return "N/A";
-    if (num >= 1e7) return `₹${(num / 1e7).toFixed(1)} Cr`;
-    if (num >= 1e5) return `₹${(num / 1e5).toFixed(1)} L`;
-    if (num >= 1e3) return `₹${(num / 1e3).toFixed(1)} K`;
-    return `₹${num.toLocaleString('en-IN')}`;
-};
-
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -146,6 +139,7 @@ const cardVariants: Variants = {
 };
 
 export default function ExplorePage() {
+    const { formatPrice, currency } = useCurrency();
     const [activeCategory, setActiveCategory] = useState("All");
     const [countryFilter, setCountryFilter] = useState("");
     const [stateFilter, setStateFilter] = useState("");
@@ -154,11 +148,11 @@ export default function ExplorePage() {
     const [stateIsoCode, setStateIsoCode] = useState("");
 
     const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
-    const { data: assetsData, isLoading, isError } = useGetAssetsQuery({ 
-      category: apiCategory,
-      country: countryFilter || undefined,
-      state: stateFilter || undefined,
-      city: cityFilter || undefined
+    const { data: assetsData, isLoading, isError } = useGetAssetsQuery({
+        category: apiCategory,
+        country: countryFilter || undefined,
+        state: stateFilter || undefined,
+        city: cityFilter || undefined
     });
 
     const assets = assetsData?.data || [];
@@ -167,7 +161,7 @@ export default function ExplorePage() {
         <div className="min-h-screen bg-black text-white font-Montserrat overflow-x-hidden">
             <Navbar />
             <style>{DROPDOWN_STYLES}</style>
-            
+
             <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-28 pb-12 sm:pt-36 sm:pb-16">
 
 
@@ -177,7 +171,7 @@ export default function ExplorePage() {
                             Discover Assets
                         </h1>
                         <p className="text-sm sm:text-base text-[var(--color-text-muted)] max-w-xl font-medium leading-relaxed">
-                            Institutional-grade real estate. Digitally simplified. Invest fractionally starting from ₹15,000.
+                            Institutional-grade real estate. Digitally simplified. Invest fractionally starting from {currency.symbol}15,000.
                         </p>
                     </div>
 
@@ -198,7 +192,7 @@ export default function ExplorePage() {
                         </div>
 
                         <div className="flex flex-wrap gap-6 items-center border-t border-white/5 pt-8">
-                            <PillDropdown 
+                            <PillDropdown
                                 label="Country"
                                 options={Country.getAllCountries()}
                                 value={countryFilter}
@@ -211,7 +205,7 @@ export default function ExplorePage() {
                                 }}
                                 placeholder="Select Country"
                             />
-                            <PillDropdown 
+                            <PillDropdown
                                 label="State"
                                 options={countryIsoCode ? State.getStatesOfCountry(countryIsoCode) : []}
                                 value={stateFilter}
@@ -223,7 +217,7 @@ export default function ExplorePage() {
                                 placeholder="Select State"
                                 disabled={!countryIsoCode}
                             />
-                            <PillDropdown 
+                            <PillDropdown
                                 label="City"
                                 options={(countryIsoCode && stateIsoCode) ? City.getCitiesOfState(countryIsoCode, stateIsoCode) : []}
                                 value={cityFilter}
@@ -234,7 +228,7 @@ export default function ExplorePage() {
                                 disabled={!stateIsoCode}
                             />
                             {(countryFilter || stateFilter || cityFilter) && (
-                                <button 
+                                <button
                                     onClick={() => {
                                         setCountryFilter("");
                                         setStateFilter("");
@@ -277,8 +271,8 @@ export default function ExplorePage() {
                                 assets.length === 1
                                     ? "grid grid-cols-1 gap-6 sm:gap-8 max-w-lg w-full justify-items-stretch"
                                     : assets.length === 2
-                                      ? "grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl w-full justify-items-stretch"
-                                      : "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 w-full"
+                                        ? "grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl w-full justify-items-stretch"
+                                        : "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 w-full"
                             }
                         >
                             {assets.map((property) => {
@@ -316,109 +310,108 @@ export default function ExplorePage() {
                                             prefetch={false}
                                         />
                                         <div className="relative z-[2] pointer-events-none flex flex-col">
-                                        <div className="relative h-44 sm:h-48 md:h-52 overflow-hidden shrink-0">
-                                            <Image
-                                                src={imageUrl}
-                                                alt={property.title}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                                            
-                                            <div className="absolute top-3 left-3 flex gap-2 sm:top-4 sm:left-4">
-                                                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-md ring-2 ring-black/60 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-black/75 text-white border border-white/20">
-                                                    {property.category.replace('_', ' ')}
-                                                </span>
+                                            <div className="relative h-44 sm:h-48 md:h-52 overflow-hidden shrink-0">
+                                                <Image
+                                                    src={imageUrl}
+                                                    alt={property.title}
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+
+                                                <div className="absolute top-3 left-3 flex gap-2 sm:top-4 sm:left-4">
+                                                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-md ring-2 ring-black/60 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-black/75 text-white border border-white/20">
+                                                        {property.category.replace('_', ' ')}
+                                                    </span>
+                                                </div>
+
+                                                <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
+                                                    <span
+                                                        className={`inline-flex items-center px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-lg ring-2 ring-black/70 ${riskLevel === "LOW"
+                                                                ? "text-[#B8FFF0] bg-[#041512] border border-[#00DAAF]/80"
+                                                                : riskLevel === "HIGH"
+                                                                    ? "text-[#FFB4B4] bg-[#1a0808] border border-[#FF5C5C]/80"
+                                                                    : "text-[#FFD699] bg-[#1a1206] border border-[#E8940C]/90"
+                                                            }`}
+                                                    >
+                                                        {riskLevel} risk
+                                                    </span>
+                                                </div>
+
+                                                <div className="absolute bottom-3 left-3 right-3 text-left sm:bottom-4 sm:left-4 sm:right-4">
+                                                    <h3 className="text-base sm:text-lg font-black text-white mb-0.5 sm:mb-1 tracking-tight leading-tight">{property.title}</h3>
+                                                    <div className="flex items-center gap-1.5 text-white/70 text-[11px] sm:text-xs font-medium">
+                                                        <MapPinIcon className="w-3.5 h-3.5" />
+                                                        {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
+                                                    </div>
+                                                </div>
                                             </div>
 
-                                            <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
-                                                <span
-                                                    className={`inline-flex items-center px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-lg ring-2 ring-black/70 ${
-                                                        riskLevel === "LOW"
-                                                            ? "text-[#B8FFF0] bg-[#041512] border border-[#00DAAF]/80"
-                                                            : riskLevel === "HIGH"
-                                                              ? "text-[#FFB4B4] bg-[#1a0808] border border-[#FF5C5C]/80"
-                                                              : "text-[#FFD699] bg-[#1a1206] border border-[#E8940C]/90"
-                                                    }`}
+                                            <div className="p-4 sm:p-5 pt-4">
+                                                <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-4 mb-4 sm:mb-5 text-left items-start">
+                                                    <div className="min-w-0">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                            Asset valuation
+                                                        </p>
+                                                        <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug">
+                                                            {formatPrice(property.valuation, true)}
+                                                        </p>
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                            Entry point
+                                                        </p>
+                                                        <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug break-words">
+                                                            {formatPrice(property.fractionPrice)}
+                                                        </p>
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                            Potential annual return
+                                                        </p>
+                                                        <p className="text-sm sm:text-base font-black text-[var(--color-primary-300)] tracking-tight tabular-nums leading-snug">
+                                                            {formattedYield}% p.a.
+                                                        </p>
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                            Available
+                                                        </p>
+                                                        <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug">
+                                                            {property.availableFractions?.toLocaleString()}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mb-4 sm:mb-5">
+                                                    <div className="flex justify-between items-baseline gap-4 mb-1.5 sm:mb-2">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold leading-tight shrink-0">
+                                                            Funding progress
+                                                        </p>
+                                                        <p className="text-[11px] sm:text-xs font-black text-[var(--color-primary-300)] tabular-nums shrink-0">
+                                                            {fundedPercentage}%
+                                                        </p>
+                                                    </div>
+                                                    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                                        <motion.div
+                                                            className="h-full rounded-full"
+                                                            style={{ background: 'linear-gradient(90deg, #00DAAF 0%, #00B28F 100%)' }}
+                                                            initial={{ width: 0 }}
+                                                            animate={{ width: `${fundedPercentage}%` }}
+                                                            transition={{ delay: 0.5, duration: 1, ease: "circOut" }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <Link
+                                                    href="/sign-in"
+                                                    prefetch={false}
+                                                    className="relative z-[3] block pointer-events-auto w-full py-3 rounded-xl bg-white/5 text-white font-bold text-xs sm:text-sm text-center border border-white/10 transition-all duration-300 shadow-lg hover:scale-[1.01] hover:bg-[#00DAAF] hover:text-black hover:border-[var(--color-primary-300)]/50 active:scale-[0.99]"
                                                 >
-                                                    {riskLevel} risk
-                                                </span>
+                                                    Start Investing
+                                                </Link>
                                             </div>
-
-                                            <div className="absolute bottom-3 left-3 right-3 text-left sm:bottom-4 sm:left-4 sm:right-4">
-                                                <h3 className="text-base sm:text-lg font-black text-white mb-0.5 sm:mb-1 tracking-tight leading-tight">{property.title}</h3>
-                                                <div className="flex items-center gap-1.5 text-white/70 text-[11px] sm:text-xs font-medium">
-                                                    <MapPinIcon className="w-3.5 h-3.5" />
-                                                    {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="p-4 sm:p-5 pt-4">
-                                            <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-4 mb-4 sm:mb-5 text-left items-start">
-                                                <div className="min-w-0">
-                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
-                                                        Asset valuation
-                                                    </p>
-                                                    <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug">
-                                                        {formatValuation(property.valuation)}
-                                                    </p>
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
-                                                        Entry point
-                                                    </p>
-                                                    <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug break-words">
-                                                        ₹{Number(property.fractionPrice).toLocaleString()}
-                                                    </p>
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
-                                                        Potential annual return
-                                                    </p>
-                                                    <p className="text-sm sm:text-base font-black text-[var(--color-primary-300)] tracking-tight tabular-nums leading-snug">
-                                                        {formattedYield}% p.a.
-                                                    </p>
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
-                                                        Available
-                                                    </p>
-                                                    <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug">
-                                                        {property.availableFractions?.toLocaleString()}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div className="mb-4 sm:mb-5">
-                                                <div className="flex justify-between items-baseline gap-4 mb-1.5 sm:mb-2">
-                                                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold leading-tight shrink-0">
-                                                        Funding progress
-                                                    </p>
-                                                    <p className="text-[11px] sm:text-xs font-black text-[var(--color-primary-300)] tabular-nums shrink-0">
-                                                        {fundedPercentage}%
-                                                    </p>
-                                                </div>
-                                                <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                                                    <motion.div
-                                                        className="h-full rounded-full"
-                                                        style={{ background: 'linear-gradient(90deg, #00DAAF 0%, #00B28F 100%)' }}
-                                                        initial={{ width: 0 }}
-                                                        animate={{ width: `${fundedPercentage}%` }}
-                                                        transition={{ delay: 0.5, duration: 1, ease: "circOut" }}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <Link
-                                                href="/sign-in"
-                                                prefetch={false}
-                                                className="relative z-[3] block pointer-events-auto w-full py-3 rounded-xl bg-white/5 text-white font-bold text-xs sm:text-sm text-center border border-white/10 transition-all duration-300 shadow-lg hover:scale-[1.01] hover:bg-[#00DAAF] hover:text-black hover:border-[var(--color-primary-300)]/50 active:scale-[0.99]"
-                                            >
-                                                Start Investing
-                                            </Link>
-                                        </div>
                                         </div>
                                     </motion.div>
                                 );
