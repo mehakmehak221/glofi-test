@@ -45,14 +45,14 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const filteredOptions = options.filter(opt => 
+    const filteredOptions = options.filter(opt =>
         opt.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
         <div className={`flex flex-col gap-1.5 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
             <label className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold px-1 font-montserrat">{label}</label>
-            <div 
+            <div
                 onClick={() => !disabled && setIsOpen(!isOpen)}
                 className={`flex justify-between items-center bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-full px-4 py-1.5 text-xs font-montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[var(--sidebar-active-text)]/30'} ${isOpen ? 'border-[var(--sidebar-active-text)]/30 shadow-sm' : ''}`}
             >
@@ -155,11 +155,11 @@ export default function MarketplacePage() {
     const router = useRouter();
 
     const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
-    const { data: assetsData, isLoading, isError } = useGetAssetsQuery({ 
-      category: apiCategory,
-      country: countryFilter || undefined,
-      state: stateFilter || undefined,
-      city: cityFilter || undefined
+    const { data: assetsData, isLoading, isError } = useGetAssetsQuery({
+        category: apiCategory,
+        country: countryFilter || undefined,
+        state: stateFilter || undefined,
+        city: cityFilter || undefined
     });
 
     const assets = assetsData?.data || [];
@@ -169,13 +169,13 @@ export default function MarketplacePage() {
     };
 
     useEffect(() => {
-       
+
     }, []);
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)]">
             <style>{DROPDOWN_STYLES}</style>
-            
+
             <div className="max-w-6xl mx-auto mb-12 sm:mb-16">
                 <InvestorBanners />
             </div>
@@ -224,7 +224,7 @@ export default function MarketplacePage() {
                 </div>
 
                 <div className="flex flex-wrap gap-4 mt-6 items-center">
-                    <PillDropdown 
+                    <PillDropdown
                         label="Country"
                         options={Country.getAllCountries()}
                         value={countryFilter}
@@ -237,7 +237,7 @@ export default function MarketplacePage() {
                         }}
                         placeholder="Select Country"
                     />
-                    <PillDropdown 
+                    <PillDropdown
                         label="State"
                         options={countryIsoCode ? State.getStatesOfCountry(countryIsoCode) : []}
                         value={stateFilter}
@@ -249,7 +249,7 @@ export default function MarketplacePage() {
                         placeholder="Select State"
                         disabled={!countryIsoCode}
                     />
-                    <PillDropdown 
+                    <PillDropdown
                         label="City"
                         options={(countryIsoCode && stateIsoCode) ? City.getCitiesOfState(countryIsoCode, stateIsoCode) : []}
                         value={cityFilter}
@@ -260,7 +260,7 @@ export default function MarketplacePage() {
                         disabled={!stateIsoCode}
                     />
                     {(countryFilter || stateFilter || cityFilter) && (
-                        <button 
+                        <button
                             onClick={() => {
                                 setCountryFilter("");
                                 setStateFilter("");
@@ -288,7 +288,7 @@ export default function MarketplacePage() {
                             Error loading assets. Please try again later.
                         </div>
                     ) : assets.length === 0 ? (
-                        <div className="text-center p-12 text-[var(--color-text-muted)] border border-dashed border-[var(--color-border-subtle)] rounded-2xl">
+                        <div className="text-center p-12 text-[var(--color-text-muted)] border border-dashed border-[var(--sidebar-border)] rounded-2xl">
                             No assets found in this category.
                         </div>
                     ) : (
