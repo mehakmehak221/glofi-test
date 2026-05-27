@@ -198,6 +198,21 @@
   --marketplace-card-progress-fill-end: #00DAAF;
   --marketplace-card-progress-text: #6B7280;
   --marketplace-card-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, transparent 40%, rgba(255, 255, 255, 0.4) 100%);
+  --marketplace-text-primary: #1A1F1C;
+  --marketplace-text-secondary: #4B5563;
+  --marketplace-text-muted: #6B7280;
+  --marketplace-banner-bg: #FFFFFF;
+  --marketplace-banner-border: #E5E7EB;
+  --marketplace-banner-text-primary: #111827;
+  --marketplace-banner-text-secondary: #6B7280;
+  --marketplace-banner-chip-bg: #111827;
+  --marketplace-banner-chip-text: #FFFFFF;
+  --marketplace-banner-arrow-bg: #E8F7F4;
+  --marketplace-banner-arrow-fg: #0B2D24;
+  --marketplace-feature-card-bg: #FFFFFF;
+  --marketplace-feature-card-border: #E5E7EB;
+  --marketplace-feature-card-title: #111827;
+  --marketplace-feature-card-subtitle: #4B5563;
 
   --btn-mint-bg: #E8F7F4;
   --btn-mint-text: #11BA96;
@@ -258,6 +273,21 @@
   --marketplace-card-progress-fill-end: #009976;
   --marketplace-card-progress-text: var(--color-text-muted);
   --marketplace-card-overlay: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+  --marketplace-text-primary: #F8FAFC;
+  --marketplace-text-secondary: #D1D5DB;
+  --marketplace-text-muted: #9CA3AF;
+  --marketplace-banner-bg: #0B100E;
+  --marketplace-banner-border: var(--color-border-subtle);
+  --marketplace-banner-text-primary: #F8FAFC;
+  --marketplace-banner-text-secondary: #B9C1CC;
+  --marketplace-banner-chip-bg: #121A16;
+  --marketplace-banner-chip-text: #FFFFFF;
+  --marketplace-banner-arrow-bg: #0E1814;
+  --marketplace-banner-arrow-fg: #E5FDF8;
+  --marketplace-feature-card-bg: var(--card-surface);
+  --marketplace-feature-card-border: var(--sidebar-border);
+  --marketplace-feature-card-title: #FFFFFF;
+  --marketplace-feature-card-subtitle: #9CA3AF;
 
   --btn-mint-bg: var(--color-primary-100);
   --btn-mint-text: #000000;
