@@ -118,7 +118,7 @@ export default function GlofiCopyrightSection() {
                 </motion.nav>
 
                 <motion.p className="site-footer__copyright" variants={fadeUpSubtle}>
-                    Copyright © 2026 GloFi Real Estates
+                    Copyright © 2026 GloFi Estates
                 </motion.p>
             </motion.div>
         </footer>
