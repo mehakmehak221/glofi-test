@@ -105,15 +105,15 @@ export default function HeroSection() {
                         reduceMotion
                             ? { duration: 0.65, ease: LANDING_EASE, delay: 0.35 }
                             : {
-                                  opacity: { duration: 0.65, ease: LANDING_EASE, delay: 0.35 },
-                                  scale: { duration: 0.65, ease: LANDING_EASE, delay: 0.35 },
-                                  y: {
-                                      duration: 5,
-                                      repeat: Infinity,
-                                      ease: 'easeInOut',
-                                      delay: 1.2,
-                                  },
-                              }
+                                opacity: { duration: 0.65, ease: LANDING_EASE, delay: 0.35 },
+                                scale: { duration: 0.65, ease: LANDING_EASE, delay: 0.35 },
+                                y: {
+                                    duration: 5,
+                                    repeat: Infinity,
+                                    ease: 'easeInOut',
+                                    delay: 1.2,
+                                },
+                            }
                     }
                 >
                     <Image

@@ -306,7 +306,6 @@
     color: var(--foreground);
     font-family: var(--font-primary);
     line-height: 1.6;
-    overflow-x: hidden;
   }
 
   h1,
@@ -623,7 +622,7 @@
     gap: 1.5rem;
     height: 72px;
     padding: 0 1.25rem;
-    max-width: 1218px;
+    max-width: 1440px;
     margin: 0 auto;
   }
 
@@ -971,9 +970,7 @@
   .hero-section {
     position: relative;
     width: 100%;
-    max-width: 1440px;
     min-height: 0;
-    margin: 0 auto;
     overflow: hidden;
     background: #041527;
   }

@@ -35,24 +35,24 @@ export default function GlobalScaleSection() {
     };
 
     const itemVariants = {
-        hidden: { 
-            opacity: 0, 
+        hidden: {
+            opacity: 0,
             y: 40,
             rotateX: 12,
             z: -40,
             transformPerspective: 1200
         },
-        visible: { 
-            opacity: 1, 
+        visible: {
+            opacity: 1,
             y: 0,
             rotateX: 0,
             z: 0,
-            transition: { 
+            transition: {
                 type: "spring" as const,
                 stiffness: 60,
                 damping: 18,
                 mass: 0.8
-            } 
+            }
         }
     };
 
