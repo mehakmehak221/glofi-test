@@ -27,7 +27,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
     const total = subtotal + fee;
 
     const formatCurrency = (val) =>
-        "$" + (Number(val) || 0).toLocaleString("en-US", { minimumFractionDigits: 0 });
+        "₹" + (Number(val) || 0).toLocaleString("en-IN", { minimumFractionDigits: 0 });
 
     const isKycApproved = kycData?.status === "APPROVED" || kycData?.status === "VERIFIED";
 
