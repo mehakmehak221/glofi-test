@@ -362,7 +362,7 @@ function StepDetails({
                         </div>
                         <div className="flex justify-between items-center text-sm">
                             <span className="font-bold text-[var(--color-text-muted)] uppercase tracking-wider">Fee (UPI)</span>
-                            <span className="font-extrabold text-[var(--header-text)]">$0.00</span>
+                            <span className="font-extrabold text-[var(--header-text)]">₹0.00</span>
                         </div>
                         <div className="h-px bg-[var(--sidebar-border)] my-1" />
                         <div className="flex justify-between items-center">
