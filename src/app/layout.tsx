@@ -27,6 +27,7 @@ export const metadata = {
 };
 
 import { CurrencyProvider } from "@/providers/CurrencyProvider";
+import GlobalToast from "@/components/GlobalToast";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${montserrat.variable} antialiased bg-[var(--background)] theme-purple`}>
         <CurrencyProvider>
           <StoreProvider>
+            <GlobalToast />
             {children}
           </StoreProvider>
         </CurrencyProvider>

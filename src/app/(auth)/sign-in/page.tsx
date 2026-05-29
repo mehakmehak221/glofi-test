@@ -86,6 +86,8 @@ function SignInPageContent() {
             localStorage.setItem("isLoggedIn", "true");
             setCookie("isLoggedIn", "true");
 
+            localStorage.setItem("toastMessage", "Login successful!");
+
             router.push("/dashboard");
         } catch (err: any) {
             const errorBody = err?.data;

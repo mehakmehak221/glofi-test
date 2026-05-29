@@ -51,15 +51,15 @@ export default function AgentTransactionsPage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-6 flex flex-col gap-4"
+                        className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl p-5 sm:p-6 flex flex-col justify-start hover:shadow-md transition-all relative overflow-hidden"
                     >
-                        <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-lg ${stat.bg} flex items-center justify-center`}>
-                                <stat.icon className={`w-5 h-5 ${stat.color}`} />
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center flex-shrink-0`}>
+                                <stat.icon className={`w-4 h-4 ${stat.color}`} />
                             </div>
-                            <span className="text-xs font-bold text-[var(--sidebar-text)] opacity-60 font-montserrat uppercase tracking-wider">{stat.label}</span>
+                            <span className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 font-montserrat uppercase tracking-[0.1em]">{stat.label}</span>
                         </div>
-                        <span className="text-3xl font-bold text-[var(--foreground)] font-montserrat">{stat.value}</span>
+                        <span className="text-2xl font-bold text-[var(--foreground)] font-montserrat tracking-tight mt-1">{stat.value}</span>
                     </motion.div>
                 ))}
             </div>

@@ -25,75 +25,119 @@ const formatValuation = (val) => {
 
 const EDITABLE_STATUSES = new Set(["DRAFT", "LIVE", "SUSPENDED", "REJECTED", "UNDER_REVIEW", "PENDING_REVIEW"]);
 
+function StatusBadge({ status }: { status: string }) {
+    const s = (status || "").toUpperCase();
+    const isLive = s === "LIVE";
+    const isSuspended = s === "SUSPENDED";
+    const isRejected = s === "REJECTED";
+    const isPending = s === "PENDING_REVIEW" || s === "UNDER_REVIEW";
+
+    const cls = isLive
+        ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20"
+        : isSuspended
+        ? "text-red-400 bg-red-500/10 border-red-500/20"
+        : isRejected
+        ? "text-orange-400 bg-orange-500/10 border-orange-500/20"
+        : isPending
+        ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
+        : "text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20";
+
+    const dot = isLive
+        ? "bg-emerald-500 animate-pulse"
+        : isSuspended
+        ? "bg-red-400"
+        : isRejected
+        ? "bg-orange-400"
+        : isPending
+        ? "bg-amber-400 animate-pulse"
+        : "bg-[var(--sidebar-active-text)] animate-pulse";
+
+    return (
+        <span className={`inline-flex items-center gap-1.5 text-[9px] font-bold tracking-[0.12em] font-montserrat uppercase rounded-full px-2.5 py-1 border whitespace-nowrap ${cls}`}>
+            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${dot}`} />
+            {status}
+        </span>
+    );
+}
+
 function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) {
     const propertyImage = property.images && property.images.length > 0 ? property.images[0] : null;
     const status = (property.status || "").toUpperCase();
     const isDraft = status === "DRAFT";
     const canEdit = EDITABLE_STATUSES.has(status);
     const isLive = status === "LIVE";
-    const isSuspended = status === "SUSPENDED";
+
+    const totalFractions = Number(property.totalFractions) || 0;
+    const soldFractions = Number(property.soldFractions) || 0;
+    const soldPct = totalFractions > 0 ? Math.min(100, (soldFractions / totalFractions) * 100) : 0;
+
+    const annualReturn = (
+        parseFloat(property.expectedYield || 0) +
+        parseFloat(property.expectedAnnualRent || 0) +
+        parseFloat(property.rentalGrowthRate || 0) +
+        parseFloat(property.expectedAppreciationRate || 0) -
+        parseFloat(property.operatingCostRate || 0)
+    ).toFixed(2);
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.05 }}
-            className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 lg:p-5 flex flex-col md:flex-row gap-5 items-center relative group hover:shadow-md transition-all"
+            transition={{ duration: 0.35, delay: index * 0.06 }}
+            className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl overflow-hidden flex flex-col sm:flex-row group hover:shadow-lg hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300"
         >
-            <div className="w-full md:w-32 lg:w-40 h-24 lg:h-28 bg-[var(--color-bg-card)] rounded-md flex-shrink-0 flex items-center justify-center border border-[var(--color-border-subtle)] overflow-hidden relative">
+            {/* Image */}
+            <div className="relative w-full sm:w-44 lg:w-52 flex-shrink-0 h-44 sm:h-auto min-h-[140px] bg-[var(--color-bg-card)]">
                 {propertyImage ? (
                     <Image
                         src={propertyImage.startsWith('http') ? propertyImage : `/${propertyImage}`}
                         alt={property.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 160px, 160px"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 640px) 100vw, 208px"
                     />
                 ) : (
-                    <PropertyIcon className="w-8 h-8 text-[var(--sidebar-active-text)]/20" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[var(--sidebar-active-bg)] to-[var(--card-surface)]">
+                        <PropertyIcon className="w-12 h-12 text-[var(--sidebar-active-text)]/20" />
+                    </div>
+                )}
+                {/* Category chip on image */}
+                {property.category && (
+                    <div className="absolute bottom-2 left-2">
+                        <span className="text-[8px] font-bold uppercase tracking-wider bg-black/50 text-white backdrop-blur-sm px-2 py-0.5 rounded-full font-montserrat">
+                            {property.category.replace(/_/g, ' ')}
+                        </span>
+                    </div>
                 )}
             </div>
 
-            <div className="flex-1 w-full">
-                <div className="mb-4 flex flex-col md:flex-row md:items-start justify-between gap-4">
-                    <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-1 flex-wrap">
-                            <h3 className="text-lg font-semibold text-[var(--color-text-primary)] font-montserrat">{property.title}</h3>
-                            <span
-                                className={`flex items-center gap-1.5 text-[9px] font-bold tracking-[0.1em] font-montserrat uppercase rounded-md px-2.5 py-1 whitespace-nowrap ${
-                                    isLive
-                                        ? "text-emerald-600 bg-emerald-500/10"
-                                        : isSuspended
-                                          ? "text-red-500/90 bg-red-500/10"
-                                          : "text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)]"
-                                }`}
-                            >
-                                <span
-                                    className={`w-1.5 h-1.5 rounded-full ${
-                                        isLive
-                                            ? "bg-emerald-500"
-                                            : isSuspended
-                                              ? "bg-red-500/80"
-                                              : "bg-[var(--sidebar-active-text)] animate-pulse"
-                                    }`}
-                                />
-                                {property.status}
-                            </span>
+            {/* Content */}
+            <div className="flex-1 p-4 lg:p-5 flex flex-col gap-3 min-w-0">
+
+                {/* Top row: title + actions */}
+                <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <h3 className="text-base font-bold text-[var(--color-text-primary)] font-montserrat truncate">{property.title}</h3>
+                            <StatusBadge status={property.status} />
                         </div>
-                        <p className="text-xs text-[var(--color-text-muted)] font-montserrat mt-1 flex items-center gap-1">
-                            <MapPinIcon className="w-3 h-3" />
-                            {property.location}
+                        <p className="text-[11px] text-[var(--color-text-muted)] font-montserrat flex items-center gap-1">
+                            <MapPinIcon className="w-3 h-3 flex-shrink-0" />
+                            <span className="truncate">{property.location}{property.city ? `, ${property.city}` : ''}{property.country ? `, ${property.country}` : ''}</span>
                         </p>
                     </div>
 
+                    {/* Action buttons */}
                     {(canEdit || isDraft) && (
-                        <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
                             {isDraft && (
                                 <button
                                     type="button"
                                     onClick={() => onSubmitForReview(property.id)}
-                                    className="px-3 py-1.5 rounded-lg bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] text-[10px] font-bold uppercase transition-all hover:bg-[var(--color-primary-300)]/20"
+                                    title="Submit for Review"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all hover:opacity-80"
                                 >
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                     Submit
                                 </button>
                             )}
@@ -101,8 +145,10 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                                 <button
                                     type="button"
                                     onClick={() => onEdit(property.id)}
-                                    className="px-3 py-1.5 rounded-lg bg-[var(--color-bg-surface-subtle)] border border-[var(--sidebar-border)] text-[var(--color-text-secondary)] text-[10px] font-bold uppercase transition-all hover:text-white hover:border-[var(--color-primary-300)]/30"
+                                    title="Edit"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--sidebar-border)] bg-[var(--form-surface)] text-[var(--color-text-secondary)] text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all hover:border-[var(--sidebar-active-text)]/40 hover:text-[var(--foreground)]"
                                 >
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                     Edit
                                 </button>
                             )}
@@ -110,8 +156,10 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                                 <button
                                     type="button"
                                     onClick={() => onDelete(property.id)}
-                                    className="px-3 py-1.5 rounded-lg bg-red-500/5 text-red-500/70 text-[10px] font-bold uppercase transition-all hover:bg-red-500/10 hover:text-red-500"
+                                    title="Delete"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/5 border border-red-500/10 text-red-400 text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-500"
                                 >
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                     Delete
                                 </button>
                             )}
@@ -119,42 +167,51 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                     )}
                 </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-2">
-                    <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Valuation</span>
-                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
-                            {formatValuation(property.valuation)}
-                        </span>
-                    </div >
-                    <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Sold</span>
-                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
-                            {property.soldFractions || 0}
+                {/* Divider */}
+                <div className="h-px bg-[var(--sidebar-border)]" />
+
+                {/* Stats grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Valuation</span>
+                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat">{formatValuation(property.valuation)}</span>
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Annual Return</span>
+                        <span className="text-sm font-bold text-emerald-500 font-montserrat">{annualReturn}%</span>
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Fractions Sold</span>
+                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat">
+                            {soldFractions}
+                            {totalFractions > 0 && <span className="text-[10px] text-[var(--color-text-muted)] font-normal"> / {totalFractions}</span>}
                         </span>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Potential Annual Return</span>
-                        <span className="text-sm font-bold text-[var(--color-text-secondary)] font-montserrat">
-                            {
-                                (
-                                    parseFloat(property.expectedYield || 0) +
-                                    parseFloat(property.expectedAnnualRent || 0) +
-                                    parseFloat(property.rentalGrowthRate || 0) +
-                                    parseFloat(property.expectedAppreciationRate || 0) -
-                                    parseFloat(property.operatingCostRate || 0)
-                                ).toFixed(2)
-                            }%
-                        </span>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Investors</span>
+                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat">{property.investorCount || 0}</span>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-montserrat font-medium">Investors</span>
-                        <span className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat">
-                            {property.investorCount || 0}
-                        </span>
+                </div>
+
+                {/* Fraction sold progress bar — only show when live */}
+                {isLive && totalFractions > 0 && (
+                    <div>
+                        <div className="flex justify-between items-center mb-1">
+                            <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Sold Progress</span>
+                            <span className="text-[9px] font-bold text-[var(--sidebar-active-text)] font-montserrat">{soldPct.toFixed(1)}%</span>
+                        </div>
+                        <div className="h-1.5 bg-[var(--sidebar-border)] rounded-full overflow-hidden">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${soldPct}%` }}
+                                transition={{ duration: 0.8, delay: index * 0.06 + 0.3, ease: "easeOut" }}
+                                className="h-full bg-[var(--sidebar-active-text)] rounded-full"
+                            />
+                        </div>
                     </div>
-                </div >
-            </div >
-        </motion.div >
+                )}
+            </div>
+        </motion.div>
     );
 }
 

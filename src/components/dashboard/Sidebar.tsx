@@ -62,6 +62,7 @@ export default function Sidebar() {
             localStorage.removeItem("isLoggedIn");
             removeCookie("isLoggedIn");
             removeCookie("access_token");
+            localStorage.setItem("toastMessage", "Logged out successfully");
             router.push("/sign-in");
         }
     };

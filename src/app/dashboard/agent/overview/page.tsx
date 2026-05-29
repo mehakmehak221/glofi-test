@@ -13,6 +13,8 @@ import {
     InfoIcon,
     CopyIcon,
     LocationIcon,
+    CloseIcon,
+    PendingIcon,
 } from "@/components/VectorImages";
 import { useGetAgentDashboardQuery } from "@/store/api/agentApi";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
@@ -79,6 +81,27 @@ export default function AgentOverviewPage() {
         },
     ];
 
+    const getStatusBadge = (type: string, status: string | undefined, defaultStatus: string) => {
+        const s = (status || defaultStatus).toUpperCase();
+        let colorClass = "text-[var(--color-primary-300)]";
+        let Icon = CheckIcon;
+
+        if (s === "REJECTED" || s === "INACTIVE" || s === "SUSPENDED") {
+            colorClass = "text-red-500";
+            Icon = CloseIcon;
+        } else if (s === "PENDING" || s === "UNDER_REVIEW") {
+            colorClass = "text-yellow-500";
+            Icon = PendingIcon;
+        }
+
+        return (
+            <div className={`flex items-center gap-2 text-[11px] font-bold ${colorClass} uppercase tracking-wider`}>
+                <Icon className="w-3.5 h-3.5" />
+                {type}: {s}
+            </div>
+        );
+    };
+
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
             <motion.div
@@ -109,14 +132,8 @@ export default function AgentOverviewPage() {
                             You&apos;re earning higher commission rates as one of our first 100 verified agents!
                         </p>
                         <div className="flex flex-wrap items-center gap-6 mt-4">
-                            <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--color-primary-300)] uppercase tracking-wider">
-                                <CheckIcon className="w-3.5 h-3.5" />
-                                KYC: {dashboardData?.kycStatus || "Verified"}
-                            </div>
-                            <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--color-primary-300)] uppercase tracking-wider">
-                                <CheckIcon className="w-3.5 h-3.5" />
-                                RERA: {dashboardData?.reraStatus || "Active"}
-                            </div>
+                            {getStatusBadge("KYC", dashboardData?.kycStatus, "Verified")}
+                            {getStatusBadge("RERA", dashboardData?.reraStatus, "Active")}
                             <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-wider">
                                 <CalendarIcon className="w-3.5 h-3.5" />
                                 Expires: {dashboardData?.expiryDate || "2027-12-31"}

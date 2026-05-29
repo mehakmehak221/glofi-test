@@ -95,6 +95,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
             localStorage.removeItem("isLoggedIn");
             removeCookie("isLoggedIn");
             removeCookie("access_token");
+            localStorage.setItem("toastMessage", "Logged out successfully");
             router.push("/sign-in");
             onClose();
         }

@@ -159,6 +159,7 @@ function SignUpPageContent() {
                 (result?.role as string | undefined) ||
                 userType.toUpperCase();
             localStorage.setItem("userType", role);
+            localStorage.setItem("toastMessage", "Registration successful!");
             router.push("/onboarding");
         } else {
             router.push(`/sign-in?message=Registration successful. Please sign in.&role=${encodeURIComponent(userType)}`);

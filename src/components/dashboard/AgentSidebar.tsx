@@ -49,6 +49,7 @@ export default function AgentSidebar() {
             localStorage.removeItem("isLoggedIn");
             removeCookie("isLoggedIn");
             removeCookie("access_token");
+            localStorage.setItem("toastMessage", "Logged out successfully");
             router.push("/sign-in");
         }
     };

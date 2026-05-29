@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BusinessPropertyIcon, UploadIcon, LoadingSpinner } from "../VectorImages";
-import { 
-    useCreateAssetMutation, 
-    useUploadFileMutation, 
+import {
+    useCreateAssetMutation,
+    useUploadFileMutation,
     useSubmitAssetForReviewMutation,
     useGetAssetByIdQuery,
     useUpdateAssetByIdMutation,
@@ -57,14 +57,14 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const filteredOptions = options.filter(opt => 
+    const filteredOptions = options.filter(opt =>
         opt.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
         <div className={`flex flex-col gap-2 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
             <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">{label}</label>
-            <div 
+            <div
                 onClick={() => !disabled && setIsOpen(!isOpen)}
                 className={`flex justify-between items-center bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm font-montserrat cursor-pointer transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[var(--foreground)]/50'} ${isOpen ? 'border-[var(--foreground)] ring-1 ring-[var(--foreground)]/50' : ''}`}
             >
@@ -221,32 +221,31 @@ const UploadArea = ({ label, onUpload, value, isUploading }) => {
     };
 
     return (
-        <div 
+        <div
             onClick={() => !isUploading && fileInputRef.current?.click()}
-            className={`flex-1 min-w-[200px] aspect-[3/2] rounded-md border border-[var(--foreground)]/20 bg-[var(--background)] hover:shadow-md flex flex-col items-center justify-center p-4 transition-all cursor-pointer group ${
-                value ? 'border-[var(--sidebar-active-text)]/40 bg-[var(--sidebar-active-bg)]' : 'hover:border-[var(--sidebar-active-text)]/20'
-            }`}
+            className={`flex-1 min-w-[120px] h-28 lg:h-20 rounded-md border border-[var(--foreground)]/20 bg-[var(--background)] hover:shadow-md flex flex-col items-center justify-center p-3 transition-all cursor-pointer group ${value ? 'border-[var(--sidebar-active-text)]/40 bg-[var(--sidebar-active-bg)]' : 'hover:border-[var(--sidebar-active-text)]/20'
+                }`}
         >
-            <input 
-                type="file" 
-                className="hidden" 
+            <input
+                type="file"
+                className="hidden"
                 ref={fileInputRef}
                 onChange={handleFileChange}
             />
-            <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3 group-hover:bg-[var(--sidebar-active-bg)] transition-colors">
+            <div className="w-8 h-8 lg:w-7 lg:h-7 rounded-full flex items-center justify-center mb-2 lg:mb-1.5 group-hover:bg-[var(--sidebar-active-bg)] transition-colors">
                 {isUploading ? (
-                    <LoadingSpinner className="w-5 h-5 text-[var(--sidebar-active-text)]" />
+                    <LoadingSpinner className="w-4 h-4 text-[var(--sidebar-active-text)]" />
                 ) : value ? (
-                    <div className="w-6 h-6 rounded-full bg-[var(--sidebar-active-text)] flex items-center justify-center text-[var(--background)] text-[10px] font-bold">✓</div>
+                    <div className="w-5 h-5 rounded-full bg-[var(--sidebar-active-text)] flex items-center justify-center text-[var(--background)] text-[9px] font-bold">✓</div>
                 ) : (
-                    <UploadIcon className="w-5 h-5 text-[var(--sidebar-text)] opacity-60 group-hover:text-[var(--sidebar-active-text)] group-hover:opacity-100" />
+                    <UploadIcon className="w-4 h-4 text-[var(--sidebar-text)] opacity-60 group-hover:text-[var(--sidebar-active-text)] group-hover:opacity-100" />
                 )}
             </div>
-            <span className="text-[11px] font-medium text-[var(--sidebar-text)] opacity-60 text-center uppercase tracking-wider font-montserrat">
-                {isUploading ? 'Uploading...' : value ? 'File Uploaded' : label}
+            <span className="text-[10px] lg:text-[9px] font-medium text-[var(--sidebar-text)] opacity-60 text-center uppercase tracking-wider font-montserrat">
+                {isUploading ? 'Uploading...' : value ? 'Uploaded' : label}
             </span>
             {value && (
-                <span className="text-[9px] text-[var(--sidebar-active-text)]/80 mt-1 font-montserrat truncate max-w-full px-2">
+                <span className="text-[8px] text-[var(--sidebar-active-text)]/80 mt-0.5 font-montserrat truncate max-w-full px-2">
                     {value.split('/').pop()}
                 </span>
             )}
@@ -318,8 +317,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
         setErrorMsg("");
         try {
             const result = await uploadFile({ file, folder: 'assets' }).unwrap();
-            const url = result.key || result.url || result.path; 
-            
+            const url = result.key || result.url || result.path;
+
             if (field === 'images') {
                 setFormData(prev => ({ ...prev, images: [...prev.images, url] }));
             } else {
@@ -395,294 +394,317 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
 
     return (
         <>
-        <style>{DROPDOWN_STYLES}</style>
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="pb-12"
-        >
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight">
-                    {editId ? "Edit Property" : "New Property"}
-                </h1>
-                <button
-                    onClick={onBack}
-                    className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all"
-                >
-                    Back to List
-                </button>
-            </div>
-
-            {editId && isLoadingAsset && !initialProperty && !unwrapAssetResponse(assetData) ? (
-                <div className="flex items-center justify-center p-20">
-                    <LoadingSpinner />
-                </div>
-            ) : isAssetLoadError && editId && !initialProperty ? (
-                <div className="rounded-md border border-red-500/20 bg-red-500/10 p-6 text-center text-red-500 text-sm font-montserrat">
-                    Could not load property details. Go back and try again.
-                </div>
-            ) : (
-                <div className="bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-md p-4 sm:p-6 lg:p-10 relative z-10">
-                    
-                    {errorMsg && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-medium flex items-center gap-3"
-                        >
-                            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {errorMsg}
-                        </motion.div>
-                    )}
-                  
-                <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-[var(--foreground)]/20 pb-2 sm:pb-4 w-full">
-                    {CATEGORIES.map((cat) => (
-                        <button
-                            key={cat.value}
-                            onClick={() => setFormData(prev => ({ ...prev, category: cat.value }))}
-                            className={`text-sm font-medium font-montserrat transition-colors relative pb-4 ${
-                                formData.category === cat.value ? "text-[var(--foreground)]" : "text-[var(--sidebar-text)] opacity-60 hover:opacity-100 hover:text-[var(--foreground)]"
-                            }`}
-                        >
-                            {cat.label}
-                            {formData.category === cat.value && (
-                                <motion.div
-                                    layoutId="activeCat"
-                                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--sidebar-active-text)]"
-                                />
-                            )}
-                        </button>
-                    ))}
+            <style>{DROPDOWN_STYLES}</style>
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="pb-12"
+            >
+                <div className="flex items-center justify-between mb-8">
+                    <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight">
+                        {editId ? "Edit Property" : "New Property"}
+                    </h1>
+                    <button
+                        onClick={onBack}
+                        className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all"
+                    >
+                        Back to List
+                    </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Title</label>
-                        <input
-                            type="text"
-                            value={formData.title}
-                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
+                {editId && isLoadingAsset && !initialProperty && !unwrapAssetResponse(assetData) ? (
+                    <div className="flex items-center justify-center p-20">
+                        <LoadingSpinner />
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Location</label>
-                        <input
-                            type="text"
-                            value={formData.location}
-                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
+                ) : isAssetLoadError && editId && !initialProperty ? (
+                    <div className="rounded-md border border-red-500/20 bg-red-500/10 p-6 text-center text-red-500 text-sm font-montserrat">
+                        Could not load property details. Go back and try again.
                     </div>
-                    <LocationDropdown
-                        label="Country"
-                        options={Country.getAllCountries()}
-                        value={formData.country}
-                        onChange={(opt) => {
-                            setCountryIsoCode(opt.isoCode);
-                            setFormData({ ...formData, country: opt.name, state: "", city: "" });
-                            setStateIsoCode("");
-                        }}
-                        placeholder="Select Country"
-                    />
-                    <LocationDropdown
-                        label="State"
-                        options={countryIsoCode ? State.getStatesOfCountry(countryIsoCode) : []}
-                        value={formData.state}
-                        onChange={(opt) => {
-                            setStateIsoCode(opt.isoCode);
-                            setFormData({ ...formData, state: opt.name, city: "" });
-                        }}
-                        placeholder="Select State"
-                        disabled={!countryIsoCode}
-                    />
-                    <LocationDropdown
-                        label="City"
-                        options={(countryIsoCode && stateIsoCode) ? City.getCitiesOfState(countryIsoCode, stateIsoCode) : []}
-                        value={formData.city}
-                        onChange={(opt) => {
-                            setFormData({ ...formData, city: opt.name });
-                        }}
-                        placeholder="Select City"
-                        disabled={!stateIsoCode}
-                    />
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Valuation ($)</label>
-                        <input
-                            type="number"
-                            value={formData.valuation}
-                            onChange={(e) => setFormData({ ...formData, valuation: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Total Fractions</label>
-                        <input
-                            type="number"
-                            value={formData.totalFractions}
-                            onChange={(e) => setFormData({ ...formData, totalFractions: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Annual Yield (%)</label>
-                        <input
-                            type="number"
-                            value={formData.expectedYield}
-                            onChange={(e) => setFormData({ ...formData, expectedYield: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Annual Rent ($)</label>
-                        <input
-                            type="number"
-                            value={formData.expectedAnnualRent}
-                            onChange={(e) => setFormData({ ...formData, expectedAnnualRent: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Rental Growth Rate (%)</label>
-                        <input
-                            type="number"
-                            value={formData.rentalGrowthRate}
-                            onChange={(e) => setFormData({ ...formData, rentalGrowthRate: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Appreciation Rate (%)</label>
-                        <input
-                            type="number"
-                            value={formData.expectedAppreciationRate}
-                            onChange={(e) => setFormData({ ...formData, expectedAppreciationRate: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Operating Cost Rate (%)</label>
-                        <input
-                            type="number"
-                            value={formData.operatingCostRate}
-                            onChange={(e) => setFormData({ ...formData, operatingCostRate: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Holding Period (Years)</label>
-                        <input
-                            type="number"
-                            value={formData.holdingPeriod}
-                            onChange={(e) => setFormData({ ...formData, holdingPeriod: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2 md:col-span-2">
-                        <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Description</label>
-                        <textarea
-                            rows={5}
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            placeholder="..."
-                            className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex flex-wrap gap-4 mb-8">
-                    <UploadArea 
-                        label="Title Deed" 
-                        onUpload={(file) => handleFileUpload(file, 'titleDeedUrl')}
-                        value={formData.titleDeedUrl}
-                        isUploading={uploadingField === 'titleDeedUrl'}
-                    />
-                    <UploadArea 
-                        label="Valuation Report" 
-                        onUpload={(file) => handleFileUpload(file, 'valuationReportUrl')}
-                        value={formData.valuationReportUrl}
-                        isUploading={uploadingField === 'valuationReportUrl'}
-                    />
-                    <UploadArea 
-                        label="Legal Opinion" 
-                        onUpload={(file) => handleFileUpload(file, 'legalOpinionUrl')}
-                        value={formData.legalOpinionUrl}
-                        isUploading={uploadingField === 'legalOpinionUrl'}
-                    />
-                    <UploadArea 
-                        label="Property Images" 
-                        onUpload={(file) => handleFileUpload(file, 'images')}
-                        value={formData.images[0]} // Show indicator if at least one image is uploaded
-                        isUploading={uploadingField === 'images'}
-                    />
-                </div>
-
-                <div className="bg-[var(--color-status-warning-bg)] border border-[var(--color-status-warning-border)] rounded-md p-4 mb-8 flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
-                            <BusinessPropertyIcon className="w-4 h-4 text-[var(--color-status-warning)]" />
+                ) : !editId && (kycStatus?.status !== 'VERIFIED' || (kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED')) ? (
+                    <div className="bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-md p-8 sm:p-14 flex flex-col items-center text-center gap-6">
+                        <div className="w-16 h-16 rounded-full bg-[var(--color-status-warning-bg)] flex items-center justify-center">
+                            <BusinessPropertyIcon className="w-7 h-7 text-[var(--color-status-warning)]" />
                         </div>
-                        <p className="text-base text-[var(--color-status-warning)]/90 font-montserrat font-medium">
-                            Verification required before listing properties.
-                        </p>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-3 ml-11">
-                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border ${kycStatus?.status === 'VERIFIED' ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]' : 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'}`}>
-                            <span className="text-[10px] font-bold uppercase font-montserrat">KYC: {kycStatus?.status || 'NOT SUBMITTED'}</span>
+                        <div>
+                            <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-2">Verification Required</h2>
+                            <p className="text-sm text-[var(--sidebar-text)] opacity-70 font-montserrat max-w-sm mx-auto leading-relaxed">
+                                Both KYC and KYB verification must be approved before you can create a new property listing.
+                            </p>
+                        </div>
+                        <div className="flex flex-wrap gap-3 justify-center">
+                            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-[10px] font-bold uppercase font-montserrat ${
+                                kycStatus?.status === 'VERIFIED'
+                                    ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]'
+                                    : kycStatus?.status === 'UNDER_REVIEW' || kycStatus?.status === 'IN_REVIEW'
+                                        ? 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
+                                        : 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'
+                            }`}>
+                                KYC: {kycStatus?.status || 'NOT SUBMITTED'}
+                            </div>
+                            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-[10px] font-bold uppercase font-montserrat ${
+                                kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED'
+                                    ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]'
+                                    : kybStatus?.status === 'UNDER_REVIEW' || kybStatus?.status === 'IN_REVIEW'
+                                        ? 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
+                                        : 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'
+                            }`}>
+                                KYB: {kybStatus?.status || 'NOT SUBMITTED'}
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap gap-3 justify-center">
                             {kycStatus?.status !== 'VERIFIED' && (
-                                <button onClick={() => setShowKycModal(true)} className="text-[9px] underline font-bold uppercase cursor-pointer bg-transparent border-0 text-inherit p-0">Verify</button>
+                                <button
+                                    onClick={() => setShowKycModal(true)}
+                                    className="px-6 py-2.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-sm font-bold font-montserrat hover:opacity-80 transition-opacity"
+                                >
+                                    Complete KYC
+                                </button>
                             )}
-                        </div>
-                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border ${kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED' ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]' : 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'}`}>
-                            <span className="text-[10px] font-bold uppercase font-montserrat">KYB: {kybStatus?.status || 'NOT SUBMITTED'}</span>
                             {kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED' && (
-                                <button onClick={() => setShowKybModal(true)} className="text-[9px] underline font-bold uppercase cursor-pointer bg-transparent border-0 text-inherit p-0">Verify</button>
+                                <button
+                                    onClick={() => setShowKybModal(true)}
+                                    className="px-6 py-2.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-sm font-bold font-montserrat hover:opacity-80 transition-opacity"
+                                >
+                                    Complete KYB
+                                </button>
                             )}
                         </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-md p-4 sm:p-6 lg:p-10 relative z-10">
 
-                <motion.button
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    className="w-full sm:w-auto bg-[var(--sidebar-active-text)] text-[var(--background)] font-bold text-sm px-8 py-3.5 rounded-md hover:opacity-90 transition-opacity font-montserrat min-w-[200px] flex items-center justify-center"
-                >
-                    {isSubmitting ? <LoadingSpinner /> : editId ? "Update Property" : "Save as Draft"}
-                </motion.button>
-            </div>
-            )}
+                        {errorMsg && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-medium flex items-center gap-3"
+                            >
+                                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {errorMsg}
+                            </motion.div>
+                        )}
 
-            <KYCModal 
-                isOpen={showKycModal} 
-                onClose={() => setShowKycModal(false)}
-                onSubmit={() => setShowKycModal(false)}
-            />
-            <KYBModal 
-                isOpen={showKybModal} 
-                onClose={() => {
-                    setShowKybModal(false);
-                }}
-                onSubmit={() => {
-                    setShowKybModal(false);
-                }}
-            />
-        </motion.div>
+                        <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-[var(--foreground)]/20 pb-2 sm:pb-4 w-full">
+                            {CATEGORIES.map((cat) => (
+                                <button
+                                    key={cat.value}
+                                    onClick={() => setFormData(prev => ({ ...prev, category: cat.value }))}
+                                    className={`text-sm font-medium font-montserrat transition-colors relative pb-4 ${formData.category === cat.value ? "text-[var(--foreground)]" : "text-[var(--sidebar-text)] opacity-60 hover:opacity-100 hover:text-[var(--foreground)]"
+                                        }`}
+                                >
+                                    {cat.label}
+                                    {formData.category === cat.value && (
+                                        <motion.div
+                                            layoutId="activeCat"
+                                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--sidebar-active-text)]"
+                                        />
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Title</label>
+                                <input
+                                    type="text"
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Location</label>
+                                <input
+                                    type="text"
+                                    value={formData.location}
+                                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <LocationDropdown
+                                label="Country"
+                                options={Country.getAllCountries()}
+                                value={formData.country}
+                                onChange={(opt) => {
+                                    setCountryIsoCode(opt.isoCode);
+                                    setFormData({ ...formData, country: opt.name, state: "", city: "" });
+                                    setStateIsoCode("");
+                                }}
+                                placeholder="Select Country"
+                            />
+                            <LocationDropdown
+                                label="State"
+                                options={countryIsoCode ? State.getStatesOfCountry(countryIsoCode) : []}
+                                value={formData.state}
+                                onChange={(opt) => {
+                                    setStateIsoCode(opt.isoCode);
+                                    setFormData({ ...formData, state: opt.name, city: "" });
+                                }}
+                                placeholder="Select State"
+                                disabled={!countryIsoCode}
+                            />
+                            <LocationDropdown
+                                label="City"
+                                options={(countryIsoCode && stateIsoCode) ? City.getCitiesOfState(countryIsoCode, stateIsoCode) : []}
+                                value={formData.city}
+                                onChange={(opt) => {
+                                    setFormData({ ...formData, city: opt.name });
+                                }}
+                                placeholder="Select City"
+                                disabled={!stateIsoCode}
+                            />
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Valuation ($)</label>
+                                <input
+                                    type="number"
+                                    value={formData.valuation}
+                                    onChange={(e) => setFormData({ ...formData, valuation: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Total Fractions</label>
+                                <input
+                                    type="number"
+                                    value={formData.totalFractions}
+                                    onChange={(e) => setFormData({ ...formData, totalFractions: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Annual Yield (%)</label>
+                                <input
+                                    type="number"
+                                    value={formData.expectedYield}
+                                    onChange={(e) => setFormData({ ...formData, expectedYield: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Annual Rent ($)</label>
+                                <input
+                                    type="number"
+                                    value={formData.expectedAnnualRent}
+                                    onChange={(e) => setFormData({ ...formData, expectedAnnualRent: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Rental Growth Rate (%)</label>
+                                <input
+                                    type="number"
+                                    value={formData.rentalGrowthRate}
+                                    onChange={(e) => setFormData({ ...formData, rentalGrowthRate: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Appreciation Rate (%)</label>
+                                <input
+                                    type="number"
+                                    value={formData.expectedAppreciationRate}
+                                    onChange={(e) => setFormData({ ...formData, expectedAppreciationRate: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Operating Cost Rate (%)</label>
+                                <input
+                                    type="number"
+                                    value={formData.operatingCostRate}
+                                    onChange={(e) => setFormData({ ...formData, operatingCostRate: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Holding Period (Years)</label>
+                                <input
+                                    type="number"
+                                    value={formData.holdingPeriod}
+                                    onChange={(e) => setFormData({ ...formData, holdingPeriod: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2 md:col-span-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Description</label>
+                                <textarea
+                                    rows={5}
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    placeholder="..."
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-4 mb-8">
+                            <UploadArea
+                                label="Title Deed"
+                                onUpload={(file) => handleFileUpload(file, 'titleDeedUrl')}
+                                value={formData.titleDeedUrl}
+                                isUploading={uploadingField === 'titleDeedUrl'}
+                            />
+                            <UploadArea
+                                label="Valuation Report"
+                                onUpload={(file) => handleFileUpload(file, 'valuationReportUrl')}
+                                value={formData.valuationReportUrl}
+                                isUploading={uploadingField === 'valuationReportUrl'}
+                            />
+                            <UploadArea
+                                label="Legal Opinion"
+                                onUpload={(file) => handleFileUpload(file, 'legalOpinionUrl')}
+                                value={formData.legalOpinionUrl}
+                                isUploading={uploadingField === 'legalOpinionUrl'}
+                            />
+                            <UploadArea
+                                label="Property Images"
+                                onUpload={(file) => handleFileUpload(file, 'images')}
+                                value={formData.images[0]} // Show indicator if at least one image is uploaded
+                                isUploading={uploadingField === 'images'}
+                            />
+                        </div>
+
+                        <motion.button
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                            className="w-full sm:w-auto bg-[var(--sidebar-active-text)] text-[var(--background)] font-bold text-sm px-8 py-3.5 rounded-md hover:opacity-90 transition-opacity font-montserrat min-w-[200px] flex items-center justify-center"
+                        >
+                            {isSubmitting ? <LoadingSpinner /> : editId ? "Update Property" : "Save as Draft"}
+                        </motion.button>
+                    </div>
+                )}
+
+                <KYCModal
+                    isOpen={showKycModal}
+                    onClose={() => setShowKycModal(false)}
+                    onSubmit={() => setShowKycModal(false)}
+                />
+                <KYBModal
+                    isOpen={showKybModal}
+                    onClose={() => {
+                        setShowKybModal(false);
+                    }}
+                    onSubmit={() => {
+                        setShowKybModal(false);
+                    }}
+                />
+            </motion.div>
         </>
     );
 }

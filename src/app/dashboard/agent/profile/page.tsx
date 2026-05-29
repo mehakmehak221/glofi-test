@@ -12,6 +12,8 @@ import {
 } from "@/components/VectorImages";
 
 import { useCurrency } from "@/providers/CurrencyProvider";
+import { API_URL } from "@/constants";
+import { useState } from "react";
 
 const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
@@ -25,6 +27,20 @@ const formatDate = (dateString: string) => {
 export default function AgentProfilePage() {
     const { data: agentData, isLoading } = useGetAgentMeQuery();
     const { formatPrice } = useCurrency();
+    const [copiedCode, setCopiedCode] = useState(false);
+    const [copiedLink, setCopiedLink] = useState(false);
+
+    const handleCopy = (text: string, type: 'code' | 'link') => {
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+        if (type === 'code') {
+            setCopiedCode(true);
+            setTimeout(() => setCopiedCode(false), 2000);
+        } else {
+            setCopiedLink(true);
+            setTimeout(() => setCopiedLink(false), 2000);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -115,16 +131,26 @@ export default function AgentProfilePage() {
                         <div className="space-y-4">
                             <div>
                                 <label className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest block mb-2">Referral Code</label>
-                                <div className="bg-[var(--field-surface)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 flex items-center justify-between">
-                                    <span className="text-sm font-bold text-[var(--foreground)] font-mono">{referralCode || "N/A"}</span>
-                                    <button onClick={() => referralCode && navigator.clipboard.writeText(referralCode)} className="text-[10px] font-bold text-[#00FFCC] uppercase cursor-pointer bg-transparent border-0">Copy</button>
+                                <div className="bg-[var(--field-surface)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 flex items-center justify-between gap-4">
+                                    <span className="text-sm font-bold text-[var(--foreground)] font-mono truncate">{referralCode || "N/A"}</span>
+                                    <button 
+                                        onClick={() => handleCopy(referralCode, 'code')} 
+                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] px-3 py-1.5 rounded-lg border-0 transition-all hover:opacity-80 flex-shrink-0 min-w-[60px]"
+                                    >
+                                        {copiedCode ? "Copied!" : "Copy"}
+                                    </button>
                                 </div>
                             </div>
                             <div>
                                 <label className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest block mb-2">Sign-up Link</label>
-                                <div className="bg-[var(--field-surface)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 flex items-center justify-between">
-                                    <span className="text-xs text-[var(--color-text-muted)] truncate font-mono mr-4">{referralLink || "N/A"}</span>
-                                    <button onClick={() => referralLink && navigator.clipboard.writeText(referralLink)} className="text-[10px] font-bold text-[#00FFCC] uppercase cursor-pointer bg-transparent border-0">Copy</button>
+                                <div className="bg-[var(--field-surface)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 flex items-center justify-between gap-4">
+                                    <span className="text-xs text-[var(--color-text-muted)] truncate font-mono">{referralLink || "N/A"}</span>
+                                    <button 
+                                        onClick={() => handleCopy(referralLink, 'link')} 
+                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] px-3 py-1.5 rounded-lg border-0 transition-all hover:opacity-80 flex-shrink-0 min-w-[60px]"
+                                    >
+                                        {copiedLink ? "Copied!" : "Copy"}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -217,8 +243,8 @@ export default function AgentProfilePage() {
                                             <p className="text-[10px] text-[var(--color-text-muted)] font-montserrat uppercase tracking-widest">{item.type?.replace('_', ' ') || "N/A"}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
-                                        <div className={`inline-flex items-center justify-center text-center text-[9px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider whitespace-nowrap min-w-[80px] ${item.status === 'APPROVED' || item.status === 'VERIFIED' || item.status === 'ACTIVE'
+                                    <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto mt-2 sm:mt-0">
+                                        <div className={`inline-flex items-center justify-center text-center text-[9px] font-bold px-2.5 py-1.5 rounded-md uppercase tracking-wider whitespace-nowrap w-[90px] ${item.status === 'APPROVED' || item.status === 'VERIFIED' || item.status === 'ACTIVE'
                                             ? 'bg-[var(--color-status-success-bg)] text-[var(--color-status-success)]' :
                                             item.status === 'REJECTED'
                                                 ? 'bg-[var(--color-status-error-bg)] text-[var(--color-status-error)]' :
@@ -227,10 +253,10 @@ export default function AgentProfilePage() {
                                             {item.status?.replace('_', ' ') || "PENDING"}
                                         </div>
                                         <a
-                                            href={item.url?.startsWith('http') ? item.url : item.url ? `https://api.glofiestates.com/files/${item.url}` : "#"}
+                                            href={item.url?.startsWith('http') ? item.url : item.url ? `${API_URL}/${item.url.replace(/^\//, '')}` : "#"}
                                             target={item.url ? "_blank" : undefined}
                                             rel="noopener noreferrer"
-                                            className={`text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:opacity-70 transition-all no-underline ${!item.url ? 'opacity-20 pointer-events-none' : ''}`}
+                                            className={`text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:opacity-70 transition-all no-underline w-[40px] text-right ${!item.url ? 'opacity-20 pointer-events-none' : ''}`}
                                         >
                                             View
                                         </a>

@@ -49,7 +49,7 @@ export default function FinancePage() {
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <h1 className="text-2xl lg:text-3xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight opacity-90">
                     Finance
                 </h1>
@@ -78,7 +78,7 @@ export default function FinancePage() {
             </div>
 
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
                 {[
                     { label: "TOTAL EARNED", value: partnerFinance?.totalEarned || 0 },
                     { label: "PENDING PAYOUT", value: partnerFinance?.pendingPayout || 0 },
@@ -89,13 +89,13 @@ export default function FinancePage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="rounded-md p-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
+                        className="rounded-md p-4 sm:p-5 bg-[var(--card-surface)] border border-[var(--sidebar-border)] hover:shadow-md transition-all relative overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-[var(--sidebar-active-text)] opacity-[0.03] pointer-events-none" />
-                        <p className="text-[10px] font-bold tracking-[1.2px] text-[var(--sidebar-text)] opacity-60 font-montserrat mb-4 uppercase">
+                        <p className="text-[9px] font-bold tracking-[1.2px] text-[var(--sidebar-text)] opacity-60 font-montserrat mb-2 uppercase">
                             {stat.label}
                         </p>
-                        <p className="text-2xl font-semibold text-[var(--foreground)] opacity-90 font-montserrat tracking-tight">
+                        <p className="text-xl font-semibold text-[var(--foreground)] opacity-90 font-montserrat tracking-tight">
                             {formatCurrency(stat.value || 0)}
                         </p>
                     </motion.div>
@@ -110,7 +110,7 @@ export default function FinancePage() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="rounded-md bg-[var(--card-surface)] p-5 border border-[var(--sidebar-border)]"
+                    className="rounded-md bg-[var(--card-surface)] p-4 sm:p-5 border border-[var(--sidebar-border)]"
                 >
                     {activeTab === "Commissions" && (
                         <div>
@@ -124,24 +124,24 @@ export default function FinancePage() {
                                     No commissions found.
                                 </div>
                             ) : (
-                                <div className="space-y-2">
+                                <div className="divide-y divide-[var(--sidebar-border)]">
                                     {commissionHistory.data.map((item, i) => (
                                         <motion.div
                                             key={i}
-                                            initial={{ opacity: 0, y: 10 }}
+                                            initial={{ opacity: 0, y: 8 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
+                                            transition={{ delay: i * 0.04 }}
+                                            className="flex items-center justify-between gap-3 py-3 sm:py-3.5 hover:bg-[var(--sidebar-active-bg)]/30 px-2 -mx-2 rounded-md transition-colors group"
                                         >
-                                            <div>
-                                                <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-90 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.asset?.title || "Commission Payment"}</h3>
-                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-70 font-montserrat mt-1">
+                                            <div className="min-w-0">
+                                                <h3 className="text-[13px] font-medium text-[var(--foreground)] opacity-90 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors truncate">{item.asset?.title || "Commission Payment"}</h3>
+                                                <p className="text-[10px] text-[var(--sidebar-text)] opacity-60 font-montserrat mt-0.5">
                                                     {item.type || 'Sale'} · {(item.date || item.createdAt) ? new Date(item.date || item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : "-"}
                                                 </p>
                                             </div>
-                                            <div className="text-left sm:text-right">
-                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] font-montserrat">{formatCurrency(item.amount || 0)}</p>
-                                                <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-80`} style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
+                                            <div className="text-right flex-shrink-0">
+                                                <p className="text-[13px] font-semibold text-[var(--sidebar-active-text)] font-montserrat">{formatCurrency(item.amount || 0)}</p>
+                                                <p className="text-[9px] font-bold font-montserrat mt-0.5 uppercase tracking-wider" style={{ color: item.status === "Paid" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                     {item.status}
                                                 </p>
                                             </div>
@@ -164,24 +164,24 @@ export default function FinancePage() {
                                     No payouts found.
                                 </div>
                             ) : (
-                                <div className="space-y-2">
+                                <div className="divide-y divide-[var(--sidebar-border)]">
                                     {payoutHistory.data.map((item, i) => (
                                         <motion.div
                                             key={i}
-                                            initial={{ opacity: 0, y: 10 }}
+                                            initial={{ opacity: 0, y: 8 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: i * 0.05 }}
-                                            className="bg-black/[0.02] dark:bg-white/[0.02] p-4 lg:p-5 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all group"
+                                            transition={{ delay: i * 0.04 }}
+                                            className="flex items-center justify-between gap-3 py-3 sm:py-3.5 hover:bg-[var(--sidebar-active-bg)]/30 px-2 -mx-2 rounded-md transition-colors group"
                                         >
-                                            <div>
-                                                <h3 className="text-[14px] font-medium text-[var(--foreground)] opacity-90 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors">{item.method || "Bank Transfer"}</h3>
-                                                <p className="text-[11px] text-[var(--sidebar-text)] opacity-70 font-montserrat mt-1">
+                                            <div className="min-w-0">
+                                                <h3 className="text-[13px] font-medium text-[var(--foreground)] opacity-90 font-montserrat group-hover:text-[var(--sidebar-active-text)] transition-colors truncate">{item.method || "Bank Transfer"}</h3>
+                                                <p className="text-[10px] text-[var(--sidebar-text)] opacity-60 font-montserrat mt-0.5">
                                                     {(item.payoutDate || item.createdAt) ? new Date(item.payoutDate || item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "-"} · {item.reference || "Completed"}
                                                 </p>
                                             </div>
-                                            <div className="text-left sm:text-right">
-                                                <p className="text-[14px] font-semibold text-[var(--sidebar-active-text)] font-montserrat">{formatCurrency(item.amount || 0)}</p>
-                                                <p className={`text-[10px] font-medium font-montserrat mt-0.5 sm:mt-1 uppercase tracking-tighter opacity-80`} style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
+                                            <div className="text-right flex-shrink-0">
+                                                <p className="text-[13px] font-semibold text-[var(--sidebar-active-text)] font-montserrat">{formatCurrency(item.amount || 0)}</p>
+                                                <p className="text-[9px] font-bold font-montserrat mt-0.5 uppercase tracking-wider" style={{ color: item.status === "Completed" ? 'var(--sidebar-active-text)' : 'var(--color-status-warning)' }}>
                                                     {item.status}
                                                 </p>
                                             </div>
