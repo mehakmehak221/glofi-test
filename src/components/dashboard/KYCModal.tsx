@@ -42,7 +42,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
     const [reraDocKey, setReraDocKey] = useState("");
 
     const { data: profileData } = useGetProfileQuery(undefined, { skip: !isOpen });
-    const { data: kycStatus, isLoading: isStatusLoading, refetch: refetchStatus } = useGetKycStatusQuery(undefined, { skip: !isOpen });
+    const { data: kycStatus, isLoading: isStatusLoading, refetch: refetchStatus } = useGetKycStatusQuery(undefined, { skip: !isOpen, refetchOnMountOrArgChange: true });
     
     const [submitKyc, { isLoading: isSubmittingInvestor }] = useSubmitKycMutation();
     const [setupAgentKyc, { isLoading: isSubmittingAgent }] = useSetupAgentKycMutation();
