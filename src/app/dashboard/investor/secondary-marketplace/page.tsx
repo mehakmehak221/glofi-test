@@ -336,10 +336,10 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
                 <div className="mt-auto space-y-3">
                     {!isOwnListing && (
                         <button
-                            onClick={onBuy}
-                            className="w-full py-3.5 rounded-md bg-[var(--color-primary-200)] text-[#000000] text-sm font-bold shadow-sm hover:scale-[1.02] active:scale-95 transition-all duration-300 border-0 cursor-pointer"
+                            disabled
+                            className="w-full py-3.5 rounded-md bg-[var(--sidebar-border)] text-[var(--color-text-muted)] text-sm font-bold shadow-sm opacity-80 cursor-not-allowed border-0"
                         >
-                            Buy Fractions
+                            Coming Soon
                         </button>
                     )}
                     <div className="grid grid-cols-2 gap-3">
@@ -419,17 +419,10 @@ function DetailModal({ id, onClose, onBuy }) {
 
                                 <div className="mt-auto space-y-4">
                                     <button
-                                        onClick={() => onBuy({
-                                            id: listing.id,
-                                            name: listing.asset?.title,
-                                            pricePerFraction: parseFloat(listing.askPrice || 0),
-                                            fractions: listing.fractions,
-                                            seller: listing.investor?.investorProfile?.fullName || "Anonymous",
-                                            image: listing.asset?.images?.[0] ? (listing.asset.images[0].startsWith('http') ? listing.asset.images[0] : `${API_URL}/${listing.asset.images[0].replace(/^\//, '')}`) : "/assets/images/marketplace/Burj.png"
-                                        })}
-                                        className="w-full py-4 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-xs font-bold uppercase tracking-[0.2em] shadow-lg hover:opacity-90 transition-all border-0 cursor-pointer"
+                                        disabled
+                                        className="w-full py-4 rounded-full bg-[var(--sidebar-border)] text-[var(--color-text-muted)] text-xs font-bold uppercase tracking-[0.2em] shadow-lg opacity-80 cursor-not-allowed border-0"
                                     >
-                                        Proceed to Purchase
+                                        Coming Soon
                                     </button>
                                     <p className="text-[10px] text-center text-[var(--color-text-muted)] uppercase font-bold tracking-[0.2em]">Transaction secured by Glofy Escrow</p>
                                 </div>

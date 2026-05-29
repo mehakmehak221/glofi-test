@@ -441,40 +441,12 @@ export default function PropertyDetailPage() {
                         </p>
 
                         <div className="space-y-3 mb-6">
-                            {userInvestment ? (
-                                <div className={`p-4 rounded-md border flex flex-col items-center justify-center gap-2 ${userInvestment.status === 'PENDING' ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-[var(--sidebar-active-text)]/30 bg-[var(--sidebar-active-bg)]'
-                                    }`}>
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${userInvestment.status === 'PENDING' ? 'bg-yellow-500/20' : 'bg-[var(--sidebar-active-text)]/20'
-                                        }`}>
-                                        {userInvestment.status === 'PENDING' ? (
-                                            <svg className="w-5 h-5 text-yellow-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        ) : (
-                                            <svg className="w-5 h-5 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        )}
-                                    </div>
-                                    <h4 className={`font-bold text-sm uppercase tracking-wider ${userInvestment.status === 'PENDING' ? 'text-yellow-500' : 'text-[var(--sidebar-active-text)]'
-                                        }`}>Investment {userInvestment.status || "Processing"}</h4>
-                                    <p className="text-xs text-[var(--color-text-muted)] text-center max-w-[200px] leading-relaxed">
-                                        You have {userInvestment.status === 'PENDING' ? 'a pending investment' : 'successfully invested'} in <span className="font-bold text-[var(--sidebar-text)]">{userInvestment.fractions} fraction{userInvestment.fractions > 1 ? "s" : ""}</span> of this property.
-                                    </p>
-                                    <Link href="/dashboard/investor/portfolio" className="mt-2 text-xs font-bold text-[var(--header-text)] underline hover:text-[var(--sidebar-active-text)] transition-colors">
-                                        View in Portfolio
-                                    </Link>
-                                </div>
-                            ) : (
-                                <motion.button
-                                    onClick={handleInvestNow}
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className="w-full py-4 rounded-md bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-glow-primary"
-                                >
-                                    Invest Now
-                                </motion.button>
-                            )}
+                            <button
+                                disabled
+                                className="w-full py-4 rounded-md bg-[var(--sidebar-border)] text-[var(--color-text-muted)] font-bold text-sm cursor-not-allowed border-0 opacity-80"
+                            >
+                                Coming Soon
+                            </button>
                         </div>
                     </div>
                 </motion.div>
