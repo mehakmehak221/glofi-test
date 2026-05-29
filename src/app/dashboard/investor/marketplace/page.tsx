@@ -338,22 +338,27 @@ export default function MarketplacePage() {
                                             <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
 
-                                            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-black/50 text-white/90 border border-white/10 backdrop-blur-sm">
+                                            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-black/55 text-white/90 border border-white/15 backdrop-blur-sm">
                                                 {property.category.replace('_', ' ')}
                                             </span>
 
 
-                                            <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-md text-[10px] font-normal uppercase tracking-wider ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)] bg-[var(--color-status-success-bg)]' :
-                                                property.riskRating === 'HIGH' ? 'text-[var(--color-status-error)] bg-[var(--color-status-error-bg)]' :
-                                                    'text-[var(--color-status-warning)] bg-[var(--color-status-warning-bg)]'
-                                                }`}>
+                                            <span className={`absolute top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border shadow-sm ${
+                                                property.riskRating === 'LOW'
+                                                    ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/70'
+                                                    : property.riskRating === 'HIGH'
+                                                        ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/70'
+                                                        : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/80'
+                                            }`}>
+                                                <span className="opacity-60">RISK</span>
+                                                <span className="opacity-30">·</span>
                                                 {property.riskRating}
                                             </span>
                                         </div>
 
 
                                         <div className="p-5">
-                                            <h3 className="text-lg font-bold text-[var(--marketplace-text-primary)] mb-1 line-clamp-1">{property.title}</h3>
+                                            <h3 className="text-lg font-bold text-[var(--marketplace-text-primary)] mb-1 leading-snug">{property.title}</h3>
                                             <div className="flex items-center gap-1.5 text-[var(--marketplace-text-muted)] text-xs mb-4 font-montserrat">
                                                 <MapPinIcon className="w-3.5 h-3.5" />
                                                 {property.city && property.state ? `${property.city}, ${property.state}` : property.location}

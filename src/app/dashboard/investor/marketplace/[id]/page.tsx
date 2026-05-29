@@ -201,10 +201,15 @@ export default function PropertyDetailPage() {
                         </span>
 
 
-                        <span className={`absolute top-3 right-3 sm:top-4 sm:right-4 px-2.5 py-1 rounded-md text-[10px] font-normal uppercase tracking-wider ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)] bg-[var(--color-status-success-bg)]' :
-                            property.riskRating === 'HIGH' ? 'text-[var(--color-status-error)] bg-[var(--color-status-error-bg)]' :
-                                'text-[var(--color-status-warning)] bg-[var(--color-status-warning-bg)]'
-                            }`}>
+                        <span className={`absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border shadow-sm ${
+                            property.riskRating === 'LOW'
+                                ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/70'
+                                : property.riskRating === 'HIGH'
+                                    ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/70'
+                                    : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/80'
+                        }`}>
+                            <span className="opacity-60">RISK</span>
+                            <span className="opacity-30">·</span>
                             {property.riskRating}
                         </span>
 
@@ -248,11 +253,18 @@ export default function PropertyDetailPage() {
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                             >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Risk Level</p>
-                                <p className={`text-base sm:text-lg font-bold ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)]' :
-                                    property.riskRating === 'HIGH' ? 'text-[var(--color-status-error)]' :
-                                        'text-[var(--color-status-warning)]'
-                                    }`}>{property.riskRating}</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-2 font-semibold">Risk Level</p>
+                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider border ${
+                                    property.riskRating === 'LOW'
+                                        ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/60'
+                                        : property.riskRating === 'HIGH'
+                                            ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/60'
+                                            : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/70'
+                                }`}>
+                                    <span className="opacity-60">RISK</span>
+                                    <span className="opacity-30">·</span>
+                                    {property.riskRating}
+                                </span>
                             </div>
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)]  border border-[var(--sidebar-border)] shadow-sm overflow-hidden"

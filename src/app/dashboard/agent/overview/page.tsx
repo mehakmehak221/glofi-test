@@ -136,9 +136,9 @@ export default function AgentOverviewPage() {
                         transition={{ duration: 0.35, delay: 0.2 + i * 0.05 }}
                         className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-6"
                     >
-                        <stat.icon className={`w-5 h-5 ${stat.iconColor} mb-6`} />
-                        <p className="text-3xl font-bold text-[var(--foreground)] font-montserrat mb-1">{stat.value}</p>
-                        <p className="text-xs font-medium text-[var(--sidebar-text)] font-montserrat opacity-60 mb-3">{stat.label}</p>
+                        <stat.icon className={`w-5 h-5 ${stat.iconColor} mb-5`} />
+                        <p className="text-3xl font-bold text-[var(--foreground)] font-montserrat mb-0.5 leading-none">{stat.value}</p>
+                        <p className="text-[11px] font-medium text-[var(--sidebar-text)] font-montserrat opacity-60 mb-3 mt-1">{stat.label}</p>
                         <p className="text-[10px] font-bold text-[var(--color-primary-300)] uppercase tracking-wider">
                             {stat.delta}
                         </p>
@@ -202,12 +202,12 @@ export default function AgentOverviewPage() {
                                     />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-bold text-[var(--foreground)] truncate">{asset.title}</p>
-                                    <div className="flex items-center gap-1 text-[10px] text-[var(--sidebar-text)] opacity-70 mt-1 uppercase font-bold tracking-tight">
+                                    <p className="text-sm font-bold text-[var(--foreground)] leading-snug">{asset.title}</p>
+                                    <div className="flex items-center gap-1 text-[10px] text-[var(--sidebar-text)] opacity-60 mt-1 uppercase font-bold tracking-tight">
                                         <LocationIcon className="w-3 h-3" />
-                                        {asset.location}, {asset.city}
+                                        {asset.location}{asset.city ? `, ${asset.city}` : ""}
                                     </div>
-                                    <p className="text-xs font-bold text-[var(--color-primary-300)] mt-2">
+                                    <p className="text-xs font-bold text-[var(--color-primary-300)] mt-2 font-montserrat">
                                         {formatCurrency(Number(asset.fractionPrice))} / Fraction
                                     </p>
                                 </div>
