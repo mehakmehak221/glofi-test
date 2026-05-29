@@ -433,22 +433,20 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </p>
                         </div>
                         <div className="flex flex-wrap gap-3 justify-center">
-                            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-[10px] font-bold uppercase font-montserrat ${
-                                kycStatus?.status === 'VERIFIED'
+                            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-[10px] font-bold uppercase font-montserrat ${kycStatus?.status === 'VERIFIED'
                                     ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]'
                                     : kycStatus?.status === 'UNDER_REVIEW' || kycStatus?.status === 'IN_REVIEW'
                                         ? 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
                                         : 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'
-                            }`}>
+                                }`}>
                                 KYC: {kycStatus?.status || 'NOT SUBMITTED'}
                             </div>
-                            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-[10px] font-bold uppercase font-montserrat ${
-                                kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED'
+                            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-[10px] font-bold uppercase font-montserrat ${kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED'
                                     ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]'
                                     : kybStatus?.status === 'UNDER_REVIEW' || kybStatus?.status === 'IN_REVIEW'
                                         ? 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
                                         : 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'
-                            }`}>
+                                }`}>
                                 KYB: {kybStatus?.status || 'NOT SUBMITTED'}
                             </div>
                         </div>
@@ -560,7 +558,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 disabled={!stateIsoCode}
                             />
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Valuation ($)</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Valuation</label>
                                 <input
                                     type="number"
                                     value={formData.valuation}
