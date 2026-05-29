@@ -30,6 +30,7 @@ const TYPE_MAP = {
 export default function KYCModal({ isOpen, onClose, onSubmit }) {
     const [step, setStep] = useState(1);
     const [activeTab, setActiveTab] = useState("Passport");
+    const [isReverifying, setIsReverifying] = useState(false);
     
     const [idDocKey, setIdDocKey] = useState("");
     const [selfieKey, setSelfieKey] = useState("");
@@ -54,6 +55,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
         if (isOpen) {
             setStep(1);
             refetchStatus();
+            setIsReverifying(false);
         }
     }, [isOpen, refetchStatus]);
 
@@ -155,7 +157,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                             <div className="flex items-center justify-center p-12">
                                 <div className="w-10 h-10 border-2 border-[#00FFCC]/20 border-t-[#00FFCC] rounded-full animate-spin" />
                             </div>
-                        ) : (isPending || isVerified || (isRejected && !idDocKey && !selfieKey && !addressKey)) ? (
+                        ) : (isPending || isVerified || (isRejected && !isReverifying && !idDocKey && !selfieKey && !addressKey)) ? (
                             <div className="text-center py-8">
                                 <div className={`w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6 ${
                                     isVerified ? 'bg-green-500/10 text-green-500' : 
@@ -183,12 +185,29 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                      isRejected ? (kycStatus?.rejectedNote || "Your submission was rejected. Please review your documents and try again.") :
                                      "Our compliance team is reviewing your documents. This typically takes 24-48 hours."}
                                 </p>
-                                <button
-                                    onClick={onClose}
-                                    className="w-full h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90"
-                                >
-                                    Return to Dashboard
-                                </button>
+                                {isRejected ? (
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        <button
+                                            onClick={onClose}
+                                            className="flex-1 h-14 rounded-xl border border-[var(--foreground)]/10 text-[var(--foreground)] font-bold text-sm hover:bg-[var(--foreground)]/5 transition-all cursor-pointer bg-transparent"
+                                        >
+                                            Return to Dashboard
+                                        </button>
+                                        <button
+                                            onClick={() => setIsReverifying(true)}
+                                            className="flex-[2] h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 font-montserrat"
+                                        >
+                                            Resubmit Documents
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={onClose}
+                                        className="w-full h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90"
+                                    >
+                                        Return to Dashboard
+                                    </button>
+                                )}
                             </div>
                         ) : (
                             <>

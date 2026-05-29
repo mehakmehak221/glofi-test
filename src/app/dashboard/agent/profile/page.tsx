@@ -2,18 +2,16 @@
 
 import { motion } from "framer-motion";
 import { useGetAgentMeQuery } from "@/store/api/agentApi";
-import { 
-    ProfileIcon, 
-    VerifiedIcon, 
-    PendingIcon, 
-    DocumentIcon, 
+import {
+    ProfileIcon,
+    VerifiedIcon,
+    PendingIcon,
+    DocumentIcon,
     LeadsIcon,
     LoadingSpinner
 } from "@/components/VectorImages";
 
-const formatCurrency = (value: number) => {
-    return `$${value.toLocaleString()}`;
-};
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
@@ -26,6 +24,7 @@ const formatDate = (dateString: string) => {
 
 export default function AgentProfilePage() {
     const { data: agentData, isLoading } = useGetAgentMeQuery();
+    const { formatPrice } = useCurrency();
 
     if (isLoading) {
         return (
@@ -40,14 +39,14 @@ export default function AgentProfilePage() {
 
     if (!agentData) return null;
 
-    const { 
-        profile = {} as any, 
-        userStatus = {} as any, 
-        status = {} as any, 
-        kyc = {} as any, 
-        email = "", 
-        referralCode = "", 
-        referralLink = "" 
+    const {
+        profile = {} as any,
+        userStatus = {} as any,
+        status = {} as any,
+        kyc = {} as any,
+        email = "",
+        referralCode = "",
+        referralLink = ""
     } = agentData || {};
 
     return (
@@ -73,7 +72,7 @@ export default function AgentProfilePage() {
                 >
                     <div className="bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl p-8 text-center relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[#00FFCC]/5 blur-3xl -mr-16 -mt-16 group-hover:bg-[#00FFCC]/10 transition-all duration-700" />
-                        
+
                         <div className="relative inline-block mb-6">
                             <div className="w-24 h-24 rounded-2xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] flex items-center justify-center mx-auto overflow-hidden">
                                 {profile?.avatarUrl ? (
@@ -91,7 +90,7 @@ export default function AgentProfilePage() {
 
                         <h2 className="text-xl font-bold text-[var(--foreground)] mb-1 font-montserrat">{profile?.fullName || "Agent Name"}</h2>
                         <p className="text-xs text-[var(--color-text-muted)] font-montserrat mb-6 uppercase tracking-widest font-bold">Registered Agent</p>
-                        
+
                         <div className="space-y-3 pt-6 border-t border-[var(--dashboard-border)]">
                             <div className="flex items-center justify-between text-xs">
                                 <span className="text-[var(--color-text-muted)] font-montserrat">Email</span>
@@ -104,7 +103,7 @@ export default function AgentProfilePage() {
                         </div>
                     </div>
 
-                
+
                     <div className="bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl p-8 space-y-6">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-8 h-8 rounded-lg bg-[#00FFCC]/10 flex items-center justify-center text-[#00FFCC]">
@@ -151,15 +150,14 @@ export default function AgentProfilePage() {
                                     <p className="text-xs text-[var(--color-text-muted)] font-montserrat">Validated real estate licensing information</p>
                                 </div>
                             </div>
-                            <div className={`inline-flex items-center justify-center text-center whitespace-nowrap px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border self-start sm:self-center ${
-                                status?.isVerified 
-                                    ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]' 
-                                    : 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
-                            }`}>
+                            <div className={`inline-flex items-center justify-center text-center whitespace-nowrap px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border self-start sm:self-center ${status?.isVerified
+                                ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]'
+                                : 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
+                                }`}>
                                 {status?.isVerified ? 'ACTIVE' : 'PENDING APPROVAL'}
                             </div>
                         </div>
-                        
+
                         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-1">
                                 <p className="text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest font-montserrat">RERA Registration</p>
@@ -175,13 +173,13 @@ export default function AgentProfilePage() {
                             <div className="space-y-1">
                                 <p className="text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest font-montserrat">Commission Rate</p>
                                 <p className="text-base font-bold text-[#00FFCC] font-montserrat">
-                                    {profile?.commissionPercent || 1}% 
+                                    {profile?.commissionPercent || 1}%
                                     {profile?.isEarlyAgent && <span className="ml-2 text-[10px] bg-[#00FFCC]/10 px-2 py-0.5 rounded text-[#00FFCC] font-bold">EARLY AGENT</span>}
                                 </p>
                             </div>
                             <div className="space-y-1">
                                 <p className="text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest font-montserrat">Total Earnings</p>
-                                <p className="text-base font-bold text-[var(--foreground)] font-montserrat">{formatCurrency(profile?.totalEarnings || 0)}</p>
+                                <p className="text-base font-bold text-[var(--foreground)] font-montserrat">{formatPrice(profile?.totalEarnings || 0)}</p>
                             </div>
                         </div>
 
@@ -201,7 +199,7 @@ export default function AgentProfilePage() {
                     {/* Documentation Status */}
                     <div className="bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl p-8">
                         <h3 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-8">Documentation Status</h3>
-                        
+
                         <div className="space-y-4">
                             {[
                                 { label: "Identity Proof", type: kyc?.documentType, status: kyc?.documentStatus, url: kyc?.documentUrl },
@@ -220,17 +218,16 @@ export default function AgentProfilePage() {
                                         </div>
                                     </div>
                                     <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
-                                        <div className={`inline-flex items-center justify-center text-center text-[9px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider whitespace-nowrap min-w-[80px] ${
-                                            item.status === 'APPROVED' || item.status === 'VERIFIED' || item.status === 'ACTIVE' 
-                                                ? 'bg-[var(--color-status-success-bg)] text-[var(--color-status-success)]' :
-                                            item.status === 'REJECTED' 
-                                                ? 'bg-[var(--color-status-error-bg)] text-[var(--color-status-error)]' : 
+                                        <div className={`inline-flex items-center justify-center text-center text-[9px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider whitespace-nowrap min-w-[80px] ${item.status === 'APPROVED' || item.status === 'VERIFIED' || item.status === 'ACTIVE'
+                                            ? 'bg-[var(--color-status-success-bg)] text-[var(--color-status-success)]' :
+                                            item.status === 'REJECTED'
+                                                ? 'bg-[var(--color-status-error-bg)] text-[var(--color-status-error)]' :
                                                 'bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)]'
-                                        }`}>
+                                            }`}>
                                             {item.status?.replace('_', ' ') || "PENDING"}
                                         </div>
-                                        <a 
-                                            href={item.url?.startsWith('http') ? item.url : item.url ? `https://api.glofiestates.com/files/${item.url}` : "#"} 
+                                        <a
+                                            href={item.url?.startsWith('http') ? item.url : item.url ? `https://api.glofiestates.com/files/${item.url}` : "#"}
                                             target={item.url ? "_blank" : undefined}
                                             rel="noopener noreferrer"
                                             className={`text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:opacity-70 transition-all no-underline ${!item.url ? 'opacity-20 pointer-events-none' : ''}`}

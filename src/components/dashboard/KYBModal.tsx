@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useUploadFileMutation } from "@/store/api/assetApi";
 import { useSubmitKybMutation, useGetKybStatusQuery } from "@/store/api/kybApi";
@@ -67,12 +67,20 @@ export default function KYBModal({ isOpen, onClose, onSubmit }) {
         directorIdKey: "",
     });
 
+    const [isReverifying, setIsReverifying] = useState(false);
+
     const [uploadField, setUploadField] = useState(null);
     const [uploadFile] = useUploadFileMutation();
     const [submitKyb, { isLoading: isSubmitting }] = useSubmitKybMutation();
     const { data: kybStatus, isLoading: isLoadingStatus } = useGetKybStatusQuery(undefined, { skip: !isOpen });
 
     const status = kybStatus?.status;
+
+    useEffect(() => {
+        if (isOpen) {
+            setIsReverifying(false);
+        }
+    }, [isOpen]);
 
     const handleFileUpload = async (file, field) => {
         setUploadField(field);
@@ -159,7 +167,7 @@ export default function KYBModal({ isOpen, onClose, onSubmit }) {
                             <div className="flex items-center justify-center p-12">
                                 <LoadingSpinner className="w-8 h-8 text-[var(--color-primary-300)]" />
                             </div>
-                        ) : status && !['PENDING', 'NOT_SUBMITTED'].includes(status) ? (
+                        ) : status && !['PENDING', 'NOT_SUBMITTED'].includes(status) && !isReverifying ? (
                             <div className="space-y-6">
                                 <div className={`p-6 rounded-2xl border ${
                                     status === 'VERIFIED' ? 'bg-[var(--color-primary-300)]/5 border-[var(--color-primary-100)]/20' :
@@ -194,12 +202,29 @@ export default function KYBModal({ isOpen, onClose, onSubmit }) {
                                     )}
                                 </div>
 
-                                <button
-                                    onClick={onClose}
-                                    className="w-full py-4 rounded-2xl bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] font-bold text-sm transition-all hover:bg-[var(--color-primary-300)]/20"
-                                >
-                                    Close Window
-                                </button>
+                                {status === 'REJECTED' ? (
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        <button
+                                            onClick={onClose}
+                                            className="flex-1 py-4 rounded-2xl border border-[var(--sidebar-border)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] font-bold text-sm transition-all hover:bg-[var(--color-primary-300)]/[0.05] bg-transparent cursor-pointer"
+                                        >
+                                            Close Window
+                                        </button>
+                                        <button
+                                            onClick={() => setIsReverifying(true)}
+                                            className="flex-[2] py-4 rounded-2xl bg-[var(--color-primary-300)] text-black font-bold text-sm transition-all hover:bg-[var(--color-primary-100)] cursor-pointer"
+                                        >
+                                            Resubmit Documents
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={onClose}
+                                        className="w-full py-4 rounded-2xl bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] font-bold text-sm transition-all hover:bg-[var(--color-primary-300)]/20"
+                                    >
+                                        Close Window
+                                    </button>
+                                )}
                             </div>
                         ) : (
                             <>
