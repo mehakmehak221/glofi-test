@@ -228,14 +228,14 @@ export default function PropertyDetailPage() {
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                             >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Valuation</p>
-                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{formatPrice(property.valuation, true)}</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Valuation</p>
+                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)]">{formatPrice(property.valuation, true)}</p>
                             </div>
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                             >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Potential Annual Return</p>
-                                <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)] truncate">{
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Potential Annual Return</p>
+                                <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)]">{
                                     (
                                         parseFloat(property.expectedYield || 0) +
                                         parseFloat(property.expectedAnnualRent || 0) +
@@ -248,8 +248,8 @@ export default function PropertyDetailPage() {
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                             >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Risk Level</p>
-                                <p className={`text-base sm:text-lg font-bold truncate ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)]' :
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Risk Level</p>
+                                <p className={`text-base sm:text-lg font-bold ${property.riskRating === 'LOW' ? 'text-[var(--color-status-success)]' :
                                     property.riskRating === 'HIGH' ? 'text-[var(--color-status-error)]' :
                                         'text-[var(--color-status-warning)]'
                                     }`}>{property.riskRating}</p>
@@ -257,8 +257,8 @@ export default function PropertyDetailPage() {
                             <div
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)]  border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                             >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold truncate">Fractions</p>
-                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)] truncate">{property.totalFractions?.toLocaleString()}</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Fractions</p>
+                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)]">{property.totalFractions?.toLocaleString()}</p>
                             </div>
                         </div>
                     </div>

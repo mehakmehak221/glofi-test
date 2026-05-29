@@ -34,8 +34,8 @@ export default function PremiumPropertySection() {
     const { reduceMotion, viewProps } = useLandingMotion();
 
     const reveal3D = {
-        hidden: { 
-            opacity: 0, 
+        hidden: {
+            opacity: 0,
             y: 50,
             rotateX: 12,
             z: -40,

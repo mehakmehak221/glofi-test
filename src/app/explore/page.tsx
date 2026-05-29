@@ -329,10 +329,10 @@ export default function ExplorePage() {
                                                 <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
                                                     <span
                                                         className={`inline-flex items-center px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-lg ring-2 ring-black/70 ${riskLevel === "LOW"
-                                                                ? "text-[#B8FFF0] bg-[#041512] border border-[#00DAAF]/80"
-                                                                : riskLevel === "HIGH"
-                                                                    ? "text-[#FFB4B4] bg-[#1a0808] border border-[#FF5C5C]/80"
-                                                                    : "text-[#FFD699] bg-[#1a1206] border border-[#E8940C]/90"
+                                                            ? "text-[#B8FFF0] bg-[#041512] border border-[#00DAAF]/80"
+                                                            : riskLevel === "HIGH"
+                                                                ? "text-[#FFB4B4] bg-[#1a0808] border border-[#FF5C5C]/80"
+                                                                : "text-[#FFD699] bg-[#1a1206] border border-[#E8940C]/90"
                                                             }`}
                                                     >
                                                         {riskLevel} risk

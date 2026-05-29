@@ -143,8 +143,8 @@ export default function PaymentModal({ isOpen, onClose, flow, asset, onSuccess }
 
                             const txId = String(
                                 verified.transactionId ??
-                                    razorpayResponse.razorpay_payment_id ??
-                                    ""
+                                razorpayResponse.razorpay_payment_id ??
+                                ""
                             );
                             setTransactionId(txId);
                             setEscrowId(
@@ -169,8 +169,8 @@ export default function PaymentModal({ isOpen, onClose, flow, asset, onSuccess }
                             reject(
                                 new Error(
                                     err?.data?.message ??
-                                        err?.message ??
-                                        "Payment verification failed."
+                                    err?.message ??
+                                    "Payment verification failed."
                                 )
                             );
                         }
@@ -212,13 +212,13 @@ export default function PaymentModal({ isOpen, onClose, flow, asset, onSuccess }
                         animate="visible"
                         exit="exit"
                     >
-                       
+
                         <div className="p-5 sm:p-8">
                             {step === 1 && (
-                                <StepSelection 
-                                    asset={asset} 
-                                    onSelect={(method) => { setSelectedMethod(method); setStep(2); }} 
-                                    onClose={onClose} 
+                                <StepSelection
+                                    asset={asset}
+                                    onSelect={(method) => { setSelectedMethod(method); setStep(2); }}
+                                    onClose={onClose}
                                 />
                             )}
                             {step === 2 && (
@@ -314,8 +314,8 @@ function StepSelection({ asset, onSelect, onClose }) {
             </div>
 
             <div className="flex items-center justify-center gap-2 text-[12px] text-[var(--color-text-muted)] mt-8 font-Montserrat">
-               <LockIcon className="w-4 h-4 text-[var(--color-text-muted)]" /> 
-               <span>All payments are secured with bank-level encryption. Your financial information is never stored.</span>
+                <LockIcon className="w-4 h-4 text-[var(--color-text-muted)]" />
+                <span>All payments are secured with bank-level encryption. Your financial information is never stored.</span>
             </div>
         </>
     );
@@ -340,7 +340,7 @@ function StepDetails({
     return (
         <>
             <button onClick={onBack} className="text-xs font-bold text-[var(--color-text-muted)] hover:text-[var(--header-text)] transition-colors mb-6 flex items-center gap-2 bg-transparent border-0 cursor-pointer">
-               <BackArrowIcon className="w-4 h-4" />Back
+                <BackArrowIcon className="w-4 h-4" />Back
             </button>
             <h2 className="text-2xl font-bold mb-8 text-[var(--header-text)]">{method.label} Details</h2>
 
@@ -348,9 +348,9 @@ function StepDetails({
                 <div className="space-y-6">
                     <div>
                         <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-2 block">UPI ID</label>
-                        <input 
-                            type="text" 
-                            defaultValue="ishant@upi" 
+                        <input
+                            type="text"
+                            defaultValue="ishant@upi"
                             className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 px-5 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30"
                         />
                     </div>
@@ -426,11 +426,10 @@ function StepDetails({
                                 <button
                                     key={crypto}
                                     onClick={() => setSelectedCrypto(crypto)}
-                                    className={`py-2 px-1 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${
-                                        selectedCrypto === crypto 
-                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30" 
+                                    className={`py-2 px-1 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${selectedCrypto === crypto
+                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30"
                                         : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
-                                    }`}
+                                        }`}
                                 >
                                     {crypto}
                                 </button>
@@ -442,10 +441,10 @@ function StepDetails({
                         <div className="p-5 space-y-4">
                             <label className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold block">Send to Wallet Address</label>
                             <div className="relative group">
-                                <input 
+                                <input
                                     readOnly
-                                    type="text" 
-                                    value="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb" 
+                                    type="text"
+                                    value="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
                                     className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-xl py-4 pl-5 pr-12 text-[10px] font-mono font-bold text-[var(--header-text)] focus:outline-none truncate"
                                 />
                                 <button className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--sidebar-active-text)] hover:opacity-80 transition-opacity bg-transparent border-0 cursor-pointer">
@@ -526,7 +525,7 @@ function StepAwaitingApproval({
         <div className="flex flex-col items-center gap-8 w-full">
             <div className="text-center w-full">
                 <div className="w-20 h-20 rounded-[2rem] bg-[var(--color-status-warning-bg)] flex items-center justify-center mb-8 mx-auto shadow-sm">
-                   <ClockIcon className="w-10 h-10 text-[var(--color-status-warning)]" />
+                    <ClockIcon className="w-10 h-10 text-[var(--color-status-warning)]" />
                 </div>
                 <h2 className="text-2xl font-bold mb-3 text-[var(--header-text)]">Awaiting Approval</h2>
                 <p className="text-sm font-medium text-[var(--color-text-muted)]">Payment received • Processing transaction</p>
@@ -724,8 +723,8 @@ function StepSuccess({
         verifyResult?.totalAmount != null
             ? formatInrAmount(Number(verifyResult.totalAmount))
             : verifyResult?.totalPaid != null
-              ? formatInrAmount(Number(verifyResult.totalPaid))
-              : asset.currentValue;
+                ? formatInrAmount(Number(verifyResult.totalPaid))
+                : asset.currentValue;
 
     return (
         <div className="flex flex-col items-center text-center">
@@ -791,7 +790,7 @@ function StepSuccess({
 
             <div className="flex flex-col sm:flex-row gap-4 w-full">
                 <button className="flex-1 py-4 rounded-full bg-[var(--background)] border border-[var(--sidebar-border)] text-[var(--header-text)] text-sm font-black flex items-center justify-center gap-2 hover:bg-[var(--sidebar-active-bg)] transition-all cursor-pointer">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
                     Receipt
                 </button>
                 <button
@@ -810,29 +809,29 @@ function PaymentIcon({ type }) {
     switch (type) {
         case 'upi':
             return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M14.166 1.66663H5.83268C4.91221 1.66663 4.16602 2.41282 4.16602 3.33329V16.6666C4.16602 17.5871 4.91221 18.3333 5.83268 18.3333H14.166C15.0865 18.3333 15.8327 17.5871 15.8327 16.6666V3.33329C15.8327 2.41282 15.0865 1.66663 14.166 1.66663Z" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M10 15H10.0083" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>;
+                <path d="M14.166 1.66663H5.83268C4.91221 1.66663 4.16602 2.41282 4.16602 3.33329V16.6666C4.16602 17.5871 4.91221 18.3333 5.83268 18.3333H14.166C15.0865 18.3333 15.8327 17.5871 15.8327 16.6666V3.33329C15.8327 2.41282 15.0865 1.66663 14.166 1.66663Z" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M10 15H10.0083" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>;
 
         case 'debit':
         case 'credit':
             return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16.666 4.16663H3.33268C2.41221 4.16663 1.66602 4.91282 1.66602 5.83329V14.1666C1.66602 15.0871 2.41221 15.8333 3.33268 15.8333H16.666C17.5865 15.8333 18.3327 15.0871 18.3327 14.1666V5.83329C18.3327 4.91282 17.5865 4.16663 16.666 4.16663Z" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M1.66602 8.33337H18.3327" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
-;
+                <path d="M16.666 4.16663H3.33268C2.41221 4.16663 1.66602 4.91282 1.66602 5.83329V14.1666C1.66602 15.0871 2.41221 15.8333 3.33268 15.8333H16.666C17.5865 15.8333 18.3327 15.0871 18.3327 14.1666V5.83329C18.3327 4.91282 17.5865 4.16663 16.666 4.16663Z" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M1.66602 8.33337H18.3327" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+                ;
         case 'escrow':
             return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16.666 4.16663H3.33268C2.41221 4.16663 1.66602 4.91282 1.66602 5.83329V14.1666C1.66602 15.0871 2.41221 15.8333 3.33268 15.8333H16.666C17.5865 15.8333 18.3327 15.0871 18.3327 14.1666V5.83329C18.3327 4.91282 17.5865 4.16663 16.666 4.16663Z" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M1.66602 8.33337H18.3327" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
-;
+                <path d="M16.666 4.16663H3.33268C2.41221 4.16663 1.66602 4.91282 1.66602 5.83329V14.1666C1.66602 15.0871 2.41221 15.8333 3.33268 15.8333H16.666C17.5865 15.8333 18.3327 15.0871 18.3327 14.1666V5.83329C18.3327 4.91282 17.5865 4.16663 16.666 4.16663Z" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M1.66602 8.33337H18.3327" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+                ;
         case 'crypto':
             return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.8333 5.83333V3.33333C15.8333 3.11232 15.7455 2.90036 15.5893 2.74408C15.433 2.5878 15.221 2.5 15 2.5H4.16667C3.72464 2.5 3.30072 2.67559 2.98816 2.98816C2.67559 3.30072 2.5 3.72464 2.5 4.16667C2.5 4.60869 2.67559 5.03262 2.98816 5.34518C3.30072 5.65774 3.72464 5.83333 4.16667 5.83333H16.6667C16.8877 5.83333 17.0996 5.92113 17.2559 6.07741C17.4122 6.23369 17.5 6.44565 17.5 6.66667V10M17.5 10H15C14.558 10 14.134 10.1756 13.8215 10.4882C13.5089 10.8007 13.3333 11.2246 13.3333 11.6667C13.3333 12.1087 13.5089 12.5326 13.8215 12.8452C14.134 13.1577 14.558 13.3333 15 13.3333H17.5C17.721 13.3333 17.933 13.2455 18.0893 13.0893C18.2455 12.933 18.3333 12.721 18.3333 12.5V10.8333C18.3333 10.6123 18.2455 10.4004 18.0893 10.2441C17.933 10.0878 17.721 10 17.5 10Z" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M2.5 4.16669V15.8334C2.5 16.2754 2.67559 16.6993 2.98816 17.0119C3.30072 17.3244 3.72464 17.5 4.16667 17.5H16.6667C16.8877 17.5 17.0996 17.4122 17.2559 17.2559C17.4122 17.0997 17.5 16.8877 17.5 16.6667V13.3334" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
-;
+                <path d="M15.8333 5.83333V3.33333C15.8333 3.11232 15.7455 2.90036 15.5893 2.74408C15.433 2.5878 15.221 2.5 15 2.5H4.16667C3.72464 2.5 3.30072 2.67559 2.98816 2.98816C2.67559 3.30072 2.5 3.72464 2.5 4.16667C2.5 4.60869 2.67559 5.03262 2.98816 5.34518C3.30072 5.65774 3.72464 5.83333 4.16667 5.83333H16.6667C16.8877 5.83333 17.0996 5.92113 17.2559 6.07741C17.4122 6.23369 17.5 6.44565 17.5 6.66667V10M17.5 10H15C14.558 10 14.134 10.1756 13.8215 10.4882C13.5089 10.8007 13.3333 11.2246 13.3333 11.6667C13.3333 12.1087 13.5089 12.5326 13.8215 12.8452C14.134 13.1577 14.558 13.3333 15 13.3333H17.5C17.721 13.3333 17.933 13.2455 18.0893 13.0893C18.2455 12.933 18.3333 12.721 18.3333 12.5V10.8333C18.3333 10.6123 18.2455 10.4004 18.0893 10.2441C17.933 10.0878 17.721 10 17.5 10Z" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2.5 4.16669V15.8334C2.5 16.2754 2.67559 16.6993 2.98816 17.0119C3.30072 17.3244 3.72464 17.5 4.16667 17.5H16.6667C16.8877 17.5 17.0996 17.4122 17.2559 17.2559C17.4122 17.0997 17.5 16.8877 17.5 16.6667V13.3334" stroke="var(--color-primary-300)" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+                ;
         default:
             return null;
     }

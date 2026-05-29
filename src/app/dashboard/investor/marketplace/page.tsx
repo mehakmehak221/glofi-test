@@ -370,11 +370,11 @@ export default function MarketplacePage() {
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] mb-0.5">Potential Annual Return</p>
-                                                    <p className="text-base font-bold text-[var(--sidebar-active-text)] truncate">{formattedYield}%</p>
+                                                    <p className="text-base font-bold text-[var(--sidebar-active-text)]">{formattedYield}%</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] mb-0.5">Available</p>
-                                                    <p className="text-base font-bold text-[var(--marketplace-text-primary)] truncate">{property.availableFractions?.toLocaleString()}</p>
+                                                    <p className="text-base font-bold text-[var(--marketplace-text-primary)]">{property.availableFractions?.toLocaleString()}</p>
                                                 </div>
                                             </div>
 
