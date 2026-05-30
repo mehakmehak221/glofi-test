@@ -16,7 +16,7 @@ import {
     CloseIcon,
     PendingIcon,
 } from "@/components/VectorImages";
-import { useGetAgentDashboardQuery } from "@/store/api/agentApi";
+import { useGetAgentDashboardQuery, useGetAgentMeQuery } from "@/store/api/agentApi";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
 
 const formatCurrency = (val: number) => {
@@ -25,9 +25,19 @@ const formatCurrency = (val: number) => {
     return `₹${val.toLocaleString('en-IN')}`;
 };
 
+const formatDate = (dateString: string) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+};
+
 export default function AgentOverviewPage() {
     const [copied, setCopied] = useState(false);
     const { data: dashboardData, isLoading: dashLoading } = useGetAgentDashboardQuery();
+    const { data: agentData, isLoading: agentLoading } = useGetAgentMeQuery();
     const { data: assetsData, isLoading: assetsLoading } = useGetAssetsQuery({ limit: 3 });
 
     const handleCopy = () => {
@@ -38,7 +48,7 @@ export default function AgentOverviewPage() {
         }
     };
 
-    const isLoading = dashLoading || assetsLoading;
+    const isLoading = dashLoading || agentLoading || assetsLoading;
 
     if (isLoading) {
         return (
@@ -86,7 +96,7 @@ export default function AgentOverviewPage() {
         let colorClass = "text-[var(--color-primary-300)]";
         let Icon = CheckIcon;
 
-        if (s === "REJECTED" || s === "INACTIVE" || s === "SUSPENDED") {
+        if (s === "REJECTED" || s === "INACTIVE" || s === "SUSPENDED" || s === "EXPIRED") {
             colorClass = "text-red-500";
             Icon = CloseIcon;
         } else if (s === "PENDING" || s === "UNDER_REVIEW") {
@@ -101,6 +111,13 @@ export default function AgentOverviewPage() {
             </div>
         );
     };
+
+    const kycStatus = agentData?.kyc?.status || dashboardData?.kycStatus || "PENDING";
+    const reraStatus = agentData?.status?.isReraExpired 
+        ? "EXPIRED" 
+        : agentData?.status?.isVerified 
+            ? "ACTIVE" 
+            : dashboardData?.reraStatus || "PENDING";
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
@@ -132,11 +149,11 @@ export default function AgentOverviewPage() {
                             You&apos;re earning higher commission rates as one of our first 100 verified agents!
                         </p>
                         <div className="flex flex-wrap items-center gap-6 mt-4">
-                            {getStatusBadge("KYC", dashboardData?.kycStatus, "Verified")}
-                            {getStatusBadge("RERA", dashboardData?.reraStatus, "Active")}
+                            {getStatusBadge("KYC", kycStatus, "PENDING")}
+                            {getStatusBadge("RERA", reraStatus, "PENDING")}
                             <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-wider">
                                 <CalendarIcon className="w-3.5 h-3.5" />
-                                Expires: {dashboardData?.expiryDate || "2027-12-31"}
+                                Expires: {agentData?.profile?.expiryDate ? formatDate(agentData.profile.expiryDate) : dashboardData?.expiryDate || "2027-12-31"}
                             </div>
                         </div>
                     </div>

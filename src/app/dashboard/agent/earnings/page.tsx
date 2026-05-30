@@ -81,15 +81,17 @@ export default function AgentEarningsPage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl p-5 sm:p-6 flex flex-col justify-start hover:shadow-md transition-all relative overflow-hidden"
+                        className="bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl p-6 flex flex-col justify-between hover:shadow-lg transition-all relative overflow-hidden group min-h-[140px]"
                     >
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className={`w-8 h-8 rounded-lg ${stat.bgColor} flex items-center justify-center flex-shrink-0`}>
-                                <stat.icon className={`w-4 h-4 ${stat.iconColor}`} />
+                        <div className="flex items-center justify-between mb-4">
+                            <div className={`w-10 h-10 rounded-xl ${stat.bgColor} flex items-center justify-center flex-shrink-0`}>
+                                <stat.icon className={`w-5 h-5 ${stat.iconColor}`} />
                             </div>
-                            <span className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 font-montserrat uppercase tracking-[0.1em]">{stat.label}</span>
                         </div>
-                        <span className="text-2xl font-bold text-[var(--foreground)] font-montserrat tracking-tight mt-1">{stat.value}</span>
+                        <div>
+                            <p className="text-3xl font-bold text-[var(--foreground)] font-montserrat tracking-tight mb-1">{stat.value}</p>
+                            <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest font-montserrat block">{stat.label}</p>
+                        </div>
                     </motion.div>
                 ))}
             </div>
@@ -100,45 +102,42 @@ export default function AgentEarningsPage() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.3 }}
-                    className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl p-6 sm:p-8"
+                    className="bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl p-6 sm:p-8"
                 >
                     <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-6">Commission Breakdown</h2>
-                    <div className="space-y-6">
-                        <div className="flex justify-between items-start">
-                            <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <TrendingUpIcon className="w-5 h-5 text-green-500" />
+                    <div className="divide-y divide-[var(--dashboard-border)]">
+                        <div className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-500">
+                                    <TrendingUpIcon className="w-5 h-5" />
                                 </div>
-                                <div className="flex flex-col">
-                                    <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-[0.1em] mb-1">Commission Rate</p>
-                                    <p className="text-sm font-bold text-[var(--foreground)] opacity-90">{commissionRate}% per transaction</p>
-                                </div>
-                            </div>
-                            <FinancialIcon className="w-5 h-5 text-[var(--sidebar-text)] opacity-10 flex-shrink-0" />
-                        </div>
-                        <div className="flex justify-between items-start">
-                            <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <LeadsIcon className="w-5 h-5 text-blue-500" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-[0.1em] mb-1">Custom Commission</p>
-                                    <p className="text-sm font-bold text-[var(--foreground)] opacity-90">Not Set</p>
+                                <div>
+                                    <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest font-montserrat">Commission Rate</p>
+                                    <p className="text-sm font-bold text-[var(--foreground)] font-montserrat mt-0.5">{commissionRate}% per transaction</p>
                                 </div>
                             </div>
-                            <FinancialIcon className="w-5 h-5 text-[var(--sidebar-text)] opacity-10 flex-shrink-0" />
                         </div>
-                        <div className="flex justify-between items-start">
-                            <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <div className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0 text-blue-500">
+                                    <LeadsIcon className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest font-montserrat">Custom Commission</p>
+                                    <p className="text-sm font-bold text-[var(--foreground)] font-montserrat mt-0.5">Not Set</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center flex-shrink-0 text-yellow-500">
                                     <FinancialIcon className="w-5 h-5 text-yellow-500" />
                                 </div>
-                                <div className="flex flex-col">
-                                    <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-[0.1em] mb-1">Default / Early Agent Status</p>
-                                    <p className="text-sm font-bold text-[var(--foreground)] opacity-90">{commissionRate}% · {earningsData?.commissionRate?.isEarlyAgent ? "Early Agent" : "Standard"}</p>
+                                <div>
+                                    <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest font-montserrat">Default / Early Agent Status</p>
+                                    <p className="text-sm font-bold text-[var(--foreground)] font-montserrat mt-0.5">{commissionRate}% · {earningsData?.commissionRate?.isEarlyAgent ? "Early Agent" : "Standard"}</p>
                                 </div>
                             </div>
-                            <TrendingUpIcon className="w-5 h-5 text-[var(--sidebar-text)] opacity-10 flex-shrink-0" />
                         </div>
                     </div>
                 </motion.div>

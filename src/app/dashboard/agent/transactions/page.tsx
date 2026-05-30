@@ -12,7 +12,6 @@ const formatCurrency = (val: number) => {
 
 export default function AgentTransactionsPage() {
     const { data: txData, isLoading } = useGetAgentTransactionsQuery();
-    const transactions = txData?.data || [];
 
     if (isLoading) {
         return (
@@ -25,10 +24,17 @@ export default function AgentTransactionsPage() {
         );
     }
 
+    const transactions = txData?.data || [];
+
+    const totalVolume = transactions.reduce((acc: number, tx: any) => acc + (Number(tx.amount) || 0), 0);
+    const totalCommission = transactions.reduce((acc: number, tx: any) => acc + (Number(tx.commission) || 0), 0);
+    const completedCount = transactions.filter((tx: any) => tx.status === "Completed" || tx.status === "SUCCESS").length;
+    const totalCount = transactions.length;
+
     const stats = [
-        { label: "Total Volume", value: "INR 0", icon: DocumentIcon, color: "text-[var(--color-primary-300)]", bg: "bg-[var(--color-primary-300)]/10" },
-        { label: "Commission", value: "INR 0", icon: ChartLineIcon, color: "text-blue-500", bg: "bg-blue-500/10" },
-        { label: "Completed", value: "0 / 0", icon: CheckIcon, color: "text-green-500", bg: "bg-green-500/10" },
+        { label: "Total Volume", value: formatCurrency(totalVolume), icon: DocumentIcon, color: "text-[var(--color-primary-300)]", bg: "bg-[var(--color-primary-300)]/10" },
+        { label: "Commission Earned", value: formatCurrency(totalCommission), icon: ChartLineIcon, color: "text-blue-500", bg: "bg-blue-500/10" },
+        { label: "Completed Referrals", value: `${completedCount} / ${totalCount}`, icon: CheckIcon, color: "text-green-500", bg: "bg-green-500/10" },
     ];
 
     return (
@@ -51,15 +57,17 @@ export default function AgentTransactionsPage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: i * 0.1 }}
-                        className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl p-5 sm:p-6 flex flex-col justify-start hover:shadow-md transition-all relative overflow-hidden"
+                        className="bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl p-6 flex flex-col justify-between hover:shadow-lg transition-all relative overflow-hidden group min-h-[140px]"
                     >
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center flex-shrink-0`}>
-                                <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                        <div className="flex items-center justify-between mb-4">
+                            <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center flex-shrink-0`}>
+                                <stat.icon className={`w-5 h-5 ${stat.color}`} />
                             </div>
-                            <span className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 font-montserrat uppercase tracking-[0.1em]">{stat.label}</span>
                         </div>
-                        <span className="text-2xl font-bold text-[var(--foreground)] font-montserrat tracking-tight mt-1">{stat.value}</span>
+                        <div>
+                            <p className="text-3xl font-bold text-[var(--foreground)] font-montserrat tracking-tight mb-1">{stat.value}</p>
+                            <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest font-montserrat block">{stat.label}</p>
+                        </div>
                     </motion.div>
                 ))}
             </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useGetAgentMeQuery } from "@/store/api/agentApi";
+import { useGetAgentMeQuery, useGetAgentReferralLinkQuery } from "@/store/api/agentApi";
 import {
     ProfileIcon,
     VerifiedIcon,
@@ -24,15 +24,36 @@ const formatDate = (dateString: string) => {
     });
 };
 
+const getDocumentUrl = (url: string | null | undefined) => {
+    if (!url) return "#";
+
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+        return url;
+    }
+
+    const cleanPath = url.replace(/^\//, "");
+
+    // KYC, RERA, and KYB documents are stored on the S3 bucket.
+    if (
+        cleanPath.startsWith("kyc/") ||
+        cleanPath.startsWith("rera/") ||
+        cleanPath.startsWith("kyb/")
+    ) {
+        return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com/${cleanPath}`;
+    }
+
+    // Other documents (e.g. starting with uploads/) are served from backend API_URL.
+    return `${API_URL}/${cleanPath}`;
+};
+
 export default function AgentProfilePage() {
-    const { data: agentData, isLoading } = useGetAgentMeQuery();
+    const { data: agentData, isLoading: isAgentLoading } = useGetAgentMeQuery();
+    const { data: referralData, isLoading: isReferralLoading } = useGetAgentReferralLinkQuery();
     const { formatPrice } = useCurrency();
     const [copiedCode, setCopiedCode] = useState(false);
     const [copiedLink, setCopiedLink] = useState(false);
 
-    const handleCopy = (text: string, type: 'code' | 'link') => {
-        if (!text) return;
-        navigator.clipboard.writeText(text);
+    const triggerFeedback = (type: 'code' | 'link') => {
         if (type === 'code') {
             setCopiedCode(true);
             setTimeout(() => setCopiedCode(false), 2000);
@@ -41,6 +62,48 @@ export default function AgentProfilePage() {
             setTimeout(() => setCopiedLink(false), 2000);
         }
     };
+
+    const handleCopy = (text: string, type: 'code' | 'link') => {
+        if (!text) return;
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    triggerFeedback(type);
+                })
+                .catch((err) => {
+                    console.error("Failed to copy with navigator.clipboard: ", err);
+                    fallbackCopy(text, type);
+                });
+        } else {
+            fallbackCopy(text, type);
+        }
+    };
+
+    const fallbackCopy = (text: string, type: 'code' | 'link') => {
+        try {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            const successful = document.execCommand("copy");
+            document.body.removeChild(textArea);
+            if (successful) {
+                triggerFeedback(type);
+            } else {
+                console.error("Fallback execCommand copy was unsuccessful");
+            }
+        } catch (err) {
+            console.error("Fallback copy failed: ", err);
+        }
+    };
+
+    const isLoading = isAgentLoading;
 
     if (isLoading) {
         return (
@@ -60,10 +123,11 @@ export default function AgentProfilePage() {
         userStatus = {} as any,
         status = {} as any,
         kyc = {} as any,
-        email = "",
-        referralCode = "",
-        referralLink = ""
+        email = ""
     } = agentData || {};
+
+    const referralCode = referralData?.referralCode || agentData?.referralCode || "";
+    const referralLink = referralData?.referralLink || agentData?.referralLink || "";
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen space-y-8 pb-20">
@@ -131,11 +195,11 @@ export default function AgentProfilePage() {
                         <div className="space-y-4">
                             <div>
                                 <label className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest block mb-2">Referral Code</label>
-                                <div className="bg-[var(--field-surface)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 flex items-center justify-between gap-4">
+                                <div className="bg-[var(--field-surface)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 flex items-center justify-between gap-4 hover:border-[#00FFCC]/30 transition-colors">
                                     <span className="text-sm font-bold text-[var(--foreground)] font-mono truncate">{referralCode || "N/A"}</span>
-                                    <button 
-                                        onClick={() => handleCopy(referralCode, 'code')} 
-                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] px-3 py-1.5 rounded-lg border-0 transition-all hover:opacity-80 flex-shrink-0 min-w-[60px]"
+                                    <button
+                                        onClick={() => handleCopy(referralCode, 'code')}
+                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] hover:bg-[#00FFCC] hover:text-black px-3 py-1.5 rounded-lg border-0 transition-all flex-shrink-0 min-w-[70px] text-center shadow-sm"
                                     >
                                         {copiedCode ? "Copied!" : "Copy"}
                                     </button>
@@ -143,11 +207,11 @@ export default function AgentProfilePage() {
                             </div>
                             <div>
                                 <label className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest block mb-2">Sign-up Link</label>
-                                <div className="bg-[var(--field-surface)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 flex items-center justify-between gap-4">
-                                    <span className="text-xs text-[var(--color-text-muted)] truncate font-mono">{referralLink || "N/A"}</span>
-                                    <button 
-                                        onClick={() => handleCopy(referralLink, 'link')} 
-                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] px-3 py-1.5 rounded-lg border-0 transition-all hover:opacity-80 flex-shrink-0 min-w-[60px]"
+                                <div className="bg-[var(--field-surface)] border border-[var(--dashboard-border)] rounded-xl px-4 py-3 flex items-center justify-between gap-4 hover:border-[#00FFCC]/30 transition-colors">
+                                    <span className="text-sm font-bold text-[var(--foreground)] font-mono truncate">{referralLink || "N/A"}</span>
+                                    <button
+                                        onClick={() => handleCopy(referralLink, 'link')}
+                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] hover:bg-[#00FFCC] hover:text-black px-3 py-1.5 rounded-lg border-0 transition-all flex-shrink-0 min-w-[70px] text-center shadow-sm"
                                     >
                                         {copiedLink ? "Copied!" : "Copy"}
                                     </button>
@@ -233,7 +297,7 @@ export default function AgentProfilePage() {
                                 { label: "Selfie Verification", type: "Facial Match", status: kyc?.selfieStatus, url: kyc?.selfieUrl },
                                 { label: "RERA Certificate", type: "Professional License", status: status?.isVerified ? "APPROVED" : "UNDER_REVIEW", url: profile?.reraDocumentUrl }
                             ].map((item, i) => (
-                                <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] hover:bg-[var(--badge-bg)] gap-4 transition-all">
+                                <div key={i} className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] hover:bg-[var(--badge-bg)] gap-4 transition-all hover:border-[#00FFCC]/20">
                                     <div className="flex items-center gap-4">
                                         <div className="w-10 h-10 rounded-lg bg-[var(--badge-bg)] flex items-center justify-center text-[var(--color-text-muted)] flex-shrink-0">
                                             <DocumentIcon className="w-5 h-5" />
@@ -243,8 +307,8 @@ export default function AgentProfilePage() {
                                             <p className="text-[10px] text-[var(--color-text-muted)] font-montserrat uppercase tracking-widest">{item.type?.replace('_', ' ') || "N/A"}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto mt-2 sm:mt-0">
-                                        <div className={`inline-flex items-center justify-center text-center text-[9px] font-bold px-2.5 py-1.5 rounded-md uppercase tracking-wider whitespace-nowrap w-[90px] ${item.status === 'APPROVED' || item.status === 'VERIFIED' || item.status === 'ACTIVE'
+                                    <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto mt-2 md:mt-0">
+                                        <div className={`inline-flex items-center justify-center text-center text-[9px] font-bold px-2.5 py-1.5 rounded-md uppercase tracking-wider whitespace-nowrap w-[110px] ${item.status === 'APPROVED' || item.status === 'VERIFIED' || item.status === 'ACTIVE'
                                             ? 'bg-[var(--color-status-success-bg)] text-[var(--color-status-success)]' :
                                             item.status === 'REJECTED'
                                                 ? 'bg-[var(--color-status-error-bg)] text-[var(--color-status-error)]' :
@@ -253,10 +317,10 @@ export default function AgentProfilePage() {
                                             {item.status?.replace('_', ' ') || "PENDING"}
                                         </div>
                                         <a
-                                            href={item.url?.startsWith('http') ? item.url : item.url ? `${API_URL}/${item.url.replace(/^\//, '')}` : "#"}
+                                            href={getDocumentUrl(item.url)}
                                             target={item.url ? "_blank" : undefined}
                                             rel="noopener noreferrer"
-                                            className={`text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:opacity-70 transition-all no-underline w-[40px] text-right ${!item.url ? 'opacity-20 pointer-events-none' : ''}`}
+                                            className={`text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:text-black hover:bg-[#00FFCC] transition-all no-underline px-4 py-1.5 rounded-lg bg-[#00FFCC]/5 border border-[#00FFCC]/20 text-center min-w-[70px] ${!item.url ? 'opacity-20 pointer-events-none' : ''}`}
                                         >
                                             View
                                         </a>
