@@ -25,7 +25,7 @@ const formatDate = (dateString: string) => {
     });
 };
 
-const getDocumentUrl = (url: string | null | undefined) => {
+const getDocumentUrl = (url: string | null | undefined, defaultFolder: string = 'kyc') => {
     if (!url) return "#";
 
     if (url.startsWith("http://") || url.startsWith("https://")) {
@@ -41,7 +41,6 @@ const getDocumentUrl = (url: string | null | undefined) => {
 
     const cleanPath = url.replace(/^\//, "");
 
-
     if (
         cleanPath.startsWith("kyc/") ||
         cleanPath.startsWith("rera/") ||
@@ -50,7 +49,7 @@ const getDocumentUrl = (url: string | null | undefined) => {
         return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com/${cleanPath}`;
     }
 
-    return `${API_URL}/${cleanPath}`;
+    return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com/${defaultFolder}/${cleanPath}`;
 };
 
 export default function AgentProfilePage() {
@@ -300,10 +299,31 @@ export default function AgentProfilePage() {
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold text-[var(--color-status-error)] uppercase tracking-wider mb-1">Action Required: KYC Rejected</p>
-                                        <p className="text-[11px] text-[var(--color-status-error)]/70 leading-relaxed font-montserrat">
-                                            <span className="font-semibold block mb-0.5 text-[var(--color-status-error)]">Reason for Rejection:</span>
-                                            {kyc.rejectedNote && kyc.rejectedNote.toLowerCase() !== "na" ? kyc.rejectedNote : "Your document submission was rejected. Please re-upload your identity proof."}
-                                        </p>
+                                        <div className="text-[11px] text-[var(--color-status-error)]/70 leading-relaxed font-montserrat space-y-2 mt-2">
+                                            {(() => {
+                                                const rejectedDocs = [];
+                                                if (kyc.documentStatus === 'REJECTED') rejectedDocs.push(`Identity Proof (${kyc.documentType?.replace('_', ' ') || 'Document'})`);
+                                                if (kyc.addressProofStatus === 'REJECTED') rejectedDocs.push(`Address Proof (${kyc.addressProofType?.replace('_', ' ') || 'Document'})`);
+                                                if (kyc.selfieStatus === 'REJECTED') rejectedDocs.push('Selfie Verification');
+
+                                                return rejectedDocs.length > 0 ? (
+                                                    <div>
+                                                        <span className="font-semibold block mb-0.5 text-[var(--color-status-error)]">Failed Verification Step:</span>
+                                                        {rejectedDocs.join(', ')}
+                                                    </div>
+                                                ) : null;
+                                            })()}
+
+                                            <div>
+                                                <span className="font-semibold block mb-0.5 text-[var(--color-status-error)]">Reason for Rejection:</span>
+                                                {kyc.rejectedNote && kyc.rejectedNote.toLowerCase() !== "na" ? kyc.rejectedNote : "Your document submission did not meet our verification standards."}
+                                            </div>
+
+                                            <div>
+                                                <span className="font-semibold block mb-0.5 text-[var(--color-status-error)]">Corrective Action:</span>
+                                                Please click on "Resubmit KYC" and provide clear, valid documents for the failed steps.
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <button
@@ -316,16 +336,16 @@ export default function AgentProfilePage() {
                         )}
                     </div>
 
-                    {/* Documentation Status */}
+
                     <div className="bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl p-8">
                         <h3 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-8">Documentation Status</h3>
 
                         <div className="space-y-4">
                             {[
-                                { label: "Identity Proof", type: kyc?.documentType, status: kyc?.documentStatus, url: kyc?.documentUrl },
-                                { label: "Address Proof", type: kyc?.addressProofType || "Utility Bill", status: kyc?.addressProofStatus, url: kyc?.addressProofUrl },
-                                { label: "Selfie Verification", type: "Facial Match", status: kyc?.selfieStatus, url: kyc?.selfieUrl },
-                                { label: "RERA Certificate", type: "Professional License", status: status?.isVerified ? "APPROVED" : "UNDER_REVIEW", url: profile?.reraDocumentUrl }
+                                { label: "Identity Proof", type: kyc?.documentType, status: kyc?.documentStatus, url: kyc?.documentUrl, folder: "kyc" },
+                                { label: "Address Proof", type: kyc?.addressProofType || "Utility Bill", status: kyc?.addressProofStatus, url: kyc?.addressProofUrl, folder: "kyc" },
+                                { label: "Selfie Verification", type: "Facial Match", status: kyc?.selfieStatus, url: kyc?.selfieUrl, folder: "kyc" },
+                                { label: "RERA Certificate", type: "Professional License", status: status?.isVerified ? "APPROVED" : "UNDER_REVIEW", url: profile?.reraDocumentUrl, folder: "rera" }
                             ].map((item, i) => (
                                 <div key={i} className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] hover:bg-[var(--badge-bg)] gap-4 transition-all hover:border-[#00FFCC]/20">
                                     <div className="flex items-center gap-4">
@@ -347,7 +367,7 @@ export default function AgentProfilePage() {
                                             {item.status?.replace('_', ' ') || "PENDING"}
                                         </div>
                                         <a
-                                            href={getDocumentUrl(item.url)}
+                                            href={getDocumentUrl(item.url, item.folder)}
                                             target={item.url ? "_blank" : undefined}
                                             rel="noopener noreferrer"
                                             className={`text-[10px] font-bold text-[#00FFCC] uppercase tracking-wider hover:text-black hover:bg-[#00FFCC] transition-all no-underline px-4 py-1.5 rounded-lg bg-[#00FFCC]/5 border border-[#00FFCC]/20 text-center min-w-[70px] ${!item.url ? 'opacity-20 pointer-events-none' : ''}`}
