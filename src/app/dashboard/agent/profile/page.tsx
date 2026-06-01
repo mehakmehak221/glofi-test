@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useGetAgentMeQuery, useGetAgentReferralLinkQuery } from "@/store/api/agentApi";
+import { useGetAgentMeQuery, useGetAgentReferralLinkQuery, useGetAgentDashboardQuery } from "@/store/api/agentApi";
 import {
     ProfileIcon,
     VerifiedIcon,
@@ -14,6 +14,7 @@ import {
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { API_URL } from "@/constants";
 import { useState } from "react";
+import KYCModal from "@/components/dashboard/KYCModal";
 
 const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
@@ -28,12 +29,19 @@ const getDocumentUrl = (url: string | null | undefined) => {
     if (!url) return "#";
 
     if (url.startsWith("http://") || url.startsWith("https://")) {
+        if (url.includes("aws-glofi-uploads.s3")) {
+            return url;
+        }
+        const match = url.match(/\/(kyc|rera|kyb)\/(.+)$/);
+        if (match) {
+            return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com/${match[1]}/${match[2]}`;
+        }
         return url;
     }
 
     const cleanPath = url.replace(/^\//, "");
 
-    // KYC, RERA, and KYB documents are stored on the S3 bucket.
+
     if (
         cleanPath.startsWith("kyc/") ||
         cleanPath.startsWith("rera/") ||
@@ -42,16 +50,16 @@ const getDocumentUrl = (url: string | null | undefined) => {
         return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com/${cleanPath}`;
     }
 
-    // Other documents (e.g. starting with uploads/) are served from backend API_URL.
     return `${API_URL}/${cleanPath}`;
 };
 
 export default function AgentProfilePage() {
-    const { data: agentData, isLoading: isAgentLoading } = useGetAgentMeQuery();
+    const { data: agentData, isLoading: isAgentLoading, refetch: refetchAgentMe } = useGetAgentMeQuery();
     const { data: referralData, isLoading: isReferralLoading } = useGetAgentReferralLinkQuery();
     const { formatPrice } = useCurrency();
     const [copiedCode, setCopiedCode] = useState(false);
     const [copiedLink, setCopiedLink] = useState(false);
+    const [showKycModal, setShowKycModal] = useState(false);
 
     const triggerFeedback = (type: 'code' | 'link') => {
         if (type === 'code') {
@@ -84,13 +92,12 @@ export default function AgentProfilePage() {
         try {
             const textArea = document.createElement("textarea");
             textArea.value = text;
-            textArea.style.position = "fixed";
+            textArea.style.position = "absolute";
+            textArea.style.left = "-9999px";
             textArea.style.top = "0";
-            textArea.style.left = "0";
-            textArea.style.opacity = "0";
             document.body.appendChild(textArea);
-            textArea.focus();
             textArea.select();
+            textArea.setSelectionRange(0, 99999);
             const successful = document.execCommand("copy");
             document.body.removeChild(textArea);
             if (successful) {
@@ -240,11 +247,23 @@ export default function AgentProfilePage() {
                                     <p className="text-xs text-[var(--color-text-muted)] font-montserrat">Validated real estate licensing information</p>
                                 </div>
                             </div>
-                            <div className={`inline-flex items-center justify-center text-center whitespace-nowrap px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border self-start sm:self-center ${status?.isVerified
-                                ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]'
-                                : 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
-                                }`}>
-                                {status?.isVerified ? 'ACTIVE' : 'PENDING APPROVAL'}
+                            <div className="flex items-center gap-3 self-start sm:self-center">
+                                <div className={`inline-flex items-center justify-center text-center whitespace-nowrap px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border ${(status?.isActive === false || userStatus?.isActive === false)
+                                    ? 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'
+                                    : status?.isVerified
+                                        ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]'
+                                        : 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
+                                    }`}>
+                                    {(status?.isActive === false || userStatus?.isActive === false) ? 'INACTIVE' : status?.isVerified ? 'ACTIVE' : 'PENDING APPROVAL'}
+                                </div>
+                                {!status?.isVerified && (
+                                    <button
+                                        onClick={() => setShowKycModal(true)}
+                                        className="px-4 py-1.5 rounded-full bg-[#00FFCC] hover:bg-[#00FFCC]/90 text-black text-[10px] font-bold uppercase transition-all whitespace-nowrap border-0 cursor-pointer shadow-sm ml-2 font-montserrat"
+                                    >
+                                        Update Details
+                                    </button>
+                                )}
                             </div>
                         </div>
 
@@ -274,14 +293,25 @@ export default function AgentProfilePage() {
                         </div>
 
                         {kyc?.status === "REJECTED" && (
-                            <div className="m-8 mt-0 p-4 rounded-xl bg-[var(--color-status-error-bg)] border border-[var(--color-status-error-border)] flex gap-4 items-start">
-                                <div className="text-[var(--color-status-error)] mt-1 flex-shrink-0">
-                                    <PendingIcon className="w-4 h-4" />
+                            <div className="m-8 mt-0 p-4 rounded-xl bg-[var(--color-status-error-bg)] border border-[var(--color-status-error-border)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                <div className="flex gap-4 items-start">
+                                    <div className="text-[var(--color-status-error)] mt-1 flex-shrink-0">
+                                        <PendingIcon className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-[var(--color-status-error)] uppercase tracking-wider mb-1">Action Required: KYC Rejected</p>
+                                        <p className="text-[11px] text-[var(--color-status-error)]/70 leading-relaxed font-montserrat">
+                                            <span className="font-semibold block mb-0.5 text-[var(--color-status-error)]">Reason for Rejection:</span>
+                                            {kyc.rejectedNote && kyc.rejectedNote.toLowerCase() !== "na" ? kyc.rejectedNote : "Your document submission was rejected. Please re-upload your identity proof."}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-xs font-bold text-[var(--color-status-error)] uppercase tracking-wider mb-1">Action Required: KYC Rejected</p>
-                                    <p className="text-[11px] text-[var(--color-status-error)]/70 leading-relaxed font-montserrat">{kyc.rejectedNote || "Your document submission was rejected. Please re-upload your identity proof."}</p>
-                                </div>
+                                <button
+                                    onClick={() => setShowKycModal(true)}
+                                    className="px-4 py-2 rounded-lg bg-[var(--color-status-error)] hover:bg-[var(--color-status-error)]/90 text-white text-[10px] font-bold uppercase transition-all whitespace-nowrap border-0 cursor-pointer shadow-sm self-stretch sm:self-auto text-center"
+                                >
+                                    Resubmit KYC
+                                </button>
                             </div>
                         )}
                     </div>
@@ -303,8 +333,8 @@ export default function AgentProfilePage() {
                                             <DocumentIcon className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-[var(--foreground)] font-montserrat">{item.label}</p>
-                                            <p className="text-[10px] text-[var(--color-text-muted)] font-montserrat uppercase tracking-widest">{item.type?.replace('_', ' ') || "N/A"}</p>
+                                            <p className="text-sm font-bold text-[var(--foreground)] font-montserrat m-0 mb-0.5 leading-snug">{item.label}</p>
+                                            <p className="text-[10px] text-[var(--color-text-muted)] font-montserrat uppercase tracking-widest m-0 leading-none">{item.type?.replace('_', ' ') || "N/A"}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto mt-2 md:mt-0">
@@ -331,6 +361,15 @@ export default function AgentProfilePage() {
                     </div>
                 </motion.div>
             </div>
+
+            <KYCModal
+                isOpen={showKycModal}
+                onClose={() => setShowKycModal(false)}
+                onSubmit={() => {
+                    setShowKycModal(false);
+                    refetchAgentMe();
+                }}
+            />
         </div>
     );
 }

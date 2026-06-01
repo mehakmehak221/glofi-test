@@ -31,7 +31,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
     const [step, setStep] = useState(1);
     const [activeTab, setActiveTab] = useState("Passport");
     const [isReverifying, setIsReverifying] = useState(false);
-    
+
     const [idDocKey, setIdDocKey] = useState("");
     const [selfieKey, setSelfieKey] = useState("");
     const [addressKey, setAddressKey] = useState("");
@@ -43,7 +43,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
 
     const { data: profileData } = useGetProfileQuery(undefined, { skip: !isOpen });
     const { data: kycStatus, isLoading: isStatusLoading, refetch: refetchStatus } = useGetKycStatusQuery(undefined, { skip: !isOpen, refetchOnMountOrArgChange: true });
-    
+
     const [submitKyc, { isLoading: isSubmittingInvestor }] = useSubmitKycMutation();
     const [setupAgentKyc, { isLoading: isSubmittingAgent }] = useSetupAgentKycMutation();
     const [uploadFile, { isLoading: isUploading }] = useUploadFileMutation();
@@ -68,7 +68,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
         try {
             const folder = type === 'rera' ? 'rera' : 'kyc';
             const result = await uploadFile({ file, folder }).unwrap();
-            
+
             if (type === 'id') setIdDocKey(result.url || result.key);
             else if (type === 'selfie') setSelfieKey(result.url || result.key);
             else if (type === 'address') setAddressKey(result.url || result.key);
@@ -159,10 +159,9 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                             </div>
                         ) : (isPending || isVerified || (isRejected && !isReverifying && !idDocKey && !selfieKey && !addressKey)) ? (
                             <div className="text-center py-8">
-                                <div className={`w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6 ${
-                                    isVerified ? 'bg-green-500/10 text-green-500' : 
+                                <div className={`w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6 ${isVerified ? 'bg-green-500/10 text-green-500' :
                                     isRejected ? 'bg-red-500/10 text-red-500' :
-                                    'bg-yellow-500/10 text-yellow-500'}`}>
+                                        'bg-yellow-500/10 text-yellow-500'}`}>
                                     {isVerified ? (
                                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -180,11 +179,18 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                 <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2 font-montserrat">
                                     {isVerified ? "Verified" : isRejected ? "Verification Rejected" : "In Review"}
                                 </h2>
-                                <p className="text-sm text-[var(--foreground)]/50 mb-8 font-montserrat px-4 leading-relaxed">
-                                    {isVerified ? "Your identity and credentials have been successfully verified." : 
-                                     isRejected ? (kycStatus?.rejectedNote || "Your submission was rejected. Please review your documents and try again.") :
-                                     "Our compliance team is reviewing your documents. This typically takes 24-48 hours."}
+                                <p className="text-sm text-[var(--foreground)]/50 mb-6 font-montserrat px-4 leading-relaxed">
+                                    {isVerified ? "Your identity and credentials have been successfully verified." :
+                                        "Our compliance team is reviewing your documents. This typically takes 24-48 hours."}
                                 </p>
+                                {isRejected && (
+                                    <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-left max-w-md mx-auto">
+                                        <p className="text-[10px] font-extrabold text-red-400 uppercase tracking-widest mb-1.5 font-montserrat">Reason for Rejection</p>
+                                        <p className="text-xs text-red-200/80 leading-relaxed font-montserrat">
+                                            {kycStatus?.rejectedNote && kycStatus.rejectedNote.toLowerCase() !== "na" ? kycStatus.rejectedNote : "Your document submission was rejected. Please re-upload your identity proof and check that your RERA registration details match exactly."}
+                                        </p>
+                                    </div>
+                                )}
                                 {isRejected ? (
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         <button

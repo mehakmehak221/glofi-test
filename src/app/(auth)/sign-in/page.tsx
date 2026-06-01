@@ -88,7 +88,7 @@ function SignInPageContent() {
 
             localStorage.setItem("toastMessage", "Login successful!");
 
-            router.push("/dashboard");
+            window.location.href = "/dashboard";
         } catch (err: any) {
             const errorBody = err?.data;
             const message = errorBody?.message ?? errorBody?.error ?? err?.message;

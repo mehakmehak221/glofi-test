@@ -113,11 +113,15 @@ export default function AgentOverviewPage() {
     };
 
     const kycStatus = agentData?.kyc?.status || dashboardData?.kycStatus || "PENDING";
-    const reraStatus = agentData?.status?.isReraExpired 
-        ? "EXPIRED" 
-        : agentData?.status?.isVerified 
-            ? "ACTIVE" 
-            : dashboardData?.reraStatus || "PENDING";
+    const reraStatus = (agentData?.status?.isActive === false || agentData?.userStatus?.isActive === false)
+        ? "INACTIVE"
+        : agentData?.status?.isReraExpired
+            ? "EXPIRED"
+            : dashboardData?.reraStatus
+                ? dashboardData.reraStatus
+                : agentData?.status?.isVerified
+                    ? "ACTIVE"
+                    : "PENDING";
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen">
@@ -194,7 +198,7 @@ export default function AgentOverviewPage() {
                             <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-[0.15em] mb-1.5">Referral Code</p>
                             <p className="text-2xl font-bold text-[var(--color-primary-300)] font-montserrat tracking-wider">{referralCode}</p>
                         </div>
-                        <button 
+                        <button
                             onClick={handleCopy}
                             className="w-full h-12 px-8 rounded-md bg-[var(--color-primary-300)]/5 border border-[var(--color-primary-300)]/20 text-[var(--color-primary-300)] font-bold text-xs font-montserrat hover:bg-[var(--color-primary-300)]/10 transition-all flex items-center justify-center gap-3"
                         >
@@ -228,10 +232,10 @@ export default function AgentOverviewPage() {
                                 className="flex gap-4 p-3 rounded-lg border border-[var(--sidebar-border)]/60 bg-[var(--background)]/35 cursor-default"
                             >
                                 <div className="w-16 h-16 rounded-md overflow-hidden bg-[var(--background)] flex-shrink-0 relative">
-                                    <Image 
-                                        src={asset.images?.[0] || "/placeholder-asset.jpg"} 
-                                        alt={asset.title} 
-                                        fill 
+                                    <Image
+                                        src={asset.images?.[0] || "/placeholder-asset.jpg"}
+                                        alt={asset.title}
+                                        fill
                                         className="object-cover"
                                     />
                                 </div>
