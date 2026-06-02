@@ -159,9 +159,9 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                             </div>
                         ) : (isPending || isVerified || (isRejected && !isReverifying && !idDocKey && !selfieKey && !addressKey)) ? (
                             <div className="text-center py-8">
-                                <div className={`w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6 ${isVerified ? 'bg-green-500/10 text-green-500' :
-                                    isRejected ? 'bg-red-500/10 text-red-500' :
-                                        'bg-yellow-500/10 text-yellow-500'}`}>
+                                <div className={`w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6 ${isVerified ? 'bg-[var(--color-status-success-bg)] text-[var(--color-status-success)]' :
+                                    isRejected ? 'bg-[var(--color-status-error-bg)] text-[var(--color-status-error)]' :
+                                        'bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)]'}`}>
                                     {isVerified ? (
                                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -184,9 +184,9 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                         "Our compliance team is reviewing your documents. This typically takes 24-48 hours."}
                                 </p>
                                 {isRejected && (
-                                    <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-left max-w-md mx-auto">
-                                        <p className="text-[10px] font-extrabold text-red-400 uppercase tracking-widest mb-1.5 font-montserrat">Reason for Rejection</p>
-                                        <p className="text-xs text-red-200/80 leading-relaxed font-montserrat">
+                                    <div className="mb-8 p-4 rounded-xl bg-[var(--color-status-error-bg)] border border-[var(--color-status-error-border)] text-left max-w-md mx-auto">
+                                        <p className="text-[10px] font-extrabold text-[var(--color-status-error)] uppercase tracking-widest mb-1.5 font-montserrat">Reason for Rejection</p>
+                                        <p className="text-xs text-[var(--color-status-error)] leading-relaxed font-montserrat font-semibold">
                                             {kycStatus?.rejectedNote && kycStatus.rejectedNote.toLowerCase() !== "na" ? kycStatus.rejectedNote : "Your document submission was rejected. Please re-upload your identity proof and check that your RERA registration details match exactly."}
                                         </p>
                                     </div>
