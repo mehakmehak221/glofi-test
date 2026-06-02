@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Sidebar from "@/components/dashboard/Sidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
@@ -12,6 +12,14 @@ export default function DashboardLayout({ children }) {
     const { data: kycData, refetch: refetchKyc } = useGetKycStatusQuery();
     const [showKycModal, setShowKycModal] = useState(false);
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+
+    useEffect(() => {
+        const handleOpenKyc = () => setShowKycModal(true);
+        window.addEventListener("open-kyc-modal", handleOpenKyc);
+        return () => {
+            window.removeEventListener("open-kyc-modal", handleOpenKyc);
+        };
+    }, []);
 
     const showToast = (message, type = "success") => {
         setToast({ show: true, message, type });
