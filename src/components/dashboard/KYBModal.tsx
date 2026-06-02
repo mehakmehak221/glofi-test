@@ -206,13 +206,15 @@ export default function KYBModal({ isOpen, onClose, onSubmit }) {
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         <button
                                             onClick={onClose}
-                                            className="flex-1 h-[72px] rounded-2xl border border-[var(--sidebar-border)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] font-bold text-sm transition-all hover:bg-[var(--color-primary-300)]/[0.05] bg-transparent cursor-pointer"
+                                            className="flex-1 rounded-2xl border border-[var(--sidebar-border)] text-[var(--color-text-muted)] hover:text-[var(--header-text)] font-bold text-sm transition-all hover:bg-[var(--color-primary-300)]/[0.05] bg-transparent cursor-pointer"
+                                            style={{ height: '72px' }}
                                         >
                                             Close Window
                                         </button>
                                         <button
                                             onClick={() => setIsReverifying(true)}
-                                            className="flex-[2] h-[72px] rounded-2xl bg-[var(--color-primary-300)] text-black font-bold text-sm transition-all hover:bg-[var(--color-primary-100)] cursor-pointer"
+                                            className="flex-[2] rounded-2xl bg-[var(--color-primary-300)] text-black font-bold text-sm transition-all hover:bg-[var(--color-primary-100)] cursor-pointer"
+                                            style={{ height: '72px' }}
                                         >
                                             Resubmit Documents
                                         </button>
@@ -220,7 +222,8 @@ export default function KYBModal({ isOpen, onClose, onSubmit }) {
                                 ) : (
                                     <button
                                         onClick={onClose}
-                                        className="w-full h-[72px] rounded-2xl bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] font-bold text-sm transition-all hover:bg-[var(--color-primary-300)]/20"
+                                        className="w-full rounded-2xl bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] font-bold text-sm transition-all hover:bg-[var(--color-primary-300)]/20"
+                                        style={{ height: '72px' }}
                                     >
                                         Close Window
                                     </button>
@@ -277,7 +280,8 @@ export default function KYBModal({ isOpen, onClose, onSubmit }) {
                             whileTap={{ scale: 0.98 }}
                             disabled={isSubmitting}
                             onClick={handleSubmit}
-                            className="w-full h-[72px] rounded-2xl bg-[var(--color-primary-300)] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:bg-[var(--color-primary-100)] flex items-center justify-center gap-2"
+                            className="w-full rounded-2xl bg-[var(--color-primary-300)] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:bg-[var(--color-primary-100)] flex items-center justify-center gap-2"
+                            style={{ height: '72px' }}
                         >
                             {isSubmitting ? <LoadingSpinner color="black" /> : (
                                 <>
