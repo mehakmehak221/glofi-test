@@ -195,13 +195,13 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         <button
                                             onClick={onClose}
-                                            className="flex-1 h-14 rounded-xl border border-[var(--foreground)]/10 text-[var(--foreground)] font-bold text-sm hover:bg-[var(--foreground)]/5 transition-all cursor-pointer bg-transparent"
+                                            className="flex-1 h-[72px] rounded-xl border border-[var(--foreground)]/10 text-[var(--foreground)] font-bold text-sm hover:bg-[var(--foreground)]/5 transition-all cursor-pointer bg-transparent"
                                         >
                                             Return to Dashboard
                                         </button>
                                         <button
                                             onClick={() => setIsReverifying(true)}
-                                            className="flex-[2] h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 font-montserrat"
+                                            className="flex-[2] h-[72px] rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 font-montserrat"
                                         >
                                             Resubmit Documents
                                         </button>
@@ -209,7 +209,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                 ) : (
                                     <button
                                         onClick={onClose}
-                                        className="w-full h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90"
+                                        className="w-full h-[72px] rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90"
                                     >
                                         Return to Dashboard
                                     </button>
@@ -293,7 +293,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                             <button
                                                 onClick={() => isAgent ? setStep(2) : handleFormSubmit()}
                                                 disabled={!idDocKey || !selfieKey || !addressKey || isUploading}
-                                                className="w-full h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 disabled:opacity-50 mt-4"
+                                                className="w-full h-[72px] rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 disabled:opacity-50 mt-4"
                                             >
                                                 {isAgent ? "Next: RERA Details" : (isSubmitting ? "Submitting..." : "Complete Verification")}
                                             </button>
@@ -339,14 +339,14 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                             <div className="flex gap-4 mt-6">
                                                 <button
                                                     onClick={() => setStep(1)}
-                                                    className="flex-1 h-14 rounded-xl border border-[var(--foreground)]/10 text-[var(--foreground)] font-bold text-sm hover:bg-[var(--foreground)]/5 transition-all"
+                                                    className="flex-1 h-[72px] rounded-xl border border-[var(--foreground)]/10 text-[var(--foreground)] font-bold text-sm hover:bg-[var(--foreground)]/5 transition-all"
                                                 >
                                                     Back
                                                 </button>
                                                 <button
                                                     onClick={handleFormSubmit}
                                                     disabled={!reraNumber || !expiryDate || !reraDocKey || isSubmitting || isUploading}
-                                                    className="flex-[2] h-14 rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 disabled:opacity-50"
+                                                    className="flex-[2] h-[72px] rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 disabled:opacity-50"
                                                 >
                                                     {isSubmitting ? "Submitting..." : "Complete Verification"}
                                                 </button>
