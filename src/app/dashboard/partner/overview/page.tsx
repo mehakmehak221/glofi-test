@@ -12,6 +12,7 @@ import {
     SparkleIcon,
 } from "@/components/VectorImages";
 import { useGetKybStatusQuery } from "@/store/api/kybApi";
+import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { useGetMyListingsQuery } from "@/store/api/assetApi";
 import { useGetPartnerPortfolioQuery, useGetListingPerformanceQuery } from "@/store/api/partnerApi";
 import { API_URL } from "@/constants";
@@ -197,7 +198,27 @@ const formatCurrency = (val) => {
 export default function PartnerOverviewPage() {
     const { data: portfolioData, isLoading: isLoadingPortfolio } = useGetPartnerPortfolioQuery();
     const { data: performanceData, isLoading: isLoadingPerformance, isError, error } = useGetListingPerformanceQuery();
+    const { data: kycData } = useGetKycStatusQuery();
+    const { data: kybData } = useGetKybStatusQuery();
     const err = error as { status?: number; data?: { message?: string } } | undefined;
+    const kycStatus = kycData?.status;
+    const kybStatus = kybData?.status;
+
+    const isKycRequired = err?.status === 403 && (
+        err?.data?.message?.includes('KYC') || 
+        kycStatus === 'REJECTED' || 
+        kycStatus === 'PENDING' || 
+        !kycStatus || 
+        (kycStatus !== 'APPROVED' && kycStatus !== 'VERIFIED')
+    );
+
+    const isKybRequired = err?.status === 403 && !isKycRequired && (
+        err?.data?.message?.includes('KYB') || 
+        kybStatus === 'REJECTED' || 
+        kybStatus === 'PENDING' || 
+        !kybStatus || 
+        (kybStatus !== 'APPROVED' && kybStatus !== 'VERIFIED')
+    );
 
     const displayListings = performanceData?.data || [];
 
@@ -312,10 +333,10 @@ export default function PartnerOverviewPage() {
                 {isError ? (
                     <div className="py-12 flex flex-col items-center justify-center text-center px-4">
                         <p className="text-sm font-bold text-[var(--foreground)] opacity-90 mb-2 uppercase tracking-wide">
-                            {err?.status === 403 && err?.data?.message?.includes('KYC') ? "Verification Required" : err?.status === 403 && err?.data?.message?.includes('KYB') ? "Business Verification Required" : "Error Loading Data"}
+                            {isKycRequired ? "Verification Required" : isKybRequired ? "Business Verification Required" : "Error Loading Data"}
                         </p>
                         <p className="text-[11px] text-[var(--sidebar-text)] opacity-60 max-w-xs mb-4">
-                            {err?.status === 403 && err?.data?.message?.includes('KYC') ? "You need to complete identity verification to view and manage your listings performance." : "Your account verification is pending. Real-time listing performance will appear once approved."}
+                            {isKycRequired ? "You need to complete identity verification to view and manage your listings performance." : isKybRequired ? "You need to complete business verification to view and manage your listings performance." : "Your account verification is pending. Real-time listing performance will appear once approved."}
                         </p>
                     </div>
                 ) : displayListings.length === 0 ? (

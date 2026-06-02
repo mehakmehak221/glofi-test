@@ -225,10 +225,22 @@ export default function PartnerPropertiesPage() {
     const { data: kybData, refetch: refetchKyb } = useGetKybStatusQuery();
 
     const err = error as { status?: number; data?: { message?: string } } | undefined;
-    const isKycRequired = err?.status === 403 && err?.data?.message?.includes('KYC');
-    const isKybRequired = err?.status === 403 && err?.data?.message?.includes('KYB');
     const kycStatus = kycData?.status;
     const kybStatus = kybData?.status;
+    const isKycRequired = err?.status === 403 && (
+        err?.data?.message?.includes('KYC') || 
+        kycStatus === 'REJECTED' || 
+        kycStatus === 'PENDING' || 
+        !kycStatus || 
+        (kycStatus !== 'APPROVED' && kycStatus !== 'VERIFIED')
+    );
+    const isKybRequired = err?.status === 403 && !isKycRequired && (
+        err?.data?.message?.includes('KYB') || 
+        kybStatus === 'REJECTED' || 
+        kybStatus === 'PENDING' || 
+        !kybStatus || 
+        (kybStatus !== 'APPROVED' && kybStatus !== 'VERIFIED')
+    );
     const [deleteAsset] = useDeleteAssetMutation();
     const [submitAssetForReview] = useSubmitAssetForReviewMutation();
 
