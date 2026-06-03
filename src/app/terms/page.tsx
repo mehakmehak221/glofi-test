@@ -23,7 +23,7 @@ export default function TermsAndConditionsPage() {
     }[] = [
         {
             title: "1. Acceptance of Terms",
-            content: "By accessing and using GloFi, a product of Bhai Finance, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this service."
+            content: "By accessing and using GloFi Estate, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this service."
         },
         {
             title: "2. Description of Service",
@@ -49,15 +49,15 @@ export default function TermsAndConditionsPage() {
         },
         {
             title: "5. Intellectual Property",
-            content: "All content, features, and functionality of the service are owned by Bhai Finance and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws."
+            content: "All content, features, and functionality of the service are owned by GloFi Estate and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws."
         },
         {
             title: "6. Limitation of Liability",
-            content: "In no event shall Bhai Finance, its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the service."
+            content: "In no event shall GloFi Estate, its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the service."
         },
         {
             title: "7. Governing Law",
-            content: "These Terms shall be governed and construed in accordance with the laws of the jurisdiction in which Bhai Finance is registered, without regard to its conflict of law provisions."
+            content: "These Terms shall be governed and construed in accordance with the laws of the jurisdiction in which GloFi Estate is registered, without regard to its conflict of law provisions."
         },
         {
             title: "8. Changes to Terms",
@@ -106,7 +106,7 @@ export default function TermsAndConditionsPage() {
                         <h1 className="heading-display mb-4 text-neutral-900">Terms & Conditions</h1>
                         <div className="text-body text-lg text-neutral-600 space-y-2">
                             <p>Last Updated: October 2025</p>
-                            <p>GloFi is a flagship product of Bhai Finance. These terms apply to all Bhai Finance products and services.</p>
+                            <p>These terms apply to all GloFi Estate products and services.</p>
                         </div>
                     </motion.div>
                 </div>
@@ -142,10 +142,10 @@ export default function TermsAndConditionsPage() {
                         <div className="mt-16 pt-16 border-t border-neutral-200 flex flex-col items-center gap-8">
                             <div className="text-center space-y-4">
                                 <p className="text-body text-neutral-500">
-                                    Bhai Finance is the parent company of GloFi and other innovative financial technology solutions.
+                                    GloFi Estate provides innovative financial technology solutions.
                                 </p>
                                 <p className="text-body-sm italic text-neutral-400">
-                                    © 2025 Bhai Finance. All rights reserved.
+                                    © 2025 GloFi Estate. All rights reserved.
                                 </p>
                             </div>
                             <Link href="/" className="btn-primary">

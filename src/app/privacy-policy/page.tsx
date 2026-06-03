@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
     }[] = [
         {
             title: "1. Introduction",
-            content: "At Bhai Finance, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services, including GloFi and all related products."
+            content: "At GloFi Estate, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services."
         },
         {
             title: "2. Information We Collect",
@@ -183,7 +183,7 @@ export default function PrivacyPolicyPage() {
                         <h1 className="heading-display mb-4 text-neutral-900">Privacy Policy</h1>
                         <div className="text-body text-lg text-neutral-600 space-y-2">
                             <p>Last Updated: October 2025</p>
-                            <p>GloFi is a flagship product of Bhai Finance. This privacy policy applies to all Bhai Finance products and services.</p>
+                            <p>This privacy policy applies to all GloFi Estate products and services.</p>
                         </div>
                     </motion.div>
                 </div>
@@ -219,10 +219,10 @@ export default function PrivacyPolicyPage() {
                         <div className="mt-16 pt-16 border-t border-neutral-200 flex flex-col items-center gap-8">
                             <div className="text-center space-y-4">
                                 <p className="text-body text-neutral-500">
-                                    Bhai Finance is the parent company of GloFi and other innovative financial technology solutions.
+                                    GloFi Estate provides innovative financial technology solutions.
                                 </p>
                                 <p className="text-body-sm italic text-neutral-400">
-                                    © 2025 Bhai Finance. All rights reserved.
+                                    © 2025 GloFi Estate. All rights reserved.
                                 </p>
                             </div>
                             <Link href="/" className="btn-primary">
