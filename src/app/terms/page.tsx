@@ -21,66 +21,66 @@ export default function TermsAndConditionsPage() {
         content: React.ReactNode;
         anchorId?: string;
     }[] = [
-        {
-            title: "1. Acceptance of Terms",
-            content: "By accessing and using GloFi Estate, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this service."
-        },
-        {
-            title: "2. Description of Service",
-            content: "GloFi provides fractional ownership and real estate investment services. We reserve the right to modify, suspend or discontinue the service with or without notice at any time and without any liability to you."
-        },
-        {
-            title: "3. User Registration",
-            content: "To use certain features of the service, you must register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate."
-        },
-        {
-            title: "4. User Conduct",
-            content: (
-                <div className="space-y-4">
-                    <p>You agree to use our services only for lawful purposes. You are prohibited from:</p>
-                    <ul className="list-disc pl-5 space-y-2 text-neutral-600">
-                        <li>Violating any local, state, national, or international law</li>
-                        <li>Interfering with the security-related features of the service</li>
-                        <li>Transmitting unauthorized commercial communications</li>
-                        <li>Attempting to bypass any measures we may use to prevent or restrict access to the service</li>
-                    </ul>
-                </div>
-            )
-        },
-        {
-            title: "5. Intellectual Property",
-            content: "All content, features, and functionality of the service are owned by GloFi Estate and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws."
-        },
-        {
-            title: "6. Limitation of Liability",
-            content: "In no event shall GloFi Estate, its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the service."
-        },
-        {
-            title: "7. Governing Law",
-            content: "These Terms shall be governed and construed in accordance with the laws of the jurisdiction in which GloFi Estate is registered, without regard to its conflict of law provisions."
-        },
-        {
-            title: "8. Changes to Terms",
-            content: "We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our service after those revisions become effective, you agree to be bound by the revised terms."
-        },
-        {
-            title: "9. Contact Information",
-            content: (
-                <div className="space-y-4">
-                    <p>If you have any questions about these Terms, please contact us at:</p>
-                    <div className="space-y-2 text-neutral-600">
-                        <p>Email: <a href="mailto:Info@bhaifinance.com" className="text-[#00876D] hover:underline">Info@bhaifinance.com</a></p>
-                        <p>Phone: +1 (716) 907-5786</p>
+            {
+                title: "1. Acceptance of Terms",
+                content: "By accessing and using GloFi Estates, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this service."
+            },
+            {
+                title: "2. Description of Service",
+                content: "GloFi provides fractional ownership and real estate investment services. We reserve the right to modify, suspend or discontinue the service with or without notice at any time and without any liability to you."
+            },
+            {
+                title: "3. User Registration",
+                content: "To use certain features of the service, you must register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate."
+            },
+            {
+                title: "4. User Conduct",
+                content: (
+                    <div className="space-y-4">
+                        <p>You agree to use our services only for lawful purposes. You are prohibited from:</p>
+                        <ul className="list-disc pl-5 space-y-2 text-neutral-600">
+                            <li>Violating any local, state, national, or international law</li>
+                            <li>Interfering with the security-related features of the service</li>
+                            <li>Transmitting unauthorized commercial communications</li>
+                            <li>Attempting to bypass any measures we may use to prevent or restrict access to the service</li>
+                        </ul>
                     </div>
-                </div>
-            )
-        }
-    ];
+                )
+            },
+            {
+                title: "5. Intellectual Property",
+                content: "All content, features, and functionality of the service are owned by GloFi Estates and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws."
+            },
+            {
+                title: "6. Limitation of Liability",
+                content: "In no event shall GloFi Estates, its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the service."
+            },
+            {
+                title: "7. Governing Law",
+                content: "These Terms shall be governed and construed in accordance with the laws of the jurisdiction in which GloFi Estates is registered, without regard to its conflict of law provisions."
+            },
+            {
+                title: "8. Changes to Terms",
+                content: "We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our service after those revisions become effective, you agree to be bound by the revised terms."
+            },
+            {
+                title: "9. Contact Information",
+                content: (
+                    <div className="space-y-4">
+                        <p>If you have any questions about these Terms, please contact us at:</p>
+                        <div className="space-y-2 text-neutral-600">
+                            <p>Email: <a href="mailto:Info@bhaifinance.com" className="text-[#00876D] hover:underline">Info@bhaifinance.com</a></p>
+                            <p>Phone: +1 (716) 907-5786</p>
+                        </div>
+                    </div>
+                )
+            }
+        ];
 
     return (
         <main className="min-h-screen bg-white text-neutral-900 selection:bg-[#00F4C4] selection:text-black">
             <Navbar />
-            
+
             <section className="relative pt-32 pb-20 overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] opacity-20 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-b from-[#00F4C4]/10 to-transparent blur-[120px]" />
@@ -99,14 +99,14 @@ export default function TermsAndConditionsPage() {
                             Go Back
                         </button>
                     </div>
-                    <motion.div 
+                    <motion.div
                         {...fadeIn}
                         className="text-center max-w-3xl mx-auto"
                     >
                         <h1 className="heading-display mb-4 text-neutral-900">Terms & Conditions</h1>
                         <div className="text-body text-lg text-neutral-600 space-y-2">
                             <p>Last Updated: October 2025</p>
-                            <p>These terms apply to all GloFi Estate products and services.</p>
+                            <p>These terms apply to all GloFi Estates products and services.</p>
                         </div>
                     </motion.div>
                 </div>
@@ -114,7 +114,7 @@ export default function TermsAndConditionsPage() {
 
             <section className="pb-32">
                 <div className="container-main max-w-4xl">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
@@ -142,10 +142,10 @@ export default function TermsAndConditionsPage() {
                         <div className="mt-16 pt-16 border-t border-neutral-200 flex flex-col items-center gap-8">
                             <div className="text-center space-y-4">
                                 <p className="text-body text-neutral-500">
-                                    GloFi Estate provides innovative financial technology solutions.
+                                    GloFi Estates provides innovative financial technology solutions.
                                 </p>
                                 <p className="text-body-sm italic text-neutral-400">
-                                    © 2025 GloFi Estate. All rights reserved.
+                                    © 2025 GloFi Estates. All rights reserved.
                                 </p>
                             </div>
                             <Link href="/" className="btn-primary">
