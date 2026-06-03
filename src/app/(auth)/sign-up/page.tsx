@@ -325,17 +325,17 @@ function SignUpPageContent() {
         >
             <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group"
+                className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
             >
                 <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
                 Back to home
             </Link>
 
             <div className="mb-8">
-                <h2 className="text-white font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
-                <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">
+                <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
+                <p className="text-neutral-500 text-sm font-montserrat">
                     Already have an account?{" "}
-                    <Link href={`/sign-in?role=${encodeURIComponent(userType)}`} className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors">
+                    <Link href={`/sign-in?role=${encodeURIComponent(userType)}`} className="text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors">
                         Sign in
                     </Link>
                 </p>
@@ -375,14 +375,14 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handleOtpSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
-                    <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                    <p className="text-sm text-neutral-500 leading-relaxed">
                         Enter the verification code sent to{" "}
-                        <span className="text-white font-medium">{form.email.trim()}</span>
+                        <span className="text-neutral-900 font-medium">{form.email.trim()}</span>
                     </p>
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="sign-up-otp" className="text-sm font-medium text-white font-montserrat">
+                        <label htmlFor="sign-up-otp" className="text-sm font-medium text-neutral-900 font-montserrat">
                             Verification code
                         </label>
                         <input
@@ -415,7 +415,7 @@ function SignUpPageContent() {
                         type="button"
                         onClick={handleResendOtp}
                         disabled={isLoading}
-                        className="text-sm text-[var(--color-text-secondary)] hover:text-white transition-colors text-center disabled:opacity-50"
+                        className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors text-center disabled:opacity-50"
                     >
                         Didn&apos;t receive a code? Resend
                     </button>
@@ -429,7 +429,7 @@ function SignUpPageContent() {
                             setErrorMsg("");
                         }}
                         disabled={isLoading}
-                        className="text-sm text-[var(--color-primary-300)] hover:text-[var(--color-primary-100)] transition-colors text-center disabled:opacity-50"
+                        className="text-sm text-[var(--color-primary-500)] hover:text-[var(--color-primary-600)] transition-colors text-center disabled:opacity-50"
                     >
                         Back to account details
                     </button>
@@ -438,10 +438,10 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handleDetailsSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="sign-up-name" className="text-sm font-medium text-white font-montserrat">
+                        <label htmlFor="sign-up-name" className="text-sm font-medium text-neutral-900 font-montserrat">
                             Full Name
                         </label>
                         <input
@@ -463,7 +463,7 @@ function SignUpPageContent() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="sign-up-email" className="text-sm font-medium text-white font-montserrat">
+                        <label htmlFor="sign-up-email" className="text-sm font-medium text-neutral-900 font-montserrat">
                             Email Address
                         </label>
                         <input
@@ -488,7 +488,7 @@ function SignUpPageContent() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="sign-up-password" className="text-sm font-medium text-white font-montserrat">
+                        <label htmlFor="sign-up-password" className="text-sm font-medium text-neutral-900 font-montserrat">
                             Password
                         </label>
                         <div className="relative">
@@ -517,7 +517,7 @@ function SignUpPageContent() {
                         </div>
                         <ul
                             id="sign-up-password-requirements"
-                            className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 space-y-1.5 text-xs text-[var(--color-text-secondary)] list-none"
+                            className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2.5 space-y-1.5 text-xs text-neutral-500 list-none"
                             aria-label="Password requirements"
                             aria-live="polite"
                         >
@@ -538,7 +538,7 @@ function SignUpPageContent() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="sign-up-confirm-password" className="text-sm font-medium text-white font-montserrat">
+                        <label htmlFor="sign-up-confirm-password" className="text-sm font-medium text-neutral-900 font-montserrat">
                             Confirm Password
                         </label>
                         <div className="relative">
@@ -571,7 +571,7 @@ function SignUpPageContent() {
                     {userType === "Agent" ? (
                         <>
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="sign-up-rera" className="text-sm font-medium text-white font-montserrat">
+                                <label htmlFor="sign-up-rera" className="text-sm font-medium text-neutral-900 font-montserrat">
                                     RERA Number
                                 </label>
                                 <input
@@ -591,7 +591,7 @@ function SignUpPageContent() {
                                 ) : null}
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="sign-up-rera-expiry" className="text-sm font-medium text-white font-montserrat">
+                                <label htmlFor="sign-up-rera-expiry" className="text-sm font-medium text-neutral-900 font-montserrat">
                                     RERA Expiry Date
                                 </label>
                                 <input
@@ -612,8 +612,8 @@ function SignUpPageContent() {
                         </>
                     ) : (
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="sign-up-referral" className="text-sm font-medium text-white font-montserrat">
-                                Referral Code <span className="text-[var(--color-text-secondary)] font-normal">(Optional)</span>
+                            <label htmlFor="sign-up-referral" className="text-sm font-medium text-neutral-900 font-montserrat">
+                                Referral Code <span className="text-neutral-500 font-normal">(Optional)</span>
                             </label>
                             <input
                                 id="sign-up-referral"
@@ -639,13 +639,13 @@ function SignUpPageContent() {
                 </form>
             )}
 
-            <p className="text-center text-xs text-[var(--color-text-muted)] mt-8 font-montserrat leading-relaxed px-1">
+            <p className="text-center text-xs text-neutral-500 mt-8 font-montserrat leading-relaxed px-1">
                 By clicking Create Account you agree to GloFi Estates{" "}
-                <Link href="/terms" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                <Link href="/terms" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
                     Terms &amp; Conditions
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy-policy" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                <Link href="/privacy-policy" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
                     Privacy Policy
                 </Link>
                 .
@@ -657,9 +657,9 @@ function SignUpPageContent() {
 function SignUpPageFallback() {
     return (
         <div className="flex flex-col gap-6 min-h-[40vh] justify-center font-montserrat" aria-hidden>
-            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-10 w-40 animate-pulse" />
-            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-24 w-full max-w-md animate-pulse" />
-            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-56 w-full max-w-md animate-pulse" />
+            <div className="rounded-lg bg-neutral-100 border border-neutral-200 h-10 w-40 animate-pulse" />
+            <div className="rounded-lg bg-neutral-100 border border-neutral-200 h-24 w-full max-w-md animate-pulse" />
+            <div className="rounded-lg bg-neutral-100 border border-neutral-200 h-56 w-full max-w-md animate-pulse" />
         </div>
     );
 }

@@ -96,7 +96,7 @@ export default function ForgotPasswordPage() {
             {step === "EMAIL" || step === "SUCCESS" ? (
                 <Link
                     href="/sign-in"
-                    className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group"
+                    className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
                 >
                     <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
                     Back to Sign In
@@ -107,7 +107,7 @@ export default function ForgotPasswordPage() {
                         if (step === "OTP") setStep("EMAIL");
                         if (step === "RESET") setStep("OTP");
                     }}
-                    className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group bg-transparent border-none cursor-pointer p-0"
+                    className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group bg-transparent border-none cursor-pointer p-0"
                 >
                     <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
                     Back
@@ -115,13 +115,13 @@ export default function ForgotPasswordPage() {
             )}
 
             <div className="mb-8">
-                <h2 className="text-white font-bold text-3xl mb-1.5 font-montserrat">
+                <h2 className="text-neutral-900 font-bold text-3xl mb-1.5 font-montserrat">
                     {step === "EMAIL" && "Forgot Password"}
                     {step === "OTP" && "Verify OTP"}
                     {step === "RESET" && "Reset Password"}
                     {step === "SUCCESS" && "Password Reset"}
                 </h2>
-                <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">
+                <p className="text-neutral-500 text-sm font-montserrat">
                     {step === "EMAIL" && "Enter your email to receive a password reset code"}
                     {step === "OTP" && `Enter the 6-digit code sent to ${email}`}
                     {step === "RESET" && "Create a new secure password for your account"}
@@ -202,7 +202,7 @@ export default function ForgotPasswordPage() {
                             type="button"
                             onClick={handleEmailSubmit}
                             disabled={isLoading}
-                            className="text-sm text-[var(--color-text-secondary)] hover:text-white transition-colors text-center"
+                            className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors text-center"
                         >
                             Didn't receive a code? Resend
                         </button>
@@ -230,7 +230,7 @@ export default function ForgotPasswordPage() {
                         </div>
                         <ul
                             id="reset-password-requirements"
-                            className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 space-y-1.5 text-xs text-[var(--color-text-secondary)] list-none"
+                            className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2.5 space-y-1.5 text-xs text-neutral-500 list-none"
                             aria-label="Password requirements"
                             aria-live="polite"
                         >

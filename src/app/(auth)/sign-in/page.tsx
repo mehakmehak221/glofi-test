@@ -123,7 +123,7 @@ function SignInPageContent() {
 
             <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors mb-8 group"
+                className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
             >
                 <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
                 Back to home
@@ -131,12 +131,12 @@ function SignInPageContent() {
 
 
             <div className="mb-8">
-                <h2 className="text-white font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
-                <p className="text-[var(--color-text-secondary)] text-sm font-montserrat">
+                <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
+                <p className="text-neutral-500 text-sm font-montserrat">
                     Don&apos;t have an account?{" "}
                     <Link
                         href={`/sign-up?role=${encodeURIComponent(userType)}`}
-                        className="text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors"
+                        className="text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors"
                     >
                         Create Account
                     </Link>
@@ -168,10 +168,10 @@ function SignInPageContent() {
             <form
                 noValidate
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-4 font-montserrat rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface-subtle)]/60 p-5 sm:p-6"
+                className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
             >
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="sign-in-email" className="text-sm font-medium text-white font-montserrat">
+                    <label htmlFor="sign-in-email" className="text-sm font-medium text-neutral-900 font-montserrat">
                         Email Address
                     </label>
                     <input
@@ -200,7 +200,7 @@ function SignInPageContent() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="sign-in-password" className="text-sm font-medium text-white font-montserrat">
+                    <label htmlFor="sign-in-password" className="text-sm font-medium text-neutral-900 font-montserrat">
                         Password
                     </label>
                     <div className="relative">
@@ -237,7 +237,7 @@ function SignInPageContent() {
                 <div className="flex justify-end -mt-1">
                     <Link
                         href="/forgot-password"
-                        className="text-sm text-[var(--color-primary-300)] font-semibold hover:text-[var(--color-primary-100)] transition-colors"
+                        className="text-sm text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors"
                     >
                         Forgot Password?
                     </Link>
@@ -248,13 +248,13 @@ function SignInPageContent() {
                 </button>
             </form>
 
-            <p className="text-center text-xs text-[var(--color-text-muted)] mt-8 font-montserrat leading-relaxed px-1">
+            <p className="text-center text-xs text-neutral-500 mt-8 font-montserrat leading-relaxed px-1">
                 By clicking Login you agree to GloFi Estates{" "}
-                <Link href="/terms" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                <Link href="/terms" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
                     Terms &amp; Conditions
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy-policy" className="text-[var(--color-text-secondary)] hover:text-white underline-offset-2 hover:underline">
+                <Link href="/privacy-policy" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
                     Privacy Policy
                 </Link>
                 .
@@ -292,9 +292,9 @@ function SearchParamsHandler({ setErrorMsg }: { setErrorMsg: (msg: string) => vo
 function SignInPageFallback() {
     return (
         <div className="flex flex-col gap-6 min-h-[40vh] justify-center font-montserrat" aria-hidden>
-            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-10 w-40 animate-pulse" />
-            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-24 w-full max-w-md animate-pulse" />
-            <div className="rounded-lg bg-white/[0.06] border border-white/10 h-56 w-full max-w-md animate-pulse" />
+            <div className="rounded-lg bg-neutral-100 border border-neutral-200 h-10 w-40 animate-pulse" />
+            <div className="rounded-lg bg-neutral-100 border border-neutral-200 h-24 w-full max-w-md animate-pulse" />
+            <div className="rounded-lg bg-neutral-100 border border-neutral-200 h-56 w-full max-w-md animate-pulse" />
         </div>
     );
 }
