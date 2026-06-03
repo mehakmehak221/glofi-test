@@ -93,6 +93,13 @@ export const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    redeemEarlyStarter: builder.mutation<any, void>({
+      query: () => ({
+        url: 'auth/redeem',
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 });
 
@@ -108,4 +115,5 @@ export const {
   useForgotPasswordMutation,
   useVerifyForgotPasswordOtpMutation,
   useResetPasswordMutation,
+  useRedeemEarlyStarterMutation,
 } = authApi;

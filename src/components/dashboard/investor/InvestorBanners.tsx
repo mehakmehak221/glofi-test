@@ -3,11 +3,12 @@
 import { motion, Variants } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { TrendingUpIcon, SecondaryMarketplaceIcon, VerifiedIcon } from "@/components/VectorImages";
+import { EarlyStarterClaimWidget } from "./EarlyStarterClaimWidget";
 
 
 export function CommunityStatusBanner() {
   const router = useRouter();
-  
+
   const avatars = [
     { initials: "R", color: "#00DAAF" },
     { initials: "M", color: "#FF4D4D" },
@@ -23,7 +24,7 @@ export function CommunityStatusBanner() {
       className="flex flex-col sm:flex-row items-center justify-between gap-6 px-6 sm:px-8 py-6 bg-[var(--marketplace-banner-bg)] border border-[var(--marketplace-banner-border)] rounded-[32px] cursor-pointer shadow-2xl mb-10 backdrop-blur-xl group relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-[var(--sidebar-active-bg)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       <div className="flex flex-col md:flex-row items-center md:items-center gap-6 sm:gap-10 relative z-10 w-full sm:w-auto">
         <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
           <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--marketplace-banner-text-secondary)] font-bold mb-1">Total Community Depth</span>
@@ -31,14 +32,14 @@ export function CommunityStatusBanner() {
             ₹62.1 Lacs <span className="text-[var(--marketplace-banner-text-secondary)] font-medium text-lg">invested</span>
           </h2>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="flex -space-x-4">
             {avatars.map((avatar, index) => (
               <div
                 key={index}
                 className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[3px] border-[var(--marketplace-banner-bg)] flex items-center justify-center text-[10px] sm:text-xs font-black text-white overflow-hidden shadow-2xl transition-all duration-300 group-hover:-translate-y-1"
-                style={{ 
+                style={{
                   backgroundColor: avatar.color,
                   zIndex: avatars.length - index,
                   boxShadow: `0 8px 16px -4px ${avatar.color}40`
@@ -81,16 +82,16 @@ export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick
       onClick={onClick}
       className="p-8 bg-[var(--marketplace-feature-card-bg)] border border-[var(--marketplace-feature-card-border)] rounded-[32px] cursor-pointer transition-all duration-500 flex flex-col justify-between shadow-2xl backdrop-blur-xl group relative overflow-hidden min-h-[220px]"
     >
-      <div 
+      <div
         className="absolute -right-4 -top-4 w-24 h-24 blur-[60px] rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500"
         style={{ backgroundColor: color }}
       />
-      
+
       <div className="relative z-10">
-        <div 
+        <div
           className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-inner"
-          style={{ 
-            backgroundColor: `${color}15`, 
+          style={{
+            backgroundColor: `${color}15`,
             color: color,
             boxShadow: `0 10px 20px -5px ${color}30`
           }}
@@ -100,7 +101,7 @@ export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick
         <h3 className="text-lg font-black text-[var(--marketplace-feature-card-title)] mb-2 leading-[1.1] tracking-tighter transition-all duration-500">{title}</h3>
         <p className="text-[11px] text-[var(--marketplace-feature-card-subtitle)] font-montserrat font-semibold uppercase tracking-widest group-hover:text-[var(--marketplace-feature-card-title)] transition-colors">{subtitle}</p>
       </div>
-      
+
       <div className="mt-6 flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 relative z-10">
         <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--search-bg)] border border-[var(--sidebar-border)]">
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -140,7 +141,11 @@ export function InvestorBanners() {
         <CommunityStatusBanner />
       </motion.div>
 
-      <motion.div 
+      <motion.div variants={itemVariants} className="mb-6">
+        <EarlyStarterClaimWidget />
+      </motion.div>
+
+      <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -155,26 +160,26 @@ export function InvestorBanners() {
             onClick={() => router.push("/dashboard/investor/returns-calculator")}
           />
         </motion.div>
-        
+
         <motion.div variants={itemVariants}>
           <FeatureBannerSmall
             icon={SecondaryMarketplaceIcon}
             title="Buy and Sell Anytime"
             subtitle="Zero lock-in period"
             color="#2E86DE"
-            onClick={() => {}}
+            onClick={() => { }}
           />
         </motion.div>
-        
-        
-        
+
+
+
         <motion.div variants={itemVariants}>
           <FeatureBannerSmall
             icon={VerifiedIcon}
             title="Only Top Properties"
             subtitle="Institutional grade"
             color="#12B76A"
-            onClick={() => {}}
+            onClick={() => { }}
           />
         </motion.div>
       </motion.div>
