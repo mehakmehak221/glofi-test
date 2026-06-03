@@ -339,9 +339,9 @@ export default function ExplorePage() {
                                                     </span>
                                                 </div>
 
-                                                <div className="absolute bottom-3 left-3 right-3 text-left sm:bottom-4 sm:left-4 sm:right-4">
-                                                    <h3 className="text-base sm:text-lg font-black text-white mb-0.5 sm:mb-1 tracking-tight leading-tight">{property.title}</h3>
-                                                    <div className="flex items-center gap-1.5 text-white/70 text-[11px] sm:text-xs font-medium">
+                                                <div className="absolute bottom-3 left-3 right-3 text-left sm:bottom-4 sm:left-4 sm:right-4 p-3 sm:p-4 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 shadow-sm max-w-xl">
+                                                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-1.5">{property.title}</h3>
+                                                    <div className="flex items-center gap-1.5 text-white/80 text-xs font-semibold">
                                                         <MapPinIcon className="w-3.5 h-3.5" />
                                                         {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
                                                     </div>

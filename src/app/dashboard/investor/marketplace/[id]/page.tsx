@@ -84,7 +84,7 @@ export default function PropertyDetailPage() {
     const fundedPercentage = Math.round(((property.totalFractions - property.availableFractions) / property.totalFractions) * 100);
 
     const documents = [
-        { name: "Title Deed", url: property.titleDeedUrl },
+        { name: "Ownership Proof / Backing Document", url: property.titleDeedUrl },
         { name: "Valuation Report", url: property.valuationReportUrl },
         { name: "Legal Opinion", url: property.legalOpinionUrl },
     ].filter(doc => doc.url);
@@ -201,20 +201,19 @@ export default function PropertyDetailPage() {
                         </span>
 
 
-                        <span className={`absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border shadow-sm ${
-                            property.riskRating === 'LOW'
+                        <span className={`absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border shadow-sm ${property.riskRating === 'LOW'
                                 ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/70'
                                 : property.riskRating === 'HIGH'
                                     ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/70'
                                     : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/80'
-                        }`}>
+                            }`}>
                             <span className="opacity-60">RISK</span>
                             <span className="opacity-30">·</span>
                             {property.riskRating}
                         </span>
 
 
-                        <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
+                        <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 p-3 sm:p-4 rounded-xl bg-[var(--background)]/85 backdrop-blur-md border border-[var(--sidebar-border)]/50 shadow-sm max-w-xl">
                             <h1 className="text-xl sm:text-md font-bold text-[var(--header-text)] mb-1">{property.title}</h1>
                             <div className="flex items-center gap-1.5 text-[var(--sidebar-text)] text-xs font-semibold">
                                 <MapPinIcon className="w-3.5 h-3.5" />
@@ -254,13 +253,12 @@ export default function PropertyDetailPage() {
                                 className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
                             >
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-2 font-semibold">Risk Level</p>
-                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider border ${
-                                    property.riskRating === 'LOW'
+                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider border ${property.riskRating === 'LOW'
                                         ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/60'
                                         : property.riskRating === 'HIGH'
                                             ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/60'
                                             : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/70'
-                                }`}>
+                                    }`}>
                                     <span className="opacity-60">RISK</span>
                                     <span className="opacity-30">·</span>
                                     {property.riskRating}
