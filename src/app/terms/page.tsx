@@ -69,7 +69,7 @@ export default function TermsAndConditionsPage() {
                     <div className="space-y-4">
                         <p>If you have any questions about these Terms, please contact us at:</p>
                         <div className="space-y-2 text-neutral-600">
-                            <p>Email: <a href="mailto:girish@glofiestates.com" className="text-[#00876D] hover:underline">info@glofiestates.com</a></p>
+                            <p>Email: <a href="mailto:girish@glofiestates.com" className="text-[#00876D] hover:underline">girish@glofiestates.com</a></p>
                             <p>Phone: 95999 70225</p>
                         </div>
                     </div>
