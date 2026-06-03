@@ -116,9 +116,14 @@ export default function PrivacyPolicyPage() {
                 )
             },
             {
-                title: "7. Cookies and Tracking Technologies",
+                title: "7. Analytics and Tracking Technologies",
                 anchorId: "cookies",
-                content: "We use cookies and similar tracking technologies to enhance your experience. You can control cookie settings through your browser preferences. However, disabling cookies may limit your ability to use certain features of our services."
+                content: (
+                    <div className="space-y-4">
+                        <p>We use cookies, web beacons, and analytics tools (such as Google Analytics) to track user behavior and monitor traffic on our platform.</p>
+                        <p>This tracking helps us understand how you interact with our services, optimize performance, and deliver personalized experiences. You can control cookie settings through your browser preferences. However, disabling tracking technologies may limit your ability to use certain features of our services.</p>
+                    </div>
+                )
             },
             {
                 title: "8. Third-Party Links",
