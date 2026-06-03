@@ -223,9 +223,7 @@ export default function PrivacyPolicyPage() {
 
                         <div className="mt-16 pt-16 border-t border-neutral-200 flex flex-col items-center gap-8">
                             <div className="text-center space-y-4">
-                                <p className="text-body text-neutral-500">
-                                    GloFi Estates provides innovative financial technology solutions.
-                                </p>
+
                                 <p className="text-body-sm italic text-neutral-400">
                                     © 2025 GloFi Estates. All rights reserved.
                                 </p>
