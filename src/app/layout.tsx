@@ -19,8 +19,23 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Glofi Real Estate — Global Finance Platform",
-  description: "Glofi – the global real estate and finance platform connecting investors worldwide.",
+  metadataBase: new URL("https://www.glofiestates.com"),
+  title: "Glofi Estates | Own Premium Real Estate, Fraction by Fraction",
+  description: "Glofi Estates is a modern real estate investment platform that makes premium property ownership accessible through fractional investing. Explore curated real estate opportunities, diversify your portfolio, earn passive income, and track your investments with complete transparency—all from a single platform.",
+  keywords: [
+    "Alternative Investment Platform",
+    "Passive Income Through Real Estate",
+    "Real Estate Crowdfunding India",
+    "Smart Property Investments",
+    "High Return Real Estate Investments",
+    "Wealth Building Through Real Estate",
+    "Real Estate Portfolio Diversification",
+    "Premium Property Investment",
+    "Fractional Real Estate Investment"
+  ],
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/assets/images/branding/favicon.png",
   },
