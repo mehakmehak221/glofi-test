@@ -343,13 +343,12 @@ export default function MarketplacePage() {
                                             </span>
 
 
-                                            <span className={`absolute top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border shadow-sm ${
-                                                property.riskRating === 'LOW'
+                                            <span className={`absolute top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border shadow-sm ${property.riskRating === 'LOW'
                                                     ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/70'
                                                     : property.riskRating === 'HIGH'
                                                         ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/70'
                                                         : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/80'
-                                            }`}>
+                                                }`}>
                                                 <span className="opacity-60">RISK</span>
                                                 <span className="opacity-30">·</span>
                                                 {property.riskRating}
@@ -407,7 +406,7 @@ export default function MarketplacePage() {
                                                 }}
                                                 className="w-full py-3 rounded-md bg-[var(--btn-mint-bg)] text-[var(--btn-mint-text)] font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-glow-primary"
                                             >
-                                                Invest Now
+                                                View Details
                                             </motion.button>
                                         </div>
                                     </motion.div>
