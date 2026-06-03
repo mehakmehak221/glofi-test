@@ -28,10 +28,25 @@ export const metadata = {
 
 import { CurrencyProvider } from "@/providers/CurrencyProvider";
 import GlobalToast from "@/components/GlobalToast";
+import Script from "next/script";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-Z15Q0W903Y"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-Z15Q0W903Y');
+          `}
+        </Script>
+      </head>
       <body className={`${montserrat.variable} antialiased bg-[var(--background)] theme-purple`}>
         <CurrencyProvider>
           <StoreProvider>
