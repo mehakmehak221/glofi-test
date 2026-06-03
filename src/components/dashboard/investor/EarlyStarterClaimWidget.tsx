@@ -102,6 +102,19 @@ export function EarlyStarterClaimWidget() {
         </button>
       </motion.div>
 
+      {/* Floating Action Button (Only visible if not claimed) */}
+      {!isClaimed && (
+        <motion.button
+          onClick={() => setIsModalOpen(true)}
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="fixed bottom-8 right-8 z-[90] bg-[#056346] text-white px-5 py-3.5 rounded-full shadow-2xl flex items-center gap-2 hover:bg-[#044c36] hover:scale-105 transition-all group"
+        >
+          <GiftIcon className="w-5 h-5 animate-pulse" />
+          <span className="font-semibold text-[15px]">Refer & Earn</span>
+        </motion.button>
+      )}
+
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">

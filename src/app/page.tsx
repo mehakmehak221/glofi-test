@@ -12,6 +12,7 @@ import AppDownloadSection from "@/components/sections/AppDownloadSection/AppDown
 import CookieSection from "@/components/sections/CookieSection/CookieSection";
 import ValuesSection from "@/components/sections/ValueSection/ValueSection";
 import HowItWorksSection from "@/components/HowItWorksSection/HowItWorksSection";
+import LandingReferralWidget from "@/components/sections/LandingReferralWidget/LandingReferralWidget";
 
 export default function Home() {
   return (
@@ -36,6 +37,7 @@ export default function Home() {
 
         {/* <CookieSection /> */}
 
+        <LandingReferralWidget />
       </main>
     </div>
   );
