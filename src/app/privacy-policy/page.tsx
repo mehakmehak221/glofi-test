@@ -111,7 +111,7 @@ export default function PrivacyPolicyPage() {
                             <li><strong className="text-neutral-900">Opt-Out:</strong> Unsubscribe from marketing communications</li>
                             <li><strong className="text-neutral-900">Data Portability:</strong> Request a copy of your data in a portable format</li>
                         </ul>
-                        <p className="pt-2">To exercise these rights, please contact us at Info@bhaifinance.com.</p>
+                        <p className="pt-2">To exercise these rights, please contact us at girish@glofiestates.com</p>
                     </div>
                 )
             },
@@ -151,8 +151,8 @@ export default function PrivacyPolicyPage() {
                     <div className="space-y-4">
                         <p>If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:</p>
                         <div className="space-y-2 text-neutral-600">
-                            <p>Email: <a href="mailto:Info@bhaifinance.com" className="text-[#00876D] hover:underline">Info@bhaifinance.com</a></p>
-                            <p>Phone: +1 (716) 907-5786</p>
+                            <p>Email: <a href="mailto:info@glofiestates.com" className="text-[#00876D] hover:underline">info@glofiestates.com</a></p>
+                            <p>Phone: 95999 70225</p>
                         </div>
                     </div>
                 )
