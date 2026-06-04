@@ -408,6 +408,16 @@
   font-family: var(--font-montserrat);
   font-size: 0.875rem;
   letter-spacing: 0.02em;
+
+  &:hover {
+    opacity: 0.9;
+    transform: scale(1.015);
+    box-shadow: var(--shadow-btn);
+  }
+
+  &:active {
+    transform: scale(0.985);
+  }
 }
 
 @utility btn-secondary {
@@ -424,6 +434,16 @@
   justify-content: center;
   font-family: var(--font-montserrat);
   font-size: 0.875rem;
+
+  &:hover {
+    background: var(--color-bg-surface-subtle);
+    border-color: var(--color-border-muted);
+    transform: scale(1.015);
+  }
+
+  &:active {
+    transform: scale(0.985);
+  }
 }
 
 @utility transition-premium {

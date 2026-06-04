@@ -169,7 +169,7 @@ function assetToFormData(asset: Record<string, unknown>) {
         holdingPeriod: toFormString(asset.holdingPeriod),
         description: toFormString(asset.description),
         riskRating: toFormString(asset.riskRating) || "MEDIUM",
-        category: toFormString(asset.category) || "DUBAI_SKYSCRAPER",
+        category: toFormString(asset.category) || "RESIDENTIAL",
         country: toFormString(asset.country),
         state: toFormString(asset.state),
         city: toFormString(asset.city),
@@ -242,7 +242,7 @@ const UploadArea = ({ label, onUpload, value, isUploading }) => {
                 )}
             </div>
             <span className="text-[10px] lg:text-[9px] font-medium text-[var(--sidebar-text)] opacity-60 text-center uppercase tracking-wider font-montserrat">
-                {isUploading ? 'Uploading...' : value ? 'Uploaded' : label}
+                {isUploading ? 'Uploading...' : label}
             </span>
             {value && (
                 <span className="text-[8px] text-[var(--sidebar-active-text)]/80 mt-0.5 font-montserrat truncate max-w-full px-2">
@@ -267,7 +267,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
         holdingPeriod: "",
         description: "",
         riskRating: "MEDIUM",
-        category: "DUBAI_SKYSCRAPER",
+        category: "RESIDENTIAL",
         country: "",
         state: "",
         city: "",
@@ -407,7 +407,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                     </h1>
                     <button
                         onClick={onBack}
-                        className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all"
+                        className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98] text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all cursor-pointer"
                     >
                         Back to List
                     </button>
@@ -454,7 +454,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             {kycStatus?.status !== 'VERIFIED' && (
                                 <button
                                     onClick={() => setShowKycModal(true)}
-                                    className="px-6 py-2.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-sm font-bold font-montserrat hover:opacity-80 transition-opacity"
+                                    className="px-6 py-2.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-sm font-bold font-montserrat transition-all cursor-pointer hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     Complete KYC
                                 </button>
@@ -462,7 +462,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             {kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED' && (
                                 <button
                                     onClick={() => setShowKybModal(true)}
-                                    className="px-6 py-2.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-sm font-bold font-montserrat hover:opacity-80 transition-opacity"
+                                    className="px-6 py-2.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-sm font-bold font-montserrat transition-all cursor-pointer hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     Complete KYB
                                 </button>
@@ -485,24 +485,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </motion.div>
                         )}
 
-                        <div className="flex overflow-x-auto custom-scrollbar-hide whitespace-nowrap items-center md:justify-center gap-6 md:gap-12 mb-8 sm:mb-10 border-b border-[var(--foreground)]/20 pb-2 sm:pb-4 w-full">
-                            {CATEGORIES.map((cat) => (
-                                <button
-                                    key={cat.value}
-                                    onClick={() => setFormData(prev => ({ ...prev, category: cat.value }))}
-                                    className={`text-sm font-medium font-montserrat transition-colors relative pb-4 ${formData.category === cat.value ? "text-[var(--foreground)]" : "text-[var(--sidebar-text)] opacity-60 hover:opacity-100 hover:text-[var(--foreground)]"
-                                        }`}
-                                >
-                                    {cat.label}
-                                    {formData.category === cat.value && (
-                                        <motion.div
-                                            layoutId="activeCat"
-                                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--sidebar-active-text)]"
-                                        />
-                                    )}
-                                </button>
-                            ))}
-                        </div>
+
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
                             <div className="flex flex-col gap-2">
@@ -588,7 +571,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Annual Rent ($)</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Annual Rent</label>
                                 <input
                                     type="number"
                                     value={formData.expectedAnnualRent}
@@ -679,9 +662,9 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                         <motion.button
                             onClick={handleSubmit}
                             disabled={isSubmitting}
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.99 }}
-                            className="w-full sm:w-auto bg-[var(--sidebar-active-text)] text-[var(--background)] font-bold text-sm px-8 py-3.5 rounded-md hover:opacity-90 transition-opacity font-montserrat min-w-[200px] flex items-center justify-center"
+                            whileHover={{ scale: 1.02, opacity: 0.9 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="w-full sm:w-auto bg-[var(--sidebar-active-text)] text-[var(--background)] font-bold text-sm px-8 py-3.5 rounded-md transition-all cursor-pointer font-montserrat min-w-[200px] flex items-center justify-center hover:shadow-glow-primary"
                         >
                             {isSubmitting ? <LoadingSpinner /> : editId ? "Update Property" : "Save as Draft"}
                         </motion.button>

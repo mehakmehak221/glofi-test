@@ -236,7 +236,7 @@ export default function ExplorePage() {
                                         setStateIsoCode("");
                                         setCountryIsoCode("");
                                     }}
-                                    className="mt-5 text-[10px] text-[var(--color-primary-300)] font-semibold hover:underline uppercase tracking-widest"
+                                    className="mt-5 text-[10px] text-[var(--color-primary-300)] font-semibold hover:underline uppercase tracking-widest cursor-pointer transition-colors duration-200 hover:text-[var(--color-primary-300)]/80"
                                 >
                                     Clear Filters
                                 </button>

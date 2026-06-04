@@ -205,7 +205,7 @@ export default function AgentProfilePage() {
                                     <span className="text-sm font-bold text-[var(--foreground)] font-mono truncate">{referralCode || "N/A"}</span>
                                     <button
                                         onClick={() => handleCopy(referralCode, 'code')}
-                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] hover:bg-[#00FFCC] hover:text-black px-3 py-1.5 rounded-lg border-0 transition-all flex-shrink-0 min-w-[70px] text-center shadow-sm"
+                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] hover:bg-[#00FFCC] hover:text-black px-3 py-1.5 rounded-lg border-0 transition-all duration-200 flex-shrink-0 min-w-[70px] text-center shadow-sm hover:scale-105 active:scale-95"
                                     >
                                         {copiedCode ? "Copied!" : "Copy"}
                                     </button>
@@ -217,7 +217,7 @@ export default function AgentProfilePage() {
                                     <span className="text-sm font-bold text-[var(--foreground)] font-mono truncate">{referralLink || "N/A"}</span>
                                     <button
                                         onClick={() => handleCopy(referralLink, 'link')}
-                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] hover:bg-[#00FFCC] hover:text-black px-3 py-1.5 rounded-lg border-0 transition-all flex-shrink-0 min-w-[70px] text-center shadow-sm"
+                                        className="text-[10px] font-bold uppercase cursor-pointer bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] hover:bg-[#00FFCC] hover:text-black px-3 py-1.5 rounded-lg border-0 transition-all duration-200 flex-shrink-0 min-w-[70px] text-center shadow-sm hover:scale-105 active:scale-95"
                                     >
                                         {copiedLink ? "Copied!" : "Copy"}
                                     </button>

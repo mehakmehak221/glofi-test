@@ -81,7 +81,7 @@ export default function AgentReferralsPage() {
                         </div>
                         <button 
                             onClick={handleCopy}
-                            className="h-14 px-8 rounded-md bg-[var(--color-primary-300)] text-black font-bold text-sm font-montserrat hover:opacity-90 transition-all flex items-center justify-center gap-3 flex-shrink-0"
+                            className="h-14 px-8 rounded-md bg-[var(--color-primary-300)] text-black font-bold text-sm font-montserrat cursor-pointer transition-all flex items-center justify-center gap-3 flex-shrink-0 hover:bg-[var(--color-primary-300)]/80 hover:scale-[1.02] active:scale-[0.98] hover:shadow-glow-primary"
                         >
                             <CopyIcon className="w-4 h-4" />
                             {copied ? "COPIED" : "COPY LINK"}

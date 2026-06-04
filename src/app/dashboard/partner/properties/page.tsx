@@ -135,7 +135,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                                     type="button"
                                     onClick={() => onSubmitForReview(property.id)}
                                     title="Submit for Review"
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all hover:opacity-80"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all cursor-pointer hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                     Submit
@@ -146,7 +146,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                                     type="button"
                                     onClick={() => onEdit(property.id)}
                                     title="Edit"
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--sidebar-border)] bg-[var(--form-surface)] text-[var(--color-text-secondary)] text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all hover:border-[var(--sidebar-active-text)]/40 hover:text-[var(--foreground)]"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--sidebar-border)] bg-[var(--form-surface)] text-[var(--color-text-secondary)] text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all cursor-pointer hover:border-[var(--sidebar-active-text)]/40 hover:text-[var(--foreground)] hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                     Edit
@@ -157,7 +157,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
                                     type="button"
                                     onClick={() => onDelete(property.id)}
                                     title="Delete"
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/5 border border-red-500/10 text-red-400 text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-500"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/5 border border-red-500/10 text-red-400 text-[10px] font-bold uppercase tracking-wide font-montserrat transition-all cursor-pointer hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-500 hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                     Delete
@@ -308,7 +308,7 @@ export default function PartnerPropertiesPage() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => setIsAddingNew(true)}
-                                className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:opacity-80 text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all"
+                                className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98] text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all cursor-pointer"
                             >
                                 <span className="text-lg leading-none">+</span>
                                 New Listing

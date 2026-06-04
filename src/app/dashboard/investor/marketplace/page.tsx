@@ -268,7 +268,7 @@ export default function MarketplacePage() {
                                 setStateIsoCode("");
                                 setCountryIsoCode("");
                             }}
-                            className="mt-5 text-[10px] text-[var(--sidebar-active-text)] font-semibold hover:underline font-montserrat"
+                            className="mt-5 text-[10px] text-[var(--sidebar-active-text)] font-semibold hover:underline font-montserrat cursor-pointer transition-colors duration-200 hover:text-[var(--sidebar-active-text)]/80"
                         >
                             Clear Filters
                         </button>

@@ -59,9 +59,9 @@ export default function FinancePage() {
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`flex-shrink-0 px-4 sm:px-6 py-2 rounded-md text-[11px] sm:text-[12px] font-medium font-montserrat transition-all relative ${activeTab === tab
-                                ? "text-[var(--sidebar-active-text)]"
-                                : "text-[var(--sidebar-text)] opacity-60 hover:opacity-90"
+                            className={`flex-shrink-0 px-4 sm:px-6 py-2 rounded-md text-[11px] sm:text-[12px] font-medium font-montserrat transition-all relative cursor-pointer ${activeTab === tab
+                                ? "text-[var(--sidebar-active-text)] hover:scale-102"
+                                : "text-[var(--sidebar-text)] opacity-60 hover:opacity-100 hover:text-[var(--sidebar-active-text)] hover:scale-102"
                                 }`}
                         >
                             {activeTab === tab && (
