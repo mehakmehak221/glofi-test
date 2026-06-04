@@ -42,7 +42,7 @@ const DROPDOWN_STYLES = `
   }
 `;
 
-function LocationDropdown({ label, options, value, onChange, placeholder, disabled = false }) {
+function LocationDropdown({ label, options, value, onChange, placeholder, disabled = false, required = false }) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const dropdownRef = useRef(null);
@@ -63,7 +63,14 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
 
     return (
         <div className={`flex flex-col gap-2 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
-            <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">{label}</label>
+            <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                {label}
+                {required ? (
+                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                ) : (
+                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                )}
+            </label>
             <div
                 onClick={() => !disabled && setIsOpen(!isOpen)}
                 className={`flex justify-between items-center bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm font-montserrat cursor-pointer transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[var(--foreground)]/50'} ${isOpen ? 'border-[var(--foreground)] ring-1 ring-[var(--foreground)]/50' : ''}`}
@@ -487,9 +494,24 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
 
 
 
+                        {/* Legend */}
+                        <div className="flex items-center gap-4 mb-6 text-[10px] font-montserrat">
+                            <span className="flex items-center gap-1 text-[var(--sidebar-text)]/60">
+                                <span className="text-red-500 text-[11px] leading-none">*</span>
+                                <span>Required</span>
+                            </span>
+                            <span className="flex items-center gap-1 text-[var(--sidebar-text)]/50">
+                                <span className="border border-[var(--foreground)]/15 rounded px-1 py-0.5 text-[8px] text-[var(--sidebar-text)]/40">optional</span>
+                                <span>Optional</span>
+                            </span>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Title</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Title
+                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                </label>
                                 <input
                                     type="text"
                                     value={formData.title}
@@ -499,7 +521,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Location</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Location
+                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                </label>
                                 <input
                                     type="text"
                                     value={formData.location}
@@ -518,6 +543,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                     setStateIsoCode("");
                                 }}
                                 placeholder="Select Country"
+                                required
                             />
                             <LocationDropdown
                                 label="State"
@@ -529,6 +555,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 }}
                                 placeholder="Select State"
                                 disabled={!countryIsoCode}
+                                required
                             />
                             <LocationDropdown
                                 label="City"
@@ -539,9 +566,13 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 }}
                                 placeholder="Select City"
                                 disabled={!stateIsoCode}
+                                required
                             />
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Valuation</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Valuation
+                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.valuation}
@@ -551,7 +582,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Total Fractions</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Total Fractions
+                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.totalFractions}
@@ -561,7 +595,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Annual Yield (%)</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Annual Yield (%)
+                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.expectedYield}
@@ -571,7 +608,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Annual Rent</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Expected Annual Rent
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.expectedAnnualRent}
@@ -581,7 +621,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Rental Growth Rate (%)</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Rental Growth Rate (%)
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.rentalGrowthRate}
@@ -591,7 +634,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Expected Appreciation Rate (%)</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Expected Appreciation Rate (%)
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.expectedAppreciationRate}
@@ -601,7 +647,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Operating Cost Rate (%)</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Operating Cost Rate (%)
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.operatingCostRate}
@@ -611,7 +660,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Holding Period (Years)</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Holding Period (Years)
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.holdingPeriod}
@@ -621,7 +673,10 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 />
                             </div>
                             <div className="flex flex-col gap-2 md:col-span-2">
-                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat">Description</label>
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Description
+                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                </label>
                                 <textarea
                                     rows={5}
                                     value={formData.description}
@@ -634,27 +689,27 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
 
                         <div className="flex flex-wrap gap-4 mb-8">
                             <UploadArea
-                                label="Ownership Proof / Backing Document"
+                                label="Ownership Proof / Backing Document *"
                                 onUpload={(file) => handleFileUpload(file, 'titleDeedUrl')}
                                 value={formData.titleDeedUrl}
                                 isUploading={uploadingField === 'titleDeedUrl'}
                             />
                             <UploadArea
-                                label="Valuation Report"
+                                label="Valuation Report (optional)"
                                 onUpload={(file) => handleFileUpload(file, 'valuationReportUrl')}
                                 value={formData.valuationReportUrl}
                                 isUploading={uploadingField === 'valuationReportUrl'}
                             />
                             <UploadArea
-                                label="Legal Opinion"
+                                label="Legal Opinion (optional)"
                                 onUpload={(file) => handleFileUpload(file, 'legalOpinionUrl')}
                                 value={formData.legalOpinionUrl}
                                 isUploading={uploadingField === 'legalOpinionUrl'}
                             />
                             <UploadArea
-                                label="Property Images"
+                                label="Property Images (optional)"
                                 onUpload={(file) => handleFileUpload(file, 'images')}
-                                value={formData.images[0]} // Show indicator if at least one image is uploaded
+                                value={formData.images[0]}
                                 isUploading={uploadingField === 'images'}
                             />
                         </div>
