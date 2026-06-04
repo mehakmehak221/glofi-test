@@ -332,16 +332,13 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
 
     if (userType === "Agent") {
         const trimmedRera = form.reraNumber.trim();
-        if (!trimmedRera) {
-            reraError = "Please enter your RERA registration number.";
-        } else if (!RERA_PATTERN.test(trimmedRera)) {
+        if (trimmedRera && !RERA_PATTERN.test(trimmedRera)) {
             reraError = RERA_FORMAT_ERROR;
         }
 
-        if (!form.expiryDate.trim()) {
-            expiryError = "Please select your RERA expiry date.";
-        } else {
-            const expiry = new Date(form.expiryDate);
+        const trimmedExpiry = form.expiryDate.trim();
+        if (trimmedExpiry) {
+            const expiry = new Date(trimmedExpiry);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             if (isNaN(expiry.getTime())) {

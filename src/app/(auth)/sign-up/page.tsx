@@ -572,7 +572,7 @@ function SignUpPageContent() {
                         <>
                             <div className="flex flex-col gap-2">
                                 <label htmlFor="sign-up-rera" className="text-sm font-medium text-neutral-900 font-montserrat">
-                                    RERA Number
+                                    RERA Number <span className="text-neutral-500 font-normal">(Optional)</span>
                                 </label>
                                 <input
                                     id="sign-up-rera"
@@ -592,7 +592,7 @@ function SignUpPageContent() {
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label htmlFor="sign-up-rera-expiry" className="text-sm font-medium text-neutral-900 font-montserrat">
-                                    RERA Expiry Date
+                                    RERA Expiry Date <span className="text-neutral-500 font-normal">(Optional)</span>
                                 </label>
                                 <input
                                     id="sign-up-rera-expiry"
