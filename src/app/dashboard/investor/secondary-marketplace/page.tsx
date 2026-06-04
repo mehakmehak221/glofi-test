@@ -277,82 +277,104 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
     return (
         <motion.div
             variants={itemVariants}
-            className="group bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md overflow-hidden flex flex-col hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-700 h-full shadow-md"
+            className="group bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-md overflow-hidden flex flex-col transition-all duration-500 h-full shadow-[var(--marketplace-card-shadow)] hover:border-[var(--sidebar-active-text)]/25 hover:shadow-2xl hover:-translate-y-0.5"
         >
-
-            <div className="relative h-56 overflow-hidden">
+            {/* Image Section */}
+            <div className="relative h-52 overflow-hidden">
                 <Image
                     src={asset.image}
                     alt={asset.name}
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--sidebar-bg)] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700" />
-                <div className="absolute top-4 right-4">
-                    <div className="px-3 py-1.5 rounded-full bg-[var(--color-primary-200)] text-black text-[11px] font-bold flex items-center gap-1.5 shadow-lg">
-                        <TrendingUpIcon className="w-3.5 h-3.5" />
+                <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
+
+                {/* Yield badge — top right */}
+                <div className="absolute top-3 right-3">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-[#B8FFF0] bg-[#041512] border border-[#00DAAF]/70 shadow-sm backdrop-blur-sm">
+                        <TrendingUpIcon className="w-3 h-3" />
                         {asset.change}
-                    </div>
+                    </span>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                    <div className="flex items-center gap-2.5 p-1 bg-[var(--sidebar-bg)]/80 backdrop-blur-md rounded-full pr-4 shadow-lg border border-[var(--sidebar-border)]/50 transition-colors duration-300">
-                        <div className="w-6 h-6 rounded-full bg-[var(--color-primary-200)] flex items-center justify-center text-[10px] font-bold text-black border border-[var(--color-primary-200)] shadow-sm">
-                            {asset.seller.charAt(0)}
-                        </div>
-                        <span className="text-[11px] font-medium text-[var(--header-text)]">{asset.seller}</span>
-                    </div>
-                </div>
+
+                {/* Status badge — top left (own listings only) */}
                 {isOwnListing && (
-                    <div className="absolute top-4 left-4">
-                        <div className={`px-3 py-1 rounded-full text-[10px] font-bold shadow-lg ${asset.status === 'LISTED' ? 'bg-[var(--color-primary-300)]/20 text-[var(--color-primary-300)] border border-[var(--color-primary-100)]/30' :
-                            asset.status === 'PENDING_APPROVAL' ? 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30' :
-                                'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-                            }`}>
+                    <div className="absolute top-3 left-3">
+                        <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm backdrop-blur-sm ${
+                            asset.status === 'LISTED'
+                                ? 'bg-[#041512] text-[#B8FFF0] border border-[#00DAAF]/70'
+                                : asset.status === 'PENDING_APPROVAL'
+                                    ? 'bg-[#1a1206] text-[#FFD699] border border-[#E8940C]/80'
+                                    : 'bg-[#111] text-[#9CA3AF] border border-white/10'
+                        }`}>
                             {asset.status.replace('_', ' ')}
-                        </div>
+                        </span>
                     </div>
                 )}
+
+                {/* Seller pill — bottom left */}
+                <div className="absolute bottom-3 left-3">
+                    <div className="flex items-center gap-2 pl-1 pr-3 py-1 bg-black/50 backdrop-blur-md rounded-full border border-white/10 shadow-lg">
+                        <div className="w-5 h-5 rounded-full bg-[var(--color-primary-200)] flex items-center justify-center text-[9px] font-bold text-black ring-1 ring-[var(--color-primary-300)]/40">
+                            {asset.seller.charAt(0).toUpperCase()}
+                        </div>
+                        <span className="text-[10px] font-semibold text-white/90 tracking-wide">{asset.seller}</span>
+                    </div>
+                </div>
             </div>
 
+            {/* Card Body */}
+            <div className="p-4 sm:p-5 flex flex-col flex-1 gap-4">
 
-            <div className="p-5 sm:p-6 flex flex-col flex-1">
-                <h3 className="text-lg sm:text-xl font-bold mb-5 text-[var(--header-text)] leading-tight group-hover:text-[var(--sidebar-active-text)] transition-colors duration-500 line-clamp-1">{asset.name}</h3>
+                {/* Property name */}
+                <h3 className="text-[15px] font-bold text-[var(--marketplace-text-primary)] leading-snug line-clamp-1 group-hover:text-[var(--sidebar-active-text)] transition-colors duration-300">
+                    {asset.name}
+                </h3>
 
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="bg-[var(--card-surface)] rounded-md py-3 px-4 flex flex-col justify-center min-h-[70px]">
-                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-1">Fractions</p>
-                        <p className="text-base font-bold text-[var(--header-text)]">{asset.fractions}</p>
+                {/* Stats row */}
+                <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-[var(--card-surface)] border border-[var(--marketplace-card-border)] rounded-md px-3 py-2.5">
+                        <p className="text-[9px] text-[var(--marketplace-text-muted)] uppercase tracking-[0.15em] font-bold mb-1">Fractions</p>
+                        <p className="text-sm font-bold text-[var(--marketplace-text-primary)]">{asset.fractions}</p>
                     </div>
-                    <div className="bg-[var(--card-surface)] rounded-md py-3 px-4 flex flex-col justify-center min-h-[70px]">
-                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-1">Price</p>
-                        <p className="text-base font-bold text-[var(--header-text)]">{asset.price}</p>
-                    </div>
-                    <div className="col-span-2 bg-[var(--card-surface)] rounded-md py-3 px-4 flex flex-col justify-center min-h-[70px]">
-                        <p className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest font-bold mb-1">Current Value</p>
-                        <p className="text-lg font-bold text-[var(--color-primary-200)]">{asset.currentValue}</p>
+                    <div className="bg-[var(--card-surface)] border border-[var(--marketplace-card-border)] rounded-md px-3 py-2.5">
+                        <p className="text-[9px] text-[var(--marketplace-text-muted)] uppercase tracking-[0.15em] font-bold mb-1">Ask Price</p>
+                        <p className="text-sm font-bold text-[var(--marketplace-text-primary)]">{asset.price}</p>
                     </div>
                 </div>
 
-                <div className="mt-auto space-y-3">
+                {/* Current Value — accent highlight */}
+                <div className="flex items-center justify-between px-3 py-2.5 rounded-md bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/10">
+                    <span className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-[0.15em] font-bold">Current Value</span>
+                    <span className="text-sm font-bold text-[var(--color-primary-200)]">{asset.currentValue}</span>
+                </div>
+
+                {/* Actions */}
+                <div className="mt-auto space-y-2.5">
                     {!isOwnListing && (
                         <button
                             disabled
-                            className="w-full py-3.5 rounded-md bg-[var(--sidebar-border)] text-[var(--color-text-muted)] text-sm font-bold shadow-sm opacity-80 cursor-not-allowed border-0"
+                            className="w-full py-2.5 rounded-md text-[11px] font-bold uppercase tracking-widest cursor-not-allowed border-0"
+                            style={{
+                                background: 'var(--marketplace-card-border)',
+                                color: 'var(--marketplace-text-muted)',
+                                opacity: 0.7
+                            }}
                         >
                             Coming Soon
                         </button>
                     )}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-2">
                         <button
                             onClick={onView}
-                            className="flex items-center justify-center gap-2 py-2.5 rounded-md bg-[var(--card-surface)] border border-[var(--sidebar-border)]/5 text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-border)] transition-all cursor-pointer"
+                            className="flex items-center justify-center gap-1.5 py-2.5 rounded-md text-[11px] font-semibold transition-all duration-200 cursor-pointer border-0 bg-[var(--btn-mint-bg)] text-[var(--btn-mint-text)] hover:opacity-90"
                         >
-                            <EyeOpenIcon className="w-4 h-4 text-[var(--color-text-secondary)]" />
-                            <span>View</span>
+                            <EyeOpenIcon className="w-3.5 h-3.5" />
+                            View
                         </button>
-                        <button className="flex items-center justify-center gap-2 py-2.5 rounded-md bg-[var(--card-surface)] border border-[var(--sidebar-border)]/5 text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-border)] transition-all cursor-pointer">
-                            <DownloadIcon className="w-4 h-4 text-[var(--color-text-secondary)]" />
-                            <span>Info</span>
+                        <button className="flex items-center justify-center gap-1.5 py-2.5 rounded-md text-[11px] font-semibold transition-all duration-200 cursor-pointer border border-[var(--marketplace-card-border)] bg-transparent text-[var(--marketplace-text-secondary)] hover:text-[var(--marketplace-text-primary)] hover:border-[var(--sidebar-active-text)]/30">
+                            <DownloadIcon className="w-3.5 h-3.5" />
+                            Info
                         </button>
                     </div>
                 </div>
