@@ -1,0 +1,16 @@
+User-agent: *
+
+# Allow important pages
+Allow: /
+
+# Block admin and private pages
+Disallow: /sign-in
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /terms
+Disallow: /privacy-policy
+
+# Sitemap
+Sitemap: https://www.glofiestates.com/sitemap.xml
