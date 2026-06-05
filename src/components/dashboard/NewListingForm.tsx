@@ -212,7 +212,7 @@ function formDataToUpdatePayload(formData: ReturnType<typeof assetToFormData>): 
     };
 }
 
-const UploadArea = ({ label, onUpload, value, isUploading }) => {
+const UploadArea = ({ label, onUpload, value, isUploading, required = false, optional = false }) => {
     const fileInputRef = useRef(null);
 
     const handleFileChange = async (e) => {
@@ -248,8 +248,12 @@ const UploadArea = ({ label, onUpload, value, isUploading }) => {
                     <UploadIcon className="w-4 h-4 text-[var(--sidebar-text)] opacity-60 group-hover:text-[var(--sidebar-active-text)] group-hover:opacity-100" />
                 )}
             </div>
-            <span className="text-[10px] lg:text-[9px] font-medium text-[var(--sidebar-text)] opacity-60 text-center uppercase tracking-wider font-montserrat">
-                {isUploading ? 'Uploading...' : label}
+            <span className="text-[10px] lg:text-[9px] font-medium text-[var(--sidebar-text)] opacity-60 text-center uppercase tracking-wider font-montserrat flex flex-col items-center gap-1">
+                <span className="flex items-center gap-1.5">
+                    {isUploading ? 'Uploading...' : label}
+                    {!isUploading && required && <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>}
+                    {!isUploading && optional && <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>}
+                </span>
             </span>
             {value && (
                 <span className="text-[8px] text-[var(--sidebar-active-text)]/80 mt-0.5 font-montserrat truncate max-w-full px-2">
@@ -689,28 +693,32 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
 
                         <div className="flex flex-wrap gap-4 mb-8">
                             <UploadArea
-                                label="Ownership Proof / Backing Document *"
+                                label="Ownership Proof / Backing Document"
                                 onUpload={(file) => handleFileUpload(file, 'titleDeedUrl')}
                                 value={formData.titleDeedUrl}
                                 isUploading={uploadingField === 'titleDeedUrl'}
+                                required
                             />
                             <UploadArea
-                                label="Valuation Report (optional)"
+                                label="Valuation Report"
                                 onUpload={(file) => handleFileUpload(file, 'valuationReportUrl')}
                                 value={formData.valuationReportUrl}
                                 isUploading={uploadingField === 'valuationReportUrl'}
+                                optional
                             />
                             <UploadArea
-                                label="Legal Opinion (optional)"
+                                label="Legal Opinion"
                                 onUpload={(file) => handleFileUpload(file, 'legalOpinionUrl')}
                                 value={formData.legalOpinionUrl}
                                 isUploading={uploadingField === 'legalOpinionUrl'}
+                                optional
                             />
                             <UploadArea
-                                label="Property Images (optional)"
+                                label="Property Images"
                                 onUpload={(file) => handleFileUpload(file, 'images')}
                                 value={formData.images[0]}
                                 isUploading={uploadingField === 'images'}
+                                optional
                             />
                         </div>
 
