@@ -39,6 +39,7 @@ export type UpdateAssetPayload = {
   valuationReportUrl: string;
   legalOpinionUrl: string;
   images: string[];
+  isReraVerified?: boolean;
 };
 
 export const validateFileUpload = (file: File): boolean => {

@@ -184,6 +184,7 @@ function assetToFormData(asset: Record<string, unknown>) {
         valuationReportUrl: toFormString(asset.valuationReportUrl),
         legalOpinionUrl: toFormString(asset.legalOpinionUrl),
         images: Array.isArray(asset.images) ? (asset.images as string[]) : [],
+        isReraVerified: asset.isReraVerified === true,
     };
 }
 
@@ -209,6 +210,7 @@ function formDataToUpdatePayload(formData: ReturnType<typeof assetToFormData>): 
         valuationReportUrl: formData.valuationReportUrl,
         legalOpinionUrl: formData.legalOpinionUrl,
         images: formData.images,
+        isReraVerified: formData.isReraVerified,
     };
 }
 
@@ -285,7 +287,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
         titleDeedUrl: "",
         valuationReportUrl: "",
         legalOpinionUrl: "",
-        images: []
+        images: [],
+        isReraVerified: false
     });
     const [countryIsoCode, setCountryIsoCode] = useState("");
     const [stateIsoCode, setStateIsoCode] = useState("");
@@ -350,12 +353,17 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
 
     const handleSubmit = async () => {
         setErrorMsg("");
-        const required = ['title', 'location', 'country', 'state', 'city', 'valuation', 'totalFractions', 'expectedYield', 'description', 'titleDeedUrl'];
+        const required = ['title', 'location', 'country', 'state', 'city', 'valuation', 'totalFractions', 'expectedYield', 'titleDeedUrl'];
         for (const field of required) {
             if (!formData[field]) {
                 setErrorMsg(`Please fill in the ${field} field.`);
                 return;
             }
+        }
+
+        if (!formData.images || formData.images.length === 0) {
+            setErrorMsg("Please upload an Asset Image.");
+            return;
         }
 
         if (kycStatus?.status !== 'VERIFIED') {
@@ -679,7 +687,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             <div className="flex flex-col gap-2 md:col-span-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
                                     Description
-                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
                                 </label>
                                 <textarea
                                     rows={5}
@@ -688,6 +696,25 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                     placeholder="..."
                                     className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
                                 />
+                            </div>
+                            
+                            <div className="flex flex-col gap-2 md:col-span-2">
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className="relative flex items-center justify-center w-5 h-5">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.isReraVerified}
+                                            onChange={(e) => setFormData({ ...formData, isReraVerified: e.target.checked })}
+                                            className="peer appearance-none w-5 h-5 border-2 border-[var(--foreground)]/30 rounded focus:ring-2 focus:ring-[var(--foreground)]/50 focus:outline-none transition-colors checked:bg-[var(--sidebar-active-text)] checked:border-[var(--sidebar-active-text)]"
+                                        />
+                                        <svg className="absolute w-3.5 h-3.5 text-[var(--background)] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </div>
+                                    <span className="text-[12px] font-semibold text-[var(--foreground)] tracking-wide font-montserrat">
+                                        Is your asset RERA verified?
+                                    </span>
+                                </label>
                             </div>
                         </div>
 
@@ -714,11 +741,11 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 optional
                             />
                             <UploadArea
-                                label="Property Images"
+                                label="Asset Image"
                                 onUpload={(file) => handleFileUpload(file, 'images')}
                                 value={formData.images[0]}
                                 isUploading={uploadingField === 'images'}
-                                optional
+                                required
                             />
                         </div>
 
