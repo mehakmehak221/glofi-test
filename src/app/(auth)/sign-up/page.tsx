@@ -247,13 +247,15 @@ function SignUpPageContent() {
 
         try {
             if (userType === "Agent") {
-                const result = await registerAgent({
+                const payload: Record<string, string> = {
                     fullName: trimmedName,
                     email: trimmedEmail,
                     password: form.password,
-                    reraNumber: trimmedReraNumber,
-                    expiryDate: form.expiryDate,
-                }).unwrap();
+                };
+                if (trimmedReraNumber) payload.reraNumber = trimmedReraNumber;
+                if (form.expiryDate) payload.expiryDate = form.expiryDate;
+
+                const result = await registerAgent(payload).unwrap();
                 completeRegistration(result);
                 return;
             }
