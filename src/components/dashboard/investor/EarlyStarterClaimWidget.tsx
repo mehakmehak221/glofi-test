@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetProfileQuery, useRedeemEarlyStarterMutation } from "@/store/api/authApi";
 import { LoadingSpinner } from "@/components/VectorImages";
@@ -57,16 +58,12 @@ export function EarlyStarterClaimWidget() {
   const handleRefer = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: 'GloFi Estates',
-          text: shareText,
-        });
+        await navigator.share({ title: "GloFi Estates", text: shareText });
         return;
       } catch (error) {
         console.log("Share cancelled or failed", error);
       }
     }
-
     try {
       await navigator.clipboard.writeText(shareText);
       alert("App links copied to your clipboard! You can now paste and share it anywhere.");
@@ -80,29 +77,37 @@ export function EarlyStarterClaimWidget() {
     <>
       <motion.div
         whileHover={{ y: -2 }}
-        className="bg-[#DDEAE6] rounded-[24px] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden h-full shadow-sm"
+        onClick={() => setIsModalOpen(true)}
+        className="relative rounded-[24px] overflow-hidden h-full min-h-[100px] cursor-pointer shadow-lg group bg-gradient-to-br from-[#0A3D2F] via-[#0D4F3C] to-[#056346]"
       >
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#C1D7D0] flex items-center justify-center shrink-0">
-            <TagIcon className="w-6 h-6 text-[#0A4B3A]" />
+
+        {/* Content */}
+        <div className="relative z-10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 h-full">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+              <TagIcon className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-white text-lg sm:text-xl font-bold mb-0.5 tracking-tight drop-shadow">
+                5% OFF Waitlist
+              </h3>
+              <p className="text-white/70 text-xs sm:text-sm font-medium">Early access deal</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-[#0A4B3A] text-lg sm:text-xl font-bold mb-0.5 tracking-tight">5% OFF Waitlist</h3>
-            <p className="text-[#0A4B3A]/80 text-xs sm:text-sm font-medium">Early access deal</p>
-          </div>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); setIsModalOpen(true); }}
+            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-md self-start sm:self-auto border backdrop-blur-sm ${isClaimed
+              ? "bg-white/15 border-white/25 text-white"
+              : "bg-white text-[#056346] border-transparent hover:bg-white/90 hover:shadow-lg"
+              }`}
+          >
+            {isClaimed ? "🎉 Claimed" : "Join"}
+          </button>
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all shadow-sm self-start sm:self-auto ${isClaimed
-            ? "bg-[#00A585] text-white"
-            : "bg-[#00A585] text-white hover:bg-[#008F73] hover:shadow-md"
-            }`}
-        >
-          {isClaimed ? "Claimed" : "Join"}
-        </button>
       </motion.div>
 
-      {/* Floating Action Button (Only visible if not claimed) */}
+      {/* ── Floating Action Button ───────────────────────────────── */}
       {!isClaimed && (
         <motion.button
           onClick={() => setIsModalOpen(true)}
@@ -111,13 +116,15 @@ export function EarlyStarterClaimWidget() {
           className="fixed bottom-8 right-8 z-[90] bg-[#056346] text-white px-5 py-3.5 rounded-full shadow-2xl flex items-center gap-2 hover:bg-[#044c36] hover:scale-105 transition-all group"
         >
           <GiftIcon className="w-5 h-5 animate-pulse" />
-          <span className="font-semibold text-[15px]">Refer & Earn</span>
+          <span className="font-semibold text-[15px]">Refer &amp; Earn</span>
         </motion.button>
       )}
 
+      {/* ── Modal ───────────────────────────────────────────────── */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -125,26 +132,41 @@ export function EarlyStarterClaimWidget() {
               onClick={() => setIsModalOpen(false)}
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
+
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-[360px] bg-white rounded-[28px] overflow-hidden shadow-2xl z-10"
+              className="relative w-full max-w-[360px] rounded-[28px] overflow-hidden shadow-2xl z-10 
+                         bg-white dark:bg-[#0F1A17]
+                         border border-neutral-100 dark:border-white/10"
             >
-              {/* Header section */}
-              <div className="bg-[#056346] pt-10 pb-8 px-6 flex flex-col items-center relative overflow-hidden">
-                {/* Decorative circles */}
+              {/* ── Modal Header with bg image ── */}
+              <div className="relative pt-10 pb-8 px-6 flex flex-col items-center overflow-hidden">
+                {/* header background image */}
+                <Image
+                  src="/assets/images/backgrounds/referbg.png"
+                  alt=""
+                  fill
+                  className="object-cover object-top"
+                  sizes="360px"
+                />
+                {/* overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#056346]/90 via-[#056346]/80 to-[#033d2b]/95" />
+
+                {/* Decorative blobs */}
                 <motion.div
-                  animate={{ scale: [1, 1.1, 1], rotate: [0, 90, 0] }}
+                  animate={{ scale: [1, 1.15, 1], rotate: [0, 90, 0] }}
                   transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                  className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-12 -translate-y-12"
+                  className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full translate-x-14 -translate-y-14"
                 />
                 <motion.div
                   animate={{ scale: [1, 1.2, 1], rotate: [0, -90, 0] }}
                   transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -translate-x-12 translate-y-12"
+                  className="absolute bottom-0 left-0 w-28 h-28 bg-white/10 rounded-full -translate-x-14 translate-y-14"
                 />
 
+                {/* Icon */}
                 <motion.div
                   initial={{ scale: 0.8, rotate: -10 }}
                   animate={{ scale: 1, rotate: 0 }}
@@ -160,7 +182,7 @@ export function EarlyStarterClaimWidget() {
                         exit={{ scale: 0, opacity: 0 }}
                         transition={{ type: "spring", bounce: 0.5 }}
                       >
-                        <CheckIcon className="w-8 h-8 text-black" />
+                        <CheckIcon className="w-8 h-8 text-[#056346]" />
                       </motion.div>
                     ) : (
                       <motion.div
@@ -175,7 +197,7 @@ export function EarlyStarterClaimWidget() {
                   </AnimatePresence>
                 </motion.div>
 
-                <h2 className="text-white text-2xl font-bold mb-3 relative z-10 text-center">
+                <h2 className="text-white text-2xl font-bold mb-3 relative z-10 text-center drop-shadow-md">
                   {isClaimed ? "5% Discount!" : "Claim 5% Discount!"}
                 </h2>
 
@@ -184,52 +206,68 @@ export function EarlyStarterClaimWidget() {
                 </span>
               </div>
 
-              {/* Body section */}
+              {/* ── Modal Body ── */}
               <motion.div
                 initial="hidden"
                 animate="visible"
                 variants={{
                   hidden: { opacity: 0 },
-                  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
+                  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
                 }}
-                className="p-6 text-center bg-white flex flex-col items-center"
+                className="p-6 text-center flex flex-col items-center
+                           bg-white dark:bg-[#0F1A17]"
               >
-                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-[#334155] text-[15px] font-medium leading-snug mb-8 px-2">
-                  Refer a friend and earn <span className="text-[#056346]">10%</span> by referring others. Make it viral!
+                <motion.p
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                  className="text-[#334155] dark:text-[#D9F4EF] text-[15px] font-medium leading-snug mb-8 px-2"
+                >
+                  Refer a friend and earn{" "}
+                  <span className="text-[#056346] dark:text-[#00DAAF] font-bold">10%</span>{" "}
+                  by referring others. Make it viral!
                 </motion.p>
 
-                <motion.div variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="w-full flex flex-col gap-3">
+                <motion.div
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                  className="w-full flex flex-col gap-3"
+                >
+                  {/* Refer Now */}
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleRefer}
-                    className="w-full bg-[#056346] text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors hover:bg-[#044c36]"
+                    className="w-full bg-[#056346] dark:bg-[#056346] text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors hover:bg-[#044c36] dark:hover:bg-[#044c36] shadow-md"
                   >
                     <ShareIcon className="w-5 h-5" />
                     Refer Now
                   </motion.button>
 
+                  {/* Claim Discount */}
                   <motion.button
                     whileHover={{ scale: isClaimed || isRedeeming ? 1 : 1.02 }}
                     whileTap={{ scale: isClaimed || isRedeeming ? 1 : 0.98 }}
                     onClick={handleClaim}
                     disabled={isClaimed || isRedeeming}
                     className={`w-full py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center ${isClaimed
-                      ? "bg-[#F1F5F9] text-[#056346]"
-                      : "bg-[#F1F5F9] text-[#056346] hover:bg-[#E2E8F0]"
+                      ? "bg-[#E8F5F0] dark:bg-[#0A2A1F] text-[#056346] dark:text-[#00DAAF]"
+                      : "bg-[#F1F5F9] dark:bg-[#1A2E28] text-[#056346] dark:text-[#D9F4EF] hover:bg-[#E2E8F0] dark:hover:bg-[#1F3A30]"
                       }`}
                   >
                     {isRedeeming ? (
                       <LoadingSpinner />
                     ) : isClaimed ? (
-                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Claimed</motion.span>
+                      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        🎉 Claimed
+                      </motion.span>
                     ) : (
                       "Claim Discount"
                     )}
                   </motion.button>
                 </motion.div>
 
-                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-[#94A3B8] text-[10px] mt-6 px-4 leading-relaxed">
+                <motion.p
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                  className="text-[#94A3B8] dark:text-[#4B7A6A] text-[10px] mt-6 px-4 leading-relaxed"
+                >
                   Terms and conditions apply. Referral credits are added instantly.
                 </motion.p>
               </motion.div>

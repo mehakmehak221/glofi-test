@@ -196,17 +196,19 @@ export default function PropertyDetailPage() {
                         <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
 
-                        <span className="absolute top-3 left-3 sm:top-4 sm:left-4 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-[var(--background)]/80 text-[var(--color-text-muted)] border border-[var(--sidebar-border)] backdrop-blur-sm">
+                        <span className="absolute top-3 left-3 sm:top-4 sm:left-4 px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-widest bg-[#FFFFFF] text-[#111111] border border-white/40 shadow-sm">
                             {property.category?.replace('_', ' ')}
                         </span>
 
 
-                        <span className={`absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border shadow-sm ${property.riskRating === 'LOW'
-                                ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/70'
-                                : property.riskRating === 'HIGH'
-                                    ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/70'
-                                    : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/80'
-                            }`}>
+                        <span className="absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm">
+                            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                                property.riskRating === 'LOW'
+                                    ? 'bg-[#00DAAF]'
+                                    : property.riskRating === 'HIGH'
+                                        ? 'bg-[#FF5C5C]'
+                                        : 'bg-[#E8940C]'
+                            }`} />
                             <span className="opacity-60">RISK</span>
                             <span className="opacity-30">·</span>
                             {property.riskRating}
@@ -439,12 +441,13 @@ export default function PropertyDetailPage() {
                         </p>
 
                         <div className="space-y-3 mb-6">
-                            <button
-                                disabled
-                                className="w-full py-4 rounded-md bg-[var(--sidebar-border)] text-[var(--color-text-muted)] font-bold text-sm cursor-not-allowed border-0 opacity-80"
-                            >
-                                Coming Soon
-                            </button>
+                            <div className="w-full bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5 flex flex-col items-center justify-center py-8 shadow-sm">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-[#00DAAF] shadow-[0_0_10px_#00DAAF]"></div>
+                                    <span className="text-[var(--header-text)] font-bold text-lg">Coming Soon</span>
+                                </div>
+                                <p className="text-[var(--color-text-muted)] text-xs">Fractional investment opens shortly</p>
+                            </div>
                         </div>
                     </div>
                 </motion.div>

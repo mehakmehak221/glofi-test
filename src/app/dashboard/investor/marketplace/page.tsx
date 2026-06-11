@@ -15,6 +15,8 @@ import { Country, State, City } from "country-state-city";
 import { API_URL } from "@/constants";
 
 const DROPDOWN_STYLES = `
+  :root { --btn-view-color: #000000; }
+  .dark { --btn-view-color: #D9F4EF; }
   .dropdown-scroll::-webkit-scrollbar {
     width: 4px;
   }
@@ -338,21 +340,21 @@ export default function MarketplacePage() {
                                             <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
 
-                                            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider bg-black/55 text-white/90 border border-white/15 backdrop-blur-sm">
-                                                {property.category.replace('_', ' ')}
+
+                                            <span className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-bold capitalize bg-[#FFFFFF] text-[#111111] shadow-md z-10">
+                                                {property.category.replace(/_/g, ' ').toLowerCase()}
                                             </span>
 
-
-                                            <span className={`absolute top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border shadow-sm ${property.riskRating === 'LOW'
-                                                    ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/70'
+                                            <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
+                                                <span className={`w-2 h-2 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${property.riskRating === 'LOW'
+                                                    ? 'bg-[#00DAAF] text-[#00DAAF]'
                                                     : property.riskRating === 'HIGH'
-                                                        ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/70'
-                                                        : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/80'
-                                                }`}>
-                                                <span className="opacity-60">RISK</span>
-                                                <span className="opacity-30">·</span>
+                                                        ? 'bg-[#FF5C5C] text-[#FF5C5C]'
+                                                        : 'bg-[#E8940C] text-[#E8940C]'
+                                                    }`} />
                                                 {property.riskRating}
                                             </span>
+
                                         </div>
 
 
@@ -398,15 +400,16 @@ export default function MarketplacePage() {
 
 
                                             <motion.button
-                                                whileHover={{ scale: 1.02 }}
+                                                whileHover={{ scale: 1.02, backgroundColor: '#D9F4EF', color: '#006D5B' }}
                                                 whileTap={{ scale: 0.98 }}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleCardClick(property.id);
                                                 }}
-                                                className="w-full py-3 rounded-md bg-[var(--btn-mint-bg)] text-[var(--btn-mint-text)] font-semibold text-sm cursor-pointer border-0 transition-shadow hover:shadow-glow-primary"
+                                                className="w-full py-3 rounded-full border border-[#006D5B] bg-transparent text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors duration-300 drop-shadow-md"
+                                                style={{ color: 'var(--btn-view-color)', textShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)' }}
                                             >
-                                                View Details
+                                                VIEW DETAIL
                                             </motion.button>
                                         </div>
                                     </motion.div>

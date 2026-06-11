@@ -21,11 +21,11 @@ const DROPDOWN_STYLES = `
     background: transparent;
   }
   .dropdown-scroll::-webkit-scrollbar-thumb {
-    background: var(--sidebar-border);
+    background: #E5E7EB;
     border-radius: 10px;
   }
   .dropdown-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--sidebar-active-text);
+    background: #D1D5DB;
   }
 `;
 
@@ -50,15 +50,15 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
 
     return (
         <div className={`flex flex-col gap-1.5 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
-            <label className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold px-1 font-Montserrat">{label}</label>
+            <label className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold px-1 font-Montserrat">{label}</label>
             <div
                 onClick={() => !disabled && setIsOpen(!isOpen)}
-                className={`flex justify-between items-center bg-[var(--color-bg-card)] border border-white/10 rounded-full px-4 py-1.5 text-xs font-Montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-white/20'} ${isOpen ? 'border-white/30 shadow-sm' : ''}`}
+                className={`flex justify-between items-center bg-neutral-50 border border-neutral-200/80 rounded-full px-4 py-1.5 text-xs font-Montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-neutral-300'} ${isOpen ? 'border-[#00DAAF] shadow-sm' : ''}`}
             >
-                <span className={value ? "text-white" : "text-[var(--color-text-muted)]"}>
+                <span className={value ? "text-neutral-900 font-medium" : "text-neutral-400"}>
                     {value || placeholder}
                 </span>
-                <svg className={`w-3 h-3 text-[var(--color-text-muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-3 h-3 text-neutral-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </div>
@@ -69,16 +69,16 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -5 }}
-                        className="absolute z-[100] top-[calc(100%+6px)] left-0 min-w-[200px] bg-[#0A0A0A] border border-white/10 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
+                        className="absolute z-[100] top-[calc(100%+6px)] left-0 min-w-[200px] bg-white border border-neutral-200 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
                     >
-                        <div className="p-2 border-b border-white/5">
+                        <div className="p-2 border-b border-neutral-100">
                             <input
                                 type="text"
                                 autoFocus
                                 placeholder="Search..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-[#1A1A1A] border border-white/10 rounded-full px-3 py-1.5 text-[10px] text-white focus:outline-none font-Montserrat"
+                                className="w-full bg-neutral-50 border border-neutral-200 rounded-full px-3 py-1.5 text-[10px] text-neutral-800 focus:outline-none focus:border-[#00DAAF]/50 font-Montserrat"
                             />
                         </div>
                         <div className="max-h-[200px] overflow-y-auto dropdown-scroll">
@@ -91,13 +91,13 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
                                             setIsOpen(false);
                                             setSearchTerm("");
                                         }}
-                                        className={`px-4 py-2 text-[11px] font-Montserrat cursor-pointer hover:bg-white/5 hover:text-white transition-colors ${value === opt.name ? 'bg-white/10 text-white' : 'text-[var(--color-text-muted)]'}`}
+                                        className={`px-4 py-2 text-[11px] font-Montserrat cursor-pointer hover:bg-neutral-50 hover:text-neutral-900 transition-colors ${value === opt.name ? 'bg-[#00DAAF]/10 text-[#00B28F] font-semibold' : 'text-neutral-600'}`}
                                     >
                                         {opt.name}
                                     </div>
                                 ))
                             ) : (
-                                <div className="px-4 py-3 text-[10px] text-[var(--color-text-muted)] font-Montserrat text-center italic">
+                                <div className="px-4 py-3 text-[10px] text-neutral-400 font-Montserrat text-center italic">
                                     No results found
                                 </div>
                             )}
@@ -158,19 +158,19 @@ export default function ExplorePage() {
     const assets = assetsData?.data || [];
 
     return (
-        <div className="min-h-screen bg-black text-white font-Montserrat overflow-x-hidden">
+        <div className="min-h-screen bg-[#F8FBFA] text-neutral-900 font-Montserrat overflow-x-hidden">
             <Navbar />
             <style>{DROPDOWN_STYLES}</style>
 
             <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-28 pb-12 sm:pt-36 sm:pb-16">
 
 
-                <div className="flex flex-col gap-10 mb-16 bg-[var(--color-bg-card)] p-8 sm:p-10 rounded-[32px] border border-white/5 shadow-2xl backdrop-blur-xl relative z-20">
+                <div className="flex flex-col gap-10 mb-16 bg-white p-8 sm:p-10 rounded-[32px] border border-neutral-200/60 shadow-sm relative z-20">
                     <div className="flex flex-col gap-4">
-                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter bg-gradient-to-r from-[#00DAAF] to-[#00DAAF]/60 bg-clip-text text-transparent">
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter bg-gradient-to-r from-[#00B28F] to-[#00DAAF] bg-clip-text text-transparent">
                             Discover Assets
                         </h1>
-                        <p className="text-sm sm:text-base text-[var(--color-text-muted)] max-w-xl font-medium leading-relaxed">
+                        <p className="text-sm sm:text-base text-neutral-500 max-w-xl font-medium leading-relaxed">
                             Institutional-grade real estate. Digitally simplified. Invest fractionally starting from {currency.symbol}15,000.
                         </p>
                     </div>
@@ -182,8 +182,8 @@ export default function ExplorePage() {
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
                                     className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 border ${activeCategory === cat
-                                        ? "bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] border-[var(--color-primary-300)]/30 shadow-[0_0_20px_rgba(0,218,175,0.1)]"
-                                        : "bg-white/5 text-[var(--color-text-muted)] border-white/10 hover:border-white/20 hover:bg-white/10"
+                                        ? "bg-[#00DAAF]/10 text-[#00B28F] border-[#00DAAF]/30 shadow-[0_0_20px_rgba(0,218,175,0.05)]"
+                                        : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300 hover:bg-neutral-100"
                                         }`}
                                 >
                                     {cat}
@@ -191,7 +191,7 @@ export default function ExplorePage() {
                             ))}
                         </div>
 
-                        <div className="flex flex-wrap gap-6 items-center border-t border-white/5 pt-8">
+                        <div className="flex flex-wrap gap-6 items-center border-t border-neutral-100 pt-8">
                             <PillDropdown
                                 label="Country"
                                 options={Country.getAllCountries()}
@@ -236,7 +236,7 @@ export default function ExplorePage() {
                                         setStateIsoCode("");
                                         setCountryIsoCode("");
                                     }}
-                                    className="mt-5 text-[10px] text-[var(--color-primary-300)] font-semibold hover:underline uppercase tracking-widest cursor-pointer transition-colors duration-200 hover:text-[var(--color-primary-300)]/80"
+                                    className="mt-5 text-[10px] text-[#00B28F] font-semibold hover:underline uppercase tracking-widest cursor-pointer transition-colors duration-200 hover:text-[#00DAAF]"
                                 >
                                     Clear Filters
                                 </button>
@@ -248,17 +248,17 @@ export default function ExplorePage() {
                 <AnimatePresence mode="wait">
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center p-24 gap-4">
-                            <div className="w-12 h-12 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />
-                            <p className="text-sm text-[var(--color-text-muted)] font-medium animate-pulse">Loading Institutional Assets...</p>
+                            <div className="w-12 h-12 border-2 border-[#00DAAF]/20 border-t-[#00DAAF] rounded-full animate-spin" />
+                            <p className="text-sm text-neutral-500 font-medium animate-pulse">Loading Institutional Assets...</p>
                         </div>
                     ) : isError ? (
-                        <div className="text-center p-24 bg-[var(--color-bg-card)] rounded-[32px] border border-white/5">
-                            <p className="text-[var(--color-text-muted)] mb-4">Error loading assets. Please try again later.</p>
-                            <button onClick={() => window.location.reload()} className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-full text-xs font-bold transition-all">Retry</button>
+                        <div className="text-center p-24 bg-white rounded-[32px] border border-neutral-200 shadow-sm">
+                            <p className="text-neutral-500 mb-4">Error loading assets. Please try again later.</p>
+                            <button onClick={() => window.location.reload()} className="px-6 py-2 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 rounded-full text-xs font-bold transition-all text-neutral-800">Retry</button>
                         </div>
                     ) : assets.length === 0 ? (
-                        <div className="text-center p-24 bg-[var(--color-bg-card)] rounded-[32px] border border-dashed border-white/10">
-                            <p className="text-[var(--color-text-muted)] font-medium">No assets found in this category.</p>
+                        <div className="text-center p-24 bg-white rounded-[32px] border border-dashed border-neutral-200 shadow-sm">
+                            <p className="text-neutral-500 font-medium">No assets found in this category.</p>
                         </div>
                     ) : (
                         <motion.div
@@ -301,11 +301,11 @@ export default function ExplorePage() {
                                         key={property.id}
                                         variants={cardVariants}
                                         whileHover={{ y: -6 }}
-                                        className="bg-[var(--color-bg-card)] border border-white/5 rounded-2xl sm:rounded-3xl overflow-hidden hover:border-[var(--color-primary-300)]/30 transition-all duration-500 group shadow-xl relative"
+                                        className="bg-white border border-neutral-200/60 rounded-2xl sm:rounded-3xl overflow-hidden hover:border-[#00DAAF]/40 transition-all duration-500 group shadow-sm hover:shadow-md relative"
                                     >
                                         <Link
                                             href={detailHref}
-                                            className="absolute inset-0 z-[1] rounded-2xl sm:rounded-3xl cursor-pointer outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-primary-300)]"
+                                            className="absolute inset-0 z-[1] rounded-2xl sm:rounded-3xl cursor-pointer outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#00DAAF]"
                                             aria-label={`View details for ${property.title}`}
                                             prefetch={false}
                                         />
@@ -341,7 +341,7 @@ export default function ExplorePage() {
 
                                                 <div className="absolute bottom-3 left-3 right-3 text-left sm:bottom-4 sm:left-4 sm:right-4 p-3 sm:p-4 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 shadow-sm max-w-xl">
                                                     <h3 className="text-xl sm:text-2xl font-bold text-white mb-1.5">{property.title}</h3>
-                                                    <div className="flex items-center gap-1.5 text-white/80 text-xs font-semibold">
+                                                    <div className="flex items-center gap-1.5 text-white/90 text-xs font-semibold">
                                                         <MapPinIcon className="w-3.5 h-3.5" />
                                                         {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
                                                     </div>
@@ -351,34 +351,34 @@ export default function ExplorePage() {
                                             <div className="p-4 sm:p-5 pt-4">
                                                 <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-4 mb-4 sm:mb-5 text-left items-start">
                                                     <div className="min-w-0">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
                                                             Asset valuation
                                                         </p>
-                                                        <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug">
+                                                        <p className="text-sm sm:text-base font-black text-neutral-800 tracking-tight tabular-nums leading-snug">
                                                             {formatPrice(property.valuation, true)}
                                                         </p>
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
                                                             Entry point
                                                         </p>
-                                                        <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug break-words">
+                                                        <p className="text-sm sm:text-base font-black text-neutral-800 tracking-tight tabular-nums leading-snug break-words">
                                                             {formatPrice(property.fractionPrice)}
                                                         </p>
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
                                                             Potential annual return
                                                         </p>
-                                                        <p className="text-sm sm:text-base font-black text-[var(--color-primary-300)] tracking-tight tabular-nums leading-snug">
+                                                        <p className="text-sm sm:text-base font-black text-[#00B28F] tracking-tight tabular-nums leading-snug">
                                                             {formattedYield}% p.a.
                                                         </p>
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold mb-1 leading-tight">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
                                                             Available
                                                         </p>
-                                                        <p className="text-sm sm:text-base font-black text-white tracking-tight tabular-nums leading-snug">
+                                                        <p className="text-sm sm:text-base font-black text-neutral-800 tracking-tight tabular-nums leading-snug">
                                                             {property.availableFractions?.toLocaleString()}
                                                         </p>
                                                     </div>
@@ -386,14 +386,14 @@ export default function ExplorePage() {
 
                                                 <div className="mb-4 sm:mb-5">
                                                     <div className="flex justify-between items-baseline gap-4 mb-1.5 sm:mb-2">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-muted)] font-bold leading-tight shrink-0">
+                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold leading-tight shrink-0">
                                                             Funding progress
                                                         </p>
-                                                        <p className="text-[11px] sm:text-xs font-black text-[var(--color-primary-300)] tabular-nums shrink-0">
+                                                        <p className="text-[11px] sm:text-xs font-black text-[#00B28F] tabular-nums shrink-0">
                                                             {fundedPercentage}%
                                                         </p>
                                                     </div>
-                                                    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                                    <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden border border-neutral-200/60">
                                                         <motion.div
                                                             className="h-full rounded-full"
                                                             style={{ background: 'linear-gradient(90deg, #00DAAF 0%, #00B28F 100%)' }}
@@ -407,7 +407,7 @@ export default function ExplorePage() {
                                                 <Link
                                                     href="/sign-in"
                                                     prefetch={false}
-                                                    className="relative z-[3] block pointer-events-auto w-full py-3 rounded-xl bg-white/5 text-white font-bold text-xs sm:text-sm text-center border border-white/10 transition-all duration-300 shadow-lg hover:scale-[1.01] hover:bg-[#00DAAF] hover:text-black hover:border-[var(--color-primary-300)]/50 active:scale-[0.99]"
+                                                    className="relative z-[3] block pointer-events-auto w-full py-3 rounded-full border border-[#006D5B] bg-transparent text-[#000000] hover:bg-[#006D5B] hover:text-white text-xs font-bold uppercase tracking-wider text-center transition-all duration-300 active:scale-[0.99]"
                                                 >
                                                     Start Investing
                                                 </Link>
