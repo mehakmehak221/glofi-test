@@ -30,7 +30,7 @@ export default function GlobalToast() {
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -50 }}
-                    className={`fixed top-4 left-1/2 -translate-x-1/2 z-[9999] px-6 py-3 rounded-full shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
+                    className={`fixed top-4 right-4 sm:right-8 z-[9999] px-6 py-3 rounded-full shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
                         ? "bg-emerald-500/90 text-white"
                         : toast.type === "error"
                             ? "bg-red-500/90 text-white"
