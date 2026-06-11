@@ -186,7 +186,7 @@ export default function MarketplacePage() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="mb-8 sm:mb-10 p-6 sm:p-8 lg:p-10 relative z-20"
+                className="mb-8 sm:mb-10 p-6 sm:p-8 lg:p-10 relative z-20 shadow-2xl"
                 style={{
                     borderRadius: '24px',
                     border: '0.667px solid var(--marketplace-card-border)',
@@ -217,7 +217,7 @@ export default function MarketplacePage() {
                             onClick={() => setActiveCategory(cat)}
                             className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer border ${activeCategory === cat
                                 ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-bg)]"
-                                : "bg-transparent text-[var(--sidebar-text)] border-transparent hover:text-[var(--sidebar-text-hover)]"
+                                : "bg-transparent text-[var(--sidebar-text)] border-[var(--sidebar-border)] hover:text-[var(--sidebar-text-hover)] hover:border-[var(--sidebar-text-hover)]"
                                 }`}
                         >
                             {cat}
