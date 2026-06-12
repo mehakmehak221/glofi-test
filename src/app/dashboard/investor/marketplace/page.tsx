@@ -72,7 +72,7 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -5 }}
-                        className="absolute z-[100] top-[calc(100%+6px)] left-0 min-w-[200px] bg-[var(--marketplace-hero-bg)] border border-[var(--sidebar-border)] rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
+                        className="absolute z-[100] top-[calc(100%+6px)] left-0 min-w-[200px] bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
                     >
                         <div className="p-2 border-b border-[var(--sidebar-border)]">
                             <input
@@ -81,7 +81,7 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
                                 placeholder="Search..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-full px-3 py-1.5 text-[10px] text-[var(--marketplace-text-primary)] focus:outline-none font-montserrat"
+                                className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-full px-3 py-1.5 text-[10px] text-[var(--marketplace-text-primary)] focus:outline-none font-montserrat"
                             />
                         </div>
                         <div className="max-h-[200px] overflow-y-auto dropdown-scroll">
