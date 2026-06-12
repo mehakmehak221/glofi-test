@@ -43,6 +43,7 @@ export default function PropertyDetailPage() {
     const { data: kycData } = useGetKycStatusQuery();
     const { data: investmentsData, refetch: refetchInvestments } = useGetInvestmentsQuery();
     const [activeTab, setActiveTab] = useState("cashflow");
+    const [mainTab, setMainTab] = useState("overview");
     const [investOpen, setInvestOpen] = useState(false);
     const [kycOpen, setKycOpen] = useState(false);
     const [confirmType, setConfirmType] = useState(null);
@@ -50,6 +51,7 @@ export default function PropertyDetailPage() {
     const [investStatus, setInvestStatus] = useState("");
     const [paymentModalOpen, setPaymentModalOpen] = useState(false);
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+    const [isDescExpanded, setIsDescExpanded] = useState(false);
 
     const showToast = (message, type = "success") => {
         setToast({ show: true, message, type });
@@ -159,22 +161,6 @@ export default function PropertyDetailPage() {
                 )}
             </AnimatePresence>
 
-            <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="mb-5"
-            >
-                <Link
-                    href="/dashboard/investor/marketplace"
-                    className="inline-flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--sidebar-active-text)] transition-colors no-underline"
-                >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                    Back
-                </Link>
-            </motion.div>
-
             <div className="flex flex-col lg:flex-row gap-6">
 
                 <motion.div
@@ -183,8 +169,8 @@ export default function PropertyDetailPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-
-                    <div className="relative w-full h-56 sm:h-72 lg:h-80 rounded-md overflow-hidden mb-5">
+                    {/* Image Container with overlays */}
+                    <div className="relative w-full h-64 sm:h-72 lg:h-80 rounded-2xl overflow-hidden mb-5 border border-[var(--sidebar-border)]/50 shadow-sm">
                         <Image
                             src={imageUrl}
                             alt={property.title}
@@ -195,234 +181,413 @@ export default function PropertyDetailPage() {
                         />
                         <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
+                        {/* Back Button (Top-Left overlay) */}
+                        <Link
+                            href="/dashboard/investor/marketplace"
+                            className="absolute top-3 left-3 sm:top-4 sm:left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-black/45 hover:bg-black/60 text-white border border-white/10 backdrop-blur-md transition-all shadow-md group z-20 cursor-pointer"
+                        >
+                            <svg className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </Link>
 
-                        <span className="absolute top-3 left-3 sm:top-4 sm:left-4 px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-widest bg-[#FFFFFF] text-[#111111] border border-white/40 shadow-sm">
-                            {property.category?.replace('_', ' ')}
+                        {/* Category Tag (Bottom-Left overlay) */}
+                        <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FFFFFF] text-[#111111] border border-white/40 shadow-md z-10">
+                            {property.category?.replace(/_/g, ' ')}
                         </span>
 
-
-                        <span className="absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm">
-                            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                        {/* Risk Rating Tag (Top-Right overlay) */}
+                        <span className="absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
+                            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${
                                 property.riskRating === 'LOW'
-                                    ? 'bg-[#00DAAF]'
+                                    ? 'bg-[#00DAAF] text-[#00DAAF]'
                                     : property.riskRating === 'HIGH'
-                                        ? 'bg-[#FF5C5C]'
-                                        : 'bg-[#E8940C]'
+                                        ? 'bg-[#FF5C5C] text-[#FF5C5C]'
+                                        : 'bg-[#E8940C] text-[#E8940C]'
                             }`} />
-                            <span className="opacity-60">RISK</span>
-                            <span className="opacity-30">·</span>
-                            {property.riskRating}
+                            {property.riskRating} RISK
                         </span>
-
-
-                        <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 p-3 sm:p-4 rounded-xl bg-[var(--background)]/85 backdrop-blur-md border border-[var(--sidebar-border)]/50 shadow-sm max-w-xl">
-                            <h1 className="text-xl sm:text-md font-bold text-[var(--header-text)] mb-1">{property.title}</h1>
-                            <div className="flex items-center gap-1.5 text-[var(--sidebar-text)] text-xs font-semibold">
-                                <MapPinIcon className="w-3.5 h-3.5" />
-                                {property.location}
-                            </div>
-                        </div>
                     </div >
 
+                    {/* Name and Location Section */}
+                    <div className="mb-5 px-1">
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--header-text)] mb-1.5 tracking-tight">{property.title}</h1>
+                        <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-xs font-semibold">
+                            <MapPinIcon className="w-3.5 h-3.5 text-[var(--sidebar-active-text)]" />
+                            {property.location}
+                        </div>
+                    </div>
 
-                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 mb-6">
-                        <p className="text-sm text-[var(--color-text-muted)] leading-relaxed mb-6 font-montserrat tracking-tight">
-                            {property.description}
-                        </p>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                            <div
-                                className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
-                            >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Valuation</p>
-                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)]">{formatPrice(property.valuation, true)}</p>
+                    {/* Valuation, Per Fraction, and Annual Return Stats Card */}
+                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 mb-6 shadow-sm">
+                        <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center items-center">
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Valuation</p>
+                                <p className="text-base font-bold text-[var(--header-text)]">{formatPrice(property.valuation, true)}</p>
                             </div>
-                            <div
-                                className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
-                            >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Potential Annual Return</p>
-                                <p className="text-base sm:text-lg font-bold text-[var(--sidebar-active-text)]">{
-                                    (
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Per Fraction</p>
+                                <p className="text-base font-bold text-[var(--header-text)]">{formatPrice(property.fractionPrice)}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Annual Return</p>
+                                <p className="text-base font-bold text-[var(--sidebar-active-text)]">
+                                    {(
                                         parseFloat(property.expectedYield || 0) +
                                         parseFloat(property.expectedAnnualRent || 0) +
                                         parseFloat(property.rentalGrowthRate || 0) +
                                         parseFloat(property.expectedAppreciationRate || 0) -
                                         parseFloat(property.operatingCostRate || 0)
-                                    ).toFixed(2)
-                                }%</p>
-                            </div>
-                            <div
-                                className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
-                            >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-2 font-semibold">Risk Level</p>
-                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider border ${property.riskRating === 'LOW'
-                                        ? 'text-[#B8FFF0] bg-[#041512] border-[#00DAAF]/60'
-                                        : property.riskRating === 'HIGH'
-                                            ? 'text-[#FFB4B4] bg-[#1a0808] border-[#FF5C5C]/60'
-                                            : 'text-[#FFD699] bg-[#1a1206] border-[#E8940C]/70'
-                                    }`}>
-                                    <span className="opacity-60">RISK</span>
-                                    <span className="opacity-30">·</span>
-                                    {property.riskRating}
-                                </span>
-                            </div>
-                            <div
-                                className="rounded-md p-3 sm:p-4 bg-[var(--card-surface)]  border border-[var(--sidebar-border)] shadow-sm overflow-hidden"
-                            >
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 mb-1 font-semibold">Fractions</p>
-                                <p className="text-base sm:text-lg font-bold text-[var(--header-text)]">{property.totalFractions?.toLocaleString()}</p>
+                                    ).toFixed(1)}%
+                                </p>
                             </div>
                         </div>
                     </div>
 
-
-                    {documents.length > 0 && (
-                        <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 mb-6">
-                            <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Documents</h3>
-                            <div className="space-y-3">
-                                {documents.map((doc) => (
-                                    <div
-                                        key={doc.name}
-                                        className="flex items-center justify-between rounded-md px-4 py-3 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <span className="w-8 h-8 rounded-full bg-[var(--badge-bg)] flex items-center justify-center text-xs">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                                    <path d="M11.6663 7.58343C11.6663 10.5001 9.62467 11.9584 7.19801 12.8043C7.07094 12.8473 6.9329 12.8453 6.80717 12.7984C4.37467 11.9584 2.33301 10.5001 2.33301 7.58343V3.5001C2.33301 3.34539 2.39447 3.19702 2.50386 3.08762C2.61326 2.97822 2.76163 2.91677 2.91634 2.91677C4.08301 2.91677 5.54134 2.21677 6.55634 1.3301C6.67992 1.22452 6.83713 1.1665 6.99967 1.1665C7.16222 1.1665 7.31943 1.22452 7.44301 1.3301C8.46384 2.2226 9.91634 2.91677 11.083 2.91677C11.2377 2.91677 11.3861 2.97822 11.4955 3.08762C11.6049 3.19702 11.6663 3.34539 11.6663 3.5001V7.58343Z" stroke="var(--sidebar-active-text)" strokeWidth="1.16667" strokeLinecap="round" strokeLinejoin="round" />
-                                                </svg>
-                                            </span>
-                                            <span className="text-sm font-medium text-[var(--sidebar-text)]">{doc.name}</span>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <a
-                                                href={doc.url.startsWith('http') ? doc.url : `${API_URL}/${doc.url}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-1.5 text-xs font-bold text-[var(--sidebar-active-text)] bg-transparent border-0 cursor-pointer hover:underline no-underline"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                </svg>
-                                                View
-                                            </a>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                    {/* Funding Progress Card */}
+                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 mb-6 shadow-sm">
+                        <div className="flex justify-between items-center mb-4">
+                            <span className="text-[11px] font-bold uppercase tracking-[1.5px] text-[var(--color-text-muted)]">Funding Progress</span>
+                            <span className="text-sm font-bold text-[var(--sidebar-active-text)]">{fundedPercentage}% funded</span>
                         </div>
-                    )}
-
-                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 mb-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-sm font-bold text-[var(--header-text)]">Projected Performance</h3>
+                        <div className="w-full h-2.5 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-full overflow-hidden mb-4">
+                            <motion.div
+                                className="h-full bg-[var(--sidebar-active-text)]"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${fundedPercentage}%` }}
+                                transition={{ duration: 1 }}
+                            />
                         </div>
+                        <div className="flex justify-between items-center text-[13px] font-bold">
+                            <span className="text-[var(--color-text-muted)]">{property.availableFractions?.toLocaleString()} fractions remaining</span>
+                            <span className="text-[var(--sidebar-active-text)]">
+                                {(
+                                    parseFloat(property.expectedYield || 0) +
+                                    parseFloat(property.expectedAnnualRent || 0) +
+                                    parseFloat(property.rentalGrowthRate || 0) +
+                                    parseFloat(property.expectedAppreciationRate || 0) -
+                                    parseFloat(property.operatingCostRate || 0)
+                                ).toFixed(1)}% p.a.
+                            </span>
+                        </div>
+                    </div>
 
-                        <div className="flex gap-4 border-b border-[var(--sidebar-border)] mb-6 overflow-x-auto no-scrollbar">
-                            {[
-                                { id: "cashflow", label: "Cashflow" },
-                                { id: "rental", label: "Rental Schedule" },
-                                { id: "valuation", label: "Valuation" }
-                            ].map((tab) => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all relative whitespace-nowrap ${activeTab === tab.id
-                                        ? "text-[var(--sidebar-active-text)]"
+                    {/* Top Segmented Tab Control */}
+                    <div className="flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-full p-1 mb-6 shadow-sm">
+                        {[
+                            { id: "overview", label: "Overview" },
+                            { id: "projection", label: "Projection" },
+                            { id: "financial", label: "Financial" }
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setMainTab(tab.id)}
+                                className={`flex-1 py-2.5 rounded-full text-[13px] font-bold transition-all cursor-pointer ${
+                                    mainTab === tab.id
+                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm"
                                         : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
-                                        }`}
-                                >
-                                    {tab.label}
-                                    {activeTab === tab.id && (
-                                        <motion.div
-                                            layoutId="activePerformanceTab"
-                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--sidebar-active-text)]"
-                                        />
-                                    )}
-                                </button>
-                            ))}
-                        </div>
+                                }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
 
-                        <div className="min-h-[200px]">
-                            {activeTab === "cashflow" && (
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-3 text-[10px] uppercase font-bold text-[var(--color-text-muted)] pb-2 border-b border-[var(--sidebar-border)]">
-                                        <span>Year</span>
-                                        <span className="text-right">Gross Rent</span>
-                                        <span className="text-right">Net Cashflow</span>
-                                    </div>
-                                    {cashflowData?.data?.length > 0 ? (
-                                        cashflowData.data.map((item, index) => (
-                                            <div key={index} className="grid grid-cols-3 text-xs font-montserrat py-1">
-                                                <span className="text-[var(--color-text-muted)]">Year {item.year}</span>
-                                                <span className="text-right text-[var(--header-text)] font-semibold">{formatPrice(item.grossRent)}</span>
-                                                <span className="text-right text-[var(--color-status-success)] font-bold">{formatPrice(item.netCashflow)}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
-                                            No projection data available
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                    <AnimatePresence mode="wait">
+                        {mainTab === "overview" && (
+                            <motion.div
+                                key="overview"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.2 }}
+                            >
 
-                            {activeTab === "rental" && (
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-2 text-[10px] uppercase font-bold text-[var(--color-text-muted)] pb-2 border-b border-[var(--sidebar-border)]">
-                                        <span>Period</span>
-                                        <span className="text-right">Estimated Rent</span>
-                                    </div>
-                                    {rentalData?.data?.length > 0 ? (
-                                        rentalData.data.map((item, index) => (
-                                            <div key={index} className="grid grid-cols-2 text-xs font-montserrat py-1">
-                                                <span className="text-[var(--color-text-muted)]">{item.period || `Year ${item.year}`}</span>
-                                                <span className="text-right text-[var(--header-text)] font-semibold">{formatPrice(item.amount || item.rent)}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
-                                            No rental schedule data available
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {activeTab === "valuation" && (
-                                <div className="space-y-6">
-                                    <div className="space-y-4">
-                                        {valuationData?.data?.length > 0 ? (
-                                            valuationData.data.map((item, index) => (
-                                                <div key={index} className="space-y-1.5">
-                                                    <div className="flex justify-between text-xs">
-                                                        <span className="text-[var(--color-text-muted)] font-medium">Year {item.year}</span>
-                                                        <span className="text-[var(--header-text)] font-bold">{formatPrice(item.valuation)}</span>
-                                                    </div>
-                                                    <div className="h-1.5 bg-[var(--sidebar-border)] rounded-full overflow-hidden">
-                                                        <motion.div
-                                                            initial={{ width: 0 }}
-                                                            animate={{ width: `${(item.valuation / valuationData.data[valuationData.data.length - 1].valuation) * 100}%` }}
-                                                            className="h-full bg-gradient-to-r from-[var(--sidebar-active-text)]/40 to-[var(--sidebar-active-text)]"
-                                                        />
-                                                    </div>
+                                {/* Images Section */}
+                                {property.images && property.images.length > 0 && (
+                                    <div className="mb-6">
+                                        <h3 className="text-sm font-bold text-[var(--header-text)] mb-4 px-1">Images</h3>
+                                        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 px-1 snap-x snap-mandatory">
+                                            {property.images.map((img, idx) => (
+                                                <div key={idx} className="relative w-40 sm:w-48 h-32 sm:h-40 rounded-2xl overflow-hidden flex-shrink-0 border border-[var(--sidebar-border)] shadow-sm snap-start">
+                                                    <Image
+                                                        src={img.startsWith('http') ? img : `${API_URL}/${img.replace(/^\/+/, '')}`}
+                                                        alt={`${property.title} image ${idx + 1}`}
+                                                        fill
+                                                        sizes="(max-width: 768px) 160px, 192px"
+                                                        className="object-cover"
+                                                    />
+                                                    {idx === 0 && (
+                                                        <span className="absolute bottom-2 left-2 px-2 py-1 bg-black/60 text-white text-[10px] font-bold rounded-md backdrop-blur-md">
+                                                            {idx + 1} / {property.images.length}
+                                                        </span>
+                                                    )}
                                                 </div>
-                                            ))
-                                        ) : (
-                                            <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
-                                                No valuation projections available
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Description and Property Info */}
+                                <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 mb-6 shadow-sm">
+                                    <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3">About this property</h3>
+                                    <div className={`text-[13px] text-[var(--color-text-muted)] leading-relaxed font-montserrat tracking-tight ${!isDescExpanded ? "line-clamp-4" : ""}`}>
+                                        {property.description}
+                                    </div>
+                                    {(property.description?.length || 0) > 250 && (
+                                        <button 
+                                            onClick={() => setIsDescExpanded(!isDescExpanded)}
+                                            className="text-[var(--sidebar-active-text)] font-bold text-[13px] mt-2 hover:underline focus:outline-none"
+                                        >
+                                            {isDescExpanded ? "View less" : "View more"}
+                                        </button>
+                                    )}
+                                    
+                                    <div className="mt-6 border-t border-[var(--sidebar-border)]/60 pt-5 flex flex-wrap gap-x-8 gap-y-4">
+                                        <div>
+                                            <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 font-semibold block mb-0.5">Total Fractions</span>
+                                            <span className="text-sm font-bold text-[var(--header-text)]">{property.totalFractions?.toLocaleString()}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 font-semibold block mb-0.5">Available Fractions</span>
+                                            <span className="text-sm font-bold text-[var(--header-text)]">{property.availableFractions?.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Documents Card */}
+                                {documents.length > 0 && (
+                                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-6 mb-6 shadow-sm">
+                                        <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Documents</h3>
+                                        <div className="space-y-3">
+                                            {documents.map((doc) => {
+                                                const isPdf = doc.url.toLowerCase().endsWith('.pdf');
+                                                const fileType = isPdf ? 'PDF' : 'IMAGE';
+                                                
+                                                return (
+                                                    <div
+                                                        key={doc.name}
+                                                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm"
+                                                    >
+                                                        <div className="flex items-center gap-4">
+                                                            {/* Left Document Icon/Thumbnail */}
+                                                            <div className="w-12 h-12 rounded-xl bg-[var(--sidebar-active-bg)] flex items-center justify-center shrink-0 border border-[var(--sidebar-active-text)]/15">
+                                                                {isPdf ? (
+                                                                    <svg className="w-6 h-6 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                                    </svg>
+                                                                ) : (
+                                                                    <svg className="w-6 h-6 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                    </svg>
+                                                                )}
+                                                            </div>
+                                                            <div className="min-w-0">
+                                                                <h4 className="text-sm font-bold text-[var(--header-text)] truncate max-w-[200px] sm:max-w-[350px]">{doc.name}</h4>
+                                                                <p className="text-[11px] text-[var(--color-text-muted)] font-medium mt-0.5">{fileType.toLowerCase()} document</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex items-center gap-3 self-end sm:self-auto">
+                                                            {/* Document Type Badge */}
+                                                            <span className="px-2.5 py-1 rounded-md text-[9px] font-black tracking-widest bg-[var(--badge-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm">
+                                                                {fileType}
+                                                            </span>
+
+                                                            {/* View Action Link */}
+                                                            <a
+                                                                href={doc.url.startsWith('http') ? doc.url : `${API_URL}/${doc.url}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)] hover:bg-[var(--sidebar-active-bg)]/80 hover:underline transition-colors no-underline border border-[var(--sidebar-active-text)]/10"
+                                                            >
+                                                                VIEW
+                                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                </svg>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+                            </motion.div>
+                        )}
+
+                        {mainTab === "projection" && (
+                            <motion.div
+                                key="projection"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                {/* Projected Performance Card */}
+                                <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-6 mb-6 shadow-sm">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h3 className="text-sm font-bold text-[var(--header-text)]">Projected Performance</h3>
+                                    </div>
+
+                                    <div className="flex gap-4 border-b border-[var(--sidebar-border)] mb-6 overflow-x-auto no-scrollbar">
+                                        {[
+                                            { id: "cashflow", label: "Cashflow" },
+                                            { id: "rental", label: "Rental Schedule" },
+                                            { id: "valuation", label: "Valuation" }
+                                        ].map((tab) => (
+                                            <button
+                                                key={tab.id}
+                                                onClick={() => setActiveTab(tab.id)}
+                                                className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all relative whitespace-nowrap cursor-pointer ${activeTab === tab.id
+                                                    ? "text-[var(--sidebar-active-text)]"
+                                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
+                                                    }`}
+                                            >
+                                                {tab.label}
+                                                {activeTab === tab.id && (
+                                                    <motion.div
+                                                        layoutId="activePerformanceTab"
+                                                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--sidebar-active-text)]"
+                                                    />
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="min-h-[200px]">
+                                        {activeTab === "cashflow" && (
+                                            <div className="space-y-4">
+                                                <div className="grid grid-cols-3 text-[10px] uppercase font-bold text-[var(--color-text-muted)] pb-2 border-b border-[var(--sidebar-border)]">
+                                                    <span>Year</span>
+                                                    <span className="text-right">Gross Rent</span>
+                                                    <span className="text-right">Net Cashflow</span>
+                                                </div>
+                                                {cashflowData?.data?.length > 0 ? (
+                                                    cashflowData.data.map((item, index) => (
+                                                        <div key={index} className="grid grid-cols-3 text-xs font-montserrat py-1">
+                                                            <span className="text-[var(--color-text-muted)]">Year {item.year}</span>
+                                                            <span className="text-right text-[var(--header-text)] font-semibold">{formatPrice(item.grossRent)}</span>
+                                                            <span className="text-right text-[var(--color-status-success)] font-bold">{formatPrice(item.netCashflow)}</span>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
+                                                        No projection data available
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {activeTab === "rental" && (
+                                            <div className="space-y-4">
+                                                <div className="grid grid-cols-2 text-[10px] uppercase font-bold text-[var(--color-text-muted)] pb-2 border-b border-[var(--sidebar-border)]">
+                                                    <span>Period</span>
+                                                    <span className="text-right">Estimated Rent</span>
+                                                </div>
+                                                {rentalData?.data?.length > 0 ? (
+                                                    rentalData.data.map((item, index) => (
+                                                        <div key={index} className="grid grid-cols-2 text-xs font-montserrat py-1">
+                                                            <span className="text-[var(--color-text-muted)]">{item.period || `Year ${item.year}`}</span>
+                                                            <span className="text-right text-[var(--header-text)] font-semibold">{formatPrice(item.amount || item.rent)}</span>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
+                                                        No rental schedule data available
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {activeTab === "valuation" && (
+                                            <div className="space-y-6">
+                                                <div className="space-y-4">
+                                                    {valuationData?.data?.length > 0 ? (
+                                                        valuationData.data.map((item, index) => (
+                                                            <div key={index} className="space-y-1.5">
+                                                                <div className="flex justify-between text-xs">
+                                                                    <span className="text-[var(--color-text-muted)] font-medium">Year {item.year}</span>
+                                                                    <span className="text-[var(--header-text)] font-bold">{formatPrice(item.valuation)}</span>
+                                                                </div>
+                                                                <div className="h-1.5 bg-[var(--sidebar-border)] rounded-full overflow-hidden">
+                                                                    <motion.div
+                                                                        initial={{ width: 0 }}
+                                                                        animate={{ width: `${(item.valuation / valuationData.data[valuationData.data.length - 1].valuation) * 100}%` }}
+                                                                        className="h-full bg-gradient-to-r from-[var(--sidebar-active-text)]/40 to-[var(--sidebar-active-text)]"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
+                                                            No valuation projections available
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                {irrData?.data && (
+                                                    <div className="p-4 rounded-2xl bg-[var(--card-surface)] border border-[var(--sidebar-border)] flex items-center justify-between shadow-sm">
+                                                        <span className="text-[10px] uppercase font-bold text-[var(--color-text-muted)]">Projected IRR</span>
+                                                        <span className="text-lg font-bold text-[var(--sidebar-active-text)]">{irrData.data.irr || irrData.data}%</span>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </div>
-                                    {irrData?.data && (
-                                        <div className="p-4 rounded-md bg-[var(--card-surface)] border border-[var(--sidebar-border)] flex items-center justify-between">
-                                            <span className="text-[10px] uppercase font-bold text-[var(--color-text-muted)]">Projected IRR</span>
-                                            <span className="text-lg font-bold text-[var(--sidebar-active-text)]">{irrData.data.irr || irrData.data}%</span>
-                                        </div>
-                                    )}
                                 </div>
-                            )}
-                        </div>
-                    </div>
+                            </motion.div>
+                        )}
+
+                        {mainTab === "financial" && (
+                            <motion.div
+                                key="financial"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                {/* Financial Details Card */}
+                                <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 mb-6 shadow-sm">
+                                    <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Financial Structure</h3>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
+                                            <span className="text-[var(--color-text-muted)] font-medium">Expected Yield</span>
+                                            <span className="font-bold text-[var(--header-text)]">{property.expectedYield}% p.a.</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
+                                            <span className="text-[var(--color-text-muted)] font-medium">Expected Annual Rent</span>
+                                            <span className="font-bold text-[var(--header-text)]">{property.expectedAnnualRent}% p.a.</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
+                                            <span className="text-[var(--color-text-muted)] font-medium">Rental Growth Rate</span>
+                                            <span className="font-bold text-[var(--header-text)]">{property.rentalGrowthRate}% p.a.</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
+                                            <span className="text-[var(--color-text-muted)] font-medium">Expected Appreciation Rate</span>
+                                            <span className="font-bold text-[var(--header-text)]">{property.expectedAppreciationRate}% p.a.</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
+                                            <span className="text-[var(--color-text-muted)] font-medium">Operating Cost Rate</span>
+                                            <span className="font-bold text-red-500">-{property.operatingCostRate}% p.a.</span>
+                                        </div>
+                                        <div className="flex justify-between items-center pt-2 text-sm font-bold">
+                                            <span className="text-[var(--header-text)]">Calculated Return Rate</span>
+                                            <span className="text-[var(--sidebar-active-text)]">
+                                                {(
+                                                    parseFloat(property.expectedYield || 0) +
+                                                    parseFloat(property.expectedAnnualRent || 0) +
+                                                    parseFloat(property.rentalGrowthRate || 0) +
+                                                    parseFloat(property.expectedAppreciationRate || 0) -
+                                                    parseFloat(property.operatingCostRate || 0)
+                                                ).toFixed(1)}% p.a.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </motion.div>
 
 
@@ -433,7 +598,7 @@ export default function PropertyDetailPage() {
                     transition={{ duration: 1.5, delay: 0.15 }}
                 >
                     <div
-                        className="rounded-md p-5 sm:p-6 lg:sticky lg:top-24 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-xl"
+                        className="rounded-[24px] p-5 sm:p-6 lg:sticky lg:top-24 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-xl"
                     >
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">Per Fraction</p>
                         <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">

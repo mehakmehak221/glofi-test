@@ -368,7 +368,7 @@ export default function ExplorePage() {
                                                     </div>
                                                     <div className="min-w-0">
                                                         <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
-                                                            Potential annual return
+                                                            Annual return
                                                         </p>
                                                         <p className="text-sm sm:text-base font-black text-[#00B28F] tracking-tight tabular-nums leading-snug">
                                                             {formattedYield}% p.a.

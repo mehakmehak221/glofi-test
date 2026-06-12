@@ -375,7 +375,7 @@ export default function MarketplacePage() {
                                                     <p className="text-base font-bold text-[var(--marketplace-text-primary)]">{formatPrice(property.fractionPrice)}</p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] mb-0.5">Potential Annual Return</p>
+                                                    <p className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] mb-0.5">Annual Return</p>
                                                     <p className="text-base font-bold text-[var(--sidebar-active-text)]">{formattedYield}%</p>
                                                 </div>
                                                 <div>
@@ -409,7 +409,7 @@ export default function MarketplacePage() {
                                                 className="w-full py-3 rounded-full border border-[#006D5B] bg-transparent text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors duration-300 drop-shadow-md"
                                                 style={{ color: 'var(--btn-view-color)', textShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)' }}
                                             >
-                                                VIEW DETAIL
+                                                VIEW DETAILS
                                             </motion.button>
                                         </div>
                                     </motion.div>
