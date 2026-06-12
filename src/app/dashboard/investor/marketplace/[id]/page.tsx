@@ -53,6 +53,13 @@ export default function PropertyDetailPage() {
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [isDescExpanded, setIsDescExpanded] = useState(false);
 
+    // SVG Chart interaction states
+    const [hoveredPoint, setHoveredPoint] = useState<"current" | "projected" | null>(null);
+    const [hoveredBar, setHoveredBar] = useState<number | null>(null);
+    const [hoveredCashflowPoint, setHoveredCashflowPoint] = useState<number | null>(null);
+
+
+
     const showToast = (message, type = "success") => {
         setToast({ show: true, message, type });
         setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
@@ -79,6 +86,19 @@ export default function PropertyDetailPage() {
     }
 
     const propertyImage = property.images?.[0];
+
+    // Dynamic valuation/return variables
+    const fractionPrice = Number(property.fractionPrice) || 0;
+    const annualReturnPercent = (
+        parseFloat(property.expectedYield || 0) +
+        parseFloat(property.expectedAnnualRent || 0) +
+        parseFloat(property.rentalGrowthRate || 0) +
+        parseFloat(property.expectedAppreciationRate || 0) -
+        parseFloat(property.operatingCostRate || 0)
+    );
+    const projectedVal = fractionPrice * (1 + annualReturnPercent / 100);
+    const totalReturnAmount = fractionPrice * (annualReturnPercent / 100);
+    const payoutPerQuarter = totalReturnAmount / 4;
     const imageUrl = propertyImage
         ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\/+/, '')}`)
         : "/assets/images/content/img_ext_0.jpeg";
@@ -134,7 +154,7 @@ export default function PropertyDetailPage() {
     };
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen">
+        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen overflow-x-hidden max-w-[100vw]">
             <AnimatePresence>
                 {toast.show && (
                     <motion.div
@@ -164,7 +184,7 @@ export default function PropertyDetailPage() {
             <div className="flex flex-col lg:flex-row gap-6">
 
                 <motion.div
-                    className="flex-1"
+                    className="flex-1 min-w-0"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -198,13 +218,12 @@ export default function PropertyDetailPage() {
 
                         {/* Risk Rating Tag (Top-Right overlay) */}
                         <span className="absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
-                            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${
-                                property.riskRating === 'LOW'
-                                    ? 'bg-[#00DAAF] text-[#00DAAF]'
-                                    : property.riskRating === 'HIGH'
-                                        ? 'bg-[#FF5C5C] text-[#FF5C5C]'
-                                        : 'bg-[#E8940C] text-[#E8940C]'
-                            }`} />
+                            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${property.riskRating === 'LOW'
+                                ? 'bg-[#00DAAF] text-[#00DAAF]'
+                                : property.riskRating === 'HIGH'
+                                    ? 'bg-[#FF5C5C] text-[#FF5C5C]'
+                                    : 'bg-[#E8940C] text-[#E8940C]'
+                                }`} />
                             {property.riskRating} RISK
                         </span>
                     </div >
@@ -282,11 +301,10 @@ export default function PropertyDetailPage() {
                             <button
                                 key={tab.id}
                                 onClick={() => setMainTab(tab.id)}
-                                className={`flex-1 py-2.5 rounded-full text-[13px] font-bold transition-all cursor-pointer ${
-                                    mainTab === tab.id
-                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm"
-                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
-                                }`}
+                                className={`flex-1 py-2.5 rounded-full text-[13px] font-bold transition-all cursor-pointer ${mainTab === tab.id
+                                    ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm"
+                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
+                                    }`}
                             >
                                 {tab.label}
                             </button>
@@ -335,14 +353,14 @@ export default function PropertyDetailPage() {
                                         {property.description}
                                     </div>
                                     {(property.description?.length || 0) > 250 && (
-                                        <button 
+                                        <button
                                             onClick={() => setIsDescExpanded(!isDescExpanded)}
                                             className="text-[var(--sidebar-active-text)] font-bold text-[13px] mt-2 hover:underline focus:outline-none"
                                         >
                                             {isDescExpanded ? "View less" : "View more"}
                                         </button>
                                     )}
-                                    
+
                                     <div className="mt-6 border-t border-[var(--sidebar-border)]/60 pt-5 flex flex-wrap gap-x-8 gap-y-4">
                                         <div>
                                             <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 font-semibold block mb-0.5">Total Fractions</span>
@@ -363,7 +381,7 @@ export default function PropertyDetailPage() {
                                             {documents.map((doc) => {
                                                 const isPdf = doc.url.toLowerCase().endsWith('.pdf');
                                                 const fileType = isPdf ? 'PDF' : 'IMAGE';
-                                                
+
                                                 return (
                                                     <div
                                                         key={doc.name}
@@ -423,116 +441,145 @@ export default function PropertyDetailPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.2 }}
+                                className="space-y-6"
                             >
-                                {/* Projected Performance Card */}
-                                <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-6 mb-6 shadow-sm">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <h3 className="text-sm font-bold text-[var(--header-text)]">Projected Performance</h3>
-                                    </div>
-
-                                    <div className="flex gap-4 border-b border-[var(--sidebar-border)] mb-6 overflow-x-auto no-scrollbar">
-                                        {[
-                                            { id: "cashflow", label: "Cashflow" },
-                                            { id: "rental", label: "Rental Schedule" },
-                                            { id: "valuation", label: "Valuation" }
-                                        ].map((tab) => (
-                                            <button
-                                                key={tab.id}
-                                                onClick={() => setActiveTab(tab.id)}
-                                                className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all relative whitespace-nowrap cursor-pointer ${activeTab === tab.id
-                                                    ? "text-[var(--sidebar-active-text)]"
-                                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
-                                                    }`}
-                                            >
-                                                {tab.label}
-                                                {activeTab === tab.id && (
-                                                    <motion.div
-                                                        layoutId="activePerformanceTab"
-                                                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--sidebar-active-text)]"
-                                                    />
-                                                )}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    <div className="min-h-[200px]">
-                                        {activeTab === "cashflow" && (
-                                            <div className="space-y-4">
-                                                <div className="grid grid-cols-3 text-[10px] uppercase font-bold text-[var(--color-text-muted)] pb-2 border-b border-[var(--sidebar-border)]">
-                                                    <span>Year</span>
-                                                    <span className="text-right">Gross Rent</span>
-                                                    <span className="text-right">Net Cashflow</span>
-                                                </div>
-                                                {cashflowData?.data?.length > 0 ? (
-                                                    cashflowData.data.map((item, index) => (
-                                                        <div key={index} className="grid grid-cols-3 text-xs font-montserrat py-1">
-                                                            <span className="text-[var(--color-text-muted)]">Year {item.year}</span>
-                                                            <span className="text-right text-[var(--header-text)] font-semibold">{formatPrice(item.grossRent)}</span>
-                                                            <span className="text-right text-[var(--color-status-success)] font-bold">{formatPrice(item.netCashflow)}</span>
+                                {/* ── Project Valuations ── */}
+                                <div>
+                                    <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3 px-1">Project Valuations</h3>
+                                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-5 shadow-sm">
+                                        {(() => {
+                                            const CH = 140;
+                                            const yMin = Math.round(fractionPrice - Math.max(projectedVal - fractionPrice, 100) * 0.2);
+                                            const yMax = Math.round(projectedVal + Math.max(projectedVal - fractionPrice, 100) * 0.3);
+                                            const range = Math.max(1, yMax - yMin);
+                                            const step = range / 4;
+                                            const yLabels = [yMax, Math.round(yMax - step), Math.round(yMax - step * 2), Math.round(yMax - step * 3), yMin];
+                                            const getY = (val: number) => CH - ((val - yMin) / range) * CH;
+                                            const cY = getY(fractionPrice);
+                                            const pY = getY(projectedVal);
+                                            const pathD = `M 70,${cY} C 140,${cY} 160,${pY} 230,${pY}`;
+                                            const areaD = `${pathD} L 230,${CH} L 70,${CH} Z`;
+                                            return (
+                                                <>
+                                                    <div className="flex gap-3">
+                                                        {/* Y labels */}
+                                                        <div className="flex flex-col justify-between" style={{ minWidth: '56px' }}>
+                                                            {yLabels.map((v, i) => (
+                                                                <span key={i} className="text-[10px] text-right block text-[var(--color-text-muted)] font-semibold leading-none font-montserrat">{formatPrice(v)}</span>
+                                                            ))}
                                                         </div>
-                                                    ))
-                                                ) : (
-                                                    <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
-                                                        No projection data available
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {activeTab === "rental" && (
-                                            <div className="space-y-4">
-                                                <div className="grid grid-cols-2 text-[10px] uppercase font-bold text-[var(--color-text-muted)] pb-2 border-b border-[var(--sidebar-border)]">
-                                                    <span>Period</span>
-                                                    <span className="text-right">Estimated Rent</span>
-                                                </div>
-                                                {rentalData?.data?.length > 0 ? (
-                                                    rentalData.data.map((item, index) => (
-                                                        <div key={index} className="grid grid-cols-2 text-xs font-montserrat py-1">
-                                                            <span className="text-[var(--color-text-muted)]">{item.period || `Year ${item.year}`}</span>
-                                                            <span className="text-right text-[var(--header-text)] font-semibold">{formatPrice(item.amount || item.rent)}</span>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
-                                                        No rental schedule data available
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {activeTab === "valuation" && (
-                                            <div className="space-y-6">
-                                                <div className="space-y-4">
-                                                    {valuationData?.data?.length > 0 ? (
-                                                        valuationData.data.map((item, index) => (
-                                                            <div key={index} className="space-y-1.5">
-                                                                <div className="flex justify-between text-xs">
-                                                                    <span className="text-[var(--color-text-muted)] font-medium">Year {item.year}</span>
-                                                                    <span className="text-[var(--header-text)] font-bold">{formatPrice(item.valuation)}</span>
-                                                                </div>
-                                                                <div className="h-1.5 bg-[var(--sidebar-border)] rounded-full overflow-hidden">
-                                                                    <motion.div
-                                                                        initial={{ width: 0 }}
-                                                                        animate={{ width: `${(item.valuation / valuationData.data[valuationData.data.length - 1].valuation) * 100}%` }}
-                                                                        className="h-full bg-gradient-to-r from-[var(--sidebar-active-text)]/40 to-[var(--sidebar-active-text)]"
-                                                                    />
-                                                                </div>
+                                                        {/* Chart */}
+                                                        <div className="flex-1">
+                                                            <svg className="w-full" viewBox={`0 0 300 ${CH}`}>
+                                                                <defs>
+                                                                    <linearGradient id="valGradient" x1="0" y1="0" x2="0" y2="1">
+                                                                        <stop offset="0%" stopColor="#00DAAF" stopOpacity="0.15" />
+                                                                        <stop offset="100%" stopColor="#00DAAF" stopOpacity="0" />
+                                                                    </linearGradient>
+                                                                </defs>
+                                                                {[0, 35, 70, 105, 140].map((y, i) => (
+                                                                    <line key={i} x1="0" y1={y} x2="300" y2={y} stroke="var(--sidebar-border)" strokeWidth="0.6" strokeOpacity="0.8" />
+                                                                ))}
+                                                                <path d={areaD} fill="url(#valGradient)" />
+                                                                <path d={pathD} fill="none" stroke="#00DAAF" strokeWidth="2.5" strokeLinecap="round" />
+                                                                <circle cx={70} cy={cY} r={8} fill="#00DAAF" fillOpacity={hoveredPoint === 'current' ? 0.2 : 0} className="transition-all duration-200" />
+                                                                <circle cx={70} cy={cY} r={4.5} fill="#00DAAF" stroke="#FFF" strokeWidth={1.5} className="cursor-pointer" onMouseEnter={() => setHoveredPoint('current')} onMouseLeave={() => setHoveredPoint(null)} />
+                                                                <circle cx={230} cy={pY} r={8} fill="#00DAAF" fillOpacity={hoveredPoint === 'projected' ? 0.2 : 0} className="transition-all duration-200" />
+                                                                <circle cx={230} cy={pY} r={4.5} fill="#00DAAF" stroke="#FFF" strokeWidth={1.5} className="cursor-pointer" onMouseEnter={() => setHoveredPoint('projected')} onMouseLeave={() => setHoveredPoint(null)} />
+                                                                {hoveredPoint === 'current' && (
+                                                                    <g transform={`translate(70,${Math.max(cY - 22, 16)})`}>
+                                                                        <rect x="-40" y="-12" width="80" height="20" rx="5" fill="var(--card-surface)" stroke="var(--sidebar-border)" strokeWidth="1" />
+                                                                        <text x="0" y="3" textAnchor="middle" fontSize="9" fill="var(--header-text)" fontWeight="700">{formatPrice(fractionPrice)}</text>
+                                                                    </g>
+                                                                )}
+                                                                {hoveredPoint === 'projected' && (
+                                                                    <g transform={`translate(230,${Math.max(pY - 22, 16)})`}>
+                                                                        <rect x="-40" y="-12" width="80" height="20" rx="5" fill="var(--card-surface)" stroke="var(--sidebar-border)" strokeWidth="1" />
+                                                                        <text x="0" y="3" textAnchor="middle" fontSize="9" fill="var(--header-text)" fontWeight="700">{formatPrice(projectedVal)}</text>
+                                                                    </g>
+                                                                )}
+                                                            </svg>
+                                                            <div className="flex justify-between mt-2">
+                                                                <span className="text-[10px] font-bold text-[var(--color-text-muted)] ml-[18%]">Current</span>
+                                                                <span className="text-[10px] font-bold text-[var(--color-text-muted)] mr-[10%]">Projected</span>
                                                             </div>
-                                                        ))
-                                                    ) : (
-                                                        <div className="py-10 text-center text-xs text-[var(--color-text-muted)] italic">
-                                                            No valuation projections available
                                                         </div>
-                                                    )}
-                                                </div>
-                                                {irrData?.data && (
-                                                    <div className="p-4 rounded-2xl bg-[var(--card-surface)] border border-[var(--sidebar-border)] flex items-center justify-between shadow-sm">
-                                                        <span className="text-[10px] uppercase font-bold text-[var(--color-text-muted)]">Projected IRR</span>
-                                                        <span className="text-lg font-bold text-[var(--sidebar-active-text)]">{irrData.data.irr || irrData.data}%</span>
                                                     </div>
-                                                )}
-                                            </div>
-                                        )}
+                                                    <p className="text-[11px] text-[var(--color-text-muted)] font-medium mt-3">Tap a point for value</p>
+                                                </>
+                                            );
+                                        })()}
+                                    </div>
+                                </div>
+
+                                {/* ── Project Returns ── */}
+                                <div>
+                                    <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3 px-1">Project Returns</h3>
+                                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden shadow-sm">
+                                        <div className="flex justify-between items-center px-5 py-4 border-b border-[var(--sidebar-border)]/50">
+                                            <span className="text-sm font-medium text-[var(--color-text-muted)]">Total Return %</span>
+                                            <span className="text-sm font-bold text-[var(--header-text)]">{annualReturnPercent.toFixed(2)}%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center px-5 py-4">
+                                            <span className="text-sm font-medium text-[var(--color-text-muted)]">Total Return Amount</span>
+                                            <span className="text-sm font-bold text-[var(--header-text)]">{formatPrice(totalReturnAmount)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* ── Return Schedule ── */}
+                                <div>
+                                    <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3 px-1">Return Schedule</h3>
+                                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-5 shadow-sm">
+                                        {(() => {
+                                            const CH = 140;
+                                            const hi = payoutPerQuarter * 1.25;
+                                            const lo = payoutPerQuarter * 0.75;
+                                            const rng = Math.max(1, hi - lo);
+                                            const s = rng / 4;
+                                            const yLabels = [hi, hi - s, hi - s * 2, hi - s * 3, lo];
+                                            const barCenters = [37, 112, 188, 263];
+                                            const BW = 44;
+                                            return (
+                                                <>
+                                                    <div className="flex gap-3">
+                                                        <div className="flex flex-col justify-between" style={{ minWidth: '56px' }}>
+                                                            {yLabels.map((v, i) => (
+                                                                <span key={i} className="text-[10px] text-right block text-[var(--color-text-muted)] font-semibold leading-none font-montserrat">{formatPrice(v)}</span>
+                                                            ))}
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <svg className="w-full" viewBox={`0 0 300 ${CH}`}>
+                                                                {[0, 35, 70, 105, 140].map((y, i) => (
+                                                                    <line key={i} x1="0" y1={y} x2="300" y2={y} stroke="var(--sidebar-border)" strokeWidth="0.6" strokeOpacity="0.8" />
+                                                                ))}
+                                                                {barCenters.map((cx, idx) => {
+                                                                    const isHov = hoveredBar === idx;
+                                                                    return (
+                                                                        <g key={idx} onMouseEnter={() => setHoveredBar(idx)} onMouseLeave={() => setHoveredBar(null)} className="cursor-pointer">
+                                                                            <rect x={cx - 30} y="0" width="60" height={CH} fill="transparent" />
+                                                                            <rect x={cx - BW / 2} y={10} width={BW} height={CH - 10} rx="12" fill="#00DAAF" opacity={hoveredBar === null || isHov ? 1 : 0.7} className="transition-all duration-200" />
+                                                                            {isHov && (
+                                                                                <g transform={`translate(${cx},4)`}>
+                                                                                    <rect x="-40" y="-12" width="80" height="20" rx="5" fill="var(--card-surface)" stroke="var(--sidebar-border)" strokeWidth="1" />
+                                                                                    <text x="0" y="3" textAnchor="middle" fontSize="9" fill="var(--header-text)" fontWeight="700">{formatPrice(payoutPerQuarter)}</text>
+                                                                                </g>
+                                                                            )}
+                                                                        </g>
+                                                                    );
+                                                                })}
+                                                            </svg>
+                                                            <div className="flex mt-2">
+                                                                {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => (
+                                                                    <span key={i} className="text-[10px] font-bold text-[var(--color-text-muted)] font-montserrat text-center" style={{ width: '25%' }}>{q}</span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p className="text-[11px] text-[var(--color-text-muted)] font-medium mt-3">Tap a bar for payout</p>
+                                                </>
+                                            );
+                                        })()}
                                     </div>
                                 </div>
                             </motion.div>
@@ -545,50 +592,87 @@ export default function PropertyDetailPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.2 }}
+                                className="space-y-6"
                             >
-                                {/* Financial Details Card */}
-                                <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 mb-6 shadow-sm">
-                                    <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Financial Structure</h3>
-                                    
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
-                                            <span className="text-[var(--color-text-muted)] font-medium">Expected Yield</span>
-                                            <span className="font-bold text-[var(--header-text)]">{property.expectedYield}% p.a.</span>
-                                        </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
-                                            <span className="text-[var(--color-text-muted)] font-medium">Expected Annual Rent</span>
-                                            <span className="font-bold text-[var(--header-text)]">{property.expectedAnnualRent}% p.a.</span>
-                                        </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
-                                            <span className="text-[var(--color-text-muted)] font-medium">Rental Growth Rate</span>
-                                            <span className="font-bold text-[var(--header-text)]">{property.rentalGrowthRate}% p.a.</span>
-                                        </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
-                                            <span className="text-[var(--color-text-muted)] font-medium">Expected Appreciation Rate</span>
-                                            <span className="font-bold text-[var(--header-text)]">{property.expectedAppreciationRate}% p.a.</span>
-                                        </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-[var(--sidebar-border)]/45 text-sm">
-                                            <span className="text-[var(--color-text-muted)] font-medium">Operating Cost Rate</span>
-                                            <span className="font-bold text-red-500">-{property.operatingCostRate}% p.a.</span>
-                                        </div>
-                                        <div className="flex justify-between items-center pt-2 text-sm font-bold">
-                                            <span className="text-[var(--header-text)]">Calculated Return Rate</span>
-                                            <span className="text-[var(--sidebar-active-text)]">
-                                                {(
-                                                    parseFloat(property.expectedYield || 0) +
-                                                    parseFloat(property.expectedAnnualRent || 0) +
-                                                    parseFloat(property.rentalGrowthRate || 0) +
-                                                    parseFloat(property.expectedAppreciationRate || 0) -
-                                                    parseFloat(property.operatingCostRate || 0)
-                                                ).toFixed(1)}% p.a.
-                                            </span>
-                                        </div>
+                                {/* ── Cashflow ── */}
+                                <div>
+                                    <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3 px-1">Cashflow</h3>
+                                    <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-5 shadow-sm">
+                                        {(() => {
+                                            const CH = 140;
+                                            const rawCashflow = cashflowData?.data || [];
+                                            const hasReal = Array.isArray(rawCashflow) && rawCashflow.length > 0 && rawCashflow.some((item: any) => (item.amount || item.netCashflow || 0) > 0);
+                                            let pts: { label: string; value: number }[] = hasReal
+                                                ? rawCashflow.map((item: any, i: number) => ({ label: item.period || `P${i + 1}`, value: Number(item.amount || item.netCashflow || 0) }))
+                                                : [{ label: 'P1', value: 0 }];
+                                            const maxV = Math.max(1, ...pts.map(p => p.value));
+                                            const minV = Math.min(0, ...pts.map(p => p.value));
+                                            const range = Math.max(1, maxV - minV);
+                                            const step = range / 4;
+                                            const yLabels = [maxV, maxV - step, maxV - step * 2, maxV - step * 3, minV].map(v => formatPrice(v));
+                                            const getY = (v: number) => CH - ((v - minV) / range) * CH;
+                                            const n = pts.length;
+                                            const coords = pts.map((p, i) => ({ ...p, x: n === 1 ? 150 : 20 + (i * 260) / (n - 1), y: getY(p.value) }));
+                                            const linePath = coords.length > 1 ? coords.reduce((a, p, i) => a + `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y} `, '') : '';
+                                            const areaPath = coords.length > 1 ? `${linePath} L ${coords[coords.length - 1].x} ${CH} L ${coords[0].x} ${CH} Z` : '';
+                                            return (
+                                                <>
+                                                    <div className="flex gap-3">
+                                                        <div className="flex flex-col justify-between" style={{ minWidth: '56px' }}>
+                                                            {yLabels.map((lbl, i) => (
+                                                                <span key={i} className="text-[10px] text-right block text-[var(--color-text-muted)] font-semibold leading-none font-montserrat">{lbl}</span>
+                                                            ))}
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <svg className="w-full" viewBox={`0 0 300 ${CH}`}>
+                                                                <defs>
+                                                                    <linearGradient id="cashGradient" x1="0" y1="0" x2="0" y2="1">
+                                                                        <stop offset="0%" stopColor="#00DAAF" stopOpacity="0.15" />
+                                                                        <stop offset="100%" stopColor="#00DAAF" stopOpacity="0" />
+                                                                    </linearGradient>
+                                                                </defs>
+                                                                {[0, 35, 70, 105, 140].map((y, i) => (
+                                                                    <line key={i} x1="0" y1={y} x2="300" y2={y} stroke="var(--sidebar-border)" strokeWidth="0.6" strokeOpacity="0.8" />
+                                                                ))}
+                                                                {hasReal && coords.length > 1 && (
+                                                                    <>
+                                                                        <path d={areaPath} fill="url(#cashGradient)" />
+                                                                        <path d={linePath} fill="none" stroke="#00DAAF" strokeWidth="2.5" strokeLinecap="round" />
+                                                                    </>
+                                                                )}
+                                                                {coords.map((p, idx) => {
+                                                                    const isHov = hoveredCashflowPoint === idx;
+                                                                    return (
+                                                                        <g key={idx} onMouseEnter={() => setHoveredCashflowPoint(idx)} onMouseLeave={() => setHoveredCashflowPoint(null)} className="cursor-pointer">
+                                                                            <circle cx={p.x} cy={p.y} r={10} fill="#00DAAF" fillOpacity={isHov ? 0.2 : 0} className="transition-all duration-200" />
+                                                                            <circle cx={p.x} cy={p.y} r={4.5} fill="#00DAAF" stroke="#FFF" strokeWidth={1.5} />
+                                                                            {isHov && (
+                                                                                <g transform={`translate(${p.x},${Math.max(p.y - 22, 16)})`}>
+                                                                                    <rect x="-40" y="-12" width="80" height="20" rx="5" fill="var(--card-surface)" stroke="var(--sidebar-border)" strokeWidth="1" />
+                                                                                    <text x="0" y="3" textAnchor="middle" fontSize="9" fill="var(--header-text)" fontWeight="700">{formatPrice(p.value)}</text>
+                                                                                </g>
+                                                                            )}
+                                                                        </g>
+                                                                    );
+                                                                })}
+                                                            </svg>
+                                                            <div className="flex mt-2" style={{ justifyContent: n === 1 ? 'center' : 'space-between' }}>
+                                                                {coords.map((p, i) => (
+                                                                    <span key={i} className="text-[10px] font-bold text-[var(--color-text-muted)] font-montserrat text-center" style={{ width: n > 1 ? `${100 / n}%` : 'auto' }}>{p.label}</span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p className="text-[11px] text-[var(--color-text-muted)] font-medium mt-3">Tap a point for value</p>
+                                                </>
+                                            );
+                                        })()}
                                     </div>
                                 </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
-                </motion.div>
+                </motion.div >
 
 
                 <motion.div
