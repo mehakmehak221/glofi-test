@@ -326,7 +326,7 @@ export default function MarketplacePage() {
                                         variants={cardVariants}
                                         layout
                                         onClick={() => handleCardClick(property.id)}
-                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-md overflow-hidden hover:border-[var(--sidebar-active-text)]/20 transition-colors duration-300 group cursor-pointer shadow-[var(--marketplace-card-shadow)]"
+                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-[24px] overflow-hidden hover:border-[var(--sidebar-active-text)]/20 transition-colors duration-300 group cursor-pointer shadow-sm"
                                     >
 
                                         <div className="relative h-48 overflow-hidden">
@@ -339,77 +339,75 @@ export default function MarketplacePage() {
                                             />
                                             <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
-
-
-                                            <span className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-bold capitalize bg-[#FFFFFF] text-[#111111] shadow-md z-10">
+                                            <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold capitalize bg-[#FFFFFF] text-[#111111] shadow-md z-10 tracking-wide">
                                                 {property.category.replace(/_/g, ' ').toLowerCase()}
                                             </span>
 
-                                            <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
-                                                <span className={`w-2 h-2 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${property.riskRating === 'LOW'
-                                                    ? 'bg-[#00DAAF] text-[#00DAAF]'
-                                                    : property.riskRating === 'HIGH'
-                                                        ? 'bg-[#FF5C5C] text-[#FF5C5C]'
-                                                        : 'bg-[#E8940C] text-[#E8940C]'
-                                                    }`} />
-                                                {property.riskRating}
+                                            <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
+                                                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${
+                                                    property.riskRating === 'LOW'
+                                                        ? 'bg-[#00DAAF] text-[#00DAAF]'
+                                                        : property.riskRating === 'HIGH'
+                                                            ? 'bg-[#FF5C5C] text-[#FF5C5C]'
+                                                            : 'bg-[#E8940C] text-[#E8940C]'
+                                                }`} />
+                                                {property.riskRating} RISK
                                             </span>
 
                                         </div>
 
 
-                                        <div className="p-5">
-                                            <h3 className="text-lg font-bold text-[var(--marketplace-text-primary)] mb-1 leading-snug">{property.title}</h3>
-                                            <div className="flex items-center gap-1.5 text-[var(--marketplace-text-muted)] text-xs mb-4 font-montserrat">
-                                                <MapPinIcon className="w-3.5 h-3.5" />
+                                        <div className="p-5 sm:p-6">
+                                            <h3 className="text-[22px] font-extrabold text-[var(--header-text)] mb-1 leading-snug tracking-tight">{property.title}</h3>
+                                            <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-[13px] mb-5 font-medium">
+                                                <MapPinIcon className="w-4 h-4 text-[var(--color-text-muted)]" />
                                                 {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-3 mb-4">
-                                                <div>
-                                                    <p className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] mb-0.5">Valuation</p>
-                                                    <p className="text-base font-bold text-[var(--marketplace-text-primary)]">{formatPrice(property.valuation, true)}</p>
-                                                </div>
-                                                <div>
-                                                    <p className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] mb-0.5">Per Fraction</p>
-                                                    <p className="text-base font-bold text-[var(--marketplace-text-primary)]">{formatPrice(property.fractionPrice)}</p>
-                                                </div>
-                                                <div>
-                                                    <p className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] mb-0.5">Annual Return</p>
-                                                    <p className="text-base font-bold text-[var(--sidebar-active-text)]">{formattedYield}%</p>
-                                                </div>
-                                                <div>
-                                                    <p className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] mb-0.5">Available</p>
-                                                    <p className="text-base font-bold text-[var(--marketplace-text-primary)]">{property.availableFractions?.toLocaleString()}</p>
+                                            {/* Valuation, Per Fraction, and Annual Return Stats Card */}
+                                            <div className="bg-[#F9FAFB] dark:bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[16px] p-4 mb-6 shadow-sm">
+                                                <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center items-center">
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1">Valuation</p>
+                                                        <p className="text-[15px] font-extrabold text-[var(--header-text)]">{formatPrice(property.valuation, true)}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1">Per Fraction</p>
+                                                        <p className="text-[15px] font-extrabold text-[var(--header-text)]">{formatPrice(property.fractionPrice)}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1">Annual Return</p>
+                                                        <p className="text-[15px] font-extrabold text-[var(--sidebar-active-text)]">{formattedYield}%</p>
+                                                    </div>
                                                 </div>
                                             </div>
 
-
-                                            <div className="mb-4">
-                                                <div className="w-full h-1.5 bg-[var(--marketplace-card-border)] rounded-full overflow-hidden">
+                                            <div className="mb-6">
+                                                <div className="flex justify-between items-center mb-2 text-[12px] font-bold text-[var(--color-text-muted)]">
+                                                    <span>{fundedPercentage}% funded</span>
+                                                    <span>{property.availableFractions?.toLocaleString()} left</span>
+                                                </div>
+                                                <div className="w-full h-2.5 bg-[var(--sidebar-active-text)]/20 rounded-full overflow-hidden">
                                                     <motion.div
-                                                        className="h-full rounded-full"
-                                                        style={{ background: 'linear-gradient(90deg, var(--marketplace-card-progress-fill-start) 0%, var(--marketplace-card-progress-fill-end) 100%)' }}
+                                                        className="h-full rounded-full bg-[var(--sidebar-active-text)]"
                                                         initial={{ width: 0 }}
                                                         animate={{ width: `${fundedPercentage}%` }}
                                                         transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                                                     />
                                                 </div>
-                                                <p className="text-[10px] text-[var(--marketplace-card-progress-text)] mt-1">{fundedPercentage}% funded</p>
                                             </div>
 
-
                                             <motion.button
-                                                whileHover={{ scale: 1.02, backgroundColor: '#D9F4EF', color: '#006D5B' }}
+                                                whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleCardClick(property.id);
                                                 }}
-                                                className="w-full py-3 rounded-full border border-[#006D5B] bg-transparent text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors duration-300 drop-shadow-md"
-                                                style={{ color: 'var(--btn-view-color)', textShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)' }}
+                                                className="w-full py-3.5 rounded-full border-[1.5px] border-[#006D5B] bg-transparent text-sm font-extrabold uppercase tracking-wide cursor-pointer transition-colors duration-300"
+                                                style={{ color: 'var(--header-text)' }}
                                             >
-                                                VIEW DETAILS
+                                                VIEW DETAIL
                                             </motion.button>
                                         </div>
                                     </motion.div>
