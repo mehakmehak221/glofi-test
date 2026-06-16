@@ -162,17 +162,18 @@ export default function ExplorePage() {
             <Navbar />
             <style>{DROPDOWN_STYLES}</style>
 
-            <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-28 pb-12 sm:pt-36 sm:pb-16">
+            <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-12 pb-12 sm:pt-16 sm:pb-16">
 
 
-                <div className="flex flex-col gap-10 mb-16 bg-white p-8 sm:p-10 rounded-[32px] border border-neutral-200/60 shadow-sm relative z-20">
+                <div className="flex flex-col gap-6 mb-8 bg-white p-6 sm:p-8 rounded-[24px] border border-neutral-200/60 shadow-sm relative z-20">
                     <div className="flex flex-col gap-4">
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter bg-gradient-to-r from-[#00B28F] to-[#00DAAF] bg-clip-text text-transparent">
                             Discover Assets
                         </h1>
                         <p className="text-sm sm:text-base text-neutral-500 max-w-xl font-medium leading-relaxed">
-                            Institutional-grade real estate. Digitally simplified. Invest fractionally starting from {currency.symbol}15,000.
-                        </p>
+                            Institutional-grade real estate. Digitally simplified. </p>
+                        <p>Invest fractionally starting from {currency.symbol}15,000.</p>
+
                     </div>
 
                     <div className="flex flex-col gap-8">
@@ -191,7 +192,7 @@ export default function ExplorePage() {
                             ))}
                         </div>
 
-                        <div className="flex flex-wrap gap-6 items-center border-t border-neutral-100 pt-8">
+                        <div className="flex flex-wrap gap-6 items-center border-t border-neutral-100 pt-5">
                             <PillDropdown
                                 label="Country"
                                 options={Country.getAllCountries()}
@@ -301,115 +302,93 @@ export default function ExplorePage() {
                                         key={property.id}
                                         variants={cardVariants}
                                         whileHover={{ y: -6 }}
-                                        className="bg-white border border-neutral-200/60 rounded-2xl sm:rounded-3xl overflow-hidden hover:border-[#00DAAF]/40 transition-all duration-500 group shadow-sm hover:shadow-md relative"
+                                        className="bg-white border border-neutral-200/60 rounded-[24px] overflow-hidden hover:border-[#00DAAF]/30 transition-all duration-500 group shadow-sm hover:shadow-md relative"
                                     >
                                         <Link
                                             href={detailHref}
-                                            className="absolute inset-0 z-[1] rounded-2xl sm:rounded-3xl cursor-pointer outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#00DAAF]"
+                                            className="absolute inset-0 z-[1] rounded-[24px] cursor-pointer outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#00DAAF]"
                                             aria-label={`View details for ${property.title}`}
                                             prefetch={false}
                                         />
                                         <div className="relative z-[2] pointer-events-none flex flex-col">
-                                            <div className="relative h-44 sm:h-48 md:h-52 overflow-hidden shrink-0">
+                                            {/* Image Section */}
+                                            <div className="relative h-48 overflow-hidden shrink-0">
                                                 <Image
                                                     src={imageUrl}
                                                     alt={property.title}
                                                     fill
                                                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                                                 />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-                                                <div className="absolute top-3 left-3 flex gap-2 sm:top-4 sm:left-4">
-                                                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-md ring-2 ring-black/60 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-black/75 text-white border border-white/20">
-                                                        {property.category.replace('_', ' ')}
-                                                    </span>
-                                                </div>
+                                                {/* Category Badge - bottom of image */}
+                                                <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold capitalize bg-white text-[#111111] shadow-md z-10 tracking-wide">
+                                                    {property.category.replace(/_/g, ' ').toLowerCase()}
+                                                </span>
 
-                                                <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
-                                                    <span
-                                                        className={`inline-flex items-center px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-lg ring-2 ring-black/70 ${riskLevel === "LOW"
-                                                            ? "text-[#B8FFF0] bg-[#041512] border border-[#00DAAF]/80"
-                                                            : riskLevel === "HIGH"
-                                                                ? "text-[#FFB4B4] bg-[#1a0808] border border-[#FF5C5C]/80"
-                                                                : "text-[#FFD699] bg-[#1a1206] border border-[#E8940C]/90"
-                                                            }`}
-                                                    >
-                                                        {riskLevel} risk
-                                                    </span>
-                                                </div>
-
-                                                <div className="absolute bottom-3 left-3 right-3 text-left sm:bottom-4 sm:left-4 sm:right-4 p-3 sm:p-4 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 shadow-sm max-w-xl">
-                                                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-1.5">{property.title}</h3>
-                                                    <div className="flex items-center gap-1.5 text-white/90 text-xs font-semibold">
-                                                        <MapPinIcon className="w-3.5 h-3.5" />
-                                                        {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
-                                                    </div>
-                                                </div>
+                                                {/* Risk Badge - top-left with glowing dot */}
+                                                <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
+                                                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${riskLevel === "LOW"
+                                                        ? 'bg-[#00DAAF] text-[#00DAAF]'
+                                                        : riskLevel === "HIGH"
+                                                            ? 'bg-[#FF5C5C] text-[#FF5C5C]'
+                                                            : 'bg-[#E8940C] text-[#E8940C]'
+                                                        }`} />
+                                                    {riskLevel} RISK
+                                                </span>
                                             </div>
 
-                                            <div className="p-4 sm:p-5 pt-4">
-                                                <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-4 mb-4 sm:mb-5 text-left items-start">
-                                                    <div className="min-w-0">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
-                                                            Asset valuation
-                                                        </p>
-                                                        <p className="text-sm sm:text-base font-black text-neutral-800 tracking-tight tabular-nums leading-snug">
-                                                            {formatPrice(property.valuation, true)}
-                                                        </p>
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
-                                                            Entry point
-                                                        </p>
-                                                        <p className="text-sm sm:text-base font-black text-neutral-800 tracking-tight tabular-nums leading-snug break-words">
-                                                            {formatPrice(property.fractionPrice)}
-                                                        </p>
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
-                                                            Annual return
-                                                        </p>
-                                                        <p className="text-sm sm:text-base font-black text-[#00B28F] tracking-tight tabular-nums leading-snug">
-                                                            {formattedYield}% p.a.
-                                                        </p>
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold mb-1 leading-tight">
-                                                            Available
-                                                        </p>
-                                                        <p className="text-sm sm:text-base font-black text-neutral-800 tracking-tight tabular-nums leading-snug">
-                                                            {property.availableFractions?.toLocaleString()}
-                                                        </p>
+                                            {/* Content Section */}
+                                            <div className="p-5 sm:p-6">
+                                                {/* Title & Location */}
+                                                <h3 className="text-[22px] font-extrabold text-neutral-900 mb-1 leading-snug tracking-tight">{property.title}</h3>
+                                                <div className="flex items-center gap-1.5 text-neutral-500 text-[13px] mb-5 font-medium">
+                                                    <MapPinIcon className="w-4 h-4 text-neutral-400" />
+                                                    {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
+                                                </div>
+
+                                                {/* Stats Card - 3 columns with dividers */}
+                                                <div className="bg-[#F9FAFB] border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-sm">
+                                                    <div className="grid grid-cols-3 divide-x divide-neutral-200/65 text-center items-center">
+                                                        <div>
+                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">Valuation</p>
+                                                            <p className="text-[15px] font-extrabold text-neutral-900">{formatPrice(property.valuation, true)}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">Per Fraction</p>
+                                                            <p className="text-[15px] font-extrabold text-neutral-900">{formatPrice(property.fractionPrice)}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">Potential Annual Return</p>
+                                                            <p className="text-[15px] font-extrabold text-[#00B28F]">{formattedYield}%</p>
+                                                        </div>
                                                     </div>
                                                 </div>
 
-                                                <div className="mb-4 sm:mb-5">
-                                                    <div className="flex justify-between items-baseline gap-4 mb-1.5 sm:mb-2">
-                                                        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-neutral-400 font-bold leading-tight shrink-0">
-                                                            Funding progress
-                                                        </p>
-                                                        <p className="text-[11px] sm:text-xs font-black text-[#00B28F] tabular-nums shrink-0">
-                                                            {fundedPercentage}%
-                                                        </p>
+                                                {/* Funding Progress */}
+                                                <div className="mb-6">
+                                                    <div className="flex justify-between items-center mb-2 text-[12px] font-bold text-neutral-400">
+                                                        <span>{fundedPercentage}% funded</span>
+                                                        <span>{property.availableFractions?.toLocaleString()} left</span>
                                                     </div>
-                                                    <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden border border-neutral-200/60">
+                                                    <div className="w-full h-2.5 bg-[#00DAAF]/20 rounded-full overflow-hidden">
                                                         <motion.div
-                                                            className="h-full rounded-full"
-                                                            style={{ background: 'linear-gradient(90deg, #00DAAF 0%, #00B28F 100%)' }}
+                                                            className="h-full rounded-full bg-[#00DAAF]"
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${fundedPercentage}%` }}
-                                                            transition={{ delay: 0.5, duration: 1, ease: "circOut" }}
+                                                            transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                                                         />
                                                     </div>
                                                 </div>
 
+                                                {/* CTA Button */}
                                                 <Link
                                                     href="/sign-in"
                                                     prefetch={false}
-                                                    className="relative z-[3] block pointer-events-auto w-full py-3 rounded-full border border-[#006D5B] bg-transparent text-[#000000] hover:bg-[#006D5B] hover:text-white text-xs font-bold uppercase tracking-wider text-center transition-all duration-300 active:scale-[0.99]"
+                                                    className="relative z-[3] block pointer-events-auto w-full py-3.5 rounded-full border-[1.5px] border-[#006D5B] bg-transparent text-neutral-900 hover:bg-[#006D5B] hover:text-white text-sm font-extrabold uppercase tracking-wide text-center transition-all duration-300 active:scale-[0.99]"
                                                 >
-                                                    Start Investing
+                                                    View Details
                                                 </Link>
                                             </div>
                                         </div>

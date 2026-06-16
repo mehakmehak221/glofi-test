@@ -153,6 +153,7 @@ export default function MarketplacePage() {
     const [cityFilter, setCityFilter] = useState("");
     const [countryIsoCode, setCountryIsoCode] = useState("");
     const [stateIsoCode, setStateIsoCode] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
 
     const router = useRouter();
 
@@ -164,7 +165,10 @@ export default function MarketplacePage() {
         city: cityFilter || undefined
     });
 
-    const assets = assetsData?.data || [];
+    const allAssets = assetsData?.data || [];
+    const assets = searchQuery.trim()
+        ? allAssets.filter((a) => a.title?.toLowerCase().includes(searchQuery.toLowerCase()))
+        : allAssets;
 
     const handleCardClick = (id) => {
         router.push(`/dashboard/investor/marketplace/${id}`);
@@ -178,7 +182,7 @@ export default function MarketplacePage() {
         <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)]">
             <style>{DROPDOWN_STYLES}</style>
 
-            <div className="max-w-6xl mx-auto mb-12 sm:mb-16">
+            <div className="max-w-6xl mx-auto mb-4">
                 <InvestorBanners />
             </div>
 
@@ -186,38 +190,66 @@ export default function MarketplacePage() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="mb-8 sm:mb-10 p-6 sm:p-8 lg:p-10 relative z-20 shadow-2xl"
+                className="mb-5 p-6 sm:p-8 relative z-20 shadow-sm"
                 style={{
                     borderRadius: '24px',
-                    border: '0.667px solid var(--marketplace-card-border)',
-                    background: 'var(--marketplace-hero-bg)',
+                    border: '1px solid var(--marketplace-card-border)',
+                    background: 'var(--marketplace-feature-card-bg)',
                 }}
             >
-                <h1
-                    className="text-xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2"
-                    style={{
-                        background: 'var(--marketplace-hero-text)',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                    }}
-                >
-                    Discover Assets
-                </h1>
-                <p
-                    className="text-xs sm:text-base lg:text-lg max-w-xl font-montserrat text-[var(--marketplace-text-muted)] font-normal tracking-tight"
-                >
-                    Institutional-grade real estate. Digitally simplified. Invest fractionally starting from {currency.symbol}15,000.
-                </p>
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+                    <div>
+                        <h1
+                            className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight mb-1"
+                            style={{
+                                background: 'var(--marketplace-hero-text)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                            }}
+                        >
+                            Discover Assets
+                        </h1>
+                        <p className="text-xs sm:text-sm text-[var(--marketplace-text-muted)] font-montserrat font-normal leading-relaxed max-w-md">
+                            Institutional-grade real estate. Digitally simplified.
+                            <p> Invest fractionally starting from {currency.symbol}10,000.</p>
+                        </p>
+                    </div>
 
-                <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-4 sm:mt-5">
+
+                    <div className="relative w-full sm:w-72 lg:w-80 flex-shrink-0">
+                        <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--sidebar-active-text)] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+                        </svg>
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search properties..."
+                            className="w-full pl-10 pr-9 py-2.5 rounded-xl text-sm bg-[var(--field-surface)] border border-[var(--sidebar-border)] text-[var(--marketplace-text-primary)] placeholder-[var(--marketplace-text-muted)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50 focus:ring-2 focus:ring-[var(--sidebar-active-text)]/15 transition-all duration-200 font-montserrat"
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery("")}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--marketplace-text-muted)] hover:text-[var(--marketplace-text-primary)] transition-colors flex items-center justify-center"
+                            >
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+
+                <div className="flex flex-wrap gap-2">
                     {CATEGORIES.map((cat) => (
                         <button
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
-                            className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer border ${activeCategory === cat
-                                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-bg)]"
-                                : "bg-transparent text-[var(--sidebar-text)] border-[var(--sidebar-border)] hover:text-[var(--sidebar-text-hover)] hover:border-[var(--sidebar-text-hover)]"
+                            className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer border ${activeCategory === cat
+                                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-bg)] scale-[1.04] shadow-sm"
+                                : "bg-transparent text-[var(--sidebar-text)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/40 hover:text-[var(--sidebar-active-text)]"
                                 }`}
                         >
                             {cat}
@@ -225,7 +257,10 @@ export default function MarketplacePage() {
                     ))}
                 </div>
 
-                <div className="flex flex-wrap gap-4 mt-6 items-center">
+
+                <div className="border-t border-[var(--sidebar-border)] my-5 opacity-60" />
+
+                <div className="flex flex-wrap gap-3 items-center">
                     <PillDropdown
                         label="Country"
                         options={Country.getAllCountries()}
@@ -270,14 +305,21 @@ export default function MarketplacePage() {
                                 setStateIsoCode("");
                                 setCountryIsoCode("");
                             }}
-                            className="mt-5 text-[10px] text-[var(--sidebar-active-text)] font-semibold hover:underline font-montserrat cursor-pointer transition-colors duration-200 hover:text-[var(--sidebar-active-text)]/80"
+                            className="text-[11px] font-bold text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-text)]/10 px-3.5 py-1.5 rounded-full font-montserrat cursor-pointer transition-all duration-200"
                         >
-                            Clear Filters
+                            ✕ Clear Filters
                         </button>
                     )}
                 </div>
             </motion.div>
 
+
+            {/* Result count when searching */}
+            {searchQuery.trim() && !isLoading && (
+                <p className="mb-4 text-xs text-[var(--marketplace-text-muted)] font-montserrat">
+                    {assets.length} result{assets.length !== 1 ? 's' : ''} for &ldquo;<span className="text-[var(--sidebar-active-text)] font-semibold">{searchQuery}</span>&rdquo;
+                </p>
+            )}
 
             <AnimatePresence mode="wait">
                 {
@@ -344,13 +386,12 @@ export default function MarketplacePage() {
                                             </span>
 
                                             <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
-                                                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${
-                                                    property.riskRating === 'LOW'
-                                                        ? 'bg-[#00DAAF] text-[#00DAAF]'
-                                                        : property.riskRating === 'HIGH'
-                                                            ? 'bg-[#FF5C5C] text-[#FF5C5C]'
-                                                            : 'bg-[#E8940C] text-[#E8940C]'
-                                                }`} />
+                                                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${property.riskRating === 'LOW'
+                                                    ? 'bg-[#00DAAF] text-[#00DAAF]'
+                                                    : property.riskRating === 'HIGH'
+                                                        ? 'bg-[#FF5C5C] text-[#FF5C5C]'
+                                                        : 'bg-[#E8940C] text-[#E8940C]'
+                                                    }`} />
                                                 {property.riskRating} RISK
                                             </span>
 
@@ -407,7 +448,7 @@ export default function MarketplacePage() {
                                                 className="w-full py-3.5 rounded-full border-[1.5px] border-[#006D5B] bg-transparent text-sm font-extrabold uppercase tracking-wide cursor-pointer transition-colors duration-300"
                                                 style={{ color: 'var(--header-text)' }}
                                             >
-                                                VIEW DETAIL
+                                                VIEW DETAILS
                                             </motion.button>
                                         </div>
                                     </motion.div>

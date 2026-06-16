@@ -19,54 +19,32 @@ export function CommunityStatusBanner() {
   return (
     <motion.div
       whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.995 }}
+      whileTap={{ scale: 0.98 }}
       onClick={() => router.push("/dashboard/investor/community")}
-      className="flex flex-col sm:flex-row items-center justify-between gap-6 px-6 sm:px-8 py-6 bg-[var(--marketplace-banner-bg)] border border-[var(--marketplace-banner-border)] rounded-[32px] cursor-pointer shadow-2xl mb-10 backdrop-blur-xl group relative overflow-hidden"
+      className="flex items-center justify-between gap-4 px-5 py-4 bg-[var(--marketplace-banner-bg)] border border-[var(--marketplace-banner-border)] rounded-2xl cursor-pointer shadow-sm mb-4 group"
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--sidebar-active-bg)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Left: stat */}
+      <p className="text-[17px] font-black text-[var(--marketplace-banner-text-primary)] tracking-tight">
+        ₹62.1 Lacs <span className="font-medium text-[var(--marketplace-banner-text-secondary)]">invested</span>
+      </p>
 
-      <div className="flex flex-col items-center sm:items-start text-center sm:text-left relative z-10">
-        <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--marketplace-banner-text-secondary)] font-bold mb-1">Total Community Depth</span>
-        <h2 className="text-2xl sm:text-3xl font-black text-[var(--marketplace-banner-text-primary)] tracking-tighter">
-          ₹62.1 Lacs <span className="text-[var(--marketplace-banner-text-secondary)] font-medium text-lg">invested</span>
-        </h2>
-      </div>
-
-      <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 relative z-10">
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="flex -space-x-4">
-            {avatars.map((avatar, index) => (
-              <div
-                key={index}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[3px] border-[var(--marketplace-banner-bg)] flex items-center justify-center text-[10px] sm:text-xs font-black text-white overflow-hidden shadow-2xl transition-all duration-300 group-hover:-translate-y-1"
-                style={{
-                  backgroundColor: avatar.color,
-                  zIndex: avatars.length - index,
-                  boxShadow: `0 8px 16px -4px ${avatar.color}40`
-                }}
-              >
-                {avatar.initials}
-              </div>
-            ))}
+      {/* Right: avatars + arrow */}
+      <div className="flex items-center gap-3">
+        <div className="flex -space-x-3">
+          {avatars.map((avatar, index) => (
             <div
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[3px] border-[var(--marketplace-banner-bg)] flex items-center justify-center text-[10px] sm:text-xs font-black text-white z-10 shadow-xl group-hover:-translate-y-1 transition-all duration-300"
-              style={{
-                backgroundColor: "var(--marketplace-banner-chip-bg)"
-              }}
+              key={index}
+              className="w-9 h-9 rounded-full border-2 border-[var(--marketplace-banner-bg)] flex items-center justify-center text-[11px] font-black text-white shadow-sm"
+              style={{ backgroundColor: avatar.color, zIndex: avatars.length - index }}
             >
-              +12
+              {avatar.initials}
             </div>
-          </div>
-          <div className="flex flex-col items-center sm:items-start">
-            <span className="text-sm font-bold text-[var(--marketplace-banner-text-primary)]">Active Investors</span>
-            <span className="text-[10px] text-[var(--marketplace-banner-text-secondary)] font-medium">Joined in last 24h</span>
-          </div>
+          ))}
         </div>
-
-        <div className="hidden sm:flex w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center border border-[var(--marketplace-banner-border)] bg-[var(--marketplace-banner-arrow-bg)] text-[var(--marketplace-banner-arrow-fg)] group-hover:bg-[var(--marketplace-banner-text-primary)] group-hover:text-[var(--marketplace-banner-bg)] transition-all duration-500 shadow-inner overflow-hidden relative z-10">
-          <svg className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
+        <div className="w-8 h-8 rounded-full border border-[var(--marketplace-banner-border)] bg-[var(--marketplace-banner-arrow-bg)] flex items-center justify-center text-[var(--marketplace-banner-arrow-fg)] group-hover:bg-[var(--sidebar-active-text)] group-hover:text-white group-hover:border-[var(--sidebar-active-text)] transition-all duration-300 flex-shrink-0">
+          <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
           </svg>
         </div>
       </div>
@@ -77,37 +55,45 @@ export function CommunityStatusBanner() {
 export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick }) {
   return (
     <motion.div
-      whileHover={{ y: -10 }}
+      whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="p-8 bg-[var(--marketplace-feature-card-bg)] border border-[var(--marketplace-feature-card-border)] rounded-[32px] cursor-pointer transition-all duration-500 flex flex-col justify-between shadow-2xl backdrop-blur-xl group relative overflow-hidden min-h-[220px]"
+      className="relative flex items-center gap-4 px-5 py-4 bg-[var(--marketplace-feature-card-bg)] border border-[var(--marketplace-feature-card-border)] rounded-2xl cursor-pointer transition-all duration-300 shadow-sm group overflow-hidden"
     >
+      {/* Colored left accent */}
       <div
-        className="absolute -right-4 -top-4 w-24 h-24 blur-[60px] rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500"
+        className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl"
         style={{ backgroundColor: color }}
       />
 
-      <div className="relative z-10">
-        <div
-          className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-inner"
-          style={{
-            backgroundColor: `${color}15`,
-            color: color,
-            boxShadow: `0 10px 20px -5px ${color}30`
-          }}
-        >
-          <Icon className="w-7 h-7" />
-        </div>
-        <h3 className="text-lg font-black text-[var(--marketplace-feature-card-title)] mb-2 leading-[1.1] tracking-tighter transition-all duration-500">{title}</h3>
-        <p className="text-[11px] text-[var(--marketplace-feature-card-subtitle)] font-montserrat font-semibold uppercase tracking-widest group-hover:text-[var(--marketplace-feature-card-title)] transition-colors">{subtitle}</p>
+      {/* Subtle glow on hover */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
+        style={{ background: `linear-gradient(135deg, ${color}08 0%, transparent 60%)` }}
+      />
+
+      {/* Icon */}
+      <div
+        className="relative z-10 w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+        style={{ backgroundColor: `${color}15`, color }}
+      >
+        <Icon className="w-5 h-5" />
       </div>
 
-      <div className="mt-6 flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 relative z-10">
-        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--search-bg)] border border-[var(--sidebar-border)]">
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
+      {/* Text */}
+      <div className="relative z-10 flex-1 min-w-0">
+        <h3 className="text-sm font-extrabold text-[var(--marketplace-feature-card-title)] leading-tight tracking-tight truncate">{title}</h3>
+        <p className="text-[11px] text-[var(--marketplace-feature-card-subtitle)] font-semibold uppercase tracking-wider mt-0.5 font-montserrat">{subtitle}</p>
+      </div>
+
+      {/* Arrow */}
+      <div
+        className="relative z-10 w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0"
+        style={{ backgroundColor: `${color}20`, color }}
+      >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
       </div>
     </motion.div>
   );
@@ -132,7 +118,7 @@ export function InvestorBanners() {
   };
 
   return (
-    <div className="mb-12">
+    <div className="mb-3">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

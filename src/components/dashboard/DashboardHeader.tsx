@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import SearchBar from "./SearchBar";
 import Avatar from "@/components/ui/Avatar";
 import { usePathname } from "next/navigation";
-import { BellIcon, MoonIcon, SunIcon } from "@/components/VectorImages";
+import { MoonIcon, SunIcon } from "@/components/VectorImages";
 import { useGetProfileQuery } from "@/store/api/authApi";
 
 export default function DashboardHeader() {
@@ -55,10 +54,8 @@ export default function DashboardHeader() {
     }
 
     return (
-        <header className="hidden lg:flex items-center justify-between px-6 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-30">
-            <SearchBar placeholder="Search..." className="w-full max-w-md" />
-
-            <div className="flex items-center gap-4 ml-4">
+        <header className="hidden lg:flex items-center justify-end px-6 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-30">
+            <div className="flex items-center gap-4">
                 <button
                     onClick={() => setIsLight(!isLight)}
                     className="flex items-center w-14 h-8 p-1 rounded-full transition-colors cursor-pointer bg-[var(--search-bg)] border border-[var(--search-border)] relative outline-none"
@@ -72,7 +69,6 @@ export default function DashboardHeader() {
                         )}
                     </div>
                 </button>
-
 
                 <div className="flex items-center gap-3 pl-3 border-l border-[var(--header-border)]">
                     <Avatar name={fullName} size="sm" />
