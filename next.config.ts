@@ -11,7 +11,13 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'aws-glofi-uploads.s3.ap-south-1.amazonaws.com',
+        hostname: 'cdn-images-1.medium.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'miro.medium.com',
         port: '',
         pathname: '/**',
       },

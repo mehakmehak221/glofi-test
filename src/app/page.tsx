@@ -7,6 +7,7 @@ import GlobalScaleSection from "@/components/sections/GlobalScaleSection/GlobalS
 import PropertyInvestmentCategoriesSection from "@/components/sections/PropertyInvestmentCategoriesSection/PropertyInvestmentCategoriesSection";
 import InvestmentSection from "@/components/sections/InvestmentSection/InvestmentSection";
 import JoinNewGenerationSection from "@/components/sections/JoinNewGenerationSection/JoinNewGenerationSection";
+import BlogSection from "@/components/sections/BlogSection/BlogSection";
 import GlofiCopyrightSection from "@/components/sections/GlofiCopyrightSection/GlofiCopyrightSection";
 import AppDownloadSection from "@/components/sections/AppDownloadSection/AppDownloadSection";
 import CookieSection from "@/components/sections/CookieSection/CookieSection";
@@ -27,6 +28,8 @@ export default function Home() {
         <InvestmentSection />
         <GlobalScaleSection />
         <PremiumPropertySection />
+
+        <BlogSection />
 
         {/* <PropertyInvestmentCategoriesSection /> */}
 

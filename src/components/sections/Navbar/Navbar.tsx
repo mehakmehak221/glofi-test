@@ -10,6 +10,7 @@ import { LANDING_EASE } from '@/lib/landingAnimations';
 const NAV_LINKS = [
     { label: 'Company', href: '/#company' },
     { label: 'Product', href: '/#product' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Support', href: '/#support' },
     { label: 'Learn', href: '/#learn' },
 ];
