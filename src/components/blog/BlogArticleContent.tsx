@@ -85,7 +85,7 @@ export default function BlogArticleContent({ post, relatedPosts }: BlogArticleCo
                                 rel="noopener noreferrer"
                                 className="blog-article__medium-btn"
                             >
-                                Read original post
+                                Read post
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                                     <path
                                         d="M4 12L12 4M12 4H6M12 4V10"
