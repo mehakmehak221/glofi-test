@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { TrendingUpIcon, SearchIcon, EyeOpenIcon, DownloadIcon, AboutIcon } from "@/components/VectorImages";
+import { TrendingUpIcon, SearchIcon, AboutIcon } from "@/components/VectorImages";
 import PaymentModal from "@/components/dashboard/PaymentModal";
-import { useGetSecondaryListingsQuery, useGetMySecondaryListingsQuery, useGetSecondaryListingByIdQuery } from "@/store/api/secondaryMarketApi";
+import { useGetSecondaryListingsQuery, useGetSecondaryListingByIdQuery } from "@/store/api/secondaryMarketApi";
 import { API_URL } from "@/constants";
 
 const containerVariants = {
@@ -19,15 +19,12 @@ const itemVariants = {
 } as const;
 
 export default function SecondaryMarketplacePage() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [activeTab, setActiveTab] = useState("Marketplace");
-    const [activeFilter, setActiveFilter] = useState("All Properties");
+    const [activeFilter, setActiveFilter] = useState("All");
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState(null);
     const [viewingAssetId, setViewingAssetId] = useState(null);
 
     const { data: marketplaceResponse, isLoading: isLoadingMarketplace } = useGetSecondaryListingsQuery(undefined);
-    const { data: myListingsResponse, isLoading: isLoadingMyListings } = useGetMySecondaryListingsQuery();
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "/assets/images/marketplace/Burj.png";
         if (imagePath.startsWith('http')) return imagePath;
@@ -54,6 +51,7 @@ export default function SecondaryMarketplacePage() {
                 location: item.assetLocation || "N/A",
                 image: getImageUrl(item.assetImages?.[0]),
                 seller: "You",
+                sellerId: item.ownerId || item.investorId || item.userId || "self",
                 fractions: item.fractionsListed || 0,
                 price: `₹${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
                 currentValue: `₹${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
@@ -72,6 +70,7 @@ export default function SecondaryMarketplacePage() {
                 location: assetObj.location || "N/A",
                 image: getImageUrl(assetObj.images?.[0]),
                 seller: sellerName,
+                sellerId: item.investor?.id || item.investorId || item.id,
                 fractions: item.fractions || 0,
                 price: `₹${(parseFloat(item.askPrice || 0)).toLocaleString()}`,
                 currentValue: `₹${(parseFloat(assetObj.fractionPrice || item.askPrice || 0)).toLocaleString()}`,
@@ -83,14 +82,18 @@ export default function SecondaryMarketplacePage() {
     };
 
     const marketplaceData = Array.isArray(marketplaceResponse) ? marketplaceResponse : (marketplaceResponse?.data || []);
-    const myListingsData = myListingsResponse?.data || [];
+    const isLoading = isLoadingMarketplace;
+    const allAssets = marketplaceData.map(mapListing);
 
-    const rawData = activeTab === "Marketplace" ? marketplaceData : myListingsData;
-    const isLoading = activeTab === "Marketplace" ? isLoadingMarketplace : isLoadingMyListings;
-
-    const displayAssets = rawData.map(mapListing).filter(asset =>
-        asset.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const displayAssets = useMemo(() => {
+        if (activeFilter === "High ROI (15%+)") {
+            return allAssets.filter((asset) => parseFloat(String(asset.change || "0")) >= 15);
+        }
+        if (activeFilter === "Best Value") {
+            return [...allAssets].sort((a, b) => (a.pricePerFraction || 0) - (b.pricePerFraction || 0));
+        }
+        return allAssets;
+    }, [allAssets, activeFilter]);
 
     const handleBuyFractions = (asset) => {
         setViewingAssetId(null);
@@ -102,88 +105,60 @@ export default function SecondaryMarketplacePage() {
         setViewingAssetId(id);
     };
 
-    const filters = ["All Properties", "High ROI (15%+)", "Best Value"];
+    const filters = ["All", "High ROI (15%+)", "Best Value"];
 
 
     const stats = [
-        { label: "Total Listings", value: displayAssets.length.toString(), change: "Active listings", icon: TrendingUpIcon },
+        { label: "Active Listings", value: displayAssets.length.toString(), change: "+3 This Week", icon: TrendingUpIcon },
         {
-            label: "Total Value",
+            label: "Market Volume",
             value: formatNumber(displayAssets.reduce((acc, item) => acc + (item.pricePerFraction * item.fractions || 0), 0)),
-            change: "Market volume",
+            change: "+8.5% Overall",
             icon: TrendingUpIcon
         },
-        { label: "Active Sellers", value: new Set(displayAssets.map(item => item.sellerId)).size.toString(), change: "Verified investors", icon: TrendingUpIcon },
-        { label: "Avg Yield", value: displayAssets.length > 0 ? "12.4%" : "0%", change: "Property average", icon: TrendingUpIcon },
+        { label: "Average Returns", value: displayAssets.length > 0 ? "12.4%" : "0%", change: "High Performing", icon: TrendingUpIcon },
+        { label: "Active Traders", value: new Set(displayAssets.map(item => item.sellerId)).size.toString(), change: "Verified Users", icon: TrendingUpIcon },
     ];
 
     return (
         <div className="p-4 sm:p-6 lg:p-10 bg-[var(--background)] min-h-screen text-[var(--sidebar-text)] font-sans transition-colors duration-300">
-            <div className="max-w-[1400px] mx-auto">
+            <div className="max-w-[1100px] mx-auto">
 
-                <header className="mb-10">
+                <header className="mb-6">
                     <h1 className="text-2xl sm:text-3xl font-bold mb-3 text-[var(--header-text)] tracking-tight">Secondary Marketplace</h1>
                     <p className="text-sm sm:text-base text-[var(--color-text-muted)] mb-8 max-w-2xl leading-relaxed font-medium">Browse property fractions relisted by investors. All assets are available for immediate purchase and transfer.</p>
-
-                    <div className="relative max-w-md w-full group">
-                        <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                            <SearchIcon className="w-5 h-5 text-[var(--color-text-muted)] group-focus-within:text-[var(--sidebar-active-text)] transition-colors" />
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Search properties by name..."
-                            className="w-full bg-[var(--search-bg)] border border-[var(--sidebar-border)] rounded-md py-3.5 pl-14 pr-6 text-sm font-bold text-[var(--header-text)] focus:outline-none focus:border-[var(--sidebar-active-text)]/30 focus:ring-4 focus:ring-[var(--sidebar-active-text)]/5 transition-all shadow-sm"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
                 </header>
 
 
-                <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
+                <section className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
                     {stats.map((stat) => (
-                        <div key={stat.label} className="bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md p-6 relative overflow-hidden group hover:border-[var(--sidebar-active-text)]/30 hover:shadow-xl transition-all duration-500">
-                            <div className="flex justify-between items-start mb-6">
+                        <div key={stat.label} className="bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-5 relative overflow-hidden">
+                            <div className="flex justify-between items-start mb-4">
                                 <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-bold">{stat.label}</span>
-                                <div className="w-10 h-10 rounded-xl bg-[var(--badge-bg)] flex items-center justify-center text-[var(--sidebar-active-text)] shadow-sm group-hover:scale-110 transition-transform">
-                                    <stat.icon className="w-5 h-5" />
+                                <div className="w-8 h-8 rounded-full bg-[var(--badge-bg)] flex items-center justify-center text-[var(--sidebar-active-text)]">
+                                    <stat.icon className="w-4 h-4" />
                                 </div>
                             </div>
-                            <div className="mb-2">
-                                <span className="text-2xl sm:text-3xl font-bold text-[var(--header-text)]">{stat.value}</span>
+                            <div>
+                                <span className="text-2xl font-bold text-[var(--header-text)]">{stat.value}</span>
                             </div>
-                            <div className="flex items-center gap-1.5 mt-2">
-                                <span className="text-xs text-[var(--sidebar-active-text)] font-bold">{stat.change}</span>
+                            <div className="inline-flex items-center gap-1.5 mt-2 px-2 py-1 rounded-full bg-[var(--search-bg)] border border-[var(--sidebar-border)]">
+                                <span className="text-xs text-[var(--sidebar-text)] font-semibold">{stat.change}</span>
                             </div>
                         </div>
                     ))}
                 </section>
 
 
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 w-full">
-                    <div className="flex items-center gap-2 p-1 bg-[var(--marketplace-card-bg)] rounded-xl border border-[var(--sidebar-border)] shadow-sm w-full md:w-auto overflow-x-auto no-scrollbar">
-                        {["Marketplace", "My Listings"].map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={`px-5 py-2.5 rounded-lg text-[12px] font-bold transition-all duration-300 border-0 cursor-pointer whitespace-nowrap ${activeTab === tab
-                                    ? "bg-[var(--color-primary-300)] text-black shadow-sm"
-                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)]"
-                                    }`}
-                            >
-                                {tab}
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="flex items-center gap-2 p-1 bg-[var(--marketplace-card-bg)] rounded-xl border border-[var(--sidebar-border)] overflow-x-auto max-w-full no-scrollbar shadow-sm">
+                <div className="mb-6 sm:mb-8">
+                    <div className="flex items-center gap-2 overflow-x-auto max-w-full no-scrollbar">
                         {filters.map((filter) => (
                             <button
                                 key={filter}
                                 onClick={() => setActiveFilter(filter)}
-                                className={`px-4 py-2 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all duration-300 border-0 cursor-pointer ${activeFilter === filter
+                                className={`px-5 py-2.5 rounded-full text-[13px] font-semibold whitespace-nowrap transition-all duration-300 border border-[var(--sidebar-border)] cursor-pointer ${activeFilter === filter
                                     ? "bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] shadow-sm"
-                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)]"
+                                    : "bg-[var(--marketplace-card-bg)] text-[var(--marketplace-text-secondary)] hover:text-[var(--header-text)]"
                                     }`}
                             >
                                 {filter}
@@ -194,11 +169,11 @@ export default function SecondaryMarketplacePage() {
 
 
                 <motion.div
-                    key={activeTab}
+                    key={activeFilter}
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 mb-16"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5 mb-10"
                 >
                     {isLoading ? (
                         <div className="col-span-full flex justify-center p-12">
@@ -217,9 +192,7 @@ export default function SecondaryMarketplacePage() {
                             <MarketplaceCard
                                 key={asset.id}
                                 asset={asset}
-                                onBuy={() => handleBuyFractions(asset)}
                                 onView={() => handleViewDetail(asset.id)}
-                                isOwnListing={activeTab === "My Listings"}
                             />
                         ))
                     )}
@@ -256,13 +229,16 @@ export default function SecondaryMarketplacePage() {
                 />
 
 
-                <section className="bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md p-8 sm:p-10 flex flex-col md:flex-row items-center md:items-start gap-8 shadow-lg relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--sidebar-active-text)]/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
-                    <div className="w-14 h-14 rounded-2xl bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 flex items-center justify-center flex-shrink-0 shadow-md relative z-10">
+                <section className="bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md p-6 sm:p-8 flex flex-col md:flex-row items-start gap-5 shadow-lg relative overflow-hidden">
+                    <div className="w-14 h-14 rounded-2xl bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/20 flex items-center justify-center flex-shrink-0">
                         <AboutIcon className="w-6 h-6 text-[var(--sidebar-active-text)]" />
                     </div>
-                    <div className="relative z-10 text-center md:text-left">
-                        <h2 className="text-xl font-bold mb-3 text-[var(--header-text)] uppercase tracking-widest">About Secondary Marketplace</h2>
+                    <div className="text-left">
+                        <div className="flex items-center gap-3 mb-1">
+                            <h2 className="text-2xl font-bold text-[var(--header-text)] leading-tight">About Secondary Marketplace</h2>
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[var(--badge-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30">Live</span>
+                        </div>
+                        <p className="text-sm font-semibold text-[var(--sidebar-active-text)] mb-2">Peer-to-Peer Property Fraction Trading</p>
                         <p className="text-sm font-medium text-[var(--color-text-muted)] leading-relaxed max-w-5xl">
                             The Secondary Marketplace allows investors to buy property fractions that have been relisted by other investors. All properties shown here were previously purchased from the primary marketplace and are now available for immediate transfer. Prices may vary based on current market value and seller preferences.
                         </p>
@@ -273,11 +249,11 @@ export default function SecondaryMarketplacePage() {
     );
 }
 
-function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
+function MarketplaceCard({ asset, onView }) {
     return (
         <motion.div
             variants={itemVariants}
-            className="group bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-md overflow-hidden flex flex-col transition-all duration-500 h-full shadow-[var(--marketplace-card-shadow)] hover:border-[var(--sidebar-active-text)]/25 hover:shadow-2xl hover:-translate-y-0.5"
+            className="group w-full sm:w-[92%] md:w-full mx-auto bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-md overflow-hidden flex flex-col transition-all duration-500 h-full shadow-[var(--marketplace-card-shadow)]"
         >
             {/* Image Section */}
             <div className="relative h-52 overflow-hidden">
@@ -289,94 +265,38 @@ function MarketplaceCard({ asset, onBuy, onView, isOwnListing }) {
                 />
                 <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
-                {/* Yield badge — top right */}
-                <div className="absolute top-3 right-3">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-[#B8FFF0] bg-[#041512] border border-[#00DAAF]/70 shadow-sm backdrop-blur-sm">
+                <div className="absolute top-3 left-3">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider text-[#D7FFF6] bg-gray-500  shadow-[0_4px_14px_rgba(0,218,175,0.25)]">
                         <TrendingUpIcon className="w-3 h-3" />
-                        {asset.change}
+                        0.0% p.a.
                     </span>
                 </div>
 
-                {/* Status badge — top left (own listings only) */}
-                {isOwnListing && (
-                    <div className="absolute top-3 left-3">
-                        <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm backdrop-blur-sm ${
-                            asset.status === 'LISTED'
-                                ? 'bg-[#041512] text-[#B8FFF0] border border-[#00DAAF]/70'
-                                : asset.status === 'PENDING_APPROVAL'
-                                    ? 'bg-[#1a1206] text-[#FFD699] border border-[#E8940C]/80'
-                                    : 'bg-[#111] text-[#9CA3AF] border border-white/10'
-                        }`}>
-                            {asset.status.replace('_', ' ')}
-                        </span>
-                    </div>
-                )}
-
-                {/* Seller pill — bottom left */}
-                <div className="absolute bottom-3 left-3">
-                    <div className="flex items-center gap-2 pl-1 pr-3 py-1 bg-black/50 backdrop-blur-md rounded-full border border-white/10 shadow-lg">
-                        <div className="w-5 h-5 rounded-full bg-[var(--color-primary-200)] flex items-center justify-center text-[9px] font-bold text-black ring-1 ring-[var(--color-primary-300)]/40">
-                            {asset.seller.charAt(0).toUpperCase()}
-                        </div>
-                        <span className="text-[10px] font-semibold text-white/90 tracking-wide">{asset.seller}</span>
-                    </div>
-                </div>
+                <div className="absolute inset-0 ring-1 ring-inset ring-black/5 pointer-events-none" />
             </div>
 
-            {/* Card Body */}
-            <div className="p-4 sm:p-5 flex flex-col flex-1 gap-4">
+            <div className="p-4 sm:p-5 flex flex-col flex-1 gap-3">
+                <h3 className="text-[32px] font-bold text-[var(--marketplace-text-primary)] leading-tight line-clamp-1">{asset.name}</h3>
+                <p className="text-sm text-[var(--marketplace-text-muted)]">Dholera</p>
 
-                {/* Property name */}
-                <h3 className="text-[15px] font-bold text-[var(--marketplace-text-primary)] leading-snug line-clamp-1 group-hover:text-[var(--sidebar-active-text)] transition-colors duration-300">
-                    {asset.name}
-                </h3>
-
-                {/* Stats row */}
-                <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-[var(--card-surface)] border border-[var(--marketplace-card-border)] rounded-md px-3 py-2.5">
+                <div className="grid grid-cols-2 gap-0 border border-[var(--marketplace-card-border)] rounded-md overflow-hidden">
+                    <div className="bg-[var(--card-surface)] px-3 py-2.5 border-r border-[var(--marketplace-card-border)]">
                         <p className="text-[9px] text-[var(--marketplace-text-muted)] uppercase tracking-[0.15em] font-bold mb-1">Fractions</p>
-                        <p className="text-sm font-bold text-[var(--marketplace-text-primary)]">{asset.fractions}</p>
+                        <p className="text-2xl font-bold text-[var(--marketplace-text-primary)]">{asset.fractions} / {asset.fractions}</p>
                     </div>
-                    <div className="bg-[var(--card-surface)] border border-[var(--marketplace-card-border)] rounded-md px-3 py-2.5">
+                    <div className="bg-[var(--card-surface)] px-3 py-2.5">
                         <p className="text-[9px] text-[var(--marketplace-text-muted)] uppercase tracking-[0.15em] font-bold mb-1">Ask Price</p>
-                        <p className="text-sm font-bold text-[var(--marketplace-text-primary)]">{asset.price}</p>
+                        <p className="text-2xl font-bold text-[var(--marketplace-text-primary)]">{asset.pricePerFraction ? `₹${asset.pricePerFraction.toFixed(2)}` : asset.price}</p>
                     </div>
                 </div>
 
-                {/* Current Value — accent highlight */}
-                <div className="flex items-center justify-between px-3 py-2.5 rounded-md bg-[var(--badge-bg)] border border-[var(--sidebar-active-text)]/10">
-                    <span className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-[0.15em] font-bold">Current Value</span>
-                    <span className="text-sm font-bold text-[var(--color-primary-200)]">{asset.currentValue}</span>
-                </div>
-
-                {/* Actions */}
-                <div className="mt-auto space-y-2.5">
-                    {!isOwnListing && (
-                        <button
-                            disabled
-                            className="w-full py-2.5 rounded-md text-[11px] font-bold uppercase tracking-widest cursor-not-allowed border-0"
-                            style={{
-                                background: 'var(--marketplace-card-border)',
-                                color: 'var(--marketplace-text-muted)',
-                                opacity: 0.7
-                            }}
-                        >
-                            Coming Soon
-                        </button>
-                    )}
-                    <div className="grid grid-cols-2 gap-2">
-                        <button
-                            onClick={onView}
-                            className="flex items-center justify-center gap-1.5 py-2.5 rounded-md text-[11px] font-semibold transition-all duration-200 cursor-pointer border-0 bg-[var(--btn-mint-bg)] text-[var(--btn-mint-text)] hover:opacity-90"
-                        >
-                            <EyeOpenIcon className="w-3.5 h-3.5" />
-                            View
-                        </button>
-                        <button className="flex items-center justify-center gap-1.5 py-2.5 rounded-md text-[11px] font-semibold transition-all duration-200 cursor-pointer border border-[var(--marketplace-card-border)] bg-transparent text-[var(--marketplace-text-secondary)] hover:text-[var(--marketplace-text-primary)] hover:border-[var(--sidebar-active-text)]/30">
-                            <DownloadIcon className="w-3.5 h-3.5" />
-                            Info
-                        </button>
-                    </div>
+                <div className="mt-auto">
+                    <button
+                        onClick={onView}
+                        className="w-full py-3 rounded-full text-sm font-bold uppercase tracking-wide border border-[var(--sidebar-active-text)] text-[var(--header-text)] bg-transparent hover:bg-[var(--sidebar-active-bg)] transition-colors cursor-pointer"
+                    >
+                        View Details
+                    </button>
                 </div>
             </div>
         </motion.div>
@@ -436,7 +356,7 @@ function DetailModal({ id, onClose, onBuy }) {
 
                                 <div className="mb-8 p-4 bg-[var(--badge-bg)] rounded-2xl border border-[var(--sidebar-active-text)]/10">
                                     <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Seller Note</p>
-                                    <p className="text-sm font-medium text-[var(--header-text)] italic leading-relaxed">"{listing.notes || "No additional notes provided by the seller."}"</p>
+                                    <p className="text-sm font-medium text-[var(--header-text)] italic leading-relaxed">&ldquo;{listing.notes || "No additional notes provided by the seller."}&rdquo;</p>
                                 </div>
 
                                 <div className="mt-auto space-y-4">

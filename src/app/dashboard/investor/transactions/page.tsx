@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { useGetTransactionsQuery } from "@/store/api/investmentApi";
 
@@ -16,17 +17,17 @@ const rowVariants: Variants = {
 function getTypeColor(type) {
     if (!type) return "bg-[var(--color-status-info-bg)] text-[var(--color-status-info)] border-[var(--color-status-info-border)]";
     const t = type.toUpperCase();
-    if (t === "BUY" || t === "PURCHASE") return "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border-[var(--color-status-success-border)]";
-    if (t === "SELL" || t === "RESALE") return "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]";
+    if (t === "BUY" || t === "PURCHASE") return "bg-[#E6FAF5] text-[#019C80] border-[#8FE2D1]";
+    if (t === "SELL" || t === "RESALE") return "bg-[#FFF5E8] text-[#B96A00] border-[#F3C27C]";
     return "bg-[var(--color-status-info-bg)] text-[var(--color-status-info)] border-[var(--color-status-info-border)]";
 }
 
 function getStatusColor(status) {
     if (!status) return "";
     const s = status.toUpperCase();
-    if (s === "COMPLETED" || s === "SUCCESS") return "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border-[var(--color-status-success-border)]";
-    if (s === "PENDING") return "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]";
-    if (s === "FAILED") return "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border-[var(--color-status-error-border)]";
+    if (s === "COMPLETED" || s === "SUCCESS") return "bg-[#E6FAF5] text-[#019C80] border-[#8FE2D1]";
+    if (s === "PENDING") return "bg-[#FFF5E8] text-[#B96A00] border-[#F3C27C]";
+    if (s === "FAILED") return "bg-[#FFEAEA] text-[#C8372D] border-[#F4A7A1]";
     return "bg-[var(--color-status-info-bg)] text-[var(--color-status-info)] border-[var(--color-status-info-border)]";
 }
 
@@ -42,8 +43,30 @@ function formatAmount(amount, currency) {
 
 export default function TransactionsPage() {
     const { data, isLoading, isError } = useGetTransactionsQuery();
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 8;
 
-    const transactions = Array.isArray(data) ? data : (data?.data || data?.transactions || []);
+    const transactions = useMemo(
+        () => (Array.isArray(data) ? data : (data?.data || data?.transactions || [])),
+        [data]
+    );
+    const totalPages = Math.max(1, Math.ceil(transactions.length / ITEMS_PER_PAGE));
+    const safeCurrentPage = Math.min(currentPage, totalPages);
+
+    const paginatedTransactions = useMemo(() => {
+        const start = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
+        return transactions.slice(start, start + ITEMS_PER_PAGE);
+    }, [transactions, safeCurrentPage]);
+
+    const visiblePages = useMemo(() => {
+        const windowSize = 5;
+        const start = Math.max(1, safeCurrentPage - Math.floor(windowSize / 2));
+        const end = Math.min(totalPages, start + windowSize - 1);
+        const adjustedStart = Math.max(1, end - windowSize + 1);
+        return Array.from({ length: end - adjustedStart + 1 }, (_, i) => adjustedStart + i);
+    }, [safeCurrentPage, totalPages]);
+
+    const showPagination = !isLoading && !isError && transactions.length > ITEMS_PER_PAGE;
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen text-[var(--sidebar-text)]">
@@ -95,7 +118,7 @@ export default function TransactionsPage() {
                                     </tr>
                                 </thead>
                                 <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
-                                    {transactions.map((tx, idx) => (
+                                    {paginatedTransactions.map((tx, idx) => (
                                         <motion.tr
                                             key={tx.id || idx}
                                             variants={rowVariants}
@@ -135,7 +158,7 @@ export default function TransactionsPage() {
                         animate="visible"
                         className="md:hidden flex flex-col gap-3"
                     >
-                        {transactions.map((tx, idx) => (
+                        {paginatedTransactions.map((tx, idx) => (
                             <motion.div
                                 key={tx.id || idx}
                                 variants={rowVariants}
@@ -169,6 +192,44 @@ export default function TransactionsPage() {
                             </motion.div>
                         ))}
                     </motion.div>
+
+                    {showPagination && (
+                        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <p className="text-xs text-[var(--color-text-muted)]">
+                                Showing {(safeCurrentPage - 1) * ITEMS_PER_PAGE + 1}-
+                                {Math.min(safeCurrentPage * ITEMS_PER_PAGE, transactions.length)} of {transactions.length}
+                            </p>
+                            <div className="flex items-center gap-1.5">
+                                <button
+                                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                                    disabled={safeCurrentPage === 1}
+                                    className="px-3 py-1.5 rounded-md text-xs font-semibold border border-[var(--sidebar-border)] bg-[var(--card-surface)] text-[var(--header-text)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                >
+                                    Prev
+                                </button>
+                                {visiblePages.map((page) => (
+                                    <button
+                                        key={page}
+                                        onClick={() => setCurrentPage(page)}
+                                        className={`min-w-8 h-8 px-2 rounded-md text-xs font-semibold border cursor-pointer ${
+                                            page === safeCurrentPage
+                                                ? "bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] border-[var(--btn-cta-bg)]"
+                                                : "bg-[var(--card-surface)] text-[var(--header-text)] border-[var(--sidebar-border)]"
+                                        }`}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
+                                <button
+                                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                                    disabled={safeCurrentPage === totalPages}
+                                    className="px-3 py-1.5 rounded-md text-xs font-semibold border border-[var(--sidebar-border)] bg-[var(--card-surface)] text-[var(--header-text)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
         </div>

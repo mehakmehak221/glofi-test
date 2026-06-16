@@ -168,9 +168,9 @@ export default function PortfolioPage() {
                                 <stat.icon className="w-5 h-5 text-[var(--sidebar-active-text)]" />
                             </div>
                         </div>
-                        <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--header-text)] mb-2 tracking-tight overflow-hidden text-ellipsis whitespace-nowrap">{stat.value}</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-[var(--header-text)] mb-2 tracking-tight overflow-hidden text-ellipsis whitespace-nowrap">{stat.value}</p>
                         {stat.change && (
-                            <p className="text-[11px] text-[var(--sidebar-active-text)] flex items-center gap-1.5 font-medium">
+                            <p className="text-xs text-[var(--color-primary-500)] flex items-center gap-1.5 font-semibold">
                                 <TrendingUpIcon className="w-3.5 h-3.5" />
                                 {stat.change}
                             </p>
@@ -311,13 +311,13 @@ function SecondaryListingCard({ item, onDelete }) {
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Value</p>
-                                <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">
+                                <p className="text-sm font-bold text-[var(--color-primary-500)]">
                                     {formatNumber((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0))}
                                 </p>
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">ROI</p>
-                                <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">
+                                <p className="text-sm font-bold text-[var(--color-primary-500)]">
                                     +15%
                                 </p>
                             </div>
@@ -416,11 +416,11 @@ function AssetCard({ asset, onResale }) {
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Value</p>
-                                <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">{asset.value}</p>
+                                <p className="text-sm font-bold text-[var(--color-primary-500)]">{asset.value}</p>
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">ROI</p>
-                                <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">{asset.roi}</p>
+                                <p className="text-sm font-bold text-[var(--color-primary-500)]">{asset.roi}</p>
                             </div>
                         </div>
                     </div>

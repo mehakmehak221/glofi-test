@@ -148,7 +148,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                                 className="px-4 pt-5 pb-2 overflow-hidden"
 
                             >
-                                <span className="text-[10px] font-normal text-[var(--color-primary-200)] tracking-[0.15em] uppercase border border-[var(--color-primary-300)]/30 font-montserrat bg-[var(--color-primary-300)]/5 rounded-full px-3 py-1 inline-block">
+                                <span className="text-[10px] font-medium text-[var(--panel-chip-text)] tracking-[0.15em] uppercase border border-[var(--panel-chip-border)] font-montserrat bg-[var(--panel-chip-bg)] rounded-full px-3 py-1 inline-block">
                                     {isPartner ? "Partner Panel" : isAgent ? "Agent Panel" : "Investor Panel"}
                                 </span>
                             </motion.div>
