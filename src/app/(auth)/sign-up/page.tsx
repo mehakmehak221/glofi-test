@@ -137,7 +137,11 @@ function SignUpPageContent() {
     };
 
     const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm((p) => ({ ...p, [k]: e.target.value }));
+        let value = e.target.value;
+        if (k === "name") {
+            value = value.replace(/[^a-zA-Z\u00C0-\u024F\u1E00-\u1EFF .'\-\s]/g, "");
+        }
+        setForm((p) => ({ ...p, [k]: value }));
         clearFieldError(k);
     };
 
