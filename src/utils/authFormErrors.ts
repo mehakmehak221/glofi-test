@@ -241,6 +241,7 @@ export function partitionSignInValidationLines(lines: string[], minPasswordLen: 
 export function partitionSignUpValidationLines(lines: string[], minPasswordLen: number) {
     let nameLine = "";
     let emailLine = "";
+    let phoneLine = "";
     let passwordLine = "";
     let otpLine = "";
     let reraLine = "";
@@ -252,6 +253,7 @@ export function partitionSignUpValidationLines(lines: string[], minPasswordLen: 
         const low = raw.toLowerCase();
         if (low.includes("otp")) otpLine = friendly;
         else if (low.includes("email")) emailLine = friendly;
+        else if (low.includes("phone")) phoneLine = friendly;
         else if (low.includes("password")) passwordLine = friendly;
         else if (low.includes("rera")) reraLine = friendly;
         else if (low.includes("expiry") || low.includes("expire")) expiryLine = friendly;
@@ -260,7 +262,7 @@ export function partitionSignUpValidationLines(lines: string[], minPasswordLen: 
             nameLine = friendly;
         else generalLines.push(friendly);
     }
-    return { nameLine, emailLine, passwordLine, otpLine, reraLine, expiryLine, referralLine, generalLines };
+    return { nameLine, emailLine, phoneLine, passwordLine, otpLine, reraLine, expiryLine, referralLine, generalLines };
 }
 
 export function validateSignInFields(email: string, password: string, minPasswordLen = MIN_PASSWORD_SIGNIN_LEN) {
@@ -286,6 +288,7 @@ export function validateSignInFields(email: string, password: string, minPasswor
 export type SignUpFormShape = {
     name: string;
     email: string;
+    phone: string;
     password: string;
     confirmPassword: string;
     referredByCode: string;
@@ -298,6 +301,7 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
     const trimmedEmail = form.email.trim();
     let nameError = "";
     let emailError = "";
+    let phoneError = "";
     let passwordError = "";
     let confirmPasswordError = "";
     let reraError = "";
@@ -316,6 +320,12 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
         emailError = "Please enter your email address.";
     } else if (!EMAIL_PATTERN.test(trimmedEmail)) {
         emailError = EMAIL_FORMAT_ERROR;
+    }
+
+    if (!form.phone.trim()) {
+        phoneError = "Please enter your phone number.";
+    } else if (!/^\+?[1-9]\d{7,14}$/.test(form.phone.trim().replace(/[\s-]/g, ""))) {
+        phoneError = "Please enter a valid phone number with country code (e.g. +1234567890).";
     }
 
     if (!form.password.trim()) {
@@ -349,7 +359,7 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
         }
     }
 
-    return { nameError, emailError, passwordError, confirmPasswordError, reraError, expiryError, referralError };
+    return { nameError, emailError, phoneError, passwordError, confirmPasswordError, reraError, expiryError, referralError };
 }
 
 export function applySignInApiErrors(
@@ -438,6 +448,7 @@ export function applySignUpApiErrors(
     setters: {
         setNameError: (s: string) => void;
         setEmailError: (s: string) => void;
+        setPhoneError: (s: string) => void;
         setPasswordError: (s: string) => void;
         setReraError: (s: string) => void;
         setExpiryError: (s: string) => void;
@@ -450,6 +461,7 @@ export function applySignUpApiErrors(
     const {
         setNameError,
         setEmailError,
+        setPhoneError,
         setPasswordError,
         setReraError,
         setExpiryError,
@@ -470,6 +482,7 @@ export function applySignUpApiErrors(
     const clearFields = () => {
         setNameError("");
         setEmailError("");
+        setPhoneError("");
         setPasswordError("");
         setReraError("");
         setExpiryError("");
@@ -495,6 +508,7 @@ export function applySignUpApiErrors(
             setConfirmPasswordError("");
             setNameError(p.nameLine);
             setEmailError(p.emailLine);
+            setPhoneError(p.phoneLine);
             setPasswordError(p.passwordLine);
             setOtpError?.(p.otpLine);
             setReraError(p.reraLine);
@@ -532,6 +546,7 @@ export function applySignUpApiErrors(
             setConfirmPasswordError("");
             setNameError(p.nameLine);
             setEmailError(p.emailLine);
+            setPhoneError(p.phoneLine);
             setPasswordError(p.passwordLine);
             setOtpError?.(p.otpLine);
             setReraError(p.reraLine);

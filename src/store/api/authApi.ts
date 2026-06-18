@@ -5,6 +5,7 @@ export type SendRegistrationOtpBody = {
   email: string;
   password: string;
   role: string;
+  phone: string;
   referralCode?: string;
 };
 
@@ -13,11 +14,35 @@ export type RegistrationOtpBody = {
   otp: string;
 };
 
+export type SendPhoneOtpBody = {
+  email: string;
+  phone: string;
+};
+
+export type VerifyPhoneOtpBody = {
+  email: string;
+  firebaseIdToken: string;
+};
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     sendRegistrationOtp: builder.mutation<{ message?: string }, SendRegistrationOtpBody>({
       query: (body) => ({
         url: 'auth/register/send-otp',
+        method: 'POST',
+        body,
+      }),
+    }),
+    sendPhoneOtp: builder.mutation<{ success: boolean; phone: string }, SendPhoneOtpBody>({
+      query: (body) => ({
+        url: 'auth/register/send-phone-otp',
+        method: 'POST',
+        body,
+      }),
+    }),
+    verifyPhoneOtp: builder.mutation<{ success: boolean }, VerifyPhoneOtpBody>({
+      query: (body) => ({
+        url: 'auth/register/verify-phone-otp',
         method: 'POST',
         body,
       }),
@@ -105,6 +130,8 @@ export const authApi = baseApi.injectEndpoints({
 
 export const {
   useSendRegistrationOtpMutation,
+  useSendPhoneOtpMutation,
+  useVerifyPhoneOtpMutation,
   useVerifyRegistrationOtpMutation,
   useRegisterMutation,
   useRegisterAgentMutation,

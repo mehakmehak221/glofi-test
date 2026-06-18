@@ -11,6 +11,8 @@ export const baseApi = createApi({
       const publicEndpoints = [
         'login',
         'sendRegistrationOtp',
+        'sendPhoneOtp',
+        'verifyPhoneOtp',
         'verifyRegistrationOtp',
         'register',
         'registerAgent',

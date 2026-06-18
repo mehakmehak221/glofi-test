@@ -1,9 +1,11 @@
 "use client";
 
-import { startTransition, Suspense, useEffect, useState } from "react";
+import { startTransition, Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
+import { firebaseAuth } from "@/lib/firebase";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
 import { ChevronLeftIcon, LoadingSpinner, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
@@ -11,6 +13,8 @@ import {
     useRegisterMutation,
     useRegisterAgentMutation,
     useSendRegistrationOtpMutation,
+    useSendPhoneOtpMutation,
+    useVerifyPhoneOtpMutation,
     useVerifyRegistrationOtpMutation,
 } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
@@ -26,7 +30,7 @@ import {
 
 const SIGNUP_ROLES = ["Investor", "Partner", "Agent"] as const;
 type SignupRole = (typeof SIGNUP_ROLES)[number];
-type SignUpStep = "DETAILS" | "OTP";
+type SignUpStep = "DETAILS" | "PHONE_OTP" | "OTP";
 
 function parseRoleQuery(raw: string | null): SignupRole | null {
     if (!raw) return null;
@@ -40,8 +44,17 @@ function SignUpPageContent() {
     const roleParam = searchParams.get("role");
     const [userType, setUserType] = useState<SignupRole>(() => parseRoleQuery(roleParam) ?? "Investor");
     const [step, setStep] = useState<SignUpStep>("DETAILS");
+
+    // Email OTP state
     const [otp, setOtp] = useState("");
     const [otpError, setOtpError] = useState("");
+
+    // Phone OTP state
+    const [phoneCode, setPhoneCode] = useState("");
+    const [phoneCodeError, setPhoneCodeError] = useState("");
+    const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+    const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
+
     const [successMsg, setSuccessMsg] = useState("");
 
     useEffect(() => {
@@ -51,9 +64,11 @@ function SignUpPageContent() {
             setUserType((current) => (current === next ? current : next));
         });
     }, [roleParam]);
+
     const [form, setForm] = useState({
         name: "",
         email: "",
+        phone: "",
         password: "",
         confirmPassword: "",
         referredByCode: "",
@@ -65,6 +80,7 @@ function SignUpPageContent() {
     const [errorMsg, setErrorMsg] = useState("");
     const [nameError, setNameError] = useState("");
     const [emailError, setEmailError] = useState("");
+    const [phoneError, setPhoneError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const [reraError, setReraError] = useState("");
@@ -72,75 +88,68 @@ function SignUpPageContent() {
     const [referralError, setReferralError] = useState("");
 
     const [sendRegistrationOtp, { isLoading: isSendingOtp }] = useSendRegistrationOtpMutation();
+    const [sendPhoneOtp, { isLoading: isSendingPhoneOtp }] = useSendPhoneOtpMutation();
+    const [verifyPhoneOtp, { isLoading: isVerifyingPhoneOtp }] = useVerifyPhoneOtpMutation();
     const [verifyRegistrationOtp, { isLoading: isVerifyingOtp }] = useVerifyRegistrationOtpMutation();
     const [register, { isLoading: isRegistering }] = useRegisterMutation();
     const [registerAgent, { isLoading: isAgentRegistering }] = useRegisterAgentMutation();
-    const isLoading = isSendingOtp || isVerifyingOtp || isRegistering || isAgentRegistering;
+    const isLoading = isSendingOtp || isSendingPhoneOtp || isVerifyingPhoneOtp || isVerifyingOtp || isRegistering || isAgentRegistering;
 
+    // ---------------------------------------------------------------------------
+    // Cleanup reCAPTCHA when leaving the phone step
+    // ---------------------------------------------------------------------------
+    const clearRecaptcha = () => {
+        if (recaptchaVerifierRef.current) {
+            try {
+                recaptchaVerifierRef.current.clear();
+            } catch (e) {
+                console.error("Error clearing recaptcha verifier:", e);
+            }
+            recaptchaVerifierRef.current = null;
+        }
+        const container = document.getElementById("recaptcha-container");
+        if (container) {
+            container.innerHTML = "";
+        }
+    };
+
+    useEffect(() => {
+        return () => { clearRecaptcha(); };
+    }, []);
+
+    // ---------------------------------------------------------------------------
+    // Role change resets everything
+    // ---------------------------------------------------------------------------
     const handleUserTypeChange = (next: string) => {
         const nextRole = SIGNUP_ROLES.includes(next as SignupRole) ? (next as SignupRole) : null;
         if (!nextRole || nextRole === userType) return;
         setUserType(nextRole);
-        setForm({
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            referredByCode: "",
-            reraNumber: "",
-            expiryDate: "",
-        });
-        setErrorMsg("");
-        setNameError("");
-        setEmailError("");
-        setPasswordError("");
-        setConfirmPasswordError("");
-        setReraError("");
-        setExpiryError("");
-        setReferralError("");
-        setShowPassword(false);
-        setShowConfirmPassword(false);
-        setStep("DETAILS");
-        setOtp("");
-        setOtpError("");
-        setSuccessMsg("");
+        setForm({ name: "", email: "", phone: "", password: "", confirmPassword: "", referredByCode: "", reraNumber: "", expiryDate: "" });
+        setErrorMsg(""); setNameError(""); setEmailError(""); setPhoneError(""); setPasswordError("");
+        setConfirmPasswordError(""); setReraError(""); setExpiryError(""); setReferralError("");
+        setShowPassword(false); setShowConfirmPassword(false);
+        setStep("DETAILS"); setOtp(""); setOtpError("");
+        setPhoneCode(""); setPhoneCodeError(""); setConfirmationResult(null);
+        setSuccessMsg(""); clearRecaptcha();
     };
 
     const clearFieldError = (k: keyof typeof form) => {
         setErrorMsg("");
         switch (k) {
-            case "name":
-                setNameError("");
-                break;
-            case "email":
-                setEmailError("");
-                break;
-            case "password":
-                setPasswordError("");
-                setConfirmPasswordError("");
-                break;
-            case "confirmPassword":
-                setConfirmPasswordError("");
-                break;
-            case "reraNumber":
-                setReraError("");
-                break;
-            case "expiryDate":
-                setExpiryError("");
-                break;
-            case "referredByCode":
-                setReferralError("");
-                break;
-            default:
-                break;
+            case "name": setNameError(""); break;
+            case "email": setEmailError(""); break;
+            case "phone": setPhoneError(""); break;
+            case "password": setPasswordError(""); setConfirmPasswordError(""); break;
+            case "confirmPassword": setConfirmPasswordError(""); break;
+            case "reraNumber": setReraError(""); break;
+            case "expiryDate": setExpiryError(""); break;
+            case "referredByCode": setReferralError(""); break;
         }
     };
 
     const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value;
-        if (k === "name") {
-            value = value.replace(/[^a-zA-Z\u00C0-\u024F\u1E00-\u1EFF .'\-\s]/g, "");
-        }
+        if (k === "name") value = value.replace(/[^a-zA-Z\u00C0-\u024F\u1E00-\u1EFF .'\\-\\s]/g, "");
         setForm((p) => ({ ...p, [k]: value }));
         clearFieldError(k);
     };
@@ -170,127 +179,184 @@ function SignUpPageContent() {
         }
     };
 
-    const sendOtpForRegistration = async () => {
+
+    const sendEmailOtp = async (transitionToOtpStep = true) => {
         const trimmedEmail = form.email.trim();
         await sendRegistrationOtp({
             fullName: form.name.trim(),
             email: trimmedEmail,
+            phone: form.phone.trim(),
             password: form.password,
             role: userType.toUpperCase(),
             ...(form.referredByCode.trim() ? { referralCode: form.referredByCode.trim() } : {}),
         }).unwrap();
         setOtp("");
         setOtpError("");
-        setSuccessMsg(`We sent a 6-digit code to ${trimmedEmail}.`);
-        setStep("OTP");
+        if (transitionToOtpStep) {
+            setSuccessMsg(`We sent a 6-digit code to ${trimmedEmail}.`);
+            setStep("OTP");
+        }
     };
 
-    const handleResendOtp = async () => {
-        setErrorMsg("");
-        setOtpError("");
-        setSuccessMsg("");
+    // ---------------------------------------------------------------------------
+    // Step 2a: Fetch phone from backend & trigger Firebase SMS
+    // ---------------------------------------------------------------------------
+    const initiatePhoneVerification = async () => {
+        const trimmedEmail = form.email.trim();
+
+        // Get phone number from backend
+        const phoneData = await sendPhoneOtp({ email: trimmedEmail, phone: form.phone.trim() }).unwrap();
+        if (!phoneData.success) throw new Error("Could not retrieve phone number");
+
+        // Set up invisible reCAPTCHA (cleared on each attempt to avoid reuse errors)
+        clearRecaptcha();
+        const verifier = new RecaptchaVerifier(firebaseAuth, "recaptcha-container", { size: "invisible" });
+        recaptchaVerifierRef.current = verifier;
+
+        // Trigger Firebase SMS
+        const result = await signInWithPhoneNumber(firebaseAuth, phoneData.phone, verifier);
+        setConfirmationResult(result);
+        setPhoneCode("");
+        setPhoneCodeError("");
+        setSuccessMsg(`We sent a verification SMS to ${phoneData.phone}.`);
+        setStep("PHONE_OTP");
+    };
+
+    // ---------------------------------------------------------------------------
+    // Step 2b: Verify SMS code with Firebase → send token to backend
+    // ---------------------------------------------------------------------------
+    const verifyPhoneCode = async () => {
+        if (!confirmationResult) throw new Error("No confirmation result — please resend.");
+
+        const credential = await confirmationResult.confirm(phoneCode);
+        const firebaseIdToken = await credential.user.getIdToken();
+
+        await verifyPhoneOtp({ email: form.email.trim(), firebaseIdToken }).unwrap();
+    };
+
+    // ---------------------------------------------------------------------------
+    // Resend email OTP handler (from OTP step)
+    // ---------------------------------------------------------------------------
+    const handleResendEmailOtp = async () => {
+        setErrorMsg(""); setOtpError(""); setSuccessMsg("");
         try {
-            await sendOtpForRegistration();
+            await sendEmailOtp(true);
         } catch (err: unknown) {
             const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
                 applySignUpApiErrors(apiErr, {
-                    setNameError,
-                    setEmailError,
-                    setPasswordError,
-                    setReraError,
-                    setExpiryError,
-                    setReferralError,
-                    setConfirmPasswordError,
-                    setOtpError,
-                    setErrorMsg,
+                    setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
+                    setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
             }
         }
     };
 
+    // ---------------------------------------------------------------------------
+    // Resend phone SMS handler (from PHONE_OTP step)
+    // ---------------------------------------------------------------------------
+    const handleResendPhoneSms = async () => {
+        setErrorMsg(""); setPhoneCodeError(""); setSuccessMsg("");
+        try {
+            await initiatePhoneVerification();
+        } catch (err: unknown) {
+            const apiErr = err as { status?: number; data?: { message?: string } };
+            setErrorMsg((apiErr?.data?.message) || "Failed to resend SMS. Please try again.");
+        }
+    };
+
+    // ---------------------------------------------------------------------------
+    // DETAILS form submit
+    // ---------------------------------------------------------------------------
     const handleDetailsSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setErrorMsg("");
-        setSuccessMsg("");
-        setNameError("");
-        setEmailError("");
-        setPasswordError("");
-        setConfirmPasswordError("");
-        setReraError("");
-        setExpiryError("");
-        setReferralError("");
-        setOtpError("");
+        setErrorMsg(""); setSuccessMsg("");
+        setNameError(""); setEmailError(""); setPhoneError(""); setPasswordError(""); setConfirmPasswordError("");
+        setReraError(""); setExpiryError(""); setReferralError(""); setOtpError("");
 
-        const trimmedName = form.name.trim();
-        const trimmedEmail = form.email.trim();
-        const trimmedReraNumber = form.reraNumber.trim();
-
-        const {
-            nameError: nextNameErr,
-            emailError: nextEmailErr,
-            passwordError: nextPassErr,
-            confirmPasswordError: nextConfirmErr,
-            reraError: nextReraErr,
-            expiryError: nextExpiryErr,
-            referralError: nextReferralErr,
-        } = validateSignUpFields(form, userType);
-        setNameError(nextNameErr);
-        setEmailError(nextEmailErr);
-        setPasswordError(nextPassErr);
-        setConfirmPasswordError(nextConfirmErr);
-        setReraError(nextReraErr);
-        setExpiryError(nextExpiryErr);
-        setReferralError(nextReferralErr);
-        if (nextNameErr || nextEmailErr || nextPassErr || nextConfirmErr || nextReraErr || nextExpiryErr || nextReferralErr) {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            return;
-        }
+        const { nameError: n, emailError: em, phoneError: ph, passwordError: p, confirmPasswordError: cp, reraError: r, expiryError: ex, referralError: ref } =
+            validateSignUpFields(form, userType);
+        setNameError(n); setEmailError(em); setPhoneError(ph); setPasswordError(p); setConfirmPasswordError(cp);
+        setReraError(r); setExpiryError(ex); setReferralError(ref);
+        if (n || em || ph || p || cp || r || ex || ref) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
 
         try {
             if (userType === "Agent") {
-                const payload: Record<string, string> = {
-                    fullName: trimmedName,
-                    email: trimmedEmail,
-                    password: form.password,
-                };
+                const trimmedName = form.name.trim();
+                const trimmedEmail = form.email.trim();
+                const trimmedReraNumber = form.reraNumber.trim();
+                const payload: Record<string, string> = { fullName: trimmedName, email: trimmedEmail, phone: form.phone.trim(), password: form.password };
                 if (trimmedReraNumber) payload.reraNumber = trimmedReraNumber;
                 if (form.expiryDate) payload.expiryDate = form.expiryDate;
-
                 const result = await registerAgent(payload).unwrap();
                 completeRegistration(result);
                 return;
             }
 
-            await sendOtpForRegistration();
+            // For Investor / Partner: 
+            // 1. First send details to create PendingRegistration and send Email OTP
+            await sendEmailOtp(false);
+            // 2. Then initiate phone verification (which reads from PendingRegistration)
+            await initiatePhoneVerification();
         } catch (err: unknown) {
             const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
-                applySignUpApiErrors(apiErr, {
-                    setNameError,
-                    setEmailError,
-                    setPasswordError,
-                    setReraError,
-                    setExpiryError,
-                    setReferralError,
-                    setConfirmPasswordError,
-                    setOtpError,
-                    setErrorMsg,
-                });
+                const friendlyMsg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
+                if (friendlyMsg && !friendlyMsg.toLowerCase().includes("phone")) {
+                    applySignUpApiErrors(apiErr, {
+                        setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
+                        setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
+                    });
+                } else {
+                    setErrorMsg(friendlyMsg || "Failed to initiate phone verification. Please try again.");
+                }
             }
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
     };
 
+    // ---------------------------------------------------------------------------
+    // PHONE_OTP form submit → verify code → move to OTP step
+    // ---------------------------------------------------------------------------
+    const handlePhoneOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setErrorMsg(""); setPhoneCodeError(""); setSuccessMsg("");
+
+        const code = phoneCode.trim();
+        if (code.length < 6) {
+            setPhoneCodeError("Please enter the 6-digit SMS code.");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            return;
+        }
+
+        try {
+            await verifyPhoneCode();
+            // Phone verified on backend — now move to Email OTP verification step
+            setStep("OTP");
+            setSuccessMsg(`We sent a 6-digit verification code to ${form.email.trim()}.`);
+            clearRecaptcha();
+        } catch (err: unknown) {
+            const apiErr = err as { status?: number; data?: { message?: string } };
+            const msg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
+            if (msg.toLowerCase().includes("otp") || msg.toLowerCase().includes("invalid") || msg.toLowerCase().includes("expired")) {
+                setPhoneCodeError("Invalid or expired SMS code. Please try again.");
+            } else {
+                setErrorMsg(msg || "Phone verification failed. Please try again.");
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    };
+
+    // ---------------------------------------------------------------------------
+    // OTP (email) form submit
+    // ---------------------------------------------------------------------------
     const handleOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setErrorMsg("");
-        setOtpError("");
-        setSuccessMsg("");
+        setErrorMsg(""); setOtpError(""); setSuccessMsg("");
 
         const normalizedOtp = normalizeOtpInput(otp);
         setOtp(normalizedOtp);
@@ -301,27 +367,21 @@ function SignUpPageContent() {
             return;
         }
 
-        const trimmedEmail = form.email.trim();
-
         try {
-            const result = await verifyRegistrationOtp({ email: trimmedEmail, otp: normalizedOtp }).unwrap();
+            const result = await verifyRegistrationOtp({ email: form.email.trim(), otp: normalizedOtp }).unwrap();
             completeRegistration(result);
         } catch (err: unknown) {
             applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, {
-                setNameError,
-                setEmailError,
-                setPasswordError,
-                setReraError,
-                setExpiryError,
-                setReferralError,
-                setConfirmPasswordError,
-                setOtpError,
-                setErrorMsg,
+                setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
+                setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
             });
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
     };
 
+    // ---------------------------------------------------------------------------
+    // Render
+    // ---------------------------------------------------------------------------
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -329,6 +389,9 @@ function SignUpPageContent() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="flex flex-col"
         >
+            {/* Invisible reCAPTCHA mount point */}
+            <div id="recaptcha-container" />
+
             <Link
                 href="/"
                 className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
@@ -353,9 +416,7 @@ function SignUpPageContent() {
                         role="alert"
                     >
                         {errorMsg.split(/\n\n+/).map((block, idx) => (
-                            <p key={idx} className="leading-relaxed">
-                                {block}
-                            </p>
+                            <p key={idx} className="leading-relaxed">{block}</p>
                         ))}
                     </motion.div>
                 )}
@@ -371,13 +432,82 @@ function SignUpPageContent() {
                 )}
             </div>
 
-
             <motion.div className="mb-4 space-y-4">
                 <UserTypeToggle value={userType} onChange={handleUserTypeChange} />
                 <RoleInsightCallout role={userType} />
             </motion.div>
 
-            {step === "OTP" ? (
+            {/* ---------------------------------------------------------------- */}
+            {/* Step: PHONE_OTP — Firebase SMS verification                      */}
+            {/* ---------------------------------------------------------------- */}
+            {step === "PHONE_OTP" ? (
+                <form
+                    noValidate
+                    onSubmit={handlePhoneOtpSubmit}
+                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                >
+                    <div className="flex flex-col gap-1">
+                        <p className="text-sm font-semibold text-neutral-900">Phone Verification</p>
+                        <p className="text-sm text-neutral-500 leading-relaxed">
+                            Enter the SMS code sent to your registered phone number.
+                        </p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="sign-up-phone-code" className="text-sm font-medium text-neutral-900 font-montserrat">
+                            SMS Code
+                        </label>
+                        <input
+                            id="sign-up-phone-code"
+                            type="text"
+                            inputMode="numeric"
+                            autoComplete="one-time-code"
+                            value={phoneCode}
+                            onChange={(e) => {
+                                setPhoneCode(normalizeOtpInput(e.target.value));
+                                setPhoneCodeError("");
+                                setErrorMsg("");
+                            }}
+                            placeholder="000000"
+                            maxLength={6}
+                            aria-invalid={Boolean(phoneCodeError)}
+                            aria-describedby={phoneCodeError ? "sign-up-phone-code-error" : undefined}
+                            className={`premium-input w-full text-center tracking-[0.4em] text-lg ${phoneCodeError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                        />
+                        {phoneCodeError ? (
+                            <p id="sign-up-phone-code-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                {phoneCodeError}
+                            </p>
+                        ) : null}
+                    </div>
+                    <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
+                        {isLoading ? <LoadingSpinner /> : "Verify Phone"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleResendPhoneSms}
+                        disabled={isLoading}
+                        className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors text-center disabled:opacity-50"
+                    >
+                        Didn&apos;t receive an SMS? Resend
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setStep("DETAILS");
+                            setPhoneCode(""); setPhoneCodeError(""); setSuccessMsg(""); setErrorMsg("");
+                            clearRecaptcha();
+                        }}
+                        disabled={isLoading}
+                        className="text-sm text-[var(--color-primary-500)] hover:text-[var(--color-primary-600)] transition-colors text-center disabled:opacity-50"
+                    >
+                        Back to account details
+                    </button>
+                </form>
+
+                /* ---------------------------------------------------------------- */
+                /* Step: OTP — Email verification                                   */
+                /* ---------------------------------------------------------------- */
+            ) : step === "OTP" ? (
                 <form
                     noValidate
                     onSubmit={handleOtpSubmit}
@@ -419,7 +549,7 @@ function SignUpPageContent() {
                     </button>
                     <button
                         type="button"
-                        onClick={handleResendOtp}
+                        onClick={handleResendEmailOtp}
                         disabled={isLoading}
                         className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors text-center disabled:opacity-50"
                     >
@@ -429,10 +559,7 @@ function SignUpPageContent() {
                         type="button"
                         onClick={() => {
                             setStep("DETAILS");
-                            setOtp("");
-                            setOtpError("");
-                            setSuccessMsg("");
-                            setErrorMsg("");
+                            setOtp(""); setOtpError(""); setSuccessMsg(""); setErrorMsg("");
                         }}
                         disabled={isLoading}
                         className="text-sm text-[var(--color-primary-500)] hover:text-[var(--color-primary-600)] transition-colors text-center disabled:opacity-50"
@@ -440,6 +567,10 @@ function SignUpPageContent() {
                         Back to account details
                     </button>
                 </form>
+
+                /* ---------------------------------------------------------------- */
+                /* Step: DETAILS — Account details form                             */
+                /* ---------------------------------------------------------------- */
             ) : (
                 <form
                     noValidate
@@ -462,9 +593,7 @@ function SignUpPageContent() {
                             className={`premium-input w-full ${nameError ? "border-red-500/60 focus:border-red-400" : ""}`}
                         />
                         {nameError ? (
-                            <p id="sign-up-name-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                {nameError}
-                            </p>
+                            <p id="sign-up-name-error" className={FIELD_ERROR_CLASSES} role="alert">{nameError}</p>
                         ) : null}
                     </div>
 
@@ -487,9 +616,27 @@ function SignUpPageContent() {
                             className={`premium-input w-full ${emailError ? "border-red-500/60 focus:border-red-400" : ""}`}
                         />
                         {emailError ? (
-                            <p id="sign-up-email-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                {emailError}
-                            </p>
+                            <p id="sign-up-email-error" className={FIELD_ERROR_CLASSES} role="alert">{emailError}</p>
+                        ) : null}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="sign-up-phone" className="text-sm font-medium text-neutral-900 font-montserrat">
+                            Phone Number
+                        </label>
+                        <input
+                            id="sign-up-phone"
+                            type="tel"
+                            value={form.phone}
+                            onChange={set("phone")}
+                            placeholder="+1234567890"
+                            autoComplete="tel"
+                            aria-invalid={Boolean(phoneError)}
+                            aria-describedby={phoneError ? "sign-up-phone-error" : undefined}
+                            className={`premium-input w-full ${phoneError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                        />
+                        {phoneError ? (
+                            <p id="sign-up-phone-error" className={FIELD_ERROR_CLASSES} role="alert">{phoneError}</p>
                         ) : null}
                     </div>
 
@@ -529,17 +676,13 @@ function SignUpPageContent() {
                         >
                             {getSignUpPasswordCriteria(form.password).map(({ id, label, met }) => (
                                 <li key={id} className={`flex items-start gap-2 ${met ? "text-emerald-400/95" : ""}`}>
-                                    <span className="mt-0.5 w-3.5 shrink-0 text-center" aria-hidden>
-                                        {met ? "✓" : "○"}
-                                    </span>
+                                    <span className="mt-0.5 w-3.5 shrink-0 text-center" aria-hidden>{met ? "✓" : "○"}</span>
                                     <span>{label}</span>
                                 </li>
                             ))}
                         </ul>
                         {passwordError ? (
-                            <p id="sign-up-password-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                {passwordError}
-                            </p>
+                            <p id="sign-up-password-error" className={FIELD_ERROR_CLASSES} role="alert">{passwordError}</p>
                         ) : null}
                     </div>
 
@@ -568,9 +711,7 @@ function SignUpPageContent() {
                             </button>
                         </div>
                         {confirmPasswordError ? (
-                            <p id="sign-up-confirm-password-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                {confirmPasswordError}
-                            </p>
+                            <p id="sign-up-confirm-password-error" className={FIELD_ERROR_CLASSES} role="alert">{confirmPasswordError}</p>
                         ) : null}
                     </div>
 
@@ -591,9 +732,7 @@ function SignUpPageContent() {
                                     className={`premium-input w-full ${reraError ? "border-red-500/60 focus:border-red-400" : ""}`}
                                 />
                                 {reraError ? (
-                                    <p id="sign-up-rera-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                        {reraError}
-                                    </p>
+                                    <p id="sign-up-rera-error" className={FIELD_ERROR_CLASSES} role="alert">{reraError}</p>
                                 ) : null}
                             </div>
                             <div className="flex flex-col gap-2">
@@ -610,9 +749,7 @@ function SignUpPageContent() {
                                     className={`premium-input w-full ${expiryError ? "border-red-500/60 focus:border-red-400" : ""}`}
                                 />
                                 {expiryError ? (
-                                    <p id="sign-up-rera-expiry-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                        {expiryError}
-                                    </p>
+                                    <p id="sign-up-rera-expiry-error" className={FIELD_ERROR_CLASSES} role="alert">{expiryError}</p>
                                 ) : null}
                             </div>
                         </>
@@ -632,9 +769,7 @@ function SignUpPageContent() {
                                 className={`premium-input w-full ${referralError ? "border-red-500/60 focus:border-red-400" : ""}`}
                             />
                             {referralError ? (
-                                <p id="sign-up-referral-error" className={FIELD_ERROR_CLASSES} role="alert">
-                                    {referralError}
-                                </p>
+                                <p id="sign-up-referral-error" className={FIELD_ERROR_CLASSES} role="alert">{referralError}</p>
                             ) : null}
                         </div>
                     )}
