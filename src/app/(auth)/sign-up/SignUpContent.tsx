@@ -218,6 +218,9 @@ function SignUpPageContent() {
         // Set up invisible reCAPTCHA (re-use the instance if already created)
         let verifier = recaptchaVerifierRef.current;
         if (!verifier) {
+            if (!firebaseAuth) {
+                throw new Error("SMS verification service is not configured. Please contact the administrator.");
+            }
             console.log("Creating RecaptchaVerifier...");
             const container = document.getElementById("recaptcha-container");
             if (container) {
