@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function AuthLeftPanel() {
   return (
@@ -11,8 +12,8 @@ export default function AuthLeftPanel() {
             backgroundImage: `url('/assets/images/backgrounds/left-bg.png')`,
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-bg-dark-alt)]/80 via-[var(--color-bg-dark-alt)]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-dark-alt)]/95 via-transparent to-[var(--color-bg-dark-alt)]/40" />
+        <div className="absolute inset-0" />
+        <div className="absolute inset-0" />
       </div>
 
 
@@ -20,7 +21,9 @@ export default function AuthLeftPanel() {
 
         <div>
           <div className="flex items-baseline gap-3">
-            <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={135} height={45} className="h-9 w-auto translate-y-[2px]" priority />
+            <Link href="/">
+              <Image src="/assets/images/branding/logo.png" alt="Glofi Logo" width={135} height={45} className="h-9 w-auto translate-y-[2px] cursor-pointer" priority />
+            </Link>
 
           </div>
         </div>

@@ -17,6 +17,7 @@
     "react": "19.2.3",
     "react-country-state-city": "^1.1.12",
     "react-dom": "19.2.3",
+    "react-phone-number-input": "^3.4.17",
     "react-qr-code": "^2.0.21",
     "react-redux": "^9.2.0",
     "rss-parser": "^3.13.0",

@@ -4,6 +4,8 @@ import { startTransition, Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
 import { firebaseAuth } from "@/lib/firebase";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
@@ -95,9 +97,6 @@ function SignUpPageContent() {
     const [registerAgent, { isLoading: isAgentRegistering }] = useRegisterAgentMutation();
     const isLoading = isSendingOtp || isSendingPhoneOtp || isVerifyingPhoneOtp || isVerifyingOtp || isRegistering || isAgentRegistering;
 
-    // ---------------------------------------------------------------------------
-    // Cleanup reCAPTCHA when leaving the phone step
-    // ---------------------------------------------------------------------------
     const clearRecaptcha = () => {
         if (recaptchaVerifierRef.current) {
             try {
@@ -117,9 +116,7 @@ function SignUpPageContent() {
         return () => { clearRecaptcha(); };
     }, []);
 
-    // ---------------------------------------------------------------------------
-    // Role change resets everything
-    // ---------------------------------------------------------------------------
+
     const handleUserTypeChange = (next: string) => {
         const nextRole = SIGNUP_ROLES.includes(next as SignupRole) ? (next as SignupRole) : null;
         if (!nextRole || nextRole === userType) return;
@@ -182,19 +179,27 @@ function SignUpPageContent() {
 
     const sendEmailOtp = async (transitionToOtpStep = true) => {
         const trimmedEmail = form.email.trim();
-        await sendRegistrationOtp({
+        const payload = {
             fullName: form.name.trim(),
             email: trimmedEmail,
             phone: form.phone.trim(),
             password: form.password,
             role: userType.toUpperCase(),
             ...(form.referredByCode.trim() ? { referralCode: form.referredByCode.trim() } : {}),
-        }).unwrap();
-        setOtp("");
-        setOtpError("");
-        if (transitionToOtpStep) {
-            setSuccessMsg(`We sent a 6-digit code to ${trimmedEmail}.`);
-            setStep("OTP");
+        };
+        console.log("Sending registration OTP with payload:", payload);
+        try {
+            const result = await sendRegistrationOtp(payload).unwrap();
+            console.log("sendRegistrationOtp success response:", result);
+            setOtp("");
+            setOtpError("");
+            if (transitionToOtpStep) {
+                setSuccessMsg(`We sent a 6-digit code to ${trimmedEmail}.`);
+                setStep("OTP");
+            }
+        } catch (err) {
+            console.error("sendRegistrationOtp failed error:", err);
+            throw err;
         }
     };
 
@@ -203,23 +208,39 @@ function SignUpPageContent() {
     // ---------------------------------------------------------------------------
     const initiatePhoneVerification = async () => {
         const trimmedEmail = form.email.trim();
+        console.log("Initiating phone verification for email:", trimmedEmail, "and phone:", form.phone.trim());
 
         // Get phone number from backend
         const phoneData = await sendPhoneOtp({ email: trimmedEmail, phone: form.phone.trim() }).unwrap();
+        console.log("Received phone number from backend:", phoneData);
         if (!phoneData.success) throw new Error("Could not retrieve phone number");
 
-        // Set up invisible reCAPTCHA (cleared on each attempt to avoid reuse errors)
-        clearRecaptcha();
-        const verifier = new RecaptchaVerifier(firebaseAuth, "recaptcha-container", { size: "invisible" });
-        recaptchaVerifierRef.current = verifier;
+        // Set up invisible reCAPTCHA (re-use the instance if already created)
+        let verifier = recaptchaVerifierRef.current;
+        if (!verifier) {
+            console.log("Creating RecaptchaVerifier...");
+            const container = document.getElementById("recaptcha-container");
+            if (container) {
+                container.innerHTML = "";
+            }
+            verifier = new RecaptchaVerifier(firebaseAuth, "recaptcha-container", { size: "invisible" });
+            recaptchaVerifierRef.current = verifier;
+        }
 
         // Trigger Firebase SMS
-        const result = await signInWithPhoneNumber(firebaseAuth, phoneData.phone, verifier);
-        setConfirmationResult(result);
-        setPhoneCode("");
-        setPhoneCodeError("");
-        setSuccessMsg(`We sent a verification SMS to ${phoneData.phone}.`);
-        setStep("PHONE_OTP");
+        console.log("Triggering Firebase SMS via signInWithPhoneNumber for:", phoneData.phone);
+        try {
+            const result = await signInWithPhoneNumber(firebaseAuth, phoneData.phone, verifier);
+            console.log("Firebase signInWithPhoneNumber success result:", result);
+            setConfirmationResult(result);
+            setPhoneCode("");
+            setPhoneCodeError("");
+            setSuccessMsg(`We sent a verification SMS to ${phoneData.phone}.`);
+            setStep("PHONE_OTP");
+        } catch (firebaseErr) {
+            console.error("Firebase signInWithPhoneNumber failed:", firebaseErr);
+            throw firebaseErr;
+        }
     };
 
     // ---------------------------------------------------------------------------
@@ -301,7 +322,9 @@ function SignUpPageContent() {
             // 2. Then initiate phone verification (which reads from PendingRegistration)
             await initiatePhoneVerification();
         } catch (err: unknown) {
+            console.error("handleDetailsSubmit caught error:", err);
             const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
+            console.error("apiErr details:", apiErr);
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
@@ -624,16 +647,17 @@ function SignUpPageContent() {
                         <label htmlFor="sign-up-phone" className="text-sm font-medium text-neutral-900 font-montserrat">
                             Phone Number
                         </label>
-                        <input
+                        <PhoneInput
                             id="sign-up-phone"
-                            type="tel"
+                            placeholder="+91 1234567890"
+                            defaultCountry="IN"
                             value={form.phone}
-                            onChange={set("phone")}
-                            placeholder="+1234567890"
-                            autoComplete="tel"
-                            aria-invalid={Boolean(phoneError)}
-                            aria-describedby={phoneError ? "sign-up-phone-error" : undefined}
-                            className={`premium-input w-full ${phoneError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                            onChange={(val) => {
+                                setForm((p) => ({ ...p, phone: val || "" }));
+                                setPhoneError("");
+                                setErrorMsg("");
+                            }}
+                            className={`premium-phone-container w-full ${phoneError ? "border-red-500/60 focus-within:border-red-400" : ""}`}
                         />
                         {phoneError ? (
                             <p id="sign-up-phone-error" className={FIELD_ERROR_CLASSES} role="alert">{phoneError}</p>
