@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, Auth } from "firebase/auth";
 
 console.log("Firebase Env Check:", {
   NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -19,8 +19,18 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
 
-console.log("Initializing Firebase with config:", firebaseConfig);
+let firebaseAuth: Auth | undefined;
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-export const firebaseAuth = getAuth(app);
+if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+  try {
+    console.log("Initializing Firebase with config:", firebaseConfig);
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    firebaseAuth = getAuth(app);
+  } catch (error) {
+    console.error("Failed to initialize Firebase:", error);
+  }
+} else {
+  console.warn("Firebase API key is missing. Authentication features will fail if triggered.");
+}
 
+export { firebaseAuth };
