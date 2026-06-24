@@ -210,10 +210,10 @@ export default function MarketplacePage() {
                         >
                             Discover Assets
                         </h1>
-                        <p className="text-xs sm:text-sm text-[var(--marketplace-text-muted)] font-montserrat font-normal leading-relaxed max-w-md">
+                        <div className="text-xs sm:text-sm text-[var(--marketplace-text-muted)] font-montserrat font-normal leading-relaxed max-w-md">
                             Institutional-grade real estate. Digitally simplified.
                             <p> Invest fractionally starting from {currency.symbol}10,000.</p>
-                        </p>
+                        </div>
                     </div>
 
 
@@ -371,7 +371,7 @@ export default function MarketplacePage() {
                                         className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-[24px] overflow-hidden hover:border-[var(--sidebar-active-text)]/20 transition-colors duration-300 group cursor-pointer shadow-sm"
                                     >
 
-                                        <div className="relative h-48 overflow-hidden">
+                                        <div className="relative h-64 sm:h-72 overflow-hidden">
                                             <Image
                                                 src={imageUrl}
                                                 alt={property.title}

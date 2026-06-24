@@ -1,6 +1,7 @@
 import { baseApi } from './baseApi';
 
 export const fileApi = baseApi.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     uploadFile: builder.mutation<any, { file: File; folder: string }>({
       query: ({ file, folder }) => {

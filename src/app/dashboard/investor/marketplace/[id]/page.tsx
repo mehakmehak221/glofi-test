@@ -189,8 +189,7 @@ export default function PropertyDetailPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    {/* Image Container with overlays */}
-                    <div className="relative w-full h-64 sm:h-72 lg:h-80 rounded-2xl overflow-hidden mb-5 border border-[var(--sidebar-border)]/50 shadow-sm">
+                    <div className="relative w-full h-80 sm:h-96 lg:h-[450px] rounded-2xl overflow-hidden mb-5 border border-[var(--sidebar-border)]/50 shadow-sm">
                         <Image
                             src={imageUrl}
                             alt={property.title}

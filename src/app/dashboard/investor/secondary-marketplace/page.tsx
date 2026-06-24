@@ -206,18 +206,18 @@ export default function SecondaryMarketplacePage() {
                     asset={
                         selectedAsset
                             ? {
-                                  listingId: selectedAsset.id,
-                                  name: selectedAsset.name,
-                                  currentValue:
-                                      selectedAsset.pricePerFraction != null &&
-                                      selectedAsset.fractions != null
-                                          ? `₹${(
-                                                selectedAsset.pricePerFraction *
-                                                parseFloat(String(selectedAsset.fractions))
-                                            ).toLocaleString("en-IN")}`
-                                          : selectedAsset.price || selectedAsset.currentValue,
-                                  fractions: parseFloat(String(selectedAsset.fractions)) || 1,
-                              }
+                                listingId: selectedAsset.id,
+                                name: selectedAsset.name,
+                                currentValue:
+                                    selectedAsset.pricePerFraction != null &&
+                                        selectedAsset.fractions != null
+                                        ? `₹${(
+                                            selectedAsset.pricePerFraction *
+                                            parseFloat(String(selectedAsset.fractions))
+                                        ).toLocaleString("en-IN")}`
+                                        : selectedAsset.price || selectedAsset.currentValue,
+                                fractions: parseFloat(String(selectedAsset.fractions)) || 1,
+                            }
                             : null
                     }
                 />
@@ -255,8 +255,7 @@ function MarketplaceCard({ asset, onView }) {
             variants={itemVariants}
             className="group w-full sm:w-[92%] md:w-full mx-auto bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-md overflow-hidden flex flex-col transition-all duration-500 h-full shadow-[var(--marketplace-card-shadow)]"
         >
-            {/* Image Section */}
-            <div className="relative h-52 overflow-hidden">
+            <div className="relative h-64 sm:h-72 overflow-hidden">
                 <Image
                     src={asset.image}
                     alt={asset.name}

@@ -2,6 +2,7 @@ import { baseApi } from './baseApi';
 import { unwrapAssetResponse, type UpdateAssetPayload } from '@/utils/assetUtils';
 
 export const assetApi = baseApi.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     createAsset: builder.mutation<any, any>({
       query: (assetData) => ({
