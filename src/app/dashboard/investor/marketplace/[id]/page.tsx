@@ -53,7 +53,7 @@ export default function PropertyDetailPage() {
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [isDescExpanded, setIsDescExpanded] = useState(false);
 
-    // SVG Chart interaction states
+
     const [hoveredPoint, setHoveredPoint] = useState<"current" | "projected" | null>(null);
     const [hoveredBar, setHoveredBar] = useState<number | null>(null);
     const [hoveredCashflowPoint, setHoveredCashflowPoint] = useState<number | null>(null);
@@ -87,7 +87,6 @@ export default function PropertyDetailPage() {
 
     const propertyImage = property.images?.[0];
 
-    // Dynamic valuation/return variables
     const fractionPrice = Number(property.fractionPrice) || 0;
     const annualReturnPercent = (
         parseFloat(property.expectedYield || 0) +
@@ -200,7 +199,7 @@ export default function PropertyDetailPage() {
                         />
                         <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
-                        {/* Back Button (Top-Left overlay) */}
+
                         <Link
                             href="/dashboard/investor/marketplace"
                             className="absolute top-3 left-3 sm:top-4 sm:left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-black/45 hover:bg-black/60 text-white border border-white/10 backdrop-blur-md transition-all shadow-md group z-20 cursor-pointer"
@@ -210,12 +209,12 @@ export default function PropertyDetailPage() {
                             </svg>
                         </Link>
 
-                        {/* Category Tag (Bottom-Left overlay) */}
+
                         <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FFFFFF] text-[#111111] border border-white/40 shadow-md z-10">
                             {property.category?.replace(/_/g, ' ')}
                         </span>
 
-                        {/* Risk Rating Tag (Top-Right overlay) */}
+
                         <span className="absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
                             <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${property.riskRating === 'LOW'
                                 ? 'bg-[#00DAAF] text-[#00DAAF]'
@@ -320,7 +319,7 @@ export default function PropertyDetailPage() {
                                 transition={{ duration: 0.2 }}
                             >
 
-                                {/* Images Section */}
+
                                 {property.images && property.images.length > 0 && (
                                     <div className="mb-6">
                                         <h3 className="text-sm font-bold text-[var(--header-text)] mb-4 px-1">Images</h3>
@@ -345,7 +344,6 @@ export default function PropertyDetailPage() {
                                     </div>
                                 )}
 
-                                {/* Description and Property Info */}
                                 <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 mb-6 shadow-sm">
                                     <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3">About this property</h3>
                                     <div className={`text-[13px] text-[var(--color-text-muted)] leading-relaxed font-montserrat tracking-tight ${!isDescExpanded ? "line-clamp-4" : ""}`}>
@@ -372,7 +370,6 @@ export default function PropertyDetailPage() {
                                     </div>
                                 </div>
 
-                                {/* Documents Card */}
                                 {documents.length > 0 && (
                                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-6 mb-6 shadow-sm">
                                         <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Documents</h3>
@@ -442,7 +439,7 @@ export default function PropertyDetailPage() {
                                 transition={{ duration: 0.2 }}
                                 className="space-y-6"
                             >
-                                {/* ── Project Valuations ── */}
+
                                 <div>
                                     <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3 px-1">Project Valuations</h3>
                                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-5 shadow-sm">
@@ -511,7 +508,7 @@ export default function PropertyDetailPage() {
                                     </div>
                                 </div>
 
-                                {/* ── Project Returns ── */}
+
                                 <div>
                                     <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3 px-1">Project Returns</h3>
                                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden shadow-sm">
@@ -526,7 +523,7 @@ export default function PropertyDetailPage() {
                                     </div>
                                 </div>
 
-                                {/* ── Return Schedule ── */}
+
                                 <div>
                                     <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3 px-1">Return Schedule</h3>
                                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-5 shadow-sm">
@@ -593,7 +590,7 @@ export default function PropertyDetailPage() {
                                 transition={{ duration: 0.2 }}
                                 className="space-y-6"
                             >
-                                {/* ── Cashflow ── */}
+
                                 <div>
                                     <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3 px-1">Cashflow</h3>
                                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-5 shadow-sm">
@@ -688,14 +685,99 @@ export default function PropertyDetailPage() {
                             {formatPrice(property.fractionPrice)}
                         </p>
 
-                        <div className="space-y-3 mb-6">
-                            <div className="w-full bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-xl p-5 flex flex-col items-center justify-center py-8 shadow-sm">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-[#00DAAF] shadow-[0_0_10px_#00DAAF]"></div>
-                                    <span className="text-[var(--header-text)] font-bold text-lg">Coming Soon</span>
+                        <div className="space-y-4 mb-6">
+
+                            <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Select Fractions</h3>
                                 </div>
-                                <p className="text-[var(--color-text-muted)] text-xs">Fractional investment opens shortly</p>
+                                <p className="text-[11px] text-[var(--color-text-muted)] font-medium mb-4">
+                                    Available: {property.availableFractions?.toLocaleString() || "20,000"} fractions
+                                </p>
+
+
+                                <div className="relative mb-5 flex items-center">
+                                    <input
+                                        type="range"
+                                        min="1"
+                                        max={Math.min(property.availableFractions || 20000, 100)}
+                                        value={investQuantity}
+                                        onChange={(e) => setInvestQuantity(Number(e.target.value))}
+                                        className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[var(--color-primary-300)] focus:outline-none"
+                                        style={{
+                                            background: `linear-gradient(to right, var(--color-primary-300) 0%, var(--color-primary-300) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
+                                                }%, var(--sidebar-border) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
+                                                }%, var(--sidebar-border) 100%)`
+                                        }}
+                                    />
+                                </div>
+
+
+                                <div className="flex gap-2 justify-between mb-4">
+                                    {[1, 2, 5, 10, 25, 50].map((num) => {
+                                        const isSelected = investQuantity === num;
+                                        return (
+                                            <button
+                                                key={num}
+                                                onClick={() => setInvestQuantity(num)}
+                                                className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${isSelected
+                                                    ? "bg-[var(--color-primary-300)] text-black border border-[var(--color-primary-300)] shadow-sm font-extrabold"
+                                                    : "bg-[var(--card-surface)] text-[var(--header-text)] border border-[var(--sidebar-border)] hover:bg-[var(--sidebar-active-bg)]"
+                                                    }`}
+                                            >
+                                                {num}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+
+                                <div className="flex justify-between items-center border-t border-[var(--sidebar-border)]/65 pt-3 mt-3">
+                                    <span className="text-xs font-semibold text-[var(--color-text-muted)]">Fractions selected</span>
+                                    <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-[var(--color-primary-300)]/15 text-[var(--sidebar-active-text)] border border-[var(--color-primary-300)]/20 shadow-sm">
+                                        {investQuantity}
+                                    </span>
+                                </div>
                             </div>
+
+
+                            <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
+                                <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)] mb-4">Investment Summary</h3>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="text-[var(--color-text-muted)] font-medium">Price per fraction</span>
+                                        <span className="text-[var(--header-text)] font-semibold">{formatPrice(property.fractionPrice)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="text-[var(--color-text-muted)] font-medium">Fractions</span>
+                                        <span className="text-[var(--header-text)] font-semibold">× {investQuantity}</span>
+                                    </div>
+                                    <div className="h-px bg-[var(--sidebar-border)]/50 my-1" />
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs font-bold text-[var(--header-text)]">Total Investment</span>
+                                        <span className="text-base font-black text-[var(--sidebar-active-text)]">
+                                            {formatPrice(property.fractionPrice * investQuantity)}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-[var(--color-primary-300)]/10 border border-[var(--color-primary-300)]/20 rounded-xl p-3 flex items-center justify-center gap-2">
+                                <svg className="w-4 h-4 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                <span className="text-xs font-bold text-[var(--sidebar-active-text)]">
+                                    Estimated Returns ({annualReturnPercent.toFixed(1)}% p.a.)
+                                </span>
+                            </div>
+
+
+                            <button
+                                onClick={() => handleVerifyPay(investQuantity)}
+                                className="w-full py-4 rounded-xl bg-[var(--color-primary-300)] hover:bg-[var(--color-primary-400)] text-black font-bold text-sm cursor-pointer border-0 transition-all shadow-premium hover:opacity-95"
+                            >
+                                Invest Now
+                            </button>
                         </div>
                     </div>
                 </motion.div>
