@@ -970,8 +970,8 @@
     flex-direction: column;
     background: transparent;
     border-top: 1px solid rgba(0, 32, 53, 0.04);
-    padding: 1.5rem 1.25rem 2rem;
-    gap: 1.25rem;
+    padding: 1.25rem 1.25rem 1.75rem;
+    gap: 0.625rem;
     overflow: hidden;
   }
 
@@ -987,7 +987,7 @@
 
   .navbar__mobile-link {
     display: block;
-    padding: 1.25rem 1.5rem;
+    padding: 0.875rem 1.25rem;
     font-family: var(--font-montserrat);
     font-size: 1.125rem;
     font-weight: 600;
