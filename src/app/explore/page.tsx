@@ -311,8 +311,8 @@ export default function ExplorePage() {
                                             prefetch={false}
                                         />
                                         <div className="relative z-[2] pointer-events-none flex flex-col">
-                                            {/* Image Section */}
-                                            <div className="relative h-48 overflow-hidden shrink-0">
+
+                                            <div className="relative h-64 sm:h-72 overflow-hidden shrink-0">
                                                 <Image
                                                     src={imageUrl}
                                                     alt={property.title}
@@ -322,12 +322,12 @@ export default function ExplorePage() {
                                                 />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-                                                {/* Category Badge - bottom of image */}
+
                                                 <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold capitalize bg-white text-[#111111] shadow-md z-10 tracking-wide">
                                                     {property.category.replace(/_/g, ' ').toLowerCase()}
                                                 </span>
 
-                                                {/* Risk Badge - top-left with glowing dot */}
+
                                                 <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
                                                     <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${riskLevel === "LOW"
                                                         ? 'bg-[#00DAAF] text-[#00DAAF]'
@@ -339,16 +339,16 @@ export default function ExplorePage() {
                                                 </span>
                                             </div>
 
-                                            {/* Content Section */}
+
                                             <div className="p-5 sm:p-6">
-                                                {/* Title & Location */}
+
                                                 <h3 className="text-[22px] font-extrabold text-neutral-900 mb-1 leading-snug tracking-tight">{property.title}</h3>
                                                 <div className="flex items-center gap-1.5 text-neutral-500 text-[13px] mb-5 font-medium">
                                                     <MapPinIcon className="w-4 h-4 text-neutral-400" />
                                                     {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
                                                 </div>
 
-                                                {/* Stats Card - 3 columns with dividers */}
+
                                                 <div className="bg-[#F9FAFB] border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-sm">
                                                     <div className="grid grid-cols-3 divide-x divide-neutral-200/65 text-center items-center">
                                                         <div>
@@ -382,7 +382,7 @@ export default function ExplorePage() {
                                                     </div>
                                                 </div>
 
-                                                {/* CTA Button */}
+
                                                 <Link
                                                     href="/sign-in"
                                                     prefetch={false}
