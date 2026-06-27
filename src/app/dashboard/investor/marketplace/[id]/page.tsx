@@ -227,11 +227,27 @@ export default function PropertyDetailPage() {
                         <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center items-center">
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Valuation</p>
-                                <p className="text-base font-bold text-[var(--header-text)]">{formatPrice(property.valuation, true)}</p>
+                                <div className="relative group inline-block w-full">
+                                    <p className="text-base font-bold text-[var(--header-text)] truncate px-1 cursor-default">{formatPrice(property.valuation, true)}</p>
+                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden group-hover:block pointer-events-none">
+                                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] text-[11px] font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
+                                            ₹{Number(property.valuation).toLocaleString('en-IN')}
+                                        </div>
+                                        <div className="w-2 h-2 bg-[var(--card-surface)] border-r border-b border-[var(--sidebar-border)] rotate-45 mx-auto -mt-1" />
+                                    </div>
+                                </div>
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Per Fraction</p>
-                                <p className="text-base font-bold text-[var(--header-text)]">{formatPrice(property.fractionPrice)}</p>
+                                <div className="relative group inline-block w-full">
+                                    <p className="text-base font-bold text-[var(--header-text)] truncate px-1 cursor-default">{formatPrice(property.fractionPrice)}</p>
+                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden group-hover:block pointer-events-none">
+                                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] text-[11px] font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
+                                            ₹{Number(property.fractionPrice).toLocaleString('en-IN')}
+                                        </div>
+                                        <div className="w-2 h-2 bg-[var(--card-surface)] border-r border-b border-[var(--sidebar-border)] rotate-45 mx-auto -mt-1" />
+                                    </div>
+                                </div>
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Annual Return</p>
