@@ -759,7 +759,7 @@ export default function PropertyDetailPage() {
                             </div>
 
 
-                            <div className="relative">
+                            {/* <div className="relative">
                                 <button
                                     disabled
                                     onMouseEnter={() => setShowComingSoon(true)}
@@ -774,7 +774,7 @@ export default function PropertyDetailPage() {
                                         <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[var(--sidebar-border)]" />
                                     </div>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </motion.div>
