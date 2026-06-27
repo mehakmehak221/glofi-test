@@ -51,6 +51,7 @@ export default function PropertyDetailPage() {
     const [investStatus, setInvestStatus] = useState("");
     const [paymentModalOpen, setPaymentModalOpen] = useState(false);
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+    const [showComingSoon, setShowComingSoon] = useState(false);
     const [isDescExpanded, setIsDescExpanded] = useState(false);
 
 
@@ -115,21 +116,7 @@ export default function PropertyDetailPage() {
     const handleVerifyPay = async (qty) => {
         setInvestQuantity(qty);
         setInvestOpen(false);
-
-        // Check KYC status
-        const isApproved = kycData?.status === "APPROVED" || kycData?.status === "VERIFIED";
-
-        if (!isApproved) {
-            if (kycData?.status !== "UNDER_REVIEW") {
-                setKycOpen(true);
-            } else {
-                showToast("Your KYC is currently under review. Please wait for approval before investing.", "warning");
-            }
-            return;
-        }
-
-        // If KYC is approved, open Payment Modal
-        setPaymentModalOpen(true);
+        // Payment disabled — coming soon
     };
 
     const handlePaymentSuccess = () => {
@@ -772,12 +759,22 @@ export default function PropertyDetailPage() {
                             </div>
 
 
-                            <button
-                                onClick={() => handleVerifyPay(investQuantity)}
-                                className="w-full py-4 rounded-xl bg-[var(--color-primary-300)] hover:bg-[var(--color-primary-400)] text-black font-bold text-sm cursor-pointer border-0 transition-all shadow-premium hover:opacity-95"
-                            >
-                                Invest Now
-                            </button>
+                            <div className="relative">
+                                <button
+                                    disabled
+                                    onMouseEnter={() => setShowComingSoon(true)}
+                                    onMouseLeave={() => setShowComingSoon(false)}
+                                    className="w-full py-4 rounded-xl bg-[var(--color-primary-300)]/40 text-black/50 font-bold text-sm border-0 transition-all cursor-not-allowed select-none"
+                                >
+                                    Invest Now
+                                </button>
+                                {showComingSoon && (
+                                    <div className="absolute bottom-[110%] left-1/2 -translate-x-1/2 bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] text-xs font-semibold px-4 py-2 rounded-xl shadow-lg whitespace-nowrap pointer-events-none z-10">
+                                        🚀 Payments coming soon
+                                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[var(--sidebar-border)]" />
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </motion.div>
