@@ -35,7 +35,7 @@ export default function DashboardHeader() {
     }, [isLight, mounted]);
 
     const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
-    const fullName = profile.fullName || profileData?.name || "Guest";
+    const fullName = profile.fullName || profileData?.fullName || profileData?.name || "Guest";
 
     let displayRole = "Investor";
     if (pathname.startsWith("/dashboard/partner")) {

@@ -172,24 +172,24 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit }) 
 
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <div className="flex flex-col gap-0.5">
-                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Valuation</span>
-                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat">{formatValuation(property.valuation)}</span>
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold truncate">Valuation</span>
+                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat truncate break-all sm:break-normal" title={formatValuation(property.valuation)}>{formatValuation(property.valuation)}</span>
                     </div>
-                    <div className="flex flex-col gap-0.5">
-                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Annual Return</span>
-                        <span className="text-sm font-bold text-emerald-500 font-montserrat">{annualReturn}%</span>
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold truncate">Annual Return</span>
+                        <span className="text-sm font-bold text-emerald-500 font-montserrat truncate" title={`${annualReturn}%`}>{annualReturn}%</span>
                     </div>
-                    <div className="flex flex-col gap-0.5">
-                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Fractions Sold</span>
-                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat">
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold truncate">Fractions Sold</span>
+                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat truncate">
                             {soldFractions}
                             {totalFractions > 0 && <span className="text-[10px] text-[var(--color-text-muted)] font-normal"> / {totalFractions}</span>}
                         </span>
                     </div>
-                    <div className="flex flex-col gap-0.5">
-                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold">Investors</span>
-                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat">{property.investorCount || 0}</span>
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                        <span className="text-[9px] uppercase tracking-widest text-[var(--color-text-muted)] font-montserrat font-semibold truncate">Investors</span>
+                        <span className="text-sm font-bold text-[var(--color-text-primary)] font-montserrat truncate">{property.investorCount || 0}</span>
                     </div>
                 </div>
 

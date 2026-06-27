@@ -24,7 +24,7 @@ export const baseApi = createApi({
       ];
 
       if (!publicEndpoints.includes(endpoint)) {
-        const token = getCookie('access_token') || localStorage.getItem('access_token');
+        const token = getCookie('access_token') || (typeof window !== 'undefined' ? localStorage.getItem('access_token') : null);
         console.log(`[API] Endpoint: ${endpoint}, Token found: ${!!token}`);
         if (token) {
           headers.set('Authorization', `Bearer ${token}`);
