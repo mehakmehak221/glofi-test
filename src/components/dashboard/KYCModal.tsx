@@ -278,7 +278,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                             </label>
 
                                             <label className={`block rounded-xl p-5 cursor-pointer transition-all border-2 border-dashed ${selfieKey ? 'bg-[#00FFCC]/5 border-[#00FFCC]/30' : 'bg-[var(--foreground)]/[0.02] border-[var(--foreground)]/10 hover:border-[var(--foreground)]/20'}`}>
-                                                <input type="file" className="hidden" accept="image/*" capture="user" onChange={(e) => handleFileUpload(e, 'selfie')} />
+                                                <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, 'selfie')} />
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center gap-4">
                                                         <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${selfieKey ? 'bg-[#00FFCC]/10 text-[#00FFCC]' : 'bg-[var(--foreground)]/5 text-[var(--foreground)]/20'}`}>
@@ -286,7 +286,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                         </div>
                                                         <div>
                                                             <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Selfie Verification</p>
-                                                            <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">Hold your ID next to your face</p>
+                                                            <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">Upload a photo holding your ID next to your face (Click to Upload)</p>
                                                         </div>
                                                     </div>
                                                     {selfieKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}

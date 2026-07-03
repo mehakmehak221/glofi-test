@@ -337,6 +337,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  section[id], footer[id] {
+    scroll-margin-top: 90px;
+  }
+
   body {
     background: var(--background);
     color: var(--foreground);
@@ -793,6 +797,11 @@
   .navbar__nav {
     display: none;
     justify-self: center;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background-color: #f8fafc;
+    border-radius: 9999px;
+    padding: 0.5rem 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   }
 
   @media (min-width: 1024px) {
@@ -805,7 +814,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    gap: clamp(1.75rem, 3.5vw, 3rem);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -814,8 +823,8 @@
   .navbar__nav-link {
     display: block;
     font-family: var(--font-montserrat);
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 0.95rem;
+    font-weight: 550;
     line-height: 1.5;
     color: #0f172a;
     text-decoration: none;
