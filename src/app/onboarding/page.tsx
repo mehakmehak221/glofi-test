@@ -341,7 +341,7 @@ export default function OnboardingPage() {
                             <label className="text-[11px] font-semibold text-white/50 tracking-wider uppercase font-Montserrat ml-1">Document Type</label>
                             <select
                                 className="w-full h-[56px] rounded-xl px-5 bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-[#00FFCC]/30 transition-all font-medium font-Montserrat appearance-none"
-                                value={rera.documentType} onChange={e => setRera({ ...rera, documentType: e.target.value })}
+                                value={rera.documentType} onChange={e => setRera({ ...rera, documentType: e.target.value, documentFile: null })}
                             >
                                 <option value="PASSPORT" className="bg-[#0D0D0D]">Passport</option>
                                 <option value="AADHAR" className="bg-[#0D0D0D]">Aadhar Card</option>
@@ -378,7 +378,7 @@ export default function OnboardingPage() {
                                     onClick={() => document.getElementById('selfieFile')?.click()}
                                 >
                                     <input 
-                                        type="file" id="selfieFile" className="hidden" accept=".jpg,.jpeg,.png"
+                                        type="file" id="selfieFile" className="hidden" accept="image/*" capture="user"
                                         onChange={e => setRera({ ...rera, selfieFile: e.target.files?.[0] || null })}
                                     />
                                     {rera.selfieFile ? (
