@@ -20,16 +20,34 @@ const modalVariants: Variants = {
 /* ── decorative shield illustration shown when REJECTED ── */
 const RejectedIllustration = () => (
     <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="48" cy="48" r="48" fill="#FEE2E2" fillOpacity="0.6" />
+        {/* Floating stars/dots */}
+        <circle cx="15" cy="30" r="2" fill="#FCA5A5" />
+        <circle cx="85" cy="25" r="3" fill="#FCA5A5" opacity="0.6" />
+        <circle cx="18" cy="72" r="2.5" fill="#FCA5A5" />
+        <circle cx="78" cy="80" r="2" fill="#FCA5A5" />
+        <path d="M72 18L76 22M76 18L72 22" stroke="#FCA5A5" strokeWidth="1" strokeLinecap="round" />
+        <path d="M28 82L32 86M32 82L28 86" stroke="#FCA5A5" strokeWidth="1" strokeLinecap="round" />
+
+        {/* Shield */}
         <path
-            d="M48 18L26 28V46C26 58.6 35.52 70.36 48 74C60.48 70.36 70 58.6 70 46V28L48 18Z"
-            fill="#FECACA"
-            stroke="#EF4444"
+            d="M42 22L24 30V45C24 55.6 32 65.5 42 68.5C52 65.5 60 55.6 60 45V30L42 22Z"
+            fill="#FFF5F5"
+            stroke="#FEE2E2"
             strokeWidth="2"
             strokeLinejoin="round"
         />
-        <circle cx="48" cy="48" r="12" fill="white" />
-        <path d="M44 44L52 52M52 44L44 52" stroke="#EF4444" strokeWidth="2.5" strokeLinecap="round" />
+
+        {/* Document */}
+        <g filter="drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.05))">
+            <rect x="56" y="32" width="22" height="28" rx="2" fill="white" stroke="#FEE2E2" strokeWidth="1.5" />
+            <line x1="60" y1="38" x2="74" y2="38" stroke="#FCA5A5" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="60" y1="44" x2="74" y2="44" stroke="#FCA5A5" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="60" y1="50" x2="68" y2="50" stroke="#FCA5A5" strokeWidth="1.5" strokeLinecap="round" />
+        </g>
+
+        {/* X Circle */}
+        <circle cx="62" cy="54" r="14" fill="#EF4444" />
+        <path d="M57.5 49.5L66.5 58.5M66.5 49.5L57.5 58.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
 );
 
@@ -217,12 +235,12 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
                             <div className="space-y-5">
                                 {/* status card */}
                                 <div
-                                    className={`p-5 rounded-2xl border ${
+                                    className={`p-5 rounded-2xl ${
                                         isVerified
-                                            ? "bg-emerald-50 border-emerald-200"
+                                            ? "bg-emerald-50 border border-emerald-200"
                                             : isRejected
-                                            ? "bg-red-50 border-red-200"
-                                            : "bg-amber-50 border-amber-200"
+                                            ? "bg-[#FFF5F5] border border-[#FFF5F5]"
+                                            : "bg-amber-50 border border-amber-200"
                                     }`}
                                 >
                                     <div className="flex items-center gap-4 mb-3">
@@ -232,7 +250,7 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
                                                 isVerified
                                                     ? "bg-emerald-100 text-emerald-600"
                                                     : isRejected
-                                                    ? "bg-red-100 text-red-500"
+                                                    ? "bg-[#EF4444] text-white"
                                                     : "bg-amber-100 text-amber-600"
                                             }`}
                                         >
@@ -242,7 +260,7 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
                                                 </svg>
                                             ) : isRejected ? (
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                    <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                                    <path d="M3 3L13 13M13 3L3 13" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
                                                 </svg>
                                             ) : (
                                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -254,8 +272,8 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
                                         </div>
                                         <div>
                                             <p
-                                                className={`text-base font-bold uppercase tracking-wider font-montserrat ${
-                                                    isVerified ? "text-emerald-700" : isRejected ? "text-red-700" : "text-amber-700"
+                                                className={`text-base font-extrabold uppercase tracking-wider font-montserrat ${
+                                                    isVerified ? "text-emerald-700" : isRejected ? "text-neutral-900" : "text-amber-700"
                                                 }`}
                                             >
                                                 {status.replace("_", " ")}
@@ -266,15 +284,15 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
 
                                     {/* rejection note */}
                                     {isRejected && kybStatus?.rejectedNote && (
-                                        <div className="mt-2 p-4 rounded-xl bg-white border border-red-200">
-                                            <p className="text-[10px] uppercase font-bold text-red-500 mb-1.5 tracking-widest font-montserrat">
+                                        <div className="mt-4 p-4 rounded-2xl bg-[#FEE2E2]/60 flex flex-col items-center justify-center text-center">
+                                            <p className="text-[10px] uppercase font-bold text-red-500 mb-1 tracking-widest font-montserrat">
                                                 Rejection Note
                                             </p>
-                                            <p className="text-sm text-red-600/90 leading-relaxed font-montserrat">
+                                            <p className="text-sm text-neutral-900 font-semibold font-montserrat">
                                                 {kybStatus.rejectedNote}
-                                            </p>
-                                        </div>
-                                    )}
+                                             </p>
+                                         </div>
+                                     )}
 
                                     {/* under review message */}
                                     {isUnderReview && (
@@ -298,7 +316,7 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
                                         </button>
                                         <button
                                             onClick={() => setIsReverifying(true)}
-                                            className="flex-[2] h-14 rounded-2xl bg-[var(--color-primary-300)] text-black font-bold text-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 font-montserrat shadow-sm"
+                                            className="flex-[2] h-14 rounded-2xl bg-[var(--color-primary-300)] text-white font-bold text-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 font-montserrat shadow-sm"
                                         >
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                 <path d="M2.5 8C2.5 5.015 4.93 2.5 8 2.5C9.644 2.5 11.118 3.21 12.142 4.34M13.5 8C13.5 10.985 11.07 13.5 8 13.5C6.356 13.5 4.882 12.79 3.858 11.66" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
