@@ -239,6 +239,7 @@
   --dashboard-surface: #FFFFFF;
   --dashboard-border: rgba(0, 0, 0, 0.12);
 
+  --color-bg-nav: #F3F4F6;
   --sidebar-border: var(--dashboard-border);
   --header-border: var(--dashboard-border);
 
