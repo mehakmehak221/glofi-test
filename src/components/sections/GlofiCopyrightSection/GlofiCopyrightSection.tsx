@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
     fadeUpSubtle,
@@ -25,7 +26,22 @@ const LEGAL_LINKS = [
 ];
 
 export default function GlofiCopyrightSection() {
+    const pathname = usePathname();
     const { viewProps } = useLandingMotion();
+
+    const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        if (href.startsWith('/#')) {
+            const targetId = href.split('#')[1];
+            if (pathname === '/') {
+                e.preventDefault();
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                    window.history.pushState(null, '', href);
+                }
+            }
+        }
+    };
 
     return (
         <footer id="support" className="site-footer">

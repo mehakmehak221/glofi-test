@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
@@ -35,11 +35,39 @@ function NavbarGlobeIcon() {
         </svg>
     );
 }
-
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
+
+    const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        if (href.startsWith('/#')) {
+            const targetId = href.split('#')[1];
+            if (pathname === '/') {
+                e.preventDefault();
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                    window.history.pushState(null, '', href);
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash) {
+            const targetId = hash.replace('#', '');
+            const element = document.getElementById(targetId);
+            if (element) {
+                const timeoutId = setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+                return () => clearTimeout(timeoutId);
+            }
+        }
+    }, [pathname]);
+
     const goHome = () => {
         if (pathname === '/') {
             window.location.assign('/');
@@ -81,14 +109,17 @@ export default function Navbar() {
                     <ul className="navbar__nav-list">
                         {NAV_LINKS.map((link) => (
                             <li key={link.label}>
-                                <Link href={link.href} className="navbar__nav-link">
+                                <Link
+                                    href={link.href}
+                                    className="navbar__nav-link"
+                                    onClick={(e) => handleScroll(e, link.href)}
+                                >
                                     {link.label}
                                 </Link>
                             </li>
                         ))}
                     </ul>
                 </nav>
-
                 <div className="navbar__actions">
                     <Link href="/sign-in" className="btn-get-Glofi">
                         Login
@@ -129,7 +160,10 @@ export default function Navbar() {
                                 <Link
                                     href={link.href}
                                     className="navbar__mobile-link"
-                                    onClick={() => setMobileOpen(false)}
+                                    onClick={(e) => {
+                                        setMobileOpen(false);
+                                        handleScroll(e, link.href);
+                                    }}
                                 >
                                     {link.label}
                                 </Link>
