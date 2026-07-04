@@ -301,8 +301,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
         isLoading: isLoadingAsset,
         isError: isAssetLoadError,
     } = useGetAssetByIdQuery(editId, { skip: !editId });
-    const { data: kybStatus } = useGetKybStatusQuery();
-    const { data: kycStatus } = useGetKycStatusQuery();
+    const { data: kybStatus, isLoading: isKybStatusLoading } = useGetKybStatusQuery();
+    const { data: kycStatus, isLoading: isKycStatusLoading } = useGetKycStatusQuery();
     const [createAsset, { isLoading: isCreating }] = useCreateAssetMutation();
     const [updateAssetById, { isLoading: isUpdating }] = useUpdateAssetByIdMutation();
     const [submitAssetForReview] = useSubmitAssetForReviewMutation();
@@ -440,7 +440,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                     <div className="rounded-md border border-red-500/20 bg-red-500/10 p-6 text-center text-red-500 text-sm font-montserrat">
                         Could not load property details. Go back and try again.
                     </div>
-                ) : !editId && (kycStatus?.status !== 'VERIFIED' || (kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED')) ? (
+                ) : !editId && !isKycStatusLoading && !isKybStatusLoading && (kycStatus?.status !== 'VERIFIED' || (kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED')) ? (
                     <div className="bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-md p-8 sm:p-14 flex flex-col items-center text-center gap-6">
                         <div className="w-16 h-16 rounded-full bg-[var(--color-status-warning-bg)] flex items-center justify-center">
                             <BusinessPropertyIcon className="w-7 h-7 text-[var(--color-status-warning)]" />
@@ -697,7 +697,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                     className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-xl px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors placeholder:text-[var(--sidebar-text)]/30 font-montserrat resize-none"
                                 />
                             </div>
-                            
+
                             <div className="flex flex-col gap-2 md:col-span-2">
                                 <label className="flex items-center gap-3 cursor-pointer group">
                                     <div className="relative flex items-center justify-center w-5 h-5">
