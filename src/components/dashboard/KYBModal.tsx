@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { useUploadFileMutation } from "@/store/api/assetApi";
+import { useUploadFileMutation } from "@/store/api/fileApi";
 import { useSubmitKybMutation, useGetKybStatusQuery } from "@/store/api/kybApi";
 import { LoadingSpinner, UploadIcon, BusinessPropertyIcon } from "../VectorImages";
 
@@ -76,9 +76,8 @@ const KybUploadItem = ({ label, description, onUpload, value, isUploading }: any
                 <div className="flex items-center gap-3">
                     <div
                         onClick={() => !isUploading && fileInputRef.current?.click()}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer transition-colors ${
-                            value ? "bg-[var(--color-primary-300)]/10" : "bg-[var(--color-bg-nav)] hover:bg-[var(--color-primary-300)]/5"
-                        }`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer transition-colors ${value ? "bg-[var(--color-primary-300)]/10" : "bg-[var(--color-bg-nav)] hover:bg-[var(--color-primary-300)]/5"
+                            }`}
                     >
                         <input
                             type="file"
@@ -165,9 +164,9 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
 
     const subtitle =
         isUnderReview ? "Your verification is currently being processed" :
-        isVerified    ? "Your business has been verified successfully" :
-        isRejected    ? "Verification was not successful" :
-        "Upload documents to verify your business entity";
+            isVerified ? "Your business has been verified successfully" :
+                isRejected ? "Verification was not successful" :
+                    "Upload documents to verify your business entity";
 
     return (
         <AnimatePresence>
@@ -235,24 +234,22 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
                             <div className="space-y-5">
                                 {/* status card */}
                                 <div
-                                    className={`p-5 rounded-2xl ${
-                                        isVerified
+                                    className={`p-5 rounded-2xl ${isVerified
                                             ? "bg-emerald-50 border border-emerald-200"
                                             : isRejected
-                                            ? "bg-[#FFF5F5] border border-[#FFF5F5]"
-                                            : "bg-amber-50 border border-amber-200"
-                                    }`}
+                                                ? "bg-[#FFF5F5] border border-[#FFF5F5]"
+                                                : "bg-amber-50 border border-amber-200"
+                                        }`}
                                 >
                                     <div className="flex items-center gap-4 mb-3">
                                         {/* status circle icon */}
                                         <div
-                                            className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                                isVerified
+                                            className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 ${isVerified
                                                     ? "bg-emerald-100 text-emerald-600"
                                                     : isRejected
-                                                    ? "bg-[#EF4444] text-white"
-                                                    : "bg-amber-100 text-amber-600"
-                                            }`}
+                                                        ? "bg-[#EF4444] text-white"
+                                                        : "bg-amber-100 text-amber-600"
+                                                }`}
                                         >
                                             {isVerified ? (
                                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -272,9 +269,8 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
                                         </div>
                                         <div>
                                             <p
-                                                className={`text-base font-extrabold uppercase tracking-wider font-montserrat ${
-                                                    isVerified ? "text-emerald-700" : isRejected ? "text-neutral-900" : "text-amber-700"
-                                                }`}
+                                                className={`text-base font-extrabold uppercase tracking-wider font-montserrat ${isVerified ? "text-emerald-700" : isRejected ? "text-neutral-900" : "text-amber-700"
+                                                    }`}
                                             >
                                                 {status.replace("_", " ")}
                                             </p>
@@ -290,9 +286,9 @@ export default function KYBModal({ isOpen, onClose, onSubmit }: any) {
                                             </p>
                                             <p className="text-sm text-neutral-900 font-semibold font-montserrat">
                                                 {kybStatus.rejectedNote}
-                                             </p>
-                                         </div>
-                                     )}
+                                            </p>
+                                        </div>
+                                    )}
 
                                     {/* under review message */}
                                     {isUnderReview && (

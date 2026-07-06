@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGetKycStatusQuery } from "@/store/api/kycApi";
+import { useGetAgentMeQuery } from "@/store/api/agentApi";
 import AgentSidebar from "@/components/dashboard/AgentSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import MobileTopbar from "@/components/dashboard/MobileTopbar";
 import KYCModal from "@/components/dashboard/KYCModal";
 
-export default function AgentDashboardLayout({ children }) {
-    const { data: kycData, refetch: refetchKyc } = useGetKycStatusQuery();
+export default function AgentDashboardLayout({ children }: { children: React.ReactNode }) {
+    const { data: agentData, refetch: refetchKyc } = useGetAgentMeQuery();
+    const kycData = agentData?.kyc ? { status: agentData.kyc.status } : undefined;
     const [showKycModal, setShowKycModal] = useState(false);
 
     return (
@@ -28,6 +29,7 @@ export default function AgentDashboardLayout({ children }) {
                     <AnimatePresence>
                         {kycData && kycData.status !== "APPROVED" && kycData.status !== "VERIFIED" && (
                             <motion.div
+                                key="kyc-banner"
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}

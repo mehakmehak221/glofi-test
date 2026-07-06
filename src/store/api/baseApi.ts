@@ -29,9 +29,7 @@ const baseQuery = fetchBaseQuery({
       }
     }
 
-    if (!headers.has('Content-Type')) {
-      headers.set('Content-Type', 'application/json');
-    }
+
     headers.set('accept', '*/*');
     return headers;
   },
@@ -55,21 +53,19 @@ const baseQueryWithAuth: BaseQueryFn<
       const isLoginRequest = url.includes('auth/login');
 
       if (!isLoginRequest) {
-        const errorMessage = typeof result.error.data === 'object' && result.error.data !== null 
-          ? (result.error.data as any)?.message || '' 
+        const errorMessage = typeof result.error.data === 'object' && result.error.data !== null
+          ? (result.error.data as any)?.message || ''
           : '';
 
-        const isAuthError = httpStatus === 401 || httpStatus === '401' || 
+        const isAuthError = httpStatus === 401 || httpStatus === '401' ||
           ((httpStatus === 403 || httpStatus === '403') && (
-            errorMessage.toLowerCase().includes('token') || 
-            errorMessage.toLowerCase().includes('expired') || 
+            errorMessage.toLowerCase().includes('token') ||
+            errorMessage.toLowerCase().includes('expired') ||
             errorMessage.toLowerCase().includes('unauthorized') ||
             errorMessage.toLowerCase().includes('auth') ||
             errorMessage.toLowerCase().includes('jwt') ||
             errorMessage.toLowerCase().includes('access denied') ||
-            errorMessage.toLowerCase().includes('forbidden') ||
-            errorMessage.toLowerCase().includes('unauthenticated') ||
-            errorMessage.trim() === ''
+            errorMessage.toLowerCase().includes('unauthenticated')
           ));
 
         if (isAuthError) {
@@ -82,6 +78,7 @@ const baseQueryWithAuth: BaseQueryFn<
               localStorage.removeItem('isLoggedIn');
               localStorage.removeItem('userType');
               window.location.href = '/sign-in';
+              setTimeout(() => { isHandlingAuthError = false; }, 3000);
             }
           }
           return result;
