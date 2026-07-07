@@ -40,6 +40,15 @@ function SignInPageContent() {
         if (next) setUserType(next);
     }, [roleParam]);
 
+    useEffect(() => {
+        if (errorMsg || emailError || passwordError) {
+            const firstError = document.querySelector('[role="alert"]');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+    }, [errorMsg, emailError, passwordError]);
+
     const handleUserTypeChange = (next: string) => {
         if (next === userType) return;
         setUserType(next);

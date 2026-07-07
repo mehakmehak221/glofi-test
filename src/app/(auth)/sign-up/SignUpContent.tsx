@@ -97,6 +97,39 @@ function SignUpPageContent() {
     const [registerAgent, { isLoading: isAgentRegistering }] = useRegisterAgentMutation();
     const isLoading = isSendingOtp || isSendingPhoneOtp || isVerifyingPhoneOtp || isVerifyingOtp || isRegistering || isAgentRegistering;
 
+    useEffect(() => {
+        if (
+            errorMsg ||
+            nameError ||
+            emailError ||
+            phoneError ||
+            passwordError ||
+            confirmPasswordError ||
+            reraError ||
+            expiryError ||
+            referralError ||
+            otpError ||
+            phoneCodeError
+        ) {
+            const firstError = document.querySelector('[role="alert"]');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+    }, [
+        errorMsg,
+        nameError,
+        emailError,
+        phoneError,
+        passwordError,
+        confirmPasswordError,
+        reraError,
+        expiryError,
+        referralError,
+        otpError,
+        phoneCodeError,
+    ]);
+
     const clearRecaptcha = () => {
         if (recaptchaVerifierRef.current) {
             try {

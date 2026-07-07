@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,6 +38,15 @@ export default function ForgotPasswordPage() {
     const [forgotPassword, { isLoading: isForgotLoading }] = useForgotPasswordMutation();
     const [verifyOtp, { isLoading: isVerifyLoading }] = useVerifyForgotPasswordOtpMutation();
     const [resetPassword, { isLoading: isResetLoading }] = useResetPasswordMutation();
+
+    useEffect(() => {
+        if (errorMsg) {
+            const firstError = document.querySelector('[role="alert"]');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+    }, [errorMsg]);
 
     const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
