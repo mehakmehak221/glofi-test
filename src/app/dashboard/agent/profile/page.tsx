@@ -321,7 +321,7 @@ export default function AgentProfilePage() {
 
                                             <div>
                                                 <span className="font-semibold block mb-0.5 text-[var(--color-status-error)]">Corrective Action:</span>
-                                                Please click on "Resubmit KYC" and provide clear, valid documents for the failed steps.
+                                                Please click on &quot;Resubmit KYC&quot; and provide clear, valid documents for the failed steps.
                                             </div>
                                         </div>
                                     </div>

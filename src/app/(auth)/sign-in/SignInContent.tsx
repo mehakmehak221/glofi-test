@@ -37,7 +37,11 @@ function SignInPageContent() {
 
     useEffect(() => {
         const next = parseRoleQuery(roleParam);
-        if (next) setUserType(next);
+        if (next) {
+            setTimeout(() => {
+                setUserType(next);
+            }, 0);
+        }
     }, [roleParam]);
 
     useEffect(() => {
@@ -281,7 +285,9 @@ function SearchParamsHandler({ setErrorMsg }: { setErrorMsg: (msg: string) => vo
             // We use a success-styled box even if we call it errorMsg state for simplicity, 
             // or we could add a successMsg state.
             // But let's just show it in a green box if possible.
-            setDisplayed(true);
+            setTimeout(() => {
+                setDisplayed(true);
+            }, 0);
         }
     }, [message, displayed]);
 

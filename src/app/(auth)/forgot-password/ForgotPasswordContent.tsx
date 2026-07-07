@@ -213,7 +213,7 @@ export default function ForgotPasswordPage() {
                             disabled={isLoading}
                             className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors text-center"
                         >
-                            Didn't receive a code? Resend
+                            Didn&apos;t receive a code? Resend
                         </button>
                     </form>
                 )}

@@ -769,7 +769,7 @@ function StepSuccess({
             </div>
 
             <div className="w-full p-8 bg-[var(--background)] rounded-[2.5rem] border border-[var(--sidebar-border)] shadow-sm space-y-8 text-left mb-12">
-                <h4 className="text-sm font-black text-[var(--header-text)] uppercase tracking-widest">What's Next?</h4>
+                <h4 className="text-sm font-black text-[var(--header-text)] uppercase tracking-widest">What&apos;s Next?</h4>
                 <div className="space-y-6">
                     <div className="flex gap-5">
                         <span className="text-[var(--sidebar-active-text)] bg-[var(--badge-bg)] p-3 rounded-2xl shadow-sm"><DocumentIcon className="w-6 h-6" /></span>

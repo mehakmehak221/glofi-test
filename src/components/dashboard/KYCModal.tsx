@@ -53,9 +53,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
 
     useEffect(() => {
         if (isOpen) {
-            setStep(1);
+            setTimeout(() => {
+                setStep(1);
+                setIsReverifying(false);
+            }, 0);
             refetchStatus();
-            setIsReverifying(false);
         }
     }, [isOpen, refetchStatus]);
 

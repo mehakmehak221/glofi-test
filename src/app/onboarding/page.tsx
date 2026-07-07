@@ -31,16 +31,18 @@ export default function OnboardingPage() {
 
     useEffect(() => {
         const role = localStorage.getItem("userType");
-        if (role) {
-            const upperRole = role.toUpperCase();
-            setUserRole(upperRole);
-            if (upperRole === "AGENT" && step === 3) {
-                setStep(4);
+        setTimeout(() => {
+            if (role) {
+                const upperRole = role.toUpperCase();
+                setUserRole(upperRole);
+                if (upperRole === "AGENT" && step === 3) {
+                    setStep(4);
+                }
+            } else {
+                setUserRole("INVESTOR");
             }
-        } else {
-            setUserRole("INVESTOR");
-        }
-    }, []);
+        }, 0);
+    }, [step]);
     const [errorMsg, setErrorMsg] = useState("");
 
     const [setupProfile, { isLoading: isSettingUp }] = useSetupProfileMutation();

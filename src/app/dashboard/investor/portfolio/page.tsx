@@ -211,7 +211,7 @@ export default function PortfolioPage() {
                             >
                                 <ResaleIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
                                 <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No active listings</h3>
-                                <p className="text-sm text-[var(--color-text-muted)]">You don't have any properties currently listed for resale</p>
+                                <p className="text-sm text-[var(--color-text-muted)]">You don&apos;t have any properties currently listed for resale</p>
                             </motion.div>
                         )}
                     </motion.div>

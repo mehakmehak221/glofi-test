@@ -13,7 +13,9 @@ export default function GlobalToast() {
         const type = localStorage.getItem("toastType") || "success";
         
         if (msg) {
-            setToast({ show: true, message: msg, type });
+            setTimeout(() => {
+                setToast({ show: true, message: msg, type });
+            }, 0);
             localStorage.removeItem("toastMessage");
             localStorage.removeItem("toastType");
             

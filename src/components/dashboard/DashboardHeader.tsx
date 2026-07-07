@@ -13,11 +13,13 @@ export default function DashboardHeader() {
     const { data: profileData } = useGetProfileQuery();
 
     useEffect(() => {
-        setMounted(true);
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme === "light") {
-            setIsLight(true);
-        }
+        setTimeout(() => {
+            setMounted(true);
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "light") {
+                setIsLight(true);
+            }
+        }, 0);
     }, []);
 
     useEffect(() => {

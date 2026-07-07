@@ -29,16 +29,18 @@ export default function ResaleModal({ isOpen, onClose, asset }) {
             
             const perFraction = asset.fractions > 0 ? (numericValue / asset.fractions) : 0;
             
-            setFormData({
-                fractionsToSell: asset.fractions || 0,
-                pricePerFraction: Math.round(perFraction),
-                minPurchase: 1,
-                notes: "",
-                agreed: false
-            });
-            setStep(1);
-            setSellError(null);
-            setSuccessData(null);
+            setTimeout(() => {
+                setFormData({
+                    fractionsToSell: asset.fractions || 0,
+                    pricePerFraction: Math.round(perFraction),
+                    minPurchase: 1,
+                    notes: "",
+                    agreed: false
+                });
+                setStep(1);
+                setSellError(null);
+                setSuccessData(null);
+            }, 0);
         }
     }, [asset, isOpen]);
 
@@ -263,7 +265,7 @@ function StepOne({ asset, formData, setFormData, totalOwned }) {
                         />
                     </div>
                     <div className="flex-1">
-                        <label className="text-[10px] uppercase text-[var(--color-text-muted)] mb-1.5 block">You'll Keep</label>
+                        <label className="text-[10px] uppercase text-[var(--color-text-muted)] mb-1.5 block">You&apos;ll Keep</label>
                         <div className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-lg px-4 py-3 text-[var(--color-text-muted)] opacity-50">
                             {totalOwned - formData.fractionsToSell}
                         </div>
