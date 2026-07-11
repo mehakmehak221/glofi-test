@@ -88,19 +88,31 @@ function SignInPageContent() {
             const result = await login(payload).unwrap();
 
             console.log('Login Result:', result);
-            const token = result?.accessToken || result?.token || result?.data?.accessToken || result?.data?.token;
 
+            // Cover all possible response shapes from the API
+            const token =
+                result?.accessToken ||
+                result?.token ||
+                result?.access_token ||
+                result?.data?.accessToken ||
+                result?.data?.token ||
+                result?.data?.access_token;
+
+            // Always store credentials before navigating
             if (token) {
                 setCookie("access_token", token);
                 localStorage.setItem("access_token", token);
             }
 
-            localStorage.setItem("userType", result?.role || result?.user?.role || userType.toUpperCase());
+            const userRole = result?.role || result?.user?.role || result?.data?.role || userType.toUpperCase();
+            localStorage.setItem("userType", userRole);
             localStorage.setItem("isLoggedIn", "true");
             setCookie("isLoggedIn", "true");
 
             localStorage.setItem("toastMessage", "Login successful!");
 
+            // Use window.location.href to do a full page navigation so the proxy
+            // picks up the freshly set cookie on the new request
             window.location.href = "/dashboard";
         } catch (err: any) {
             const errorBody = err?.data;
