@@ -11,15 +11,16 @@ export const assetApi = baseApi.injectEndpoints({
         body: assetData,
       }),
     }),
-    getAssets: builder.query<any, { category?: string; riskRating?: string; country?: string; state?: string; city?: string; limit?: number; page?: number } | void>({
+    getAssets: builder.query<any, { category?: string; riskRating?: string; country?: string; state?: string; city?: string; limit?: number; page?: number; saleType?: 'FRACTIONAL' | 'WHOLE' } | void>({
       query: (arg) => {
-        const { category, riskRating, country, state, city, limit = 10, page = 1 } = arg || {};
+        const { category, riskRating, country, state, city, limit = 10, page = 1, saleType } = arg || {};
         const params = new URLSearchParams({ limit: String(limit), page: String(page) });
         if (category) params.append('category', category);
         if (riskRating) params.append('riskRating', riskRating);
         if (country) params.append('country', country);
         if (state) params.append('state', state);
         if (city) params.append('city', city);
+        if (saleType) params.append('saleType', saleType);
         return {
           url: `assets?${params.toString()}`,
           method: 'GET',

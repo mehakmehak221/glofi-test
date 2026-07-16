@@ -111,7 +111,8 @@ export default function PortfolioPage() {
             isResale: inv.status === "RESALE",
             status: inv.status,
             totalFractions: inv.totalFractions || asset.totalFractions || 100,
-            certificateUrl: fullCertUrl
+            certificateUrl: fullCertUrl,
+            saleType: asset.saleType || inv.saleType || 'FRACTIONAL'
         };
     });
 
@@ -426,25 +427,33 @@ function AssetCard({ asset, onResale }) {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
-                        <motion.button
-                            onClick={handleOpenCertificate}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
-                        >
-                            <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
-                            Certificate
-                        </motion.button>
-                        <motion.button
-                            onClick={handleOpenCertificate}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
-                        >
-                            <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
-                            Download
-                        </motion.button>
-                        {!asset.isResale && (
+                        {asset.saleType !== 'WHOLE' ? (
+                            <>
+                                <motion.button
+                                    onClick={handleOpenCertificate}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
+                                >
+                                    <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
+                                    Certificate
+                                </motion.button>
+                                <motion.button
+                                    onClick={handleOpenCertificate}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
+                                >
+                                    <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
+                                    Download
+                                </motion.button>
+                            </>
+                        ) : (
+                            <span className="text-xs text-[var(--color-text-muted)] font-semibold italic bg-[var(--field-surface)] px-4 py-2 rounded-lg border border-[var(--sidebar-border)]">
+                                Offline Agreement & Certificate
+                            </span>
+                        )}
+                        {!asset.isResale && asset.saleType !== 'WHOLE' && (
                             <motion.button
                                 onClick={onResale}
                                 whileHover={{ scale: 1.02 }}

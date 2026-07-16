@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
 
@@ -17,6 +17,12 @@ const modalVariants = {
 
 export default function InvestModal({ isOpen, onClose, property, onVerifyPay, isLoading = false }) {
     const [quantity, setQuantity] = useState(1);
+
+    useEffect(() => {
+        if (isOpen && property) {
+            setQuantity(property.saleType === 'WHOLE' ? (property.totalFractions || 1) : 1);
+        }
+    }, [isOpen, property]);
 
     const { data: kycData } = useGetKycStatusQuery();
     if (!isOpen || !property) return null;
@@ -66,24 +72,36 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)] font-bold mb-3">Fractions</p>
 
                       
-                        <div className="flex items-center justify-between rounded-md p-1.5 mb-6 bg-[var(--field-surface)] border border-[var(--sidebar-border)]"
-                        >
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="w-11 h-11 rounded-md bg-[var(--field-surface)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
+                        {property.saleType === 'WHOLE' ? (
+                            <div className="mb-6 bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md p-4 flex flex-col items-center gap-3">
+                                <div className="text-center">
+                                    <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-bold mb-1 block">Total fractions</span>
+                                    <span className="text-3xl font-black text-[var(--header-text)]">{quantity}</span>
+                                </div>
+                                <div className="w-full bg-[var(--color-primary-300)]/15 border border-[var(--color-primary-300)]/20 rounded-md p-2.5 text-center text-xs text-[var(--sidebar-active-text)] font-semibold leading-normal">
+                                    Whole asset purchase: You are acquiring 100% of this asset.
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex items-center justify-between rounded-md p-1.5 mb-6 bg-[var(--field-surface)] border border-[var(--sidebar-border)]"
                             >
-                                −
-                            </motion.button>
-                            <span className="text-2xl font-black text-[var(--header-text)] min-w-[60px] text-center">{quantity}</span>
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => setQuantity(quantity + 1)}
-                                className="w-11 h-11 rounded-md bg-[var(--field-surface)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
-                            >
-                                +
-                            </motion.button>
-                        </div>
+                                <motion.button
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                    className="w-11 h-11 rounded-md bg-[var(--field-surface)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
+                                >
+                                    −
+                                </motion.button>
+                                <span className="text-2xl font-black text-[var(--header-text)] min-w-[60px] text-center">{quantity}</span>
+                                <motion.button
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => setQuantity(quantity + 1)}
+                                    className="w-11 h-11 rounded-md bg-[var(--field-surface)] hover:bg-[var(--sidebar-active-bg)] text-[var(--header-text)] text-xl font-bold flex items-center justify-center cursor-pointer border border-[var(--sidebar-border)] transition-all shadow-sm"
+                                >
+                                    +
+                                </motion.button>
+                            </div>
+                        )}
 
                    
                         <div className="space-y-3 mb-6 bg-[var(--field-surface)] rounded-md p-4 border border-[var(--sidebar-border)]">

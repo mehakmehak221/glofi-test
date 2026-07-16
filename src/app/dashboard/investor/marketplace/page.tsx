@@ -147,6 +147,7 @@ import { useCurrency } from "@/providers/CurrencyProvider";
 
 export default function MarketplacePage() {
     const { formatPrice, currency } = useCurrency();
+    const [saleTypeFilter, setSaleTypeFilter] = useState<'FRACTIONAL' | 'WHOLE'>('FRACTIONAL');
     const [activeCategory, setActiveCategory] = useState("All");
     const [countryFilter, setCountryFilter] = useState("");
     const [stateFilter, setStateFilter] = useState("");
@@ -162,7 +163,8 @@ export default function MarketplacePage() {
         category: apiCategory,
         country: countryFilter || undefined,
         state: stateFilter || undefined,
-        city: cityFilter || undefined
+        city: cityFilter || undefined,
+        saleType: saleTypeFilter
     });
 
     const allAssets = assetsData?.data || [];
@@ -184,6 +186,42 @@ export default function MarketplacePage() {
 
             <div className="max-w-6xl mx-auto mb-4">
                 <InvestorBanners />
+            </div>
+
+            {/* Marketplace Mode Toggle */}
+            <div className="flex max-w-6xl mx-auto border-b border-[var(--sidebar-border)] mb-6">
+                <button
+                    onClick={() => setSaleTypeFilter('FRACTIONAL')}
+                    className={`pb-3 px-6 text-sm font-extrabold tracking-wide uppercase transition-all relative cursor-pointer border-0 bg-transparent ${
+                        saleTypeFilter === 'FRACTIONAL'
+                            ? 'text-[var(--sidebar-active-text)]'
+                            : 'text-[var(--color-text-muted)] hover:text-[var(--header-text)]'
+                    }`}
+                >
+                    Fractional Marketplace
+                    {saleTypeFilter === 'FRACTIONAL' && (
+                        <motion.div
+                            layoutId="activeMarketplaceTab"
+                            className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[var(--sidebar-active-text)]"
+                        />
+                    )}
+                </button>
+                <button
+                    onClick={() => setSaleTypeFilter('WHOLE')}
+                    className={`pb-3 px-6 text-sm font-extrabold tracking-wide uppercase transition-all relative cursor-pointer border-0 bg-transparent ${
+                        saleTypeFilter === 'WHOLE'
+                            ? 'text-[var(--sidebar-active-text)]'
+                            : 'text-[var(--color-text-muted)] hover:text-[var(--header-text)]'
+                    }`}
+                >
+                    Whole Asset Marketplace
+                    {saleTypeFilter === 'WHOLE' && (
+                        <motion.div
+                            layoutId="activeMarketplaceTab"
+                            className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[var(--sidebar-active-text)]"
+                        />
+                    )}
+                </button>
             </div>
 
             <motion.div
@@ -212,7 +250,11 @@ export default function MarketplacePage() {
                         </h1>
                         <div className="text-xs sm:text-sm text-[var(--marketplace-text-muted)] font-montserrat font-normal leading-relaxed max-w-md">
                             Institutional-grade real estate. Digitally simplified.
-                            <p> Invest fractionally starting from {currency.symbol}10,000.</p>
+                            {saleTypeFilter === 'FRACTIONAL' ? (
+                                <p> Invest fractionally starting from {currency.symbol}10,000.</p>
+                            ) : (
+                                <p> Buy complete institutional assets as a single whole transaction.</p>
+                            )}
                         </div>
                     </div>
 
