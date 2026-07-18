@@ -54,9 +54,17 @@ export default function PropertyDetailPage() {
     const [showComingSoon, setShowComingSoon] = useState(false);
     const [isDescExpanded, setIsDescExpanded] = useState(false);
 
+    const [purchaseMode, setPurchaseMode] = useState<"fractional" | "whole">("fractional");
+
     useEffect(() => {
-        if (property && property.saleType === 'WHOLE') {
-            setInvestQuantity(property.totalFractions || 1);
+        if (property) {
+            if (property.saleType === 'WHOLE') {
+                setPurchaseMode("whole");
+                setInvestQuantity(property.totalFractions || 1);
+            } else {
+                setPurchaseMode("fractional");
+                setInvestQuantity(1);
+            }
         }
     }, [property]);
 
@@ -695,8 +703,36 @@ export default function PropertyDetailPage() {
 
                         <div className="space-y-4 mb-6">
 
+                            {/* Purchase Mode Toggle */}
+                            <div className="flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-1 mb-2 shadow-sm">
+                                <button
+                                    onClick={() => {
+                                        setPurchaseMode("fractional");
+                                        setInvestQuantity(1);
+                                    }}
+                                    className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${purchaseMode === "fractional"
+                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm"
+                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] border border-transparent"
+                                        }`}
+                                >
+                                    Fraction Buy
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setPurchaseMode("whole");
+                                        setInvestQuantity(property.availableFractions || property.totalFractions || 1);
+                                    }}
+                                    className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${purchaseMode === "whole"
+                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm"
+                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] border border-transparent"
+                                        }`}
+                                >
+                                    Full Property
+                                </button>
+                            </div>
+
                             <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
-                                {property.saleType === 'WHOLE' ? (
+                                {purchaseMode === 'whole' ? (
                                     <div className="py-2">
                                         <div className="flex justify-between items-center mb-3">
                                             <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Whole Asset Purchase</h3>
@@ -706,7 +742,7 @@ export default function PropertyDetailPage() {
                                         </div>
                                         <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl p-3.5 text-center mb-4">
                                             <p className="text-[11px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider mb-1 font-montserrat">Fractions to Purchase</p>
-                                            <p className="text-3xl font-black text-[var(--header-text)]">{property.totalFractions?.toLocaleString()}</p>
+                                            <p className="text-3xl font-black text-[var(--header-text)]">{investQuantity?.toLocaleString()}</p>
                                         </div>
                                         <div className="bg-[var(--color-primary-300)]/10 border border-[var(--color-primary-300)]/20 rounded-xl p-3.5 text-xs text-[var(--sidebar-active-text)] font-semibold text-center leading-relaxed">
                                             ✨ Whole asset purchase: You are acquiring 100% of this asset.
@@ -797,14 +833,14 @@ export default function PropertyDetailPage() {
                             </div>
 
 
-                            {/* <div className="relative">
+                            <div className="relative">
                                 <button
                                     onClick={handleInvestNow}
                                     className="w-full py-4 rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-sm border-0 transition-all cursor-pointer select-none hover:opacity-90 shadow-glow-primary"
                                 >
                                     Invest Now
                                 </button>
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 </motion.div>
