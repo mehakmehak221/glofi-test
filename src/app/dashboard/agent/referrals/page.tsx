@@ -147,19 +147,19 @@ export default function AgentReferralsPage() {
                         <div className="space-y-3">
                             <div className="w-8 h-8 rounded-full bg-[var(--color-primary-300)]/10 border border-[var(--color-primary-300)]/20 flex items-center justify-center text-[var(--color-primary-300)] font-bold text-xs">1</div>
                             <h3 className="text-sm font-bold text-[var(--foreground)] font-montserrat">Share Your Link</h3>
-                            <p className="text-xs text-[var(--sidebar-text)] opacity-40 font-montserrat leading-relaxed text-balance">Send your unique referral link to potential investors through your network.</p>
+                            <p className="text-xs text-[var(--sidebar-text)] opacity-70 font-montserrat leading-relaxed text-balance">Send your unique referral link to potential investors through your network.</p>
                         </div>
 
                         <div className="space-y-3">
                             <div className="w-8 h-8 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500 font-bold text-xs">2</div>
                             <h3 className="text-sm font-bold text-[var(--foreground)] font-montserrat">Investor Signs Up</h3>
-                            <p className="text-xs text-[var(--sidebar-text)] opacity-40 font-montserrat leading-relaxed text-balance">They register using your link and are automatically tagged as your referral in our system.</p>
+                            <p className="text-xs text-[var(--sidebar-text)] opacity-70 font-montserrat leading-relaxed text-balance">They register using your link and are automatically tagged as your referral in our system.</p>
                         </div>
 
                         <div className="space-y-3">
                             <div className="w-8 h-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-500 font-bold text-xs">3</div>
                             <h3 className="text-sm font-bold text-[var(--foreground)] font-montserrat">Earn Commission</h3>
-                            <p className="text-xs text-[var(--sidebar-text)] opacity-40 font-montserrat leading-relaxed text-balance">You earn a commission on every successful purchase they make on the platform.</p>
+                            <p className="text-xs text-[var(--sidebar-text)] opacity-70 font-montserrat leading-relaxed text-balance">You earn a commission on every successful purchase they make on the platform.</p>
                         </div>
                     </div>
                 </motion.div>

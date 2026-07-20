@@ -103,6 +103,62 @@ export interface AgentTransactionsResponse {
     total: number;
 }
 
+export type CommissionStatus =
+  | 'PENDING'
+  | 'APPROVED'
+  | 'LOCKED'
+  | 'WITHDRAWABLE'
+  | 'PAID'
+  | 'CANCELLED';
+
+export type CommissionType = 'AGENT' | 'PARTNER' | 'PLATFORM';
+
+export interface CommissionSummary {
+  Pending: number;
+  Approved: number;
+  Locked: number;
+  Withdrawable: number;
+  Paid: number;
+}
+
+export interface Commission {
+  id: string;
+  partnerId: string;
+  agentId?: string;
+  assetId?: string;
+  investmentId?: string;
+  amount: string; // Decimal returned as string from API
+  status: CommissionStatus;
+  type: CommissionType;
+  source?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  lockedAt?: string;
+  withdrawableAt?: string;
+  paidAt?: string;
+  walletTransactionId?: string;
+  createdAt: string;
+  updatedAt: string;
+  investment?: {
+    id: string;
+    asset?: {
+      title: string;
+    };
+  };
+  agent?: {
+    id: string;
+    fullName: string;
+    referralCode: string;
+  };
+}
+
+export interface WithdrawalRequestResponse {
+  id: string;
+  amount: number;
+  status: string;
+  createdAt: string;
+}
+
 export const agentApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAgentDashboard: builder.query<AgentDashboardResponse, void>({
@@ -121,9 +177,21 @@ export const agentApi = baseApi.injectEndpoints({
             query: () => 'agent/transactions',
             providesTags: ['Commission'],
         }),
-        getAgentCommissions: builder.query<any[], void>({
+        getAgentCommissions: builder.query<Commission[], void>({
             query: () => 'agent/commissions',
             providesTags: ['Commission'],
+        }),
+        getAgentCommissionSummary: builder.query<CommissionSummary, void>({
+            query: () => 'agent/commissions/summary',
+            providesTags: ['Commission'],
+        }),
+        requestCommissionWithdrawal: builder.mutation<WithdrawalRequestResponse, { amount: number; bankAccountId?: string }>({
+            query: (body) => ({
+                url: 'wallet/withdraw',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['Commission'],
         }),
         getAgentMe: builder.query<AgentMeResponse, void>({
             query: () => 'agent/me',
@@ -144,7 +212,10 @@ export const {
     useGetAgentEarningsHistoryQuery,
     useGetAgentTransactionsQuery,
     useGetAgentCommissionsQuery,
+    useGetAgentCommissionSummaryQuery,
+    useRequestCommissionWithdrawalMutation,
     useGetAgentMeQuery,
     useGetAgentReferralLinkQuery,
     useGetReferralByCodeQuery,
 } = agentApi;
+
