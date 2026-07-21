@@ -694,7 +694,7 @@ export default function PropertyDetailPage() {
                     transition={{ duration: 1.5, delay: 0.15 }}
                 >
                     <div
-                        className="rounded-[24px] p-5 sm:p-6 lg:sticky lg:top-24 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-xl"
+                        className="rounded-[24px] p-5 sm:p-6 lg:sticky  bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-xl"
                     >
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">Per Fraction</p>
                         <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">
@@ -702,103 +702,54 @@ export default function PropertyDetailPage() {
                         </p>
 
                         <div className="space-y-4 mb-6">
-
-                            {/* Purchase Mode Toggle */}
-                            <div className="flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-1 mb-2 shadow-sm">
-                                <button
-                                    onClick={() => {
-                                        setPurchaseMode("fractional");
-                                        setInvestQuantity(1);
-                                    }}
-                                    className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${purchaseMode === "fractional"
-                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm"
-                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] border border-transparent"
-                                        }`}
-                                >
-                                    Fraction Buy
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setPurchaseMode("whole");
-                                        setInvestQuantity(property.availableFractions || property.totalFractions || 1);
-                                    }}
-                                    className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${purchaseMode === "whole"
-                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm"
-                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)] border border-transparent"
-                                        }`}
-                                >
-                                    Full Property
-                                </button>
-                            </div>
-
                             <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
-                                {purchaseMode === 'whole' ? (
-                                    <div className="py-2">
-                                        <div className="flex justify-between items-center mb-3">
-                                            <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Whole Asset Purchase</h3>
-                                            <span className="px-2.5 py-0.5 rounded-full bg-[var(--color-primary-300)]/20 text-[var(--sidebar-active-text)] text-[10px] font-extrabold uppercase tracking-wider">
-                                                100% Required
-                                            </span>
-                                        </div>
-                                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl p-3.5 text-center mb-4">
-                                            <p className="text-[11px] text-[var(--color-text-muted)] font-semibold uppercase tracking-wider mb-1 font-montserrat">Fractions to Purchase</p>
-                                            <p className="text-3xl font-black text-[var(--header-text)]">{investQuantity?.toLocaleString()}</p>
-                                        </div>
-                                        <div className="bg-[var(--color-primary-300)]/10 border border-[var(--color-primary-300)]/20 rounded-xl p-3.5 text-xs text-[var(--sidebar-active-text)] font-semibold text-center leading-relaxed">
-                                            ✨ Whole asset purchase: You are acquiring 100% of this asset.
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Select Fractions</h3>
-                                        </div>
-                                        <p className="text-[11px] text-[var(--color-text-muted)] font-medium mb-4">
-                                            Available: {property.availableFractions?.toLocaleString() || "20,000"} fractions
-                                        </p>
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Select Fractions</h3>
+                                </div>
+                                <p className="text-[11px] text-[var(--color-text-muted)] font-medium mb-4">
+                                    Available: {property.availableFractions?.toLocaleString() || "20,000"} fractions
+                                </p>
 
-                                        <div className="relative mb-5 flex items-center">
-                                            <input
-                                                type="range"
-                                                min="1"
-                                                max={Math.min(property.availableFractions || 20000, 100)}
-                                                value={investQuantity}
-                                                onChange={(e) => setInvestQuantity(Number(e.target.value))}
-                                                className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[var(--color-primary-300)] focus:outline-none"
-                                                style={{
-                                                    background: `linear-gradient(to right, var(--color-primary-300) 0%, var(--color-primary-300) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
-                                                        }%, var(--sidebar-border) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
-                                                        }%, var(--sidebar-border) 100%)`
-                                                }}
-                                            />
-                                        </div>
+                                <div className="relative mb-5 flex items-center">
+                                    <input
+                                        type="range"
+                                        min="1"
+                                        max={Math.min(property.availableFractions || 20000, 100)}
+                                        value={investQuantity}
+                                        onChange={(e) => setInvestQuantity(Number(e.target.value))}
+                                        className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[var(--color-primary-300)] focus:outline-none"
+                                        style={{
+                                            background: `linear-gradient(to right, var(--color-primary-300) 0%, var(--color-primary-300) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
+                                                }%, var(--sidebar-border) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
+                                                }%, var(--sidebar-border) 100%)`
+                                        }}
+                                    />
+                                </div>
 
-                                        <div className="flex gap-2 justify-between mb-4">
-                                            {[1, 2, 5, 10, 25, 50].map((num) => {
-                                                const isSelected = investQuantity === num;
-                                                return (
-                                                    <button
-                                                        key={num}
-                                                        onClick={() => setInvestQuantity(num)}
-                                                        className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${isSelected
-                                                            ? "bg-[var(--color-primary-300)] text-black border border-[var(--color-primary-300)] shadow-sm font-extrabold"
-                                                            : "bg-[var(--card-surface)] text-[var(--header-text)] border border-[var(--sidebar-border)] hover:bg-[var(--sidebar-active-bg)]"
-                                                            }`}
-                                                    >
-                                                        {num}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
+                                <div className="flex gap-2 justify-between mb-4">
+                                    {[1, 2, 5, 10, 25, 50].map((num) => {
+                                        const isSelected = investQuantity === num;
+                                        return (
+                                            <button
+                                                key={num}
+                                                onClick={() => setInvestQuantity(num)}
+                                                className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${isSelected
+                                                    ? "bg-[var(--color-primary-300)] text-black border border-[var(--color-primary-300)] shadow-sm font-extrabold"
+                                                    : "bg-[var(--card-surface)] text-[var(--header-text)] border border-[var(--sidebar-border)] hover:bg-[var(--sidebar-active-bg)]"
+                                                    }`}
+                                            >
+                                                {num}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
 
-                                        <div className="flex justify-between items-center border-t border-[var(--sidebar-border)]/65 pt-3 mt-3">
-                                            <span className="text-xs font-semibold text-[var(--color-text-muted)]">Fractions selected</span>
-                                            <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-[var(--color-primary-300)]/15 text-[var(--sidebar-active-text)] border border-[var(--color-primary-300)]/20 shadow-sm">
-                                                {investQuantity}
-                                            </span>
-                                        </div>
-                                    </>
-                                )}
+                                <div className="flex justify-between items-center border-t border-[var(--sidebar-border)]/65 pt-3 mt-3">
+                                    <span className="text-xs font-semibold text-[var(--color-text-muted)]">Fractions selected</span>
+                                    <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-[var(--color-primary-300)]/15 text-[var(--sidebar-active-text)] border border-[var(--color-primary-300)]/20 shadow-sm">
+                                        {investQuantity}
+                                    </span>
+                                </div>
                             </div>
 
 
@@ -851,6 +802,8 @@ export default function PropertyDetailPage() {
                 isOpen={investOpen}
                 onClose={() => setInvestOpen(false)}
                 property={property}
+                purchaseMode={purchaseMode}
+                initialQuantity={investQuantity}
                 onVerifyPay={handleVerifyPay}
             />
             <PaymentModal

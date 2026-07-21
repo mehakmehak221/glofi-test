@@ -11,9 +11,22 @@ export const assetApi = baseApi.injectEndpoints({
         body: assetData,
       }),
     }),
-    getAssets: builder.query<any, { category?: string; riskRating?: string; country?: string; state?: string; city?: string; limit?: number; page?: number; saleType?: 'FRACTIONAL' | 'WHOLE' } | void>({
+    getAssets: builder.query<any, {
+      category?: string;
+      riskRating?: string;
+      country?: string;
+      state?: string;
+      city?: string;
+      limit?: number;
+      page?: number;
+      saleType?: 'FRACTIONAL' | 'WHOLE';
+      status?: string;
+      search?: string;
+      sortBy?: string;
+      sortOrder?: 'asc' | 'desc';
+    } | void>({
       query: (arg) => {
-        const { category, riskRating, country, state, city, limit = 10, page = 1, saleType } = arg || {};
+        const { category, riskRating, country, state, city, limit = 10, page = 1, saleType, status, search, sortBy, sortOrder } = arg || {};
         const params = new URLSearchParams({ limit: String(limit), page: String(page) });
         if (category) params.append('category', category);
         if (riskRating) params.append('riskRating', riskRating);
@@ -21,6 +34,10 @@ export const assetApi = baseApi.injectEndpoints({
         if (state) params.append('state', state);
         if (city) params.append('city', city);
         if (saleType) params.append('saleType', saleType);
+        if (status) params.append('status', status);
+        if (search) params.append('search', search);
+        if (sortBy) params.append('sortBy', sortBy);
+        if (sortOrder) params.append('sortOrder', sortOrder);
         return {
           url: `assets?${params.toString()}`,
           method: 'GET',

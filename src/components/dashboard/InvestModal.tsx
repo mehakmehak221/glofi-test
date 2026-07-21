@@ -15,14 +15,20 @@ const modalVariants = {
     exit: { opacity: 0, scale: 0.95, y: 20 },
 } satisfies import("framer-motion").Variants;
 
-export default function InvestModal({ isOpen, onClose, property, onVerifyPay, isLoading = false }) {
+export default function InvestModal({ isOpen, onClose, property, onVerifyPay, isLoading = false, purchaseMode = "fractional", initialQuantity }) {
     const [quantity, setQuantity] = useState(1);
+
+    const isWholePurchase = property.saleType === 'WHOLE' || purchaseMode === 'whole';
 
     useEffect(() => {
         if (isOpen && property) {
-            setQuantity(property.saleType === 'WHOLE' ? (property.totalFractions || 1) : 1);
+            if (initialQuantity !== undefined) {
+                setQuantity(initialQuantity);
+            } else {
+                setQuantity(isWholePurchase ? (property.availableFractions || property.totalFractions || 1) : 1);
+            }
         }
-    }, [isOpen, property]);
+    }, [isOpen, property, isWholePurchase, initialQuantity]);
 
     const { data: kycData } = useGetKycStatusQuery();
     if (!isOpen || !property) return null;
@@ -72,7 +78,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)] font-bold mb-3">Fractions</p>
 
                       
-                        {property.saleType === 'WHOLE' ? (
+                        {isWholePurchase ? (
                             <div className="mb-6 bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md p-4 flex flex-col items-center gap-3">
                                 <div className="text-center">
                                     <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-bold mb-1 block">Total fractions</span>

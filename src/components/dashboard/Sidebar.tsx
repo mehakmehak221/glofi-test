@@ -86,8 +86,8 @@ export default function Sidebar() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
 
-            <div className="flex items-center h-16 px-4 border-b border-[var(--sidebar-border)] overflow-hidden">
-                <Link href={userRole === "AGENT" ? "/dashboard/agent/overview" : userRole === "PARTNER" ? "/dashboard/partner/overview" : "/dashboard/investor/marketplace"} className="flex items-center gap-3 no-underline">
+            <div className="flex items-center justify-center h-16 px-4 border-b border-[var(--sidebar-border)] overflow-hidden">
+                <Link href={userRole === "AGENT" ? "/dashboard/agent/overview" : userRole === "PARTNER" ? "/dashboard/partner/overview" : "/dashboard/investor/marketplace"} className="flex items-center justify-center w-full gap-3 no-underline">
                     <motion.div
                         animate={{ 
                             opacity: collapsed ? 0 : 1,
@@ -95,7 +95,7 @@ export default function Sidebar() {
                             x: collapsed ? -20 : 0
                         }}
                         transition={{ duration: 0.2 }}
-                        className="flex items-center gap-3 flex-shrink-0"
+                        className="flex items-center justify-center gap-3 flex-shrink-0"
                     >
                         <Image
                             src={isLight ? "/assets/images/branding/light-logo.png" : "/assets/images/branding/logo.png"}

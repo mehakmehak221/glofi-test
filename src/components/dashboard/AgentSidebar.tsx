@@ -25,8 +25,10 @@ import {
 
 const NAV_ITEMS = [
     { href: "/dashboard/agent/overview", icon: OverviewIcon, label: "Overview" },
+    { href: "/dashboard/agent/leads", icon: LeadsIcon, label: "Leads & CRM" },
+    { href: "/dashboard/agent/followups", icon: FinancialIcon, label: "Follow-ups" },
     { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Referrals" },
-    { href: "/dashboard/agent/transactions", icon: LeadsIcon, label: "Transactions" },
+    { href: "/dashboard/agent/transactions", icon: AccountIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
     { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
 ];

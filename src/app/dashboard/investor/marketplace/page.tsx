@@ -8,103 +8,107 @@ import { MapPinIcon } from "@/components/VectorImages";
 
 import { InvestorBanners } from "@/components/dashboard/investor/InvestorBanners";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
-import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { CATEGORIES } from "@/data/propertyData";
-import { Country, State, City } from "country-state-city";
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 import { API_URL } from "@/constants";
 
-const DROPDOWN_STYLES = `
-  :root { --btn-view-color: #000000; }
-  .dark { --btn-view-color: #D9F4EF; }
-  .dropdown-scroll::-webkit-scrollbar {
-    width: 4px;
-  }
-  .dropdown-scroll::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .dropdown-scroll::-webkit-scrollbar-thumb {
-    background: var(--sidebar-border);
-    border-radius: 10px;
-  }
-  .dropdown-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--sidebar-active-text);
-  }
-`;
+const CATEGORY_MAP: Record<string, string> = {
+    "Dubai Skyscrapers": "DUBAI_SKYSCRAPER",
+    "Land Parcels": "LAND_PARCEL",
+    "Commercial Real Estate": "COMMERCIAL_REAL_ESTATE",
+    "Residential": "RESIDENTIAL",
+};
 
-function PillDropdown({ label, options, value, onChange, placeholder, disabled = false }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
-    const dropdownRef = useRef(null);
+const RISK_OPTIONS = [
+    { label: "All Risk", value: "" },
+    { label: "Low Risk", value: "LOW" },
+    { label: "Medium Risk", value: "MEDIUM" },
+    { label: "High Risk", value: "HIGH" },
+];
+
+const SORT_OPTIONS = [
+    { label: "Newest", value: "createdAt", order: "desc" as const },
+    { label: "Oldest", value: "createdAt", order: "asc" as const },
+    { label: "Price: Low to High", value: "fractionPrice", order: "asc" as const },
+    { label: "Price: High to Low", value: "fractionPrice", order: "desc" as const },
+    { label: "Yield: High to Low", value: "expectedYield", order: "desc" as const },
+];
+
+const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
+};
+
+function FilterDropdown({
+    options,
+    value,
+    onChange,
+    placeholder,
+}: {
+    options: { label: string; value: string }[];
+    value: string;
+    onChange: (v: string) => void;
+    placeholder: string;
+}) {
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
+        const handler = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
         };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
     }, []);
 
-    const filteredOptions = options.filter(opt =>
-        opt.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const selected = options.find((o) => o.value === value);
 
     return (
-        <div className={`flex flex-col gap-1.5 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
-            <label className="text-[10px] uppercase tracking-wider text-[var(--marketplace-text-muted)] font-semibold px-1 font-montserrat">{label}</label>
-            <div
-                onClick={() => !disabled && setIsOpen(!isOpen)}
-                className={`flex justify-between items-center bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-full px-4 py-1.5 text-xs font-montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[var(--sidebar-active-text)]/30'} ${isOpen ? 'border-[var(--sidebar-active-text)]/30 shadow-sm' : ''}`}
+        <div className="relative" ref={ref}>
+            <button
+                onClick={() => setOpen((p) => !p)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border transition-all cursor-pointer ${
+                    value
+                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
+                        : "bg-[var(--field-surface)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
+                }`}
             >
-                <span className={value ? "text-[var(--marketplace-text-primary)]" : "text-[var(--marketplace-text-muted)]"}>
-                    {value || placeholder}
-                </span>
-                <svg className={`w-3 h-3 text-[var(--marketplace-text-muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                {selected ? selected.label : placeholder}
+                <svg
+                    className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-            </div>
+            </button>
 
             <AnimatePresence>
-                {isOpen && (
+                {open && (
                     <motion.div
-                        initial={{ opacity: 0, y: -5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -5 }}
-                        className="absolute z-[100] top-[calc(100%+6px)] left-0 min-w-[200px] bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
+                        initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute z-50 top-[calc(100%+6px)] left-0 min-w-[180px] bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl shadow-2xl overflow-hidden"
                     >
-                        <div className="p-2 border-b border-[var(--sidebar-border)]">
-                            <input
-                                type="text"
-                                autoFocus
-                                placeholder="Search..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-[var(--background)] border border-[var(--sidebar-border)] rounded-full px-3 py-1.5 text-[10px] text-[var(--marketplace-text-primary)] focus:outline-none font-montserrat"
-                            />
-                        </div>
-                        <div className="max-h-[200px] overflow-y-auto dropdown-scroll">
-                            {filteredOptions.length > 0 ? (
-                                filteredOptions.map((opt) => (
-                                    <div
-                                        key={opt.isoCode || opt.name}
-                                        onClick={() => {
-                                            onChange(opt);
-                                            setIsOpen(false);
-                                            setSearchTerm("");
-                                        }}
-                                        className={`px-4 py-2 text-[11px] font-montserrat cursor-pointer hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--sidebar-active-text)] transition-colors ${value === opt.name ? 'bg-[var(--sidebar-active-text)] text-black' : 'text-[var(--marketplace-text-secondary)]'}`}
-                                    >
-                                        {opt.name}
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="px-4 py-3 text-[10px] text-[var(--marketplace-text-muted)] font-montserrat text-center italic">
-                                    No results found
-                                </div>
-                            )}
-                        </div>
+                        {options.map((opt) => (
+                            <button
+                                key={opt.value}
+                                onClick={() => { onChange(opt.value); setOpen(false); }}
+                                className={`w-full text-left px-4 py-2.5 text-xs font-semibold transition-colors cursor-pointer border-0 ${
+                                    value === opt.value
+                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]"
+                                        : "text-[var(--color-text-muted)] hover:bg-[var(--sidebar-bg)] hover:text-[var(--header-text)]"
+                                }`}
+                            >
+                                {opt.label}
+                            </button>
+                        ))}
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -112,155 +116,137 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
     );
 }
 
-const CATEGORY_MAP = {
-    "Dubai Skyscrapers": "DUBAI_SKYSCRAPER",
-    "Land Parcels": "LAND_PARCEL",
-    "Commercial Real Estate": "COMMERCIAL_REAL_ESTATE",
-    "Residential": "RESIDENTIAL"
-};
-
-
-
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1
-        }
-    }
-};
-
-const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.5,
-            ease: "easeOut"
-        }
-    }
-};
-
-import { useCurrency } from "@/providers/CurrencyProvider";
-
 export default function MarketplacePage() {
     const { formatPrice, currency } = useCurrency();
-    const [saleTypeFilter, setSaleTypeFilter] = useState<'FRACTIONAL' | 'WHOLE'>('FRACTIONAL');
-    const [activeCategory, setActiveCategory] = useState("All");
-    const [countryFilter, setCountryFilter] = useState("");
-    const [stateFilter, setStateFilter] = useState("");
-    const [cityFilter, setCityFilter] = useState("");
-    const [countryIsoCode, setCountryIsoCode] = useState("");
-    const [stateIsoCode, setStateIsoCode] = useState("");
-    const [searchQuery, setSearchQuery] = useState("");
-
     const router = useRouter();
 
-    const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
-    const { data: assetsData, isLoading, isError } = useGetAssetsQuery({
-        category: apiCategory,
-        country: countryFilter || undefined,
-        state: stateFilter || undefined,
-        city: cityFilter || undefined,
-        saleType: saleTypeFilter
-    });
-
-    const allAssets = assetsData?.data || [];
-    const assets = searchQuery.trim()
-        ? allAssets.filter((a) => a.title?.toLowerCase().includes(searchQuery.toLowerCase()))
-        : allAssets;
-
-    const handleCardClick = (id) => {
-        router.push(`/dashboard/investor/marketplace/${id}`);
-    };
+    const [saleTypeFilter, setSaleTypeFilter] = useState<"FRACTIONAL" | "WHOLE">("FRACTIONAL");
+    const [activeCategory, setActiveCategory] = useState("All");
+    const [riskFilter, setRiskFilter] = useState("");
+    const [sortIndex, setSortIndex] = useState(0);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
 
     useEffect(() => {
+        const t = setTimeout(() => setDebouncedSearch(searchQuery), 400);
+        return () => clearTimeout(t);
+    }, [searchQuery]);
 
-    }, []);
+    const sortOpt = SORT_OPTIONS[sortIndex];
+    const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
+
+    const { data: assetsData, isLoading, isError } = useGetAssetsQuery({
+        category: apiCategory,
+        saleType: saleTypeFilter,
+        riskRating: riskFilter || undefined,
+        search: debouncedSearch || undefined,
+        sortBy: sortOpt.value,
+        sortOrder: sortOpt.order,
+        limit: 50,
+        page: 1,
+    });
+
+    const assets = assetsData?.data || [];
+    const hasActiveFilters = !!(riskFilter || debouncedSearch);
+
+    const clearAllFilters = () => {
+        setRiskFilter("");
+        setSearchQuery("");
+        setDebouncedSearch("");
+        setSortIndex(0);
+        setActiveCategory("All");
+    };
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)]">
-            <style>{DROPDOWN_STYLES}</style>
+        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen">
 
-            <div className="max-w-6xl mx-auto mb-4">
+            <div className="max-w-6xl mx-auto mb-6">
                 <InvestorBanners />
             </div>
 
-            {/* Marketplace Mode Toggle */}
-            <div className="flex max-w-6xl mx-auto border-b border-[var(--sidebar-border)] mb-6">
-                <button
-                    onClick={() => setSaleTypeFilter('FRACTIONAL')}
-                    className={`pb-3 px-6 text-sm font-extrabold tracking-wide uppercase transition-all relative cursor-pointer border-0 bg-transparent ${
-                        saleTypeFilter === 'FRACTIONAL'
-                            ? 'text-[var(--sidebar-active-text)]'
-                            : 'text-[var(--color-text-muted)] hover:text-[var(--header-text)]'
-                    }`}
-                >
-                    Fractional Marketplace
-                    {saleTypeFilter === 'FRACTIONAL' && (
-                        <motion.div
-                            layoutId="activeMarketplaceTab"
-                            className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[var(--sidebar-active-text)]"
-                        />
-                    )}
-                </button>
-                <button
-                    onClick={() => setSaleTypeFilter('WHOLE')}
-                    className={`pb-3 px-6 text-sm font-extrabold tracking-wide uppercase transition-all relative cursor-pointer border-0 bg-transparent ${
-                        saleTypeFilter === 'WHOLE'
-                            ? 'text-[var(--sidebar-active-text)]'
-                            : 'text-[var(--color-text-muted)] hover:text-[var(--header-text)]'
-                    }`}
-                >
-                    Whole Asset Marketplace
-                    {saleTypeFilter === 'WHOLE' && (
-                        <motion.div
-                            layoutId="activeMarketplaceTab"
-                            className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[var(--sidebar-active-text)]"
-                        />
-                    )}
-                </button>
+            <div className="max-w-6xl mx-auto mb-5">
+                <h1 className="text-2xl sm:text-3xl font-black text-[var(--header-text)] tracking-tight mb-1">
+                    Discover Assets
+                </h1>
+                <p className="text-sm text-[var(--color-text-muted)] font-medium">
+                    {saleTypeFilter === "FRACTIONAL"
+                        ? `Institutional-grade real estate. Invest fractionally from ${currency.symbol}10,000.`
+                        : "Acquire complete institutional assets as a single whole transaction."}
+                </p>
             </div>
 
+            {/* Sale-type pill toggle */}
+            <div className="max-w-6xl mx-auto mb-6">
+                <div className="inline-flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-full p-1 gap-1 shadow-sm relative">
+                    {(["FRACTIONAL", "WHOLE"] as const).map((type) => {
+                        const isSelected = saleTypeFilter === type;
+                        return (
+                            <button
+                                key={type}
+                                onClick={() => setSaleTypeFilter(type)}
+                                className={`relative px-6 py-2.5 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${
+                                    isSelected
+                                        ? "text-[var(--sidebar-active-text)]"
+                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
+                                }`}
+                            >
+                                {isSelected && (
+                                    <motion.div
+                                        layoutId="activeSaleType"
+                                        className="absolute inset-0 bg-[var(--sidebar-active-bg)] border border-[var(--sidebar-active-text)]/15 rounded-full z-[-1] shadow-sm"
+                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                    />
+                                )}
+                                {type === "FRACTIONAL" ? "Fractional Real Estate" : "Whole Properties"}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Filter bar */}
             <motion.div
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="mb-5 p-6 sm:p-8 relative z-20 shadow-sm"
-                style={{
-                    borderRadius: '24px',
-                    border: '1px solid var(--marketplace-card-border)',
-                    background: 'var(--marketplace-feature-card-bg)',
-                }}
+                transition={{ duration: 0.4 }}
+                className="max-w-6xl mx-auto mb-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 shadow-sm backdrop-blur-md"
             >
-                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
-                    <div>
-                        <h1
-                            className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight mb-1"
-                            style={{
-                                background: 'var(--marketplace-hero-text)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                            }}
+                {/* Category tabs */}
+                <div className="flex flex-wrap gap-2 mb-4 relative z-10">
+                    {CATEGORIES.map((cat) => {
+                        const isSelected = activeCategory === cat;
+                        return (
+                            <button
+                                key={cat}
+                                onClick={() => setActiveCategory(cat)}
+                                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold transition-colors duration-200 cursor-pointer border-0 bg-transparent ${
+                                    isSelected
+                                        ? "text-[var(--sidebar-active-text)]"
+                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
+                                }`}
+                            >
+                                {isSelected && (
+                                    <motion.div
+                                        layoutId="activeCategoryBg"
+                                        className="absolute inset-0 bg-[var(--sidebar-active-bg)] border border-[var(--sidebar-active-text)]/10 rounded-full z-[-1] shadow-sm"
+                                        transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                                    />
+                                )}
+                                {cat}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                <div className="h-px bg-gradient-to-r from-[var(--sidebar-border)]/20 via-[var(--sidebar-border)]/60 to-[var(--sidebar-border)]/20 mb-5" />
+
+                {/* Search + dropdowns */}
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="relative flex-1 min-w-[200px] max-w-xs">
+                        <svg
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--sidebar-active-text)] pointer-events-none"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         >
-                            Discover Assets
-                        </h1>
-                        <div className="text-xs sm:text-sm text-[var(--marketplace-text-muted)] font-montserrat font-normal leading-relaxed max-w-md">
-                            Institutional-grade real estate. Digitally simplified.
-                            {saleTypeFilter === 'FRACTIONAL' ? (
-                                <p> Invest fractionally starting from {currency.symbol}10,000.</p>
-                            ) : (
-                                <p> Buy complete institutional assets as a single whole transaction.</p>
-                            )}
-                        </div>
-                    </div>
-
-
-                    <div className="relative w-full sm:w-72 lg:w-80 flex-shrink-0">
-                        <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--sidebar-active-text)] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
                         </svg>
                         <input
@@ -268,188 +254,160 @@ export default function MarketplacePage() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search properties..."
-                            className="w-full pl-10 pr-9 py-2.5 rounded-xl text-sm bg-[var(--field-surface)] border border-[var(--sidebar-border)] text-[var(--marketplace-text-primary)] placeholder-[var(--marketplace-text-muted)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50 focus:ring-2 focus:ring-[var(--sidebar-active-text)]/15 transition-all duration-200 font-montserrat"
+                            className="w-full pl-10 pr-9 py-2 rounded-full text-xs bg-[var(--field-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50 focus:ring-1 focus:ring-[var(--sidebar-active-text)]/15 transition-all font-medium"
                         />
                         {searchQuery && (
                             <button
                                 onClick={() => setSearchQuery("")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--marketplace-text-muted)] hover:text-[var(--marketplace-text-primary)] transition-colors flex items-center justify-center"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
                             >
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-3.5 h-3.5">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         )}
                     </div>
-                </div>
 
+                    <FilterDropdown
+                        options={RISK_OPTIONS}
+                        value={riskFilter}
+                        onChange={setRiskFilter}
+                        placeholder="Risk Rating"
+                    />
 
-                <div className="flex flex-wrap gap-2">
-                    {CATEGORIES.map((cat) => (
+                    <FilterDropdown
+                        options={SORT_OPTIONS.map((o, i) => ({ label: o.label, value: String(i) }))}
+                        value={String(sortIndex)}
+                        onChange={(v) => setSortIndex(Number(v))}
+                        placeholder="Sort By"
+                    />
+
+                    {hasActiveFilters && (
                         <button
-                            key={cat}
-                            onClick={() => setActiveCategory(cat)}
-                            className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer border ${activeCategory === cat
-                                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-bg)] scale-[1.04] shadow-sm"
-                                : "bg-transparent text-[var(--sidebar-text)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/40 hover:text-[var(--sidebar-active-text)]"
-                                }`}
+                            onClick={clearAllFilters}
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-text)]/10 cursor-pointer transition-all"
                         >
-                            {cat}
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Clear
                         </button>
-                    ))}
-                </div>
+                    )}
 
-
-                <div className="border-t border-[var(--sidebar-border)] my-5 opacity-60" />
-
-                <div className="flex flex-wrap gap-3 items-center">
-                    <PillDropdown
-                        label="Country"
-                        options={Country.getAllCountries()}
-                        value={countryFilter}
-                        onChange={(opt) => {
-                            setCountryIsoCode(opt.isoCode);
-                            setCountryFilter(opt.name);
-                            setStateFilter("");
-                            setCityFilter("");
-                            setStateIsoCode("");
-                        }}
-                        placeholder="Select Country"
-                    />
-                    <PillDropdown
-                        label="State"
-                        options={countryIsoCode ? State.getStatesOfCountry(countryIsoCode) : []}
-                        value={stateFilter}
-                        onChange={(opt) => {
-                            setStateIsoCode(opt.isoCode);
-                            setStateFilter(opt.name);
-                            setCityFilter("");
-                        }}
-                        placeholder="Select State"
-                        disabled={!countryIsoCode}
-                    />
-                    <PillDropdown
-                        label="City"
-                        options={(countryIsoCode && stateIsoCode) ? City.getCitiesOfState(countryIsoCode, stateIsoCode) : []}
-                        value={cityFilter}
-                        onChange={(opt) => {
-                            setCityFilter(opt.name);
-                        }}
-                        placeholder="Select City"
-                        disabled={!stateIsoCode}
-                    />
-                    {(countryFilter || stateFilter || cityFilter) && (
-                        <button
-                            onClick={() => {
-                                setCountryFilter("");
-                                setStateFilter("");
-                                setCityFilter("");
-                                setStateIsoCode("");
-                                setCountryIsoCode("");
-                            }}
-                            className="text-[11px] font-bold text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-text)]/10 px-3.5 py-1.5 rounded-full font-montserrat cursor-pointer transition-all duration-200"
-                        >
-                            ✕ Clear Filters
-                        </button>
+                    {!isLoading && (
+                        <span className="ml-auto text-[11px] text-[var(--color-text-muted)] font-medium">
+                            {assets.length} asset{assets.length !== 1 ? "s" : ""}
+                        </span>
                     )}
                 </div>
             </motion.div>
 
-
-            {/* Result count when searching */}
-            {searchQuery.trim() && !isLoading && (
-                <p className="mb-4 text-xs text-[var(--marketplace-text-muted)] font-montserrat">
-                    {assets.length} result{assets.length !== 1 ? 's' : ''} for &ldquo;<span className="text-[var(--sidebar-active-text)] font-semibold">{searchQuery}</span>&rdquo;
-                </p>
-            )}
-
-            <AnimatePresence mode="wait">
-                {
-                    isLoading ? (
-                        <div className="flex items-center justify-center p-12">
+            {/* Asset grid */}
+            <div className="max-w-6xl mx-auto">
+                <AnimatePresence mode="wait">
+                    {isLoading ? (
+                        <motion.div
+                            key="loading"
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            className="flex items-center justify-center p-16"
+                        >
                             <div className="w-8 h-8 border-2 border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />
-                        </div>
+                        </motion.div>
                     ) : isError ? (
-                        <div className="text-center p-12 text-[var(--marketplace-text-muted)]">
-                            Error loading assets. Please try again later.
-                        </div>
+                        <motion.div
+                            key="error"
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            className="text-center p-12 text-[var(--color-text-muted)] border border-dashed border-[var(--sidebar-border)] rounded-2xl"
+                        >
+                            Error loading assets. Please try again.
+                        </motion.div>
                     ) : assets.length === 0 ? (
-                        <div className="text-center p-12 text-[var(--marketplace-text-muted)] border border-dashed border-[var(--sidebar-border)] rounded-2xl">
-                            No assets found in this category.
-                        </div>
+                        <motion.div
+                            key="empty"
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            className="text-center p-16 text-[var(--color-text-muted)] border border-dashed border-[var(--sidebar-border)] rounded-2xl"
+                        >
+                            <svg className="w-10 h-10 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
+                            </svg>
+                            <p className="font-semibold">No assets found</p>
+                            <p className="text-xs mt-1">Try adjusting your filters</p>
+                        </motion.div>
                     ) : (
                         <motion.div
-                            key={activeCategory}
+                            key={`${activeCategory}-${saleTypeFilter}-${riskFilter}-${sortIndex}`}
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
                             exit="hidden"
                             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
                         >
-                            {assets.map((property, index) => {
+                            {assets.map((property) => {
                                 const propertyImage = property.images?.[0];
                                 const imageUrl = propertyImage
-                                    ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, '')}`)
+                                    ? (propertyImage.startsWith("http") ? propertyImage : `${API_URL}/${propertyImage.replace(/^\//, "")}`)
                                     : "/assets/images/content/img_ext_0.jpeg";
-                                const expectedYield = parseFloat(property.expectedYield || 0);
-                                const expectedAnnualRent = parseFloat(property.expectedAnnualRent || 0);
-                                const rentalGrowthRate = parseFloat(property.rentalGrowthRate || 0);
-                                const expectedAppreciationRate = parseFloat(property.expectedAppreciationRate || 0);
-                                const operatingCostRate = parseFloat(property.operatingCostRate || 0);
 
-                                const rawYield = expectedYield + expectedAnnualRent + rentalGrowthRate + expectedAppreciationRate - operatingCostRate;
-                                const formattedYield = rawYield.toFixed(2).replace(/\.?0+$/, '');
+                                const rawYield =
+                                    parseFloat(property.expectedYield || 0) +
+                                    parseFloat(property.expectedAnnualRent || 0) +
+                                    parseFloat(property.rentalGrowthRate || 0) +
+                                    parseFloat(property.expectedAppreciationRate || 0) -
+                                    parseFloat(property.operatingCostRate || 0);
+                                const formattedYield = rawYield.toFixed(1);
 
                                 const total = property.totalFractions || 1;
-                                const available = property.availableFractions || 0;
-                                const fundedPercentage = Math.max(0, Math.min(100, Math.round(((total - available) / total) * 100)));
+                                const available = property.availableFractions ?? total;
+                                const fundedPct = Math.max(0, Math.min(100, Math.round(((total - available) / total) * 100)));
+
+                                const riskColor =
+                                    property.riskRating === "LOW"
+                                        ? "bg-[#00DAAF] text-[#00DAAF]"
+                                        : property.riskRating === "HIGH"
+                                        ? "bg-[#FF5C5C] text-[#FF5C5C]"
+                                        : "bg-[#E8940C] text-[#E8940C]";
 
                                 return (
                                     <motion.div
                                         key={property.id}
                                         variants={cardVariants}
                                         layout
-                                        onClick={() => handleCardClick(property.id)}
-                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-[24px] overflow-hidden hover:border-[var(--sidebar-active-text)]/20 transition-colors duration-300 group cursor-pointer shadow-sm"
+                                        onClick={() => router.push(`/dashboard/investor/marketplace/${property.id}`)}
+                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-[24px] overflow-hidden hover:border-[var(--sidebar-active-text)]/25 transition-all duration-300 group cursor-pointer shadow-sm hover:shadow-md"
                                     >
-
                                         <div className="relative h-64 sm:h-72 overflow-hidden">
                                             <Image
                                                 src={imageUrl}
                                                 alt={property.title}
                                                 fill
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
                                             />
-                                            <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
+                                            <div className="absolute inset-0" style={{ background: "var(--marketplace-card-overlay)" }} />
 
-                                            <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold capitalize bg-[#FFFFFF] text-[#111111] shadow-md z-10 tracking-wide">
-                                                {property.category.replace(/_/g, ' ').toLowerCase()}
+                                            <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold capitalize bg-white text-[#111] shadow-md z-10 tracking-wide">
+                                                {property.category?.replace(/_/g, " ").toLowerCase()}
                                             </span>
 
                                             <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
-                                                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${property.riskRating === 'LOW'
-                                                    ? 'bg-[#00DAAF] text-[#00DAAF]'
-                                                    : property.riskRating === 'HIGH'
-                                                        ? 'bg-[#FF5C5C] text-[#FF5C5C]'
-                                                        : 'bg-[#E8940C] text-[#E8940C]'
-                                                    }`} />
+                                                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${riskColor}`} />
                                                 {property.riskRating} RISK
                                             </span>
-
                                         </div>
 
-
                                         <div className="p-5 sm:p-6">
-                                            <h3 className="text-[22px] font-extrabold text-[var(--header-text)] mb-1 leading-snug tracking-tight">{property.title}</h3>
+                                            <h3 className="text-[22px] font-extrabold text-[var(--header-text)] mb-1 leading-snug tracking-tight">
+                                                {property.title}
+                                            </h3>
                                             <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-[13px] mb-5 font-medium">
                                                 <MapPinIcon className="w-4 h-4 text-[var(--color-text-muted)]" />
-                                                {property.city && property.state ? `${property.city}, ${property.state}` : property.location}
+                                                {property.city && property.state
+                                                    ? `${property.city}, ${property.state}`
+                                                    : property.location}
                                             </div>
 
-                                            {/* Valuation, Per Fraction, and Annual Return Stats Card */}
-                                            <div className="bg-[#F9FAFB] dark:bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[16px] p-4 mb-6 shadow-sm">
-                                                <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center items-center">
+                                            <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[16px] p-4 mb-5 shadow-sm">
+                                                <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center">
                                                     <div>
                                                         <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1">Valuation</p>
                                                         <p className="text-[15px] font-extrabold text-[var(--header-text)]">{formatPrice(property.valuation, true)}</p>
@@ -465,17 +423,17 @@ export default function MarketplacePage() {
                                                 </div>
                                             </div>
 
-                                            <div className="mb-6">
+                                            <div className="mb-5">
                                                 <div className="flex justify-between items-center mb-2 text-[12px] font-bold text-[var(--color-text-muted)]">
-                                                    <span>{fundedPercentage}% funded</span>
-                                                    <span>{property.availableFractions?.toLocaleString()} left</span>
+                                                    <span>{fundedPct}% funded</span>
+                                                    <span>{available?.toLocaleString()} left</span>
                                                 </div>
-                                                <div className="w-full h-2.5 bg-[var(--sidebar-active-text)]/20 rounded-full overflow-hidden">
+                                                <div className="w-full h-2 bg-[var(--sidebar-active-text)]/15 rounded-full overflow-hidden">
                                                     <motion.div
                                                         className="h-full rounded-full bg-[var(--sidebar-active-text)]"
                                                         initial={{ width: 0 }}
-                                                        animate={{ width: `${fundedPercentage}%` }}
-                                                        transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+                                                        animate={{ width: `${fundedPct}%` }}
+                                                        transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
                                                     />
                                                 </div>
                                             </div>
@@ -483,23 +441,19 @@ export default function MarketplacePage() {
                                             <motion.button
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleCardClick(property.id);
-                                                }}
-                                                className="w-full py-3.5 rounded-full border-[1.5px] border-[#006D5B] bg-transparent text-sm font-extrabold uppercase tracking-wide cursor-pointer transition-colors duration-300"
-                                                style={{ color: 'var(--header-text)' }}
+                                                onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/investor/marketplace/${property.id}`); }}
+                                                className="w-full py-3.5 rounded-full border-[1.5px] border-[var(--sidebar-active-text)] bg-transparent text-sm font-extrabold uppercase tracking-wide cursor-pointer transition-colors duration-300 text-[var(--header-text)] hover:bg-[var(--sidebar-active-text)]/10"
                                             >
-                                                VIEW DETAILS
+                                                View Details
                                             </motion.button>
                                         </div>
                                     </motion.div>
                                 );
                             })}
                         </motion.div>
-                    )
-                }
-            </AnimatePresence >
-        </div >
+                    )}
+                </AnimatePresence>
+            </div>
+        </div>
     );
 }
