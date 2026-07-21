@@ -833,14 +833,14 @@ export default function PropertyDetailPage() {
                             </div>
 
 
-                            {/* <div className="relative">
+                            <div className="relative">
                                 <button
                                     onClick={handleInvestNow}
                                     className="w-full py-4 rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-sm border-0 transition-all cursor-pointer select-none hover:opacity-90 shadow-glow-primary"
                                 >
                                     Invest Now
                                 </button>
-                            </div> */}
+                            </div> 
                         </div>
                     </div>
                 </motion.div>
