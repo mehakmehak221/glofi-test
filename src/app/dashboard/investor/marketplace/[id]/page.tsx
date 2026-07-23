@@ -101,7 +101,9 @@ export default function PropertyDetailPage() {
 
     const propertyImage = property.images?.[0];
 
-    const fractionPrice = Number(property.fractionPrice) || 0;
+    const fractionPrice = Number(property.fractionPrice) && Number(property.fractionPrice) !== Number(property.valuation)
+        ? Number(property.fractionPrice)
+        : (Number(property.valuation) / (Number(property.totalFractions) || 1));
     const annualReturnPercent = (
         parseFloat(property.expectedYield || 0) +
         parseFloat(property.expectedAnnualRent || 0) +
@@ -253,10 +255,12 @@ export default function PropertyDetailPage() {
                             <div>
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Per Fraction</p>
                                 <div className="relative group inline-block w-full">
-                                    <p className="text-base font-bold text-[var(--header-text)] truncate px-1 cursor-default">{formatPrice(property.fractionPrice)}</p>
+                                    <p className="text-base font-bold text-[var(--header-text)] truncate px-1 cursor-default">
+                                        ₹{Number(fractionPrice).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </p>
                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden group-hover:block pointer-events-none">
                                         <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] text-[11px] font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
-                                            ₹{Number(property.fractionPrice).toLocaleString('en-IN')}
+                                            ₹{Number(fractionPrice).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </div>
                                         <div className="w-2 h-2 bg-[var(--card-surface)] border-r border-b border-[var(--sidebar-border)] rotate-45 mx-auto -mt-1" />
                                     </div>
@@ -698,59 +702,62 @@ export default function PropertyDetailPage() {
                     >
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">Per Fraction</p>
                         <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">
-                            {formatPrice(property.fractionPrice)}
+                            ₹{Number(fractionPrice).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
 
                         <div className="space-y-4 mb-6">
-                            <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
-                                <div className="flex justify-between items-center mb-2">
-                                    <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Select Fractions</h3>
-                                </div>
-                                <p className="text-[11px] text-[var(--color-text-muted)] font-medium mb-4">
-                                    Available: {property.availableFractions?.toLocaleString() || "20,000"} fractions
-                                </p>
+                            {/* Only show the fraction calculator if there are multiple fractions to select (i.e. not a whole asset purchase type or available fractions <= 1) */}
+                            {property.saleType !== 'WHOLE' && (property.totalFractions || 1) > 1 && (
+                                <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Select Fractions</h3>
+                                    </div>
+                                    <p className="text-[11px] text-[var(--color-text-muted)] font-medium mb-4">
+                                        Available: {property.availableFractions?.toLocaleString() || "20,000"} fractions
+                                    </p>
 
-                                <div className="relative mb-5 flex items-center">
-                                    <input
-                                        type="range"
-                                        min="1"
-                                        max={Math.min(property.availableFractions || 20000, 100)}
-                                        value={investQuantity}
-                                        onChange={(e) => setInvestQuantity(Number(e.target.value))}
-                                        className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[var(--color-primary-300)] focus:outline-none"
-                                        style={{
-                                            background: `linear-gradient(to right, var(--color-primary-300) 0%, var(--color-primary-300) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
-                                                }%, var(--sidebar-border) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
-                                                }%, var(--sidebar-border) 100%)`
-                                        }}
-                                    />
-                                </div>
+                                    <div className="relative mb-5 flex items-center">
+                                        <input
+                                            type="range"
+                                            min="1"
+                                            max={Math.min(property.availableFractions || 20000, 100)}
+                                            value={investQuantity}
+                                            onChange={(e) => setInvestQuantity(Number(e.target.value))}
+                                            className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-[var(--color-primary-300)] focus:outline-none"
+                                            style={{
+                                                background: `linear-gradient(to right, var(--color-primary-300) 0%, var(--color-primary-300) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
+                                                    }%, var(--sidebar-border) ${((investQuantity - 1) / (Math.min(property.availableFractions || 20000, 100) - 1)) * 100
+                                                    }%, var(--sidebar-border) 100%)`
+                                            }}
+                                        />
+                                    </div>
 
-                                <div className="flex gap-2 justify-between mb-4">
-                                    {[1, 2, 5, 10, 25, 50].map((num) => {
-                                        const isSelected = investQuantity === num;
-                                        return (
-                                            <button
-                                                key={num}
-                                                onClick={() => setInvestQuantity(num)}
-                                                className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${isSelected
-                                                    ? "bg-[var(--color-primary-300)] text-black border border-[var(--color-primary-300)] shadow-sm font-extrabold"
-                                                    : "bg-[var(--card-surface)] text-[var(--header-text)] border border-[var(--sidebar-border)] hover:bg-[var(--sidebar-active-bg)]"
-                                                    }`}
-                                            >
-                                                {num}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
+                                    <div className="flex gap-2 justify-between mb-4">
+                                        {[1, 2, 5, 10, 25, 50].map((num) => {
+                                            const isSelected = investQuantity === num;
+                                            return (
+                                                <button
+                                                    key={num}
+                                                    onClick={() => setInvestQuantity(num)}
+                                                    className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all cursor-pointer ${isSelected
+                                                        ? "bg-[var(--color-primary-300)] text-black border border-[var(--color-primary-300)] shadow-sm font-extrabold"
+                                                        : "bg-[var(--card-surface)] text-[var(--header-text)] border border-[var(--sidebar-border)] hover:bg-[var(--sidebar-active-bg)]"
+                                                        }`}
+                                                >
+                                                    {num}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
 
-                                <div className="flex justify-between items-center border-t border-[var(--sidebar-border)]/65 pt-3 mt-3">
-                                    <span className="text-xs font-semibold text-[var(--color-text-muted)]">Fractions selected</span>
-                                    <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-[var(--color-primary-300)]/15 text-[var(--sidebar-active-text)] border border-[var(--color-primary-300)]/20 shadow-sm">
-                                        {investQuantity}
-                                    </span>
+                                    <div className="flex justify-between items-center border-t border-[var(--sidebar-border)]/65 pt-3 mt-3">
+                                        <span className="text-xs font-semibold text-[var(--color-text-muted)]">Fractions selected</span>
+                                        <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-[var(--color-primary-300)]/15 text-[var(--sidebar-active-text)] border border-[var(--color-primary-300)]/20 shadow-sm">
+                                            {investQuantity}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
 
                             <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
@@ -758,7 +765,9 @@ export default function PropertyDetailPage() {
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center text-xs">
                                         <span className="text-[var(--color-text-muted)] font-medium">Price per fraction</span>
-                                        <span className="text-[var(--header-text)] font-semibold">{formatPrice(property.fractionPrice)}</span>
+                                        <span className="text-[var(--header-text)] font-semibold">
+                                            ₹{Number(fractionPrice).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs">
                                         <span className="text-[var(--color-text-muted)] font-medium">Fractions</span>
@@ -768,7 +777,7 @@ export default function PropertyDetailPage() {
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-bold text-[var(--header-text)]">Total Investment</span>
                                         <span className="text-base font-black text-[var(--sidebar-active-text)]">
-                                            {formatPrice(property.fractionPrice * investQuantity)}
+                                            ₹{Number(fractionPrice * investQuantity).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </span>
                                     </div>
                                 </div>
@@ -813,7 +822,7 @@ export default function PropertyDetailPage() {
                 asset={{
                     assetId: params.id as string,
                     name: property.title,
-                    currentValue: formatPrice(property.fractionPrice * investQuantity),
+                    currentValue: formatPrice(fractionPrice * investQuantity),
                     fractions: investQuantity,
                 }}
                 onSuccess={handlePaymentSuccess}

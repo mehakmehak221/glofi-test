@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import type { BlogPost } from '@/lib/mediumBlog';
+import { BlogPost } from '@/types/blog';
 import { BlogGrid } from '@/components/blog/BlogCard';
 import BlogPostPlaceholder from '@/components/blog/BlogPostPlaceholder';
 import BlogArticleProse from '@/components/blog/BlogArticleProse';

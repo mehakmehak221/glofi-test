@@ -1,23 +1,10 @@
 import Parser, { type Item } from 'rss-parser';
 import sanitizeHtml from 'sanitize-html';
 import { unstable_cache } from 'next/cache';
+import { BlogPost } from '@/types/blog';
 
 const MEDIUM_FEED_URL = 'https://medium.com/feed/@laxmi_83890';
 const REVALIDATE_SECONDS = 3600;
-
-export type BlogPost = {
-    slug: string;
-    id: string;
-    title: string;
-    link: string;
-    pubDate: string;
-    isoDate: string;
-    excerpt: string;
-    imageUrl: string | null;
-    author: string;
-    contentHtml: string;
-    readingTime: string;
-};
 
 type MediumFeedItem = {
     'content:encoded'?: string;

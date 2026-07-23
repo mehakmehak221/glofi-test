@@ -38,8 +38,13 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
     const fee = subtotal * 0.02;
     const total = subtotal + fee;
 
-    const formatCurrency = (val) =>
-        "₹" + (Number(val) || 0).toLocaleString("en-IN", { minimumFractionDigits: 0 });
+    const formatCurrency = (val) => {
+        const num = Number(val) || 0;
+        return "₹" + num.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    };
 
     const isKycApproved = kycData?.status === "APPROVED" || kycData?.status === "VERIFIED";
 
@@ -61,7 +66,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                         animate="visible"
                         exit="exit"
                     >
-                     
+
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-lg sm:text-xl font-bold text-[var(--header-text)]">{property.title}</h2>
                             <button
@@ -74,10 +79,10 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                             </button>
                         </div>
 
-                        
+
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)] font-bold mb-3">Fractions</p>
 
-                      
+
                         {isWholePurchase ? (
                             <div className="mb-6 bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-md p-4 flex flex-col items-center gap-3">
                                 <div className="text-center">
@@ -109,7 +114,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                             </div>
                         )}
 
-                   
+
                         <div className="space-y-3 mb-6 bg-[var(--field-surface)] rounded-md p-4 border border-[var(--sidebar-border)]">
                             <div className="flex items-center justify-between text-sm">
                                 <span className="text-[var(--color-text-muted)] font-medium">{quantity} × {formatCurrency(price)}</span>
@@ -126,16 +131,15 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                             </div>
                         </div>
 
-                       
+
                         {!isKycApproved && (
                             <div
-                                className={`rounded-md p-4 mb-6 flex items-start gap-3 border ${
-                                    kycData?.status === "UNDER_REVIEW"
+                                className={`rounded-md p-4 mb-6 flex items-start gap-3 border ${kycData?.status === "UNDER_REVIEW"
                                         ? "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
                                         : kycData?.status === "REJECTED"
-                                        ? "bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]"
-                                        : "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
-                                }`}
+                                            ? "bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]"
+                                            : "bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]"
+                                    }`}
                             >
                                 <span className="shrink-0 mt-0.5">
                                     {kycData?.status === "UNDER_REVIEW" ? (
@@ -154,14 +158,14 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                                         {kycData?.status === "UNDER_REVIEW"
                                             ? "Your identity verification is currently being processed. We'll notify you once it's approved."
                                             : kycData?.status === "REJECTED"
-                                            ? `Your verification was rejected. Please check your details and re-submit. ${kycData?.rejectedNote ? `Reason: ${kycData.rejectedNote}` : ''}`
-                                            : "KYC verification required before your first investment. Quick 3-step process."}
+                                                ? `Your verification was rejected. Please check your details and re-submit. ${kycData?.rejectedNote ? `Reason: ${kycData.rejectedNote}` : ''}`
+                                                : "KYC verification required before your first investment. Quick 3-step process."}
                                     </p>
                                 </div>
                             </div>
                         )}
 
-                        
+
                         <motion.button
                             whileHover={!isLoading ? { scale: 1.02 } : {}}
                             whileTap={!isLoading ? { scale: 0.98 } : {}}

@@ -1,28 +1,10 @@
 import { baseApi } from './baseApi';
-
-export type SendRegistrationOtpBody = {
-  fullName: string;
-  email: string;
-  password: string;
-  role: string;
-  phone: string;
-  referralCode?: string;
-};
-
-export type RegistrationOtpBody = {
-  email: string;
-  otp: string;
-};
-
-export type SendPhoneOtpBody = {
-  email: string;
-  phone: string;
-};
-
-export type VerifyPhoneOtpBody = {
-  email: string;
-  firebaseIdToken: string;
-};
+import {
+  SendRegistrationOtpBody,
+  RegistrationOtpBody,
+  SendPhoneOtpBody,
+  VerifyPhoneOtpBody
+} from '@/types/auth';
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

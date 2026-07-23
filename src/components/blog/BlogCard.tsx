@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import type { BlogPost } from '@/lib/mediumBlog';
+import { BlogPost } from '@/types/blog';
 import BlogPostPlaceholder from '@/components/blog/BlogPostPlaceholder';
 
 type BlogCardProps = {

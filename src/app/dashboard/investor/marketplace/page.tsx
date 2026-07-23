@@ -408,17 +408,24 @@ export default function MarketplacePage() {
 
                                             <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[16px] p-4 mb-5 shadow-sm">
                                                 <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center">
-                                                    <div>
-                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1">Valuation</p>
-                                                        <p className="text-[15px] font-extrabold text-[var(--header-text)]">{formatPrice(property.valuation, true)}</p>
+                                                    <div className="min-w-0 px-1">
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">Valuation</p>
+                                                        <p className="text-[13px] font-extrabold text-[var(--header-text)] break-all leading-tight">{formatPrice(property.valuation, true)}</p>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1">Per Fraction</p>
-                                                        <p className="text-[15px] font-extrabold text-[var(--header-text)]">{formatPrice(property.fractionPrice)}</p>
+                                                    <div className="min-w-0 px-1">
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">Per Fraction</p>
+                                                        <p className="text-[13px] font-extrabold text-[var(--header-text)] break-all leading-tight">
+                                                            {formatPrice(
+                                                                Number(property.fractionPrice) && Number(property.fractionPrice) !== Number(property.valuation)
+                                                                    ? property.fractionPrice
+                                                                    : (Number(property.valuation) / (Number(property.totalFractions) || 1)),
+                                                                true
+                                                            )}
+                                                        </p>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1">Annual Return</p>
-                                                        <p className="text-[15px] font-extrabold text-[var(--sidebar-active-text)]">{formattedYield}%</p>
+                                                    <div className="min-w-0 px-1">
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">Annual Return</p>
+                                                        <p className="text-[13px] font-extrabold text-[var(--sidebar-active-text)] break-all leading-tight">{formattedYield}%</p>
                                                     </div>
                                                 </div>
                                             </div>

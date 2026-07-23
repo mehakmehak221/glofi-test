@@ -357,7 +357,13 @@ export default function ExplorePage() {
                                                         </div>
                                                         <div>
                                                             <p className="text-[10px] font-bold text-neutral-400 mb-1">Per Fraction</p>
-                                                            <p className="text-[15px] font-extrabold text-neutral-900">{formatPrice(property.fractionPrice)}</p>
+                                                            <p className="text-[15px] font-extrabold text-neutral-900">
+                                                                {formatPrice(
+                                                                    Number(property.fractionPrice) && Number(property.fractionPrice) !== Number(property.valuation)
+                                                                        ? property.fractionPrice
+                                                                        : (Number(property.valuation) / (Number(property.totalFractions) || 1))
+                                                                )}
+                                                            </p>
                                                         </div>
                                                         <div>
                                                             <p className="text-[10px] font-bold text-neutral-400 mb-1">Potential Annual Return</p>
