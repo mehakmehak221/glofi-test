@@ -68,7 +68,7 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
                 {required ? (
                     <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
                 ) : (
-                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
                 )}
             </label>
             <div
@@ -257,7 +257,7 @@ const UploadArea = ({ label, onUpload, value, isUploading, required = false, opt
                 <span className="flex items-center gap-1.5">
                     {isUploading ? 'Uploading...' : label}
                     {!isUploading && required && <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>}
-                    {!isUploading && optional && <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>}
+                    {!isUploading && optional && <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>}
                 </span>
             </span>
             {value && (
@@ -518,7 +518,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 <span>Required</span>
                             </span>
                             <span className="flex items-center gap-1 text-[var(--sidebar-text)]/50">
-                                <span className="border border-[var(--foreground)]/15 rounded px-1 py-0.5 text-[8px] text-[var(--sidebar-text)]/40">optional</span>
+                                <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
                             </span>
                         </div>
 
@@ -657,7 +657,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
                                     Expected Annual Rent
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
                                 </label>
                                 <input
                                     type="number"
@@ -670,7 +670,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
                                     Rental Growth Rate (%)
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
                                 </label>
                                 <input
                                     type="number"
@@ -683,7 +683,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
                                     Expected Appreciation Rate (%)
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
                                 </label>
                                 <input
                                     type="number"
@@ -696,7 +696,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
                                     Operating Cost Rate (%)
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
                                 </label>
                                 <input
                                     type="number"
@@ -709,7 +709,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
                                     Holding Period (Years)
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
                                 </label>
                                 <input
                                     type="number"
@@ -722,7 +722,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             <div className="flex flex-col gap-2 md:col-span-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
                                     Description
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/40 border border-[var(--foreground)]/15 rounded px-1 py-0.5 font-montserrat">optional</span>
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
                                 </label>
                                 <textarea
                                     rows={5}
