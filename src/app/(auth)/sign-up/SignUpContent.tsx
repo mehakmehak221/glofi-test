@@ -30,7 +30,7 @@ import {
     validateSignUpFields,
 } from "@/utils/authFormErrors";
 
-const SIGNUP_ROLES = ["Investor", "Partner", "Agent"] as const;
+const SIGNUP_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SignupRole = (typeof SIGNUP_ROLES)[number];
 type SignUpStep = "DETAILS" | "PHONE_OTP" | "OTP";
 
@@ -217,7 +217,7 @@ function SignUpPageContent() {
             email: trimmedEmail,
             phone: form.phone.trim(),
             password: form.password,
-            role: userType.toUpperCase(),
+            role: userType === "Developer" ? "PARTNER" : userType.toUpperCase(),
             ...(form.referredByCode.trim() ? { referralCode: form.referredByCode.trim() } : {}),
         };
         console.log("Sending registration OTP with payload:", payload);
@@ -352,7 +352,7 @@ function SignUpPageContent() {
                 return;
             }
 
-            // For Investor / Partner: 
+            // For Investor / Developer: 
             // 1. First send details to create PendingRegistration and send Email OTP
             await sendEmailOtp(false);
             // 2. Then initiate phone verification (which reads from PendingRegistration)

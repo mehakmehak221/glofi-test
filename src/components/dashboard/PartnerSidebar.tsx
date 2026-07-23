@@ -41,7 +41,7 @@ export default function PartnerSidebar() {
         try {
             await logout().unwrap();
         } catch (err) {
-           
+
             console.error("Logout error:", err);
         } finally {
             localStorage.removeItem("userType");
@@ -78,7 +78,7 @@ export default function PartnerSidebar() {
                         height={40}
                         className="h-10 w-auto flex-shrink-0 object-contain"
                     />
-                
+
                 </Link>
             </div>
 
@@ -89,7 +89,7 @@ export default function PartnerSidebar() {
                 transition={{ duration: 0.2 }}
             >
                 <span className="text-[10px] font-normal text-[var(--badge-text)] tracking-[0.15em] uppercase border border-[var(--badge-border)] font-montserrat bg-[var(--badge-bg)] rounded-full px-3 py-1 inline-block">
-                    Partner Panel
+                    Developer Panel
                 </span>
             </motion.div>
 
@@ -132,7 +132,7 @@ export default function PartnerSidebar() {
                 </motion.button>
 
 
-                <button 
+                <button
                     onClick={handleLogout}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--sidebar-text)] hover:text-[var(--color-status-error)] hover:bg-[var(--color-status-error-bg)] transition-colors cursor-pointer w-full border-0 bg-transparent group"
                 >

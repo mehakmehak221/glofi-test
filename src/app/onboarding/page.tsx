@@ -156,7 +156,7 @@ export default function OnboardingPage() {
             <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[var(--color-bg-surface-subtle)] mb-10 sm:mb-16 shadow-sm max-w-full">
                 <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary-300)]/60" />
                 <span className="text-[11px] sm:text-[12px] font-bold tracking-[0.15em] text-[var(--color-text-muted)] uppercase font-Montserrat whitespace-nowrap">
-                    {userRole === "PARTNER" ? "Partner Panel" : userRole === "AGENT" ? "Agent Setup" : "Investor Setup"}
+                    {userRole === "PARTNER" ? "Developer Panel" : userRole === "AGENT" ? "Agent Setup" : "Investor Setup"}
                 </span>
             </div>
 

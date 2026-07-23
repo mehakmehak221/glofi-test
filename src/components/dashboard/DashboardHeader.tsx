@@ -41,7 +41,7 @@ export default function DashboardHeader() {
 
     let displayRole = "Investor";
     if (pathname.startsWith("/dashboard/partner")) {
-        displayRole = "Partner";
+        displayRole = "Developer";
     } else if (pathname.startsWith("/dashboard/agent")) {
         displayRole = "Agent";
     } else if (pathname.startsWith("/dashboard/investor")) {

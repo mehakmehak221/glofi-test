@@ -3,7 +3,7 @@
 const USER_ROLE_INSIGHT: Record<string, string> = {
     Investor:
         "Own fractions of premium properties. Track your portfolio and monitor returns.",
-    Partner:
+    Developer:
         "Fractionalize your property. Reach qualified investors, and raise capital faster.",
     Agent: "Connect investors with premium properties and earn on every transaction.",
 };

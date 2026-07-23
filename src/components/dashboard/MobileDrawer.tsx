@@ -83,7 +83,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 
     const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
     const fullName = profile.fullName || profileData?.fullName || profileData?.name || "Guest";
-    const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Partner" : isAgent ? "Agent" : "Investor");
+    const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Developer" : isAgent ? "Agent" : "Investor");
 
     const handleLogout = async () => {
         try {
@@ -149,7 +149,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 
                             >
                                 <span className="text-[10px] font-medium text-[var(--panel-chip-text)] tracking-[0.15em] uppercase border border-[var(--panel-chip-border)] font-montserrat bg-[var(--panel-chip-bg)] rounded-full px-3 py-1 inline-block">
-                                    {isPartner ? "Partner Panel" : isAgent ? "Agent Panel" : "Investor Panel"}
+                                    {isPartner ? "Developer Panel" : isAgent ? "Agent Panel" : "Investor Panel"}
                                 </span>
                             </motion.div>
                             {activeNavItems.map((item, i) => {

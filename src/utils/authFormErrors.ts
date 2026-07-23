@@ -296,7 +296,7 @@ export type SignUpFormShape = {
     expiryDate: string;
 };
 
-export function validateSignUpFields(form: SignUpFormShape, userType: "Investor" | "Partner" | "Agent") {
+export function validateSignUpFields(form: SignUpFormShape, userType: "Investor" | "Partner" | "Developer" | "Agent") {
     const trimmedName = form.name.trim();
     const trimmedEmail = form.email.trim();
     let nameError = "";

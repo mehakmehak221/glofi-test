@@ -12,7 +12,7 @@ import { useLoginMutation } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
 import { applySignInApiErrors, FIELD_ERROR_CLASSES, validateSignInFields } from "@/utils/authFormErrors";
 
-const SIGNIN_ROLES = ["Investor", "Partner", "Agent"] as const;
+const SIGNIN_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SigninRole = (typeof SIGNIN_ROLES)[number];
 
 function parseRoleQuery(raw: string | null): SigninRole | null {
@@ -80,7 +80,7 @@ function SignInPageContent() {
             const payload = {
                 email: trimmedEmail,
                 password,
-                role: userType.toUpperCase(),
+                role: userType === "Developer" ? "PARTNER" : userType.toUpperCase(),
             };
 
             console.log('Login Request Payload:', JSON.stringify(payload, null, 2));

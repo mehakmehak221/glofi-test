@@ -260,7 +260,7 @@ export default function PartnerOverviewPage() {
                 <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight opacity-90 uppercase tracking-widest">
                     Overview
                 </h1>
-                <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] font-montserrat mt-2 text-[var(--sidebar-text)] opacity-40 uppercase">Partner command center</p>
+                <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] font-montserrat mt-2 text-[var(--sidebar-text)] opacity-40 uppercase">Developer command center</p>
             </motion.div>
 
 
