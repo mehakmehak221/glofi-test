@@ -40,6 +40,8 @@ export type UpdateAssetPayload = {
   legalOpinionUrl: string;
   images: string[];
   isReraVerified?: boolean;
+  isreraverified?: boolean;
+  saleType?: "FRACTIONAL" | "WHOLE";
 };
 
 export const validateFileUpload = (file: File): boolean => {

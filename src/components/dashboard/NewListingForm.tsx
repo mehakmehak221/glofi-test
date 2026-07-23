@@ -185,6 +185,7 @@ function assetToFormData(asset: Record<string, unknown>) {
         legalOpinionUrl: toFormString(asset.legalOpinionUrl),
         images: Array.isArray(asset.images) ? (asset.images as string[]) : [],
         isReraVerified: asset.isReraVerified === true,
+        saleType: toFormString(asset.saleType) || "FRACTIONAL",
     };
 }
 
@@ -211,6 +212,8 @@ function formDataToUpdatePayload(formData: ReturnType<typeof assetToFormData>): 
         legalOpinionUrl: formData.legalOpinionUrl,
         images: formData.images,
         isReraVerified: formData.isReraVerified,
+        isreraverified: formData.isReraVerified,
+        saleType: formData.saleType as "FRACTIONAL" | "WHOLE",
     };
 }
 
@@ -288,7 +291,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
         valuationReportUrl: "",
         legalOpinionUrl: "",
         images: [],
-        isReraVerified: false
+        isReraVerified: false,
+        saleType: "FRACTIONAL"
     });
     const [countryIsoCode, setCountryIsoCode] = useState("");
     const [stateIsoCode, setStateIsoCode] = useState("");
@@ -391,6 +395,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                 operatingCostRate: Number(formData.operatingCostRate),
                 holdingPeriod: Number(formData.holdingPeriod),
                 fractionPrice: Number(formData.valuation) / Number(formData.totalFractions),
+                isreraverified: formData.isReraVerified,
             };
 
             await createAsset(payload).unwrap();
@@ -514,7 +519,6 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </span>
                             <span className="flex items-center gap-1 text-[var(--sidebar-text)]/50">
                                 <span className="border border-[var(--foreground)]/15 rounded px-1 py-0.5 text-[8px] text-[var(--sidebar-text)]/40">optional</span>
-                                <span>Optional</span>
                             </span>
                         </div>
 
@@ -580,6 +584,37 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 disabled={!stateIsoCode}
                                 required
                             />
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Category
+                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                </label>
+                                <select
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors font-montserrat cursor-pointer"
+                                >
+                                    {CATEGORIES.map((cat) => (
+                                        <option key={cat.value} value={cat.value} className="bg-[var(--form-surface)] text-[var(--foreground)]">
+                                            {cat.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
+                                    Sale Type
+                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                </label>
+                                <select
+                                    value={formData.saleType}
+                                    onChange={(e) => setFormData({ ...formData, saleType: e.target.value })}
+                                    className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors font-montserrat cursor-pointer"
+                                >
+                                    <option value="FRACTIONAL" className="bg-[var(--form-surface)] text-[var(--foreground)]">Fractional</option>
+                                    <option value="WHOLE" className="bg-[var(--form-surface)] text-[var(--foreground)]">Whole</option>
+                                </select>
+                            </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
                                     Valuation
