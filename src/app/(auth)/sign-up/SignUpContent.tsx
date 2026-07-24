@@ -74,7 +74,7 @@ function SignUpPageContent() {
         phone: "",
         password: "",
         confirmPassword: "",
-        referredByCode: "",
+        referredByCode: searchParams.get("ref") || "",
         reraNumber: "",
         expiryDate: ""
     });
@@ -185,7 +185,7 @@ function SignUpPageContent() {
         const nextRole = SIGNUP_ROLES.includes(next as SignupRole) ? (next as SignupRole) : null;
         if (!nextRole || nextRole === userType) return;
         setUserType(nextRole);
-        setForm({ name: "", email: "", phone: "", password: "", confirmPassword: "", referredByCode: "", reraNumber: "", expiryDate: "" });
+        setForm({ name: "", email: "", phone: "", password: "", confirmPassword: "", referredByCode: searchParams.get("ref") || "", reraNumber: "", expiryDate: "" });
         setErrorMsg(""); setNameError(""); setEmailError(""); setPhoneError(""); setPasswordError("");
         setConfirmPasswordError(""); setReraError(""); setExpiryError(""); setReferralError("");
         setShowPassword(false); setShowConfirmPassword(false);
