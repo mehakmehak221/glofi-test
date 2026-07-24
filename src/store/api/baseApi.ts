@@ -16,6 +16,11 @@ const baseQuery = fetchBaseQuery({
       'registerAgent',
       'getAssets',
       'getAssetById',
+      'getAssetReturns',
+      'getAssetCashflow',
+      'getAssetIrrCurve',
+      'getAssetRentalSchedule',
+      'getAssetProjectedValuation',
       'forgotPassword',
       'verifyForgotPasswordOtp',
       'resetPassword'

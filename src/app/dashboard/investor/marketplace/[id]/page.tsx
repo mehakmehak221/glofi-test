@@ -33,6 +33,15 @@ export default function PropertyDetailPage() {
     const router = useRouter();
     const assetId = params.id as string;
 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+        }
+    }, []);
+
     const { data: property, isLoading, isError } = useGetAssetByIdQuery(assetId);
     const { data: returnsData } = useGetAssetReturnsQuery(assetId);
     const { data: cashflowData } = useGetAssetCashflowQuery(assetId);
@@ -40,8 +49,8 @@ export default function PropertyDetailPage() {
     const { data: rentalData } = useGetAssetRentalScheduleQuery(assetId);
     const { data: valuationData } = useGetAssetProjectedValuationQuery(assetId);
 
-    const { data: kycData } = useGetKycStatusQuery();
-    const { data: investmentsData, refetch: refetchInvestments } = useGetInvestmentsQuery();
+    const { data: kycData } = useGetKycStatusQuery(undefined, { skip: !isLoggedIn });
+    const { data: investmentsData, refetch: refetchInvestments } = useGetInvestmentsQuery(undefined, { skip: !isLoggedIn });
     const [activeTab, setActiveTab] = useState("cashflow");
     const [mainTab, setMainTab] = useState("overview");
     const [investOpen, setInvestOpen] = useState(false);
@@ -68,11 +77,61 @@ export default function PropertyDetailPage() {
         }
     }, [property]);
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (isShareDropdownOpen && !(event.target as Element).closest('.share-container')) {
+                setIsShareDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isShareDropdownOpen]);
+
+    const getShareUrl = () => {
+        if (typeof window !== 'undefined') {
+            return `${window.location.origin}/assets/${assetId}`;
+        }
+        return `https://www.glofiestates.com/assets/${assetId}`;
+    };
+
+    const handleCopyLink = () => {
+        const url = getShareUrl();
+        navigator.clipboard.writeText(url);
+        showToast("Link copied to clipboard!");
+        setIsShareDropdownOpen(false);
+    };
+
+    const handleShareWhatsApp = () => {
+        const url = getShareUrl();
+        const text = `Check out this premium property on Glofi Estates: ${property?.title || ""}`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`, "_blank");
+        setIsShareDropdownOpen(false);
+    };
+
+    const handleShareEmail = () => {
+        const url = getShareUrl();
+        const subject = `Premium Property Opportunity: ${property?.title || ""}`;
+        const body = `Hi,\n\nI found this interesting property on Glofi Estates and thought you might like to see it:\n\n${property?.title || ""}\nLocation: ${property?.location || ""}\nValuation: ₹${Number(property?.valuation || 0).toLocaleString('en-IN')}\n\nView details here: ${url}`;
+        window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, "_self");
+        setIsShareDropdownOpen(false);
+    };
+
+    const handleShareTwitter = () => {
+        const url = getShareUrl();
+        const text = `Check out this premium property on Glofi Estates: ${property?.title || ""}`;
+        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, "_blank");
+        setIsShareDropdownOpen(false);
+    };
+
+    const handleShareLinkedIn = () => {
+        const url = getShareUrl();
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, "_blank");
+        setIsShareDropdownOpen(false);
+    };
+
     const [hoveredPoint, setHoveredPoint] = useState<"current" | "projected" | null>(null);
     const [hoveredBar, setHoveredBar] = useState<number | null>(null);
     const [hoveredCashflowPoint, setHoveredCashflowPoint] = useState<number | null>(null);
-
-
 
     const showToast = (message, type = "success") => {
         setToast({ show: true, message, type });
@@ -94,7 +153,12 @@ export default function PropertyDetailPage() {
         return (
             <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen flex flex-col items-center justify-center gap-4">
                 <p className="text-[var(--header-text)]">Property not found or error loading details.</p>
-                <Link href="/dashboard/investor/marketplace" className="text-[var(--color-primary-300)] hover:underline">Back to Marketplace</Link>
+                <Link
+                    href={isLoggedIn ? "/dashboard/investor/marketplace" : "/"}
+                    className="text-[var(--color-primary-300)] hover:underline"
+                >
+                    {isLoggedIn ? "Back to Marketplace" : "Back to Home"}
+                </Link>
             </div>
         );
     }
@@ -126,7 +190,13 @@ export default function PropertyDetailPage() {
         { name: "Legal Opinion", url: property.legalOpinionUrl },
     ].filter(doc => doc.url);
 
-    const handleInvestNow = () => setInvestOpen(true);
+    const handleInvestNow = () => {
+        if (!isLoggedIn) {
+            router.push(`/sign-up?redirect=${encodeURIComponent(`/assets/${assetId}`)}`);
+            return;
+        }
+        setInvestOpen(true);
+    };
 
     const handleVerifyPay = async (qty) => {
         setInvestQuantity(qty);
@@ -202,14 +272,25 @@ export default function PropertyDetailPage() {
                         <div className="absolute inset-0" style={{ background: 'var(--marketplace-card-overlay)' }} />
 
 
-                        <Link
-                            href="/dashboard/investor/marketplace"
-                            className="absolute top-3 left-3 sm:top-4 sm:left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-black/45 hover:bg-black/60 text-white border border-white/10 backdrop-blur-md transition-all shadow-md group z-20 cursor-pointer"
-                        >
-                            <svg className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </Link>
+                        {isLoggedIn ? (
+                            <Link
+                                href="/dashboard/investor/marketplace"
+                                className="absolute top-3 left-3 sm:top-4 sm:left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-black/45 hover:bg-black/60 text-white border border-white/10 backdrop-blur-md transition-all shadow-md group z-20 cursor-pointer"
+                            >
+                                <svg className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={() => router.back()}
+                                className="absolute top-3 left-3 sm:top-4 sm:left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-black/45 hover:bg-black/60 text-white border border-white/10 backdrop-blur-md transition-all shadow-md group z-20 cursor-pointer"
+                            >
+                                <svg className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                        )}
 
 
                         <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FFFFFF] text-[#111111] border border-white/40 shadow-md z-10">
@@ -229,11 +310,86 @@ export default function PropertyDetailPage() {
                     </div >
 
                     {/* Name and Location Section */}
-                    <div className="mb-5 px-1">
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--header-text)] mb-1.5 tracking-tight">{property.title}</h1>
-                        <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-xs font-semibold">
-                            <MapPinIcon className="w-3.5 h-3.5 text-[var(--sidebar-active-text)]" />
-                            {property.location}
+                    <div className="mb-5 px-1 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--header-text)] mb-1.5 tracking-tight">{property.title}</h1>
+                            <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-xs font-semibold">
+                                <MapPinIcon className="w-3.5 h-3.5 text-[var(--sidebar-active-text)]" />
+                                {property.location}
+                            </div>
+                        </div>
+                        {/* Share Button & Dropdown */}
+                        <div className="relative share-container">
+                            <button
+                                onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
+                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] text-sm font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all cursor-pointer shadow-sm"
+                            >
+                                <svg className="w-4 h-4 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 10.742l4.57-2.286M8.684 13.258l4.57 2.286M2 12a10 10 0 0110-10c5.523 0 10 4.477 10 10s-4.477 10-10 10a10 10 0 01-10-10z" />
+                                    <circle cx="18" cy="5" r="3" />
+                                    <circle cx="6" cy="12" r="3" />
+                                    <circle cx="18" cy="19" r="3" />
+                                </svg>
+                                Share
+                            </button>
+                            <AnimatePresence>
+                                {isShareDropdownOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        className="absolute right-0 mt-2 w-48 rounded-xl bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] shadow-xl z-50 overflow-hidden font-montserrat"
+                                    >
+                                        <div className="p-1.5 flex flex-col gap-1">
+                                            <button
+                                                onClick={handleShareWhatsApp}
+                                                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all text-left cursor-pointer"
+                                            >
+                                                <svg className="w-4 h-4 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.01 14.069.993 11.999.993c-5.444 0-9.87 4.373-9.874 9.8.001 2.02.531 3.993 1.539 5.733l-.999 3.65 3.748-.98a9.8 9.8 0 004.144.958zm10.748-7.397c-.296-.148-1.747-.862-2.019-.962-.272-.099-.47-.148-.668.148-.198.297-.766.962-.939 1.16-.173.199-.347.223-.643.075-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.174.2-.298.3-.496.099-.198.05-.371-.025-.521-.075-.148-.668-1.609-.916-2.203-.242-.582-.487-.504-.668-.513l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.747-.713 1.995-1.402.248-.689.248-1.28.173-1.402-.075-.125-.272-.198-.57-.347z"/>
+                                                </svg>
+                                                WhatsApp
+                                            </button>
+                                            <button
+                                                onClick={handleCopyLink}
+                                                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all text-left cursor-pointer"
+                                            >
+                                                <svg className="w-4 h-4 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                                </svg>
+                                                Copy Link
+                                            </button>
+                                            <button
+                                                onClick={handleShareEmail}
+                                                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all text-left cursor-pointer"
+                                            >
+                                                <svg className="w-4 h-4 text-[#D44638]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                </svg>
+                                                Email
+                                            </button>
+                                            <button
+                                                onClick={handleShareTwitter}
+                                                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all text-left cursor-pointer"
+                                            >
+                                                <svg className="w-4 h-4 text-[#1DA1F2]" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                                </svg>
+                                                Twitter / X
+                                            </button>
+                                            <button
+                                                onClick={handleShareLinkedIn}
+                                                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all text-left cursor-pointer"
+                                            >
+                                                <svg className="w-4 h-4 text-[#0A66C2]" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                                </svg>
+                                                LinkedIn
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
 
