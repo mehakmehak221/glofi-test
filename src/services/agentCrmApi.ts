@@ -10,8 +10,9 @@ import {
   ScheduleFollowUpDto,
   FollowUpStatus,
 } from '@/types/crm';
+import { API_URL } from '@/constants';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+const BASE_URL = API_URL;
 
 async function fetcher<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${endpoint}`, {

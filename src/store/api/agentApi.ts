@@ -10,6 +10,7 @@ import {
     Commission,
     WithdrawalRequestResponse
 } from '@/types/agent';
+import { AssetShareReport, ShareAssetRequest, ShareLinkResponse } from '@/types/assetShare';
 
 export const agentApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -55,6 +56,28 @@ export const agentApi = baseApi.injectEndpoints({
         getReferralByCode: builder.query<any, string>({
             query: (code) => `agent/referral/${code}`,
         }),
+        generateAssetShareLink: builder.mutation<ShareLinkResponse, { assetId: string | number; body?: ShareAssetRequest }>({
+            query: ({ assetId, body }) => ({
+                url: `agent/assets/${assetId}/share`,
+                method: 'POST',
+                body: body ?? {},
+            }),
+            invalidatesTags: [{ type: 'AssetShare', id: 'LIST' }],
+        }),
+        getSharedAssets: builder.query<ShareLinkResponse[], void>({
+            query: () => 'agent/assets/shared',
+            providesTags: (result) =>
+                result
+                    ? [
+                        { type: 'AssetShare' as const, id: 'LIST' },
+                        ...result.map((item) => ({ type: 'AssetShare' as const, id: item.assetId })),
+                    ]
+                    : [{ type: 'AssetShare' as const, id: 'LIST' }],
+        }),
+        getAgentAssetShareReport: builder.query<AssetShareReport, string | number>({
+            query: (assetId) => `agent/assets/${assetId}/share-report`,
+            providesTags: (_result, _error, assetId) => [{ type: 'AssetShare', id: String(assetId) }],
+        }),
     }),
 });
 
@@ -69,5 +92,7 @@ export const {
     useGetAgentMeQuery,
     useGetAgentReferralLinkQuery,
     useGetReferralByCodeQuery,
+    useGenerateAssetShareLinkMutation,
+    useGetSharedAssetsQuery,
+    useGetAgentAssetShareReportQuery,
 } = agentApi;
-

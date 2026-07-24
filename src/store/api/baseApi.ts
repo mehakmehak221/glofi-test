@@ -96,7 +96,7 @@ export const baseApi = createApi({
   tagTypes: [
     'User', 'Post', 'Kyb', 'Kyc', 'Investment', 'SecondaryMarketplace',
     'MySecondaryListings', 'PendingApprovals', 'Certificates', 'Commission',
-    'PartnerFinance', 'Payout', 'Asset', 'Lead', 'LeadNote', 'FollowUp', 'LeadActivity',
+    'PartnerFinance', 'Payout', 'Asset', 'AssetShare', 'Lead', 'LeadNote', 'FollowUp', 'LeadActivity',
   ],
   endpoints: () => ({}),
 });

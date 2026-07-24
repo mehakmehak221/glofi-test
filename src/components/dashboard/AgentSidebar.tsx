@@ -27,7 +27,7 @@ const NAV_ITEMS = [
     { href: "/dashboard/agent/overview", icon: OverviewIcon, label: "Overview" },
     { href: "/dashboard/agent/leads", icon: LeadsIcon, label: "Leads & CRM" },
     { href: "/dashboard/agent/followups", icon: FinancialIcon, label: "Follow-ups" },
-    { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Referrals" },
+    { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Asset Sharing" },
     { href: "/dashboard/agent/transactions", icon: AccountIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
     { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
@@ -72,8 +72,8 @@ export default function AgentSidebar() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
 
-            <div className="flex items-center h-16 px-4 border-b border-[var(--color-border-subtle)] overflow-hidden">
-                <Link href="/dashboard/agent/overview" className="flex items-center gap-3 no-underline">
+            <div className="flex items-center justify-center h-16 px-4 border-b border-[var(--color-border-subtle)] overflow-hidden">
+                <Link href="/dashboard/agent/overview" className="flex items-center justify-center w-full gap-3 no-underline">
                     <motion.div
                         animate={{ 
                             opacity: collapsed ? 0 : 1,
@@ -81,7 +81,7 @@ export default function AgentSidebar() {
                             x: collapsed ? -20 : 0
                         }}
                         transition={{ duration: 0.2 }}
-                        className="flex items-center gap-3 flex-shrink-0"
+                        className="flex items-center justify-center gap-3 flex-shrink-0"
                     >
                         <Image
                             src={isLight ? "/assets/images/branding/light-logo.png" : "/assets/images/branding/logo.png"}

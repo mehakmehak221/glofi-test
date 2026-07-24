@@ -44,6 +44,7 @@ export const metadata = {
 import { CurrencyProvider } from "@/providers/CurrencyProvider";
 import GlobalToast from "@/components/GlobalToast";
 import Script from "next/script";
+import TrackingBootstrap from "@/components/TrackingBootstrap";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <CurrencyProvider>
           <StoreProvider>
             <GlobalToast />
+            <TrackingBootstrap />
             {children}
           </StoreProvider>
         </CurrencyProvider>
