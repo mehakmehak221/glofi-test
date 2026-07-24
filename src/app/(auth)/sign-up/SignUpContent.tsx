@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
-import { firebaseAuth } from "@/lib/firebase";
+import { firebaseAuth, ensureFirebasePhoneAuthReady, isFirebasePhoneAuthEnabled } from "@/lib/firebase";
 import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
 import { ChevronLeftIcon, LoadingSpinner, EyeOpenIcon, EyeClosedIcon } from "@/components/VectorImages";
@@ -56,6 +56,7 @@ function SignUpPageContent() {
     const [phoneCodeError, setPhoneCodeError] = useState("");
     const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
     const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
+    const recaptchaAttemptRef = useRef(0);
 
     const [successMsg, setSuccessMsg] = useState("");
 
@@ -139,10 +140,40 @@ function SignUpPageContent() {
             }
             recaptchaVerifierRef.current = null;
         }
-        const container = document.getElementById("recaptcha-container");
-        if (container) {
-            container.innerHTML = "";
+        const mount = document.getElementById("recaptcha-mount");
+        if (mount) {
+            mount.innerHTML = "";
         }
+    };
+
+    const createRecaptchaVerifier = () => {
+        if (!firebaseAuth) {
+            throw new Error("Firebase Auth is not configured.");
+        }
+
+        clearRecaptcha();
+
+        recaptchaAttemptRef.current += 1;
+        const containerId = `recaptcha-container-${recaptchaAttemptRef.current}`;
+        const mount = document.getElementById("recaptcha-mount");
+        if (!mount) {
+            throw new Error("reCAPTCHA mount point is missing.");
+        }
+
+        const container = document.createElement("div");
+        container.id = containerId;
+        mount.appendChild(container);
+
+        const verifier = new RecaptchaVerifier(firebaseAuth, containerId, {
+            size: "invisible",
+            callback: () => {},
+            "expired-callback": () => {
+                clearRecaptcha();
+            },
+        });
+
+        recaptchaVerifierRef.current = verifier;
+        return verifier;
     };
 
     useEffect(() => {
@@ -210,6 +241,22 @@ function SignUpPageContent() {
     };
 
 
+    const proceedToEmailOtpStep = (message?: string) => {
+        setSuccessMsg(message ?? `We sent a 6-digit code to ${form.email.trim()}.`);
+        setStep("OTP");
+        clearRecaptcha();
+    };
+
+    const isRecoverableFirebasePhoneError = (err: unknown) => {
+        const code = (err as { code?: string })?.code;
+        return (
+            code === "auth/invalid-app-credential" ||
+            code === "auth/captcha-check-failed" ||
+            code === "auth/missing-app-credential" ||
+            code === "auth/quota-exceeded"
+        );
+    };
+
     const sendEmailOtp = async (transitionToOtpStep = true) => {
         const trimmedEmail = form.email.trim();
         const payload = {
@@ -240,6 +287,10 @@ function SignUpPageContent() {
     // Step 2a: Fetch phone from backend & trigger Firebase SMS
     // ---------------------------------------------------------------------------
     const initiatePhoneVerification = async () => {
+        if (!firebaseAuth) return;
+
+        await ensureFirebasePhoneAuthReady();
+
         const trimmedEmail = form.email.trim();
         console.log("Initiating phone verification for email:", trimmedEmail, "and phone:", form.phone.trim());
 
@@ -248,24 +299,10 @@ function SignUpPageContent() {
         console.log("Received phone number from backend:", phoneData);
         if (!phoneData.success) throw new Error("Could not retrieve phone number");
 
-        // Set up invisible reCAPTCHA (re-use the instance if already created)
-        let verifier = recaptchaVerifierRef.current;
-        if (!verifier) {
-            if (!firebaseAuth) {
-                throw new Error("SMS verification service is not configured. Please contact the administrator.");
-            }
-            console.log("Creating RecaptchaVerifier...");
-            const container = document.getElementById("recaptcha-container");
-            if (container) {
-                container.innerHTML = "";
-            }
-            verifier = new RecaptchaVerifier(firebaseAuth, "recaptcha-container", { size: "invisible" });
-            recaptchaVerifierRef.current = verifier;
-        }
-
-        // Trigger Firebase SMS
+        // Trigger Firebase SMS with a fresh reCAPTCHA verifier each attempt
         console.log("Triggering Firebase SMS via signInWithPhoneNumber for:", phoneData.phone);
         try {
+            const verifier = createRecaptchaVerifier();
             const result = await signInWithPhoneNumber(firebaseAuth, phoneData.phone, verifier);
             console.log("Firebase signInWithPhoneNumber success result:", result);
             setConfirmationResult(result);
@@ -274,6 +311,7 @@ function SignUpPageContent() {
             setSuccessMsg(`We sent a verification SMS to ${phoneData.phone}.`);
             setStep("PHONE_OTP");
         } catch (firebaseErr) {
+            clearRecaptcha();
             console.error("Firebase signInWithPhoneNumber failed:", firebaseErr);
             throw firebaseErr;
         }
@@ -352,11 +390,24 @@ function SignUpPageContent() {
                 return;
             }
 
-            // For Investor / Developer: 
-            // 1. First send details to create PendingRegistration and send Email OTP
+            // For Investor / Developer:
+            // 1. Send details to create PendingRegistration and send Email OTP
             await sendEmailOtp(false);
-            // 2. Then initiate phone verification (which reads from PendingRegistration)
-            await initiatePhoneVerification();
+            // 2. Phone SMS via Firebase when configured; otherwise proceed with email OTP only
+            if (isFirebasePhoneAuthEnabled) {
+                try {
+                    await initiatePhoneVerification();
+                } catch (phoneErr) {
+                    if (isRecoverableFirebasePhoneError(phoneErr)) {
+                        console.warn("Firebase phone verification unavailable, continuing with email OTP.", phoneErr);
+                        proceedToEmailOtpStep();
+                        return;
+                    }
+                    throw phoneErr;
+                }
+            } else {
+                proceedToEmailOtpStep();
+            }
         } catch (err: unknown) {
             console.error("handleDetailsSubmit caught error:", err);
             const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
@@ -364,6 +415,10 @@ function SignUpPageContent() {
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
+                if (isRecoverableFirebasePhoneError(err)) {
+                    proceedToEmailOtpStep();
+                    return;
+                }
                 const friendlyMsg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
                 if (friendlyMsg && !friendlyMsg.toLowerCase().includes("phone")) {
                     applySignUpApiErrors(apiErr, {
@@ -449,7 +504,7 @@ function SignUpPageContent() {
             className="flex flex-col"
         >
             {/* Invisible reCAPTCHA mount point */}
-            <div id="recaptcha-container" />
+            <div id="recaptcha-mount" />
 
             <Link
                 href="/"
