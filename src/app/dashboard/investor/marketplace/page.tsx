@@ -126,11 +126,21 @@ export default function MarketplacePage() {
     const [sortIndex, setSortIndex] = useState(0);
     const [searchQuery, setSearchQuery] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
+    const [copiedId, setCopiedId] = useState<string | null>(null);
 
     useEffect(() => {
         const t = setTimeout(() => setDebouncedSearch(searchQuery), 400);
         return () => clearTimeout(t);
     }, [searchQuery]);
+
+    const handleCardShare = (e: React.MouseEvent, id: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const url = `${window.location.origin}/assets/${id}`;
+        navigator.clipboard.writeText(url);
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+    };
 
     const sortOpt = SORT_OPTIONS[sortIndex];
     const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
@@ -389,10 +399,31 @@ export default function MarketplacePage() {
                                                 {property.category?.replace(/_/g, " ").toLowerCase()}
                                             </span>
 
+                                            <span className="absolute bottom-3 right-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase bg-[var(--sidebar-active-text)] text-[#090D0A] shadow-md z-10 tracking-wider">
+                                                {property.saleType === 'WHOLE' ? 'Whole Property' : 'Fractional'}
+                                            </span>
+
                                             <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
                                                 <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${riskColor}`} />
                                                 {property.riskRating} RISK
                                             </span>
+
+                                            <button
+                                                onClick={(e) => handleCardShare(e, property.id)}
+                                                className="absolute top-3 right-3 edit-icon-btn z-30 pointer-events-auto p-2 rounded-full bg-black/50 text-white hover:bg-neutral-800 transition-all border border-white/10 backdrop-blur-md shadow-sm flex items-center justify-center cursor-pointer group"
+                                                aria-label="Share property"
+                                            >
+                                                {copiedId === property.id ? (
+                                                    <span className="text-[10px] font-bold px-1.5 text-[#00DAAF]">Copied!</span>
+                                                ) : (
+                                                    <svg className="w-4 h-4 text-white group-hover:text-[#00DAAF] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 10.742l4.57-2.286M8.684 13.258l4.57 2.286M2 12a10 10 0 0110-10c5.523 0 10 4.477 10 10s-4.477 10-10 10a10 10 0 01-10-10z" />
+                                                        <circle cx="18" cy="5" r="3" />
+                                                        <circle cx="6" cy="12" r="3" />
+                                                        <circle cx="18" cy="19" r="3" />
+                                                    </svg>
+                                                )}
+                                            </button>
                                         </div>
 
                                         <div className="p-5 sm:p-6">
@@ -413,7 +444,9 @@ export default function MarketplacePage() {
                                                         <p className="text-[13px] font-extrabold text-[var(--header-text)] break-all leading-tight">{formatPrice(property.valuation, true)}</p>
                                                     </div>
                                                     <div className="min-w-0 px-1">
-                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">Per Fraction</p>
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">
+                                                            {property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}
+                                                        </p>
                                                         <p className="text-[13px] font-extrabold text-[var(--header-text)] break-all leading-tight">
                                                             {formatPrice(
                                                                 Number(property.fractionPrice) && Number(property.fractionPrice) !== Number(property.valuation)

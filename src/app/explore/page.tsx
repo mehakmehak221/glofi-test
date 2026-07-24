@@ -146,13 +146,16 @@ export default function ExplorePage() {
     const [cityFilter, setCityFilter] = useState("");
     const [countryIsoCode, setCountryIsoCode] = useState("");
     const [stateIsoCode, setStateIsoCode] = useState("");
+    const [saleTypeFilter, setSaleTypeFilter] = useState<"FRACTIONAL" | "WHOLE">("FRACTIONAL");
+    const [copiedId, setCopiedId] = useState<string | null>(null);
 
     const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
     const { data: assetsData, isLoading, isError } = useGetAssetsQuery({
         category: apiCategory,
         country: countryFilter || undefined,
         state: stateFilter || undefined,
-        city: cityFilter || undefined
+        city: cityFilter || undefined,
+        saleType: saleTypeFilter
     });
 
     const assets = assetsData?.data || [];
@@ -170,10 +173,43 @@ export default function ExplorePage() {
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter bg-gradient-to-r from-[#00B28F] to-[#00DAAF] bg-clip-text text-transparent">
                             Discover Assets
                         </h1>
-                        <p className="text-sm sm:text-base text-neutral-500 max-w-xl font-medium leading-relaxed">
-                            Institutional-grade real estate. Digitally simplified. </p>
-                        <p>Invest fractionally starting from {currency.symbol}15,000.</p>
+                        <p className="text-sm sm:text-base text-neutral-500 max-w-xl font-medium leading-relaxed mb-0.5">
+                            Institutional-grade real estate. Digitally simplified.
+                        </p>
+                        <p className="text-sm text-neutral-500 font-medium">
+                            {saleTypeFilter === "FRACTIONAL"
+                                ? `Invest fractionally starting from ${currency.symbol}15,000.`
+                                : "Acquire complete institutional assets as a single whole transaction."}
+                        </p>
+                    </div>
 
+                    {/* Sale-type pill toggle */}
+                    <div className="flex mb-1">
+                        <div className="inline-flex bg-neutral-100 border border-neutral-200/80 rounded-full p-1 gap-1 shadow-sm relative">
+                            {(["FRACTIONAL", "WHOLE"] as const).map((type) => {
+                                const isSelected = saleTypeFilter === type;
+                                return (
+                                    <button
+                                        key={type}
+                                        onClick={() => setSaleTypeFilter(type)}
+                                        className={`relative px-5 py-2 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${
+                                            isSelected
+                                                ? "text-[#00B28F]"
+                                                : "text-neutral-500 hover:text-neutral-900"
+                                        }`}
+                                    >
+                                        {isSelected && (
+                                            <motion.div
+                                                layoutId="activeSaleType"
+                                                className="absolute inset-0 bg-white border border-[#00DAAF]/30 rounded-full z-[-1] shadow-sm"
+                                                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                            />
+                                        )}
+                                        {type === "FRACTIONAL" ? "Fractional Real Estate" : "Whole Properties"}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
 
                     <div className="flex flex-col gap-8">
@@ -237,7 +273,7 @@ export default function ExplorePage() {
                                         setStateIsoCode("");
                                         setCountryIsoCode("");
                                     }}
-                                    className="mt-5 text-[10px] text-[#00B28F] font-semibold hover:underline uppercase tracking-widest cursor-pointer transition-colors duration-200 hover:text-[#00DAAF]"
+                                    className="text-xs font-bold text-neutral-400 hover:text-neutral-600 transition-colors py-2 px-3 hover:bg-neutral-50 rounded-full"
                                 >
                                     Clear Filters
                                 </button>
@@ -295,7 +331,7 @@ export default function ExplorePage() {
                                 const fundedPercentage = Math.max(0, Math.min(100, Math.round(((total - available) / total) * 100)));
                                 const riskLevel = (property.riskRating || "MEDIUM").toString().toUpperCase();
 
-                                const detailHref = `/dashboard/investor/marketplace/${property.id}`;
+                                const detailHref = `/assets/${property.id}`;
 
                                 return (
                                     <motion.div
@@ -327,6 +363,9 @@ export default function ExplorePage() {
                                                     {property.category.replace(/_/g, ' ').toLowerCase()}
                                                 </span>
 
+                                                <span className="absolute bottom-3 right-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase bg-[#00B28F]/95 text-white shadow-md z-10 tracking-wider">
+                                                    {property.saleType === 'WHOLE' ? 'Whole Property' : 'Fractional'}
+                                                </span>
 
                                                 <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
                                                     <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${riskLevel === "LOW"
@@ -337,6 +376,30 @@ export default function ExplorePage() {
                                                         }`} />
                                                     {riskLevel} RISK
                                                 </span>
+
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        const url = `${window.location.origin}/assets/${property.id}`;
+                                                        navigator.clipboard.writeText(url);
+                                                        setCopiedId(property.id);
+                                                        setTimeout(() => setCopiedId(null), 2000);
+                                                    }}
+                                                    className="absolute top-3 right-3 edit-icon-btn z-30 pointer-events-auto p-2 rounded-full bg-black/50 text-white hover:bg-neutral-800 transition-all border border-white/10 backdrop-blur-md shadow-sm flex items-center justify-center cursor-pointer group"
+                                                    aria-label="Share property"
+                                                >
+                                                    {copiedId === property.id ? (
+                                                        <span className="text-[10px] font-bold px-1.5 text-[#00DAAF]">Copied!</span>
+                                                    ) : (
+                                                        <svg className="w-4 h-4 text-white group-hover:text-[#00DAAF] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 10.742l4.57-2.286M8.684 13.258l4.57 2.286M2 12a10 10 0 0110-10c5.523 0 10 4.477 10 10s-4.477 10-10 10a10 10 0 01-10-10z" />
+                                                            <circle cx="18" cy="5" r="3" />
+                                                            <circle cx="6" cy="12" r="3" />
+                                                            <circle cx="18" cy="19" r="3" />
+                                                        </svg>
+                                                    )}
+                                                </button>
                                             </div>
 
 
@@ -356,7 +419,9 @@ export default function ExplorePage() {
                                                             <p className="text-[15px] font-extrabold text-neutral-900">{formatPrice(property.valuation, true)}</p>
                                                         </div>
                                                         <div>
-                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">Per Fraction</p>
+                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">
+                                                                {property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}
+                                                            </p>
                                                             <p className="text-[15px] font-extrabold text-neutral-900">
                                                                 {formatPrice(
                                                                     Number(property.fractionPrice) && Number(property.fractionPrice) !== Number(property.valuation)
@@ -390,7 +455,7 @@ export default function ExplorePage() {
 
 
                                                 <Link
-                                                    href="/sign-in"
+                                                    href={detailHref}
                                                     prefetch={false}
                                                     className="relative z-[3] block pointer-events-auto w-full py-3.5 rounded-full border-[1.5px] border-[#006D5B] bg-transparent text-neutral-900 hover:bg-[#006D5B] hover:text-white text-sm font-extrabold uppercase tracking-wide text-center transition-all duration-300 active:scale-[0.99]"
                                                 >
