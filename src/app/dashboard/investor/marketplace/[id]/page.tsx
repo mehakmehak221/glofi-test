@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPinIcon } from "@/components/VectorImages";
+import { MapPinIcon, ShareIcon } from "@/components/VectorImages";
 import { PROPERTIES } from "@/data/propertyData";
 import InvestModal from "@/components/dashboard/InvestModal";
 import KYCModal from "@/components/dashboard/KYCModal";
@@ -324,12 +324,7 @@ export default function PropertyDetailPage() {
                                 onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
                                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] text-sm font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all cursor-pointer shadow-sm"
                             >
-                                <svg className="w-4 h-4 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 10.742l4.57-2.286M8.684 13.258l4.57 2.286M2 12a10 10 0 0110-10c5.523 0 10 4.477 10 10s-4.477 10-10 10a10 10 0 01-10-10z" />
-                                    <circle cx="18" cy="5" r="3" />
-                                    <circle cx="6" cy="12" r="3" />
-                                    <circle cx="18" cy="19" r="3" />
-                                </svg>
+                                <ShareIcon className="w-4 h-4 text-[var(--sidebar-active-text)]" />
                                 Share
                             </button>
                             <AnimatePresence>

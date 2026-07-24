@@ -8,7 +8,7 @@ import { useGetAssetsQuery } from "@/store/api/assetApi";
 import { CATEGORIES } from "@/data/propertyData";
 import { Country, State, City } from "country-state-city";
 import { API_URL } from "@/constants";
-import { MapPinIcon, TrendingUpIcon, VerifiedIcon, SecondaryMarketplaceIcon } from "@/components/VectorImages";
+import { MapPinIcon, TrendingUpIcon, VerifiedIcon, SecondaryMarketplaceIcon, ShareIcon } from "@/components/VectorImages";
 import Link from "next/link";
 
 import { useCurrency } from "@/providers/CurrencyProvider";
@@ -363,10 +363,6 @@ export default function ExplorePage() {
                                                     {property.category.replace(/_/g, ' ').toLowerCase()}
                                                 </span>
 
-                                                <span className="absolute bottom-3 right-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase bg-[#00B28F]/95 text-white shadow-md z-10 tracking-wider">
-                                                    {property.saleType === 'WHOLE' ? 'Whole Property' : 'Fractional'}
-                                                </span>
-
                                                 <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
                                                     <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${riskLevel === "LOW"
                                                         ? 'bg-[#00DAAF] text-[#00DAAF]'
@@ -392,12 +388,7 @@ export default function ExplorePage() {
                                                     {copiedId === property.id ? (
                                                         <span className="text-[10px] font-bold px-1.5 text-[#00DAAF]">Copied!</span>
                                                     ) : (
-                                                        <svg className="w-4 h-4 text-white group-hover:text-[#00DAAF] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 10.742l4.57-2.286M8.684 13.258l4.57 2.286M2 12a10 10 0 0110-10c5.523 0 10 4.477 10 10s-4.477 10-10 10a10 10 0 01-10-10z" />
-                                                            <circle cx="18" cy="5" r="3" />
-                                                            <circle cx="6" cy="12" r="3" />
-                                                            <circle cx="18" cy="19" r="3" />
-                                                        </svg>
+                                                        <ShareIcon className="w-4 h-4 text-white group-hover:text-[#00DAAF] transition-colors" />
                                                     )}
                                                 </button>
                                             </div>
