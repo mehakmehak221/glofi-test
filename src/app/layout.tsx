@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import { Montserrat, Poppins } from "next/font/google";
 import "./satoshi.css";
 import "./globals.css";
@@ -67,7 +67,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <CurrencyProvider>
           <StoreProvider>
             <GlobalToast />
-            <TrackingBootstrap />
+            <Suspense fallback={null}>
+              <TrackingBootstrap />
+            </Suspense>
             {children}
           </StoreProvider>
         </CurrencyProvider>
