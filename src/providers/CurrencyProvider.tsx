@@ -31,7 +31,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
 
   const formatPrice = (usdAmount: number, compact: boolean = false) => {
     const convertedAmount = usdAmount * currency.rate;
-    
+
     if (compact) {
       if (convertedAmount >= 1_000_000) {
         return `${currency.symbol}${(convertedAmount / 1_000_000).toFixed(1).replace(/\\.0$/, '')}M`;
@@ -39,7 +39,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
         return `${currency.symbol}${(convertedAmount / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
       }
     }
-    
+
     return `${currency.symbol}${convertedAmount.toLocaleString(undefined, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 2
