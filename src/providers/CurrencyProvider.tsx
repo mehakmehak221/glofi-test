@@ -36,7 +36,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
       if (convertedAmount >= 1_000_000) {
         return `${currency.symbol}${(convertedAmount / 1_000_000).toFixed(1).replace(/\\.0$/, '')}M`;
       } else if (convertedAmount >= 1_000) {
-        return `${currency.symbol}${(convertedAmount / 1_000).toFixed(0)}K`;
+        return `${currency.symbol}${(convertedAmount / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
       }
     }
     

@@ -72,11 +72,10 @@ function FilterDropdown({
         <div className="relative" ref={ref}>
             <button
                 onClick={() => setOpen((p) => !p)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border transition-all cursor-pointer ${
-                    value
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border transition-all cursor-pointer ${value
                         ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
                         : "bg-[var(--field-surface)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
-                }`}
+                    }`}
             >
                 {selected ? selected.label : placeholder}
                 <svg
@@ -100,11 +99,10 @@ function FilterDropdown({
                             <button
                                 key={opt.value}
                                 onClick={() => { onChange(opt.value); setOpen(false); }}
-                                className={`w-full text-left px-4 py-2.5 text-xs font-semibold transition-colors cursor-pointer border-0 ${
-                                    value === opt.value
+                                className={`w-full text-left px-4 py-2.5 text-xs font-semibold transition-colors cursor-pointer border-0 ${value === opt.value
                                         ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]"
                                         : "text-[var(--color-text-muted)] hover:bg-[var(--sidebar-bg)] hover:text-[var(--header-text)]"
-                                }`}
+                                    }`}
                             >
                                 {opt.label}
                             </button>
@@ -194,11 +192,10 @@ export default function MarketplacePage() {
                             <button
                                 key={type}
                                 onClick={() => setSaleTypeFilter(type)}
-                                className={`relative px-6 py-2.5 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${
-                                    isSelected
+                                className={`relative px-6 py-2.5 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${isSelected
                                         ? "text-[var(--sidebar-active-text)]"
                                         : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
-                                }`}
+                                    }`}
                             >
                                 {isSelected && (
                                     <motion.div
@@ -229,11 +226,10 @@ export default function MarketplacePage() {
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
-                                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold transition-colors duration-200 cursor-pointer border-0 bg-transparent ${
-                                    isSelected
+                                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold transition-colors duration-200 cursor-pointer border-0 bg-transparent ${isSelected
                                         ? "text-[var(--sidebar-active-text)]"
                                         : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
-                                }`}
+                                    }`}
                             >
                                 {isSelected && (
                                     <motion.div
@@ -374,8 +370,8 @@ export default function MarketplacePage() {
                                     property.riskRating === "LOW"
                                         ? "bg-[#00DAAF] text-[#00DAAF]"
                                         : property.riskRating === "HIGH"
-                                        ? "bg-[#FF5C5C] text-[#FF5C5C]"
-                                        : "bg-[#E8940C] text-[#E8940C]";
+                                            ? "bg-[#FF5C5C] text-[#FF5C5C]"
+                                            : "bg-[#E8940C] text-[#E8940C]";
 
                                 return (
                                     <motion.div
@@ -448,7 +444,7 @@ export default function MarketplacePage() {
                                                         </p>
                                                     </div>
                                                     <div className="min-w-0 px-1">
-                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">Annual Return</p>
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">Potential Annual Return</p>
                                                         <p className="text-[13px] font-extrabold text-[var(--sidebar-active-text)] break-all leading-tight">{formattedYield}%</p>
                                                     </div>
                                                 </div>

@@ -402,18 +402,18 @@ export default function PropertyDetailPage() {
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">{property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}</p>
                                 <div className="relative group inline-block w-full">
                                     <p className="text-base font-bold text-[var(--header-text)] truncate px-1 cursor-default">
-                                        ₹{Number(fractionPrice).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        {formatPrice(fractionPrice, true)}
                                     </p>
                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden group-hover:block pointer-events-none">
                                         <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] text-[11px] font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
-                                            ₹{Number(fractionPrice).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            {formatPrice(fractionPrice)}
                                         </div>
                                         <div className="w-2 h-2 bg-[var(--card-surface)] border-r border-b border-[var(--sidebar-border)] rotate-45 mx-auto -mt-1" />
                                     </div>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Annual Return</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Potential Annual Return</p>
                                 <p className="text-base font-bold text-[var(--sidebar-active-text)]">
                                     {(
                                         parseFloat(property.expectedYield || 0) +
@@ -852,7 +852,7 @@ export default function PropertyDetailPage() {
                     >
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">{property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}</p>
                         <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">
-                            ₹{Number(fractionPrice).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {formatPrice(fractionPrice, true)}
                         </p>
 
                         <div className="space-y-4 mb-6">
@@ -916,7 +916,7 @@ export default function PropertyDetailPage() {
                                     <div className="flex justify-between items-center text-xs">
                                         <span className="text-[var(--color-text-muted)] font-medium">{property.saleType === 'WHOLE' ? 'Whole Price' : 'Price per fraction'}</span>
                                         <span className="text-[var(--header-text)] font-semibold">
-                                            ₹{Number(fractionPrice).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            {formatPrice(fractionPrice)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs">
@@ -927,7 +927,7 @@ export default function PropertyDetailPage() {
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-bold text-[var(--header-text)]">Total Investment</span>
                                         <span className="text-base font-black text-[var(--sidebar-active-text)]">
-                                            ₹{Number(fractionPrice * investQuantity).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            {formatPrice(fractionPrice * investQuantity, true)}
                                         </span>
                                     </div>
                                 </div>
