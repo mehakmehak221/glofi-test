@@ -33,10 +33,18 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     const convertedAmount = usdAmount * currency.rate;
 
     if (compact) {
-      if (convertedAmount >= 1_000_000) {
-        return `${currency.symbol}${(convertedAmount / 1_000_000).toFixed(1).replace(/\\.0$/, '')}M`;
+      if (convertedAmount >= 10_000_000) {
+
+        const val = (convertedAmount / 10_000_000).toFixed(1);
+        return `${currency.symbol}${val.endsWith('.0') ? val.slice(0, -2) : val}Cr`;
+      } else if (convertedAmount >= 100_000) {
+
+        const val = (convertedAmount / 100_000).toFixed(1);
+        return `${currency.symbol}${val.endsWith('.0') ? val.slice(0, -2) : val}L`;
       } else if (convertedAmount >= 1_000) {
-        return `${currency.symbol}${(convertedAmount / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
+
+        const val = (convertedAmount / 1_000).toFixed(1);
+        return `${currency.symbol}${val.endsWith('.0') ? val.slice(0, -2) : val}K`;
       }
     }
 

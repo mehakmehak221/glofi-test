@@ -417,7 +417,8 @@ export default function ExplorePage() {
                                                                 {formatPrice(
                                                                     Number(property.fractionPrice) && Number(property.fractionPrice) !== Number(property.valuation)
                                                                         ? property.fractionPrice
-                                                                        : (Number(property.valuation) / (Number(property.totalFractions) || 1))
+                                                                        : (Number(property.valuation) / (Number(property.totalFractions) || 1)),
+                                                                    true
                                                                 )}
                                                             </p>
                                                         </div>
