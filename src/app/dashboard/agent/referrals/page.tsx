@@ -231,7 +231,7 @@ export default function AgentReferralsPage() {
                           {asset.location || "Location unavailable"}
                         </p>
                       </div>
-                      <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)]">
+                      <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
                         {asset.category || "Asset"}
                       </span>
                     </div>
@@ -304,10 +304,10 @@ export default function AgentReferralsPage() {
                         </p>
                       </div>
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)]">
+                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
                           {item.stats?.totalClicks || 0} clicks
                         </span>
-                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)]">
+                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
                           {item.stats?.investmentsCount || 0} invests
                         </span>
                       </div>
@@ -388,7 +388,7 @@ export default function AgentReferralsPage() {
                           <p className="text-sm font-bold text-[var(--foreground)] font-montserrat">{link.code}</p>
                           <p className="mt-1 text-xs text-[var(--sidebar-text)] opacity-60 break-all">{link.shareUrl}</p>
                         </div>
-                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)]">
+                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
                           {link.stats.totalClicks} clicks
                         </span>
                       </div>
@@ -420,7 +420,7 @@ export default function AgentReferralsPage() {
           <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">2. Share</p>
             <p className="mt-3 text-sm text-[var(--sidebar-text)] opacity-70">
-              Send the share URL through WhatsApp, copy-link, or the native share sheet.
+              Send the share URL through WhatsApp or copy-link.
             </p>
           </div>
           <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">

@@ -576,10 +576,10 @@ export default function PartnerPropertiesPage() {
                                                         </p>
                                                     </div>
                                                     <div className="flex shrink-0 flex-col items-end gap-1">
-                                                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)]">
+                                                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
                                                             {item.stats?.totalClicks || 0} clicks
                                                         </span>
-                                                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)]">
+                                                        <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
                                                             {item.stats?.investmentsCount || 0} invests
                                                         </span>
                                                     </div>
@@ -673,7 +673,7 @@ export default function PartnerPropertiesPage() {
                                                     <div className="min-w-0 flex-1">
                                                         <div className="flex flex-wrap items-center gap-2">
                                                             <p className="truncate text-sm font-bold text-[var(--foreground)] font-montserrat">{link.code}</p>
-                                                            <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)]">
+                                                            <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
                                                                 {link.stats.totalClicks} clicks
                                                             </span>
                                                         </div>

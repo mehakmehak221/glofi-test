@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShareIcon, CopyIcon } from "@/components/VectorImages";
-import { buildShareMessage, copyToClipboard, openWhatsAppShare, shareAsset } from "@/utils/assetShare";
+import { buildShareMessage, copyToClipboard, openWhatsAppShare } from "@/utils/assetShare";
 
 type ShareAssetModalProps = {
   isOpen: boolean;
@@ -41,11 +41,6 @@ export default function ShareAssetModal({
     await copyToClipboard(shareUrl);
     setCopyLabel("COPIED");
     window.setTimeout(() => setCopyLabel("COPY LINK"), 1600);
-  };
-
-  const handleNativeShare = async () => {
-    if (!shareUrl) return;
-    await shareAsset({ shareUrl, assetTitle, assetValuation });
   };
 
   const handleWhatsApp = () => {
@@ -128,22 +123,14 @@ export default function ShareAssetModal({
               </button>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-3">
               <button
                 type="button"
                 onClick={handleWhatsApp}
                 disabled={!shareUrl}
-                className="h-11 flex-1 rounded-md border border-[#25D366]/20 bg-[#25D366]/10 text-sm font-bold text-[#25D366] transition hover:bg-[#25D366]/15 disabled:cursor-not-allowed disabled:opacity-60"
+                className="h-11 w-full rounded-md border border-[#25D366]/20 bg-[#25D366]/10 text-sm font-bold text-[#25D366] transition hover:bg-[#25D366]/15 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Share on WhatsApp
-              </button>
-              <button
-                type="button"
-                onClick={handleNativeShare}
-                disabled={!shareUrl}
-                className="h-11 flex-1 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] text-sm font-bold text-[var(--foreground)] transition hover:border-[var(--color-primary-300)]/40 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                Native Share
               </button>
             </div>
 
