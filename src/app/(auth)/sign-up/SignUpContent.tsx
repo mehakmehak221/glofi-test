@@ -166,7 +166,7 @@ function SignUpPageContent() {
 
         const verifier = new RecaptchaVerifier(firebaseAuth, containerId, {
             size: "invisible",
-            callback: () => {},
+            callback: () => { },
             "expired-callback": () => {
                 clearRecaptcha();
             },
@@ -249,12 +249,8 @@ function SignUpPageContent() {
 
     const isRecoverableFirebasePhoneError = (err: unknown) => {
         const code = (err as { code?: string })?.code;
-        return (
-            code === "auth/invalid-app-credential" ||
-            code === "auth/captcha-check-failed" ||
-            code === "auth/missing-app-credential" ||
-            code === "auth/quota-exceeded"
-        );
+
+        return code === "auth/quota-exceeded";
     };
 
     const sendEmailOtp = async (transitionToOtpStep = true) => {
@@ -283,23 +279,22 @@ function SignUpPageContent() {
         }
     };
 
-    // ---------------------------------------------------------------------------
-    // Step 2a: Fetch phone from backend & trigger Firebase SMS
-    // ---------------------------------------------------------------------------
     const initiatePhoneVerification = async () => {
         if (!firebaseAuth) return;
+
+        // Clear any stale errors before starting phone verification
+        setErrorMsg(""); setSuccessMsg(""); setPhoneCodeError("");
 
         await ensureFirebasePhoneAuthReady();
 
         const trimmedEmail = form.email.trim();
         console.log("Initiating phone verification for email:", trimmedEmail, "and phone:", form.phone.trim());
 
-        // Get phone number from backend
+
         const phoneData = await sendPhoneOtp({ email: trimmedEmail, phone: form.phone.trim() }).unwrap();
         console.log("Received phone number from backend:", phoneData);
         if (!phoneData.success) throw new Error("Could not retrieve phone number");
 
-        // Trigger Firebase SMS with a fresh reCAPTCHA verifier each attempt
         console.log("Triggering Firebase SMS via signInWithPhoneNumber for:", phoneData.phone);
         try {
             const verifier = createRecaptchaVerifier();
@@ -317,13 +312,12 @@ function SignUpPageContent() {
         }
     };
 
-    // ---------------------------------------------------------------------------
-    // Step 2b: Verify SMS code with Firebase → send token to backend
-    // ---------------------------------------------------------------------------
+
     const verifyPhoneCode = async () => {
         if (!confirmationResult) throw new Error("No confirmation result — please resend.");
 
-        const credential = await confirmationResult.confirm(phoneCode);
+        const trimmedCode = phoneCode.trim();
+        const credential = await confirmationResult.confirm(trimmedCode);
         const firebaseIdToken = await credential.user.getIdToken();
 
         await verifyPhoneOtp({ email: form.email.trim(), firebaseIdToken }).unwrap();
@@ -390,42 +384,30 @@ function SignUpPageContent() {
                 return;
             }
 
-            // For Investor / Developer:
-            // 1. Send details to create PendingRegistration and send Email OTP
+
             await sendEmailOtp(false);
-            // 2. Phone SMS via Firebase when configured; otherwise proceed with email OTP only
             if (isFirebasePhoneAuthEnabled) {
-                try {
-                    await initiatePhoneVerification();
-                } catch (phoneErr) {
-                    if (isRecoverableFirebasePhoneError(phoneErr)) {
-                        console.warn("Firebase phone verification unavailable, continuing with email OTP.", phoneErr);
-                        proceedToEmailOtpStep();
-                        return;
-                    }
-                    throw phoneErr;
-                }
-            } else {
-                proceedToEmailOtpStep();
+                await initiatePhoneVerification();
             }
         } catch (err: unknown) {
             console.error("handleDetailsSubmit caught error:", err);
             const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
-            console.error("apiErr details:", apiErr);
+            const firebaseCode = (err as { code?: string })?.code;
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
+            } else if (firebaseCode === "auth/unauthorized-domain") {
+                setErrorMsg("Phone verification is not configured for this domain. Please contact support.");
+            } else if (firebaseCode === "auth/quota-exceeded" || firebaseCode === "auth/operation-not-allowed") {
+                setErrorMsg("SMS verification is temporarily unavailable. Please try again later.");
+            } else if (firebaseCode === "auth/too-many-requests") {
+                setErrorMsg("Too many attempts. This phone number has been temporarily blocked by Firebase due to too many request attempts. Please try again in a few minutes.");
             } else {
-                if (isRecoverableFirebasePhoneError(err)) {
-                    proceedToEmailOtpStep();
-                    return;
-                }
                 const friendlyMsg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
-                if (friendlyMsg && !friendlyMsg.toLowerCase().includes("phone")) {
-                    applySignUpApiErrors(apiErr, {
-                        setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
-                        setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
-                    });
-                } else {
+                applySignUpApiErrors(apiErr, {
+                    setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
+                    setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
+                });
+                if (!nameError && !emailError && !phoneError && !passwordError && !confirmPasswordError && !reraError && !expiryError && !referralError) {
                     setErrorMsg(friendlyMsg || "Failed to initiate phone verification. Please try again.");
                 }
             }
@@ -433,9 +415,6 @@ function SignUpPageContent() {
         }
     };
 
-    // ---------------------------------------------------------------------------
-    // PHONE_OTP form submit → verify code → move to OTP step
-    // ---------------------------------------------------------------------------
     const handlePhoneOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMsg(""); setPhoneCodeError(""); setSuccessMsg("");
@@ -449,15 +428,29 @@ function SignUpPageContent() {
 
         try {
             await verifyPhoneCode();
-            // Phone verified on backend — now move to Email OTP verification step
             setStep("OTP");
             setSuccessMsg(`We sent a 6-digit verification code to ${form.email.trim()}.`);
             clearRecaptcha();
         } catch (err: unknown) {
+            const firebaseCode = (err as { code?: string })?.code;
             const apiErr = err as { status?: number; data?: { message?: string } };
             const msg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
-            if (msg.toLowerCase().includes("otp") || msg.toLowerCase().includes("invalid") || msg.toLowerCase().includes("expired")) {
-                setPhoneCodeError("Invalid or expired SMS code. Please try again.");
+
+            // Firebase-specific code error handling
+            if (
+                firebaseCode === "auth/invalid-verification-code" ||
+                firebaseCode === "auth/missing-verification-code" ||
+                msg.toLowerCase().includes("invalid") ||
+                msg.toLowerCase().includes("otp")
+            ) {
+                setPhoneCodeError("Wrong code. Please check the SMS and try again.");
+            } else if (
+                firebaseCode === "auth/code-expired" ||
+                msg.toLowerCase().includes("expired")
+            ) {
+                setPhoneCodeError("This code has expired. Please request a new SMS.");
+            } else if (firebaseCode === "auth/too-many-requests") {
+                setErrorMsg("Too many attempts. Please wait a moment and try again.");
             } else {
                 setErrorMsg(msg || "Phone verification failed. Please try again.");
             }
@@ -493,9 +486,6 @@ function SignUpPageContent() {
         }
     };
 
-    // ---------------------------------------------------------------------------
-    // Render
-    // ---------------------------------------------------------------------------
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -740,7 +730,7 @@ function SignUpPageContent() {
                         </label>
                         <PhoneInput
                             id="sign-up-phone"
-                            placeholder="+91 1234567890"
+                            placeholder=" 1234567890"
                             defaultCountry="IN"
                             value={form.phone}
                             onChange={(val) => {
