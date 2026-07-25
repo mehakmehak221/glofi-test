@@ -62,6 +62,7 @@ export default function PropertyDetailPage() {
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [showComingSoon, setShowComingSoon] = useState(false);
     const [isDescExpanded, setIsDescExpanded] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const [purchaseMode, setPurchaseMode] = useState<"fractional" | "whole">("fractional");
 
@@ -490,7 +491,11 @@ export default function PropertyDetailPage() {
                                         <h3 className="text-sm font-bold text-[var(--header-text)] mb-4 px-1">Images</h3>
                                         <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 px-1 snap-x snap-mandatory">
                                             {property.images.map((img, idx) => (
-                                                <div key={idx} className="relative w-40 sm:w-48 h-32 sm:h-40 rounded-2xl overflow-hidden flex-shrink-0 border border-[var(--sidebar-border)] shadow-sm snap-start">
+                                                <div
+                                                    key={idx}
+                                                    className="relative w-40 sm:w-48 h-32 sm:h-40 rounded-2xl overflow-hidden flex-shrink-0 border border-[var(--sidebar-border)] shadow-sm snap-start cursor-pointer hover:scale-[1.03] transition-transform duration-200"
+                                                    onClick={() => setLightboxIndex(idx)}
+                                                >
                                                     <Image
                                                         src={img.startsWith('http') ? img : `${API_URL}/${img.replace(/^\/+/, '')}`}
                                                         alt={`${property.title} image ${idx + 1}`}
@@ -987,6 +992,88 @@ export default function PropertyDetailPage() {
                     />
                 )
             }
+            {/* Lightbox Overlay */}
+            {lightboxIndex !== null && property?.images && (
+                <div
+                    className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+                    onClick={() => setLightboxIndex(null)}
+                >
+                    {/* Close button */}
+                    <button
+                        className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                        onClick={() => setLightboxIndex(null)}
+                    >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    {/* Counter */}
+                    <div className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-white/10 rounded-full text-white text-sm font-semibold font-montserrat">
+                        {lightboxIndex + 1} / {property.images.length}
+                    </div>
+
+                    {/* Prev */}
+                    {lightboxIndex > 0 && (
+                        <button
+                            className="absolute left-3 sm:left-6 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors"
+                            onClick={(e) => { e.stopPropagation(); setLightboxIndex(lightboxIndex - 1); }}
+                        >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                    )}
+
+                    {/* Image */}
+                    <div
+                        className="relative w-[90vw] max-w-3xl h-[70vh] rounded-2xl overflow-hidden shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <Image
+                            src={property.images[lightboxIndex].startsWith('http')
+                                ? property.images[lightboxIndex]
+                                : `${API_URL}/${property.images[lightboxIndex].replace(/^[/\\]+/, '')}`}
+                            alt={`${property.title} image ${lightboxIndex + 1}`}
+                            fill
+                            sizes="90vw"
+                            className="object-contain"
+                            priority
+                        />
+                    </div>
+
+                    {/* Next */}
+                    {lightboxIndex < property.images.length - 1 && (
+                        <button
+                            className="absolute right-3 sm:right-6 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors"
+                            onClick={(e) => { e.stopPropagation(); setLightboxIndex(lightboxIndex + 1); }}
+                        >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    )}
+
+                    {/* Thumbnail strip */}
+                    <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 px-4 overflow-x-auto max-w-[90vw]">
+                        {property.images.map((img, idx) => (
+                            <button
+                                key={idx}
+                                onClick={(e) => { e.stopPropagation(); setLightboxIndex(idx); }}
+                                className={`relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all ${idx === lightboxIndex ? 'border-[#00DAAF] scale-110' : 'border-white/20 opacity-60 hover:opacity-100'}`}
+                            >
+                                <Image
+                                    src={img.startsWith('http') ? img : `${API_URL}/${img.replace(new RegExp('^[\\\\/]+'), '')}`}
+                                    alt={`thumb ${idx + 1}`}
+                                    fill
+                                    sizes="48px"
+                                    className="object-cover"
+                                />
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div >
     );
 }
