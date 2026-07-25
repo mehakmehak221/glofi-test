@@ -109,7 +109,7 @@ export default function GlofiCopyrightSection() {
                 </motion.div>
 
                 <motion.p className="site-footer__powered-by" variants={fadeUpSubtle}>
-                    Powered By Maxtronize
+                    Powered By Maxtron
                 </motion.p>
 
                 <motion.nav className="site-footer__nav" aria-label="Footer navigation" variants={fadeUpSubtle}>
