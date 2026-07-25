@@ -43,11 +43,11 @@ export default function PropertyDetailPage() {
     }, []);
 
     const { data: property, isLoading, isError } = useGetAssetByIdQuery(assetId);
-    const { data: returnsData } = useGetAssetReturnsQuery(assetId);
-    const { data: cashflowData } = useGetAssetCashflowQuery(assetId);
-    const { data: irrData } = useGetAssetIrrCurveQuery(assetId);
-    const { data: rentalData } = useGetAssetRentalScheduleQuery(assetId);
-    const { data: valuationData } = useGetAssetProjectedValuationQuery(assetId);
+    const { data: returnsData } = useGetAssetReturnsQuery(assetId, { skip: !isLoggedIn });
+    const { data: cashflowData } = useGetAssetCashflowQuery(assetId, { skip: !isLoggedIn });
+    const { data: irrData } = useGetAssetIrrCurveQuery(assetId, { skip: !isLoggedIn });
+    const { data: rentalData } = useGetAssetRentalScheduleQuery(assetId, { skip: !isLoggedIn });
+    const { data: valuationData } = useGetAssetProjectedValuationQuery(assetId, { skip: !isLoggedIn });
 
     const { data: kycData } = useGetKycStatusQuery(undefined, { skip: !isLoggedIn });
     const { data: investmentsData, refetch: refetchInvestments } = useGetInvestmentsQuery(undefined, { skip: !isLoggedIn });
@@ -192,7 +192,7 @@ export default function PropertyDetailPage() {
 
     const handleInvestNow = () => {
         if (!isLoggedIn) {
-            router.push(`/sign-up?redirect=${encodeURIComponent(`/assets/${assetId}`)}`);
+            showToast("Coming soon!");
             return;
         }
         setInvestOpen(true);
@@ -225,27 +225,21 @@ export default function PropertyDetailPage() {
     };
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen overflow-x-hidden max-w-[100vw]">
+        <div className="bg-[var(--background)] min-h-screen overflow-x-hidden max-w-[100vw] px-4 sm:px-6 lg:px-10 xl:px-16 py-6 sm:py-8 max-w-screen-2xl mx-auto">
             <AnimatePresence>
                 {toast.show && (
                     <motion.div
                         initial={{ opacity: 0, y: -50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -50 }}
-                        className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-md shadow-lg font-montserrat text-sm font-semibold flex items-center gap-2 ${toast.type === "success"
-                            ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success)]/20"
-                            : toast.type === "warning"
-                                ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border border-[var(--color-status-warning)]/20"
-                                : "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border border-[var(--color-status-error)]/20"
-                            }`}
-                        style={{ backdropFilter: "blur(8px)" }}
+                        className={`fixed top-6 left-1/2 -translate-x-1/2 z-[9999] px-5 py-3 rounded-full shadow-2xl font-montserrat text-sm font-semibold flex items-center gap-2 bg-neutral-900 border border-neutral-700 text-white whitespace-nowrap`}
                     >
                         {toast.type === "success" ? (
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                            <svg className="w-5 h-5 text-[#00DAAF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                         ) : toast.type === "warning" ? (
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                            <svg className="w-5 h-5 text-[#FE9A00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
                         ) : (
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            <svg className="w-5 h-5 text-[#FF5C5C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                         )}
                         {toast.message}
                     </motion.div>
@@ -341,7 +335,7 @@ export default function PropertyDetailPage() {
                                                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all text-left cursor-pointer"
                                             >
                                                 <svg className="w-4 h-4 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.01 14.069.993 11.999.993c-5.444 0-9.87 4.373-9.874 9.8.001 2.02.531 3.993 1.539 5.733l-.999 3.65 3.748-.98a9.8 9.8 0 004.144.958zm10.748-7.397c-.296-.148-1.747-.862-2.019-.962-.272-.099-.47-.148-.668.148-.198.297-.766.962-.939 1.16-.173.199-.347.223-.643.075-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.174.2-.298.3-.496.099-.198.05-.371-.025-.521-.075-.148-.668-1.609-.916-2.203-.242-.582-.487-.504-.668-.513l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.747-.713 1.995-1.402.248-.689.248-1.28.173-1.402-.075-.125-.272-.198-.57-.347z"/>
+                                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.01 14.069.993 11.999.993c-5.444 0-9.87 4.373-9.874 9.8.001 2.02.531 3.993 1.539 5.733l-.999 3.65 3.748-.98a9.8 9.8 0 004.144.958zm10.748-7.397c-.296-.148-1.747-.862-2.019-.962-.272-.099-.47-.148-.668.148-.198.297-.766.962-.939 1.16-.173.199-.347.223-.643.075-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.174.2-.298.3-.496.099-.198.05-.371-.025-.521-.075-.148-.668-1.609-.916-2.203-.242-.582-.487-.504-.668-.513l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.747-.713 1.995-1.402.248-.689.248-1.28.173-1.402-.075-.125-.272-.198-.57-.347z" />
                                                 </svg>
                                                 WhatsApp
                                             </button>
@@ -368,7 +362,7 @@ export default function PropertyDetailPage() {
                                                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all text-left cursor-pointer"
                                             >
                                                 <svg className="w-4 h-4 text-[#1DA1F2]" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                                                 </svg>
                                                 Twitter / X
                                             </button>
@@ -377,7 +371,7 @@ export default function PropertyDetailPage() {
                                                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all text-left cursor-pointer"
                                             >
                                                 <svg className="w-4 h-4 text-[#0A66C2]" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                                                 </svg>
                                                 LinkedIn
                                             </button>
@@ -574,12 +568,12 @@ export default function PropertyDetailPage() {
                                                         </div>
 
                                                         <div className="flex items-center gap-3 self-end sm:self-auto">
-                                                            {/* Document Type Badge */}
+
                                                             <span className="px-2.5 py-1 rounded-md text-[9px] font-black tracking-widest bg-[var(--badge-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm">
                                                                 {fileType}
                                                             </span>
 
-                                                            {/* View Action Link */}
+
                                                             <a
                                                                 href={doc.url.startsWith('http') ? doc.url : `${API_URL}/${doc.url}`}
                                                                 target="_blank"
@@ -655,14 +649,14 @@ export default function PropertyDetailPage() {
                                                                 <circle cx={230} cy={pY} r={4.5} fill="#00DAAF" stroke="#FFF" strokeWidth={1.5} className="cursor-pointer" onMouseEnter={() => setHoveredPoint('projected')} onMouseLeave={() => setHoveredPoint(null)} />
                                                                 {hoveredPoint === 'current' && (
                                                                     <g transform={`translate(70,${Math.max(cY - 22, 16)})`}>
-                                                                        <rect x="-40" y="-12" width="80" height="20" rx="5" fill="var(--card-surface)" stroke="var(--sidebar-border)" strokeWidth="1" />
-                                                                        <text x="0" y="3" textAnchor="middle" fontSize="9" fill="var(--header-text)" fontWeight="700">{formatPrice(fractionPrice)}</text>
+                                                                        <rect x="-50" y="-12" width="100" height="20" rx="10" fill="var(--card-surface)" />
+                                                                        <text x="0" y="3" textAnchor="middle" fontSize="7" fill="var(--header-text)" fontWeight="700">{formatPrice(fractionPrice)}</text>
                                                                     </g>
                                                                 )}
                                                                 {hoveredPoint === 'projected' && (
                                                                     <g transform={`translate(230,${Math.max(pY - 22, 16)})`}>
-                                                                        <rect x="-40" y="-12" width="80" height="20" rx="5" fill="var(--card-surface)" stroke="var(--sidebar-border)" strokeWidth="1" />
-                                                                        <text x="0" y="3" textAnchor="middle" fontSize="9" fill="var(--header-text)" fontWeight="700">{formatPrice(projectedVal)}</text>
+                                                                        <rect x="-50" y="-12" width="100" height="20" rx="10" fill="var(--card-surface)" />
+                                                                        <text x="0" y="3" textAnchor="middle" fontSize="7" fill="var(--header-text)" fontWeight="700">{formatPrice(projectedVal)}</text>
                                                                     </g>
                                                                 )}
                                                             </svg>
@@ -728,8 +722,8 @@ export default function PropertyDetailPage() {
                                                                             <rect x={cx - BW / 2} y={10} width={BW} height={CH - 10} rx="12" fill="#00DAAF" opacity={hoveredBar === null || isHov ? 1 : 0.7} className="transition-all duration-200" />
                                                                             {isHov && (
                                                                                 <g transform={`translate(${cx},4)`}>
-                                                                                    <rect x="-40" y="-12" width="80" height="20" rx="5" fill="var(--card-surface)" stroke="var(--sidebar-border)" strokeWidth="1" />
-                                                                                    <text x="0" y="3" textAnchor="middle" fontSize="9" fill="var(--header-text)" fontWeight="700">{formatPrice(payoutPerQuarter)}</text>
+                                                                                    <rect x="-50" y="-12" width="100" height="20" rx="10" fill="var(--card-surface)" />
+                                                                                    <text x="0" y="3" textAnchor="middle" fontSize="7" fill="var(--header-text)" fontWeight="700">{formatPrice(payoutPerQuarter)}</text>
                                                                                 </g>
                                                                             )}
                                                                         </g>
@@ -815,7 +809,7 @@ export default function PropertyDetailPage() {
                                                                             <circle cx={p.x} cy={p.y} r={4.5} fill="#00DAAF" stroke="#FFF" strokeWidth={1.5} />
                                                                             {isHov && (
                                                                                 <g transform={`translate(${p.x},${Math.max(p.y - 22, 16)})`}>
-                                                                                    <rect x="-40" y="-12" width="80" height="20" rx="5" fill="var(--card-surface)" stroke="var(--sidebar-border)" strokeWidth="1" />
+                                                                                    <rect x="-50" y="-12" width="100" height="20" rx="10" fill="var(--card-surface)" />
                                                                                     <text x="0" y="3" textAnchor="middle" fontSize="9" fill="var(--header-text)" fontWeight="700">{formatPrice(p.value)}</text>
                                                                                 </g>
                                                                             )}
@@ -849,7 +843,7 @@ export default function PropertyDetailPage() {
                     transition={{ duration: 1.5, delay: 0.15 }}
                 >
                     <div
-                        className="rounded-[24px] p-5 sm:p-6 lg:sticky  bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-xl"
+                        className="rounded-[24px] p-5 sm:p-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-xl"
                     >
                         <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">{property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}</p>
                         <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">

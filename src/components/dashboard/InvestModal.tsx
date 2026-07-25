@@ -30,7 +30,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
         }
     }, [isOpen, property, isWholePurchase, initialQuantity]);
 
-    const { data: kycData } = useGetKycStatusQuery();
+    const { data: kycData } = useGetKycStatusQuery(undefined, { skip: !isOpen });
     if (!isOpen || !property) return null;
 
     const price = Number(property.fractionPrice) || 0;

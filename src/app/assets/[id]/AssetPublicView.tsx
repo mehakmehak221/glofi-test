@@ -36,34 +36,13 @@ function AssetPublicViewInner({ assetId }: Props) {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[var(--background)] theme-purple">
+    <div className="w-full min-h-screen bg-[var(--background)] theme-purple light">
       {/* Public site navbar */}
       <div className="landing-page">
         <Navbar />
       </div>
 
-      {/* Call-to-action banner for unauthenticated users */}
-      <div className="bg-gradient-to-r from-[#00DAAF]/10 via-[#7B5EA7]/10 to-[#00DAAF]/10 border-b border-[#00DAAF]/20">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm font-montserrat">
-          <p className="text-[var(--header-text)] font-medium text-center sm:text-left">
-            <span className="text-[#00DAAF] font-bold">Sign up free</span> to invest in this property and explore 100+ premium opportunities
-          </p>
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <Link
-              href="/sign-in"
-              className="px-4 py-1.5 rounded-lg border border-[var(--sidebar-border)] text-[var(--header-text)] hover:bg-[var(--sidebar-bg)] transition-all font-semibold text-xs"
-            >
-              Sign In
-            </Link>
-            <Link
-              href={`/sign-up?redirect=${encodeURIComponent(`/assets/${assetId}`)}`}
-              className="px-4 py-1.5 rounded-lg bg-[#00DAAF] text-[#090D0A] font-bold text-xs hover:bg-[#00DAAF]/90 transition-all shadow-sm"
-            >
-              Get Started →
-            </Link>
-          </div>
-        </div>
-      </div>
+
 
       {/* Reuse the same PropertyDetailPage component, which already handles
           unauthenticated state (skip private queries, redirect on invest click) */}
