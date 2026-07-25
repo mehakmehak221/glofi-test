@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "N7UUU5WQW7.app.glofiestates.com",
+        "paths": [
+          "/property*",
+          "/properties*",
+          "/sign-up*"
+        ]
+      }
+    ]
+  }
+}
