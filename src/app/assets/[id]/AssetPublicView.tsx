@@ -17,10 +17,25 @@ function AssetPublicViewInner({ assetId }: Props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    const ua = navigator.userAgent || navigator.vendor;
+
+    // Android → Google Play Store
+    if (/android/i.test(ua)) {
+      window.location.href =
+        "https://play.google.com/store/apps/details?id=app.glofiestates.com";
+      return;
+    }
+
+    // iOS → Apple App Store
+    if (/iPad|iPhone|iPod/.test(ua)) {
+      window.location.href =
+        "https://apps.apple.com/in/app/glofi-estates/id6764258977";
+      return;
+    }
+
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedIn);
     if (loggedIn) {
-      // Redirect authenticated users into the dashboard context
       router.replace(`/dashboard/investor/marketplace/${assetId}`);
     } else {
       setChecked(true);
