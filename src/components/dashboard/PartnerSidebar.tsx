@@ -20,6 +20,7 @@ import {
     SecondaryMarketplaceIcon,
     AccountIcon,
     SupportIcon,
+    DollarIcon,
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
 
     // { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
+    { href: "/dashboard/partner/rewards", icon: DollarIcon, label: "Rewards" },
     // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
     { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
 ];

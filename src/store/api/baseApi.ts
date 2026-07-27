@@ -101,7 +101,7 @@ export const baseApi = createApi({
     'User', 'Post', 'Kyb', 'Kyc', 'Investment', 'SecondaryMarketplace',
     'MySecondaryListings', 'PendingApprovals', 'Certificates', 'Commission',
     'PartnerFinance', 'Payout', 'Asset', 'AssetShare', 'Lead', 'LeadNote', 'FollowUp', 'LeadActivity',
-    'Support',
+    'Support', 'Rewards',
   ],
   endpoints: () => ({}),
 });

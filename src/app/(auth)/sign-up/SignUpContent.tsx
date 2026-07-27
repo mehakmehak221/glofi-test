@@ -19,7 +19,6 @@ import {
     useVerifyPhoneOtpMutation,
     useVerifyRegistrationOtpMutation,
 } from "@/store/api/authApi";
-import { setCookie } from "@/utils/cookieUtils";
 import {
     applySignUpApiErrors,
     FIELD_ERROR_CLASSES,
@@ -29,6 +28,7 @@ import {
     normalizeOtpInput,
     validateSignUpFields,
 } from "@/utils/authFormErrors";
+import { extractAccessToken, persistAuthSession } from "@/utils/authSession";
 
 const SIGNUP_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SignupRole = (typeof SIGNUP_ROLES)[number];
@@ -216,23 +216,15 @@ function SignUpPageContent() {
     };
 
     const completeRegistration = (result: Record<string, unknown>) => {
-        const token =
-            (result?.accessToken as string | undefined) ||
-            (result?.token as string | undefined) ||
-            ((result?.data as Record<string, unknown> | undefined)?.accessToken as string | undefined) ||
-            ((result?.data as Record<string, unknown> | undefined)?.token as string | undefined) ||
-            ((result?.agent as Record<string, unknown> | undefined)?.token as string | undefined);
+        const token = extractAccessToken(result);
 
         if (token) {
-            setCookie("access_token", token);
-            localStorage.setItem("access_token", token);
-            localStorage.setItem("isLoggedIn", "true");
-            setCookie("isLoggedIn", "true");
+            clearRecaptcha();
             const role =
                 ((result?.agent as Record<string, unknown> | undefined)?.role as string | undefined) ||
                 (result?.role as string | undefined) ||
                 userType.toUpperCase();
-            localStorage.setItem("userType", role);
+            persistAuthSession(token, role);
             localStorage.setItem("toastMessage", "Registration successful!");
             router.push("/onboarding");
         } else {
@@ -431,6 +423,7 @@ function SignUpPageContent() {
 
         try {
             await verifyPhoneCode();
+            clearRecaptcha();
             proceedToEmailOtpStep(`Phone verified. Enter the verification code sent to ${form.email.trim()}.`);
         } catch (err: unknown) {
             const firebaseCode = (err as { code?: string })?.code;

@@ -9,8 +9,8 @@ import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
 import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner } from "@/components/VectorImages";
 import { useLoginMutation } from "@/store/api/authApi";
-import { setCookie } from "@/utils/cookieUtils";
 import { applySignInApiErrors, FIELD_ERROR_CLASSES, validateSignInFields } from "@/utils/authFormErrors";
+import { extractAccessToken, persistAuthSession } from "@/utils/authSession";
 
 const SIGNIN_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SigninRole = (typeof SIGNIN_ROLES)[number];
@@ -90,24 +90,15 @@ function SignInPageContent() {
             console.log('Login Result:', result);
 
             // Cover all possible response shapes from the API
-            const token =
-                result?.accessToken ||
-                result?.token ||
-                result?.access_token ||
-                result?.data?.accessToken ||
-                result?.data?.token ||
-                result?.data?.access_token;
+            const userRole = result?.role || result?.user?.role || result?.data?.role || userType.toUpperCase();
+            const token = extractAccessToken(result);
 
-            // Always store credentials before navigating
-            if (token) {
-                setCookie("access_token", token);
-                localStorage.setItem("access_token", token);
+            if (!token) {
+                setErrorMsg("Login succeeded but no access token was returned by the API. Please check the backend auth response.");
+                return;
             }
 
-            const userRole = result?.role || result?.user?.role || result?.data?.role || userType.toUpperCase();
-            localStorage.setItem("userType", userRole);
-            localStorage.setItem("isLoggedIn", "true");
-            setCookie("isLoggedIn", "true");
+            persistAuthSession(token, userRole);
 
             localStorage.setItem("toastMessage", "Login successful!");
 

@@ -34,7 +34,11 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
                     />
                 )}
 
-                <span className="flex-shrink-0 ml-0.5 text-[var(--sidebar-active-text)]">
+                <span
+                    className={`flex-shrink-0 ml-0.5 ${
+                        isActive ? "text-[var(--sidebar-active-text)]" : "text-[var(--sidebar-text)]"
+                    }`}
+                >
                     <Icon className="w-5 h-5" />
                 </span>
 
