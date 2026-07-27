@@ -69,7 +69,6 @@ const baseQueryWithAuth: BaseQueryFn<
             errorMessage.toLowerCase().includes('unauthorized') ||
             errorMessage.toLowerCase().includes('auth') ||
             errorMessage.toLowerCase().includes('jwt') ||
-            errorMessage.toLowerCase().includes('access denied') ||
             errorMessage.toLowerCase().includes('unauthenticated')
           ));
 
@@ -102,6 +101,7 @@ export const baseApi = createApi({
     'User', 'Post', 'Kyb', 'Kyc', 'Investment', 'SecondaryMarketplace',
     'MySecondaryListings', 'PendingApprovals', 'Certificates', 'Commission',
     'PartnerFinance', 'Payout', 'Asset', 'AssetShare', 'Lead', 'LeadNote', 'FollowUp', 'LeadActivity',
+    'Support',
   ],
   endpoints: () => ({}),
 });

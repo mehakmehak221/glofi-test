@@ -372,6 +372,8 @@ function SignUpPageContent() {
         if (n || em || ph || p || cp || r || ex || ref) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
 
         try {
+            const canUseFirebasePhone = Boolean(isFirebasePhoneAuthEnabled && firebaseAuth);
+
             if (userType === "Agent") {
                 const trimmedName = form.name.trim();
                 const trimmedEmail = form.email.trim();
@@ -384,10 +386,11 @@ function SignUpPageContent() {
                 return;
             }
 
-
-            await sendEmailOtp(false);
-            if (isFirebasePhoneAuthEnabled) {
+            if (canUseFirebasePhone) {
+                await sendEmailOtp(false);
                 await initiatePhoneVerification();
+            } else {
+                await sendEmailOtp(true);
             }
         } catch (err: unknown) {
             console.error("handleDetailsSubmit caught error:", err);
@@ -428,9 +431,7 @@ function SignUpPageContent() {
 
         try {
             await verifyPhoneCode();
-            setStep("OTP");
-            setSuccessMsg(`We sent a 6-digit verification code to ${form.email.trim()}.`);
-            clearRecaptcha();
+            proceedToEmailOtpStep(`Phone verified. Enter the verification code sent to ${form.email.trim()}.`);
         } catch (err: unknown) {
             const firebaseCode = (err as { code?: string })?.code;
             const apiErr = err as { status?: number; data?: { message?: string } };

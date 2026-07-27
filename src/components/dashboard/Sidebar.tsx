@@ -22,6 +22,7 @@ import {
     OverviewIcon,
     LeadIcon,
     DollarIcon,
+    SupportIcon,
 } from "@/components/VectorImages";
 
 const INVESTOR_NAV_ITEMS = [
@@ -30,6 +31,7 @@ const INVESTOR_NAV_ITEMS = [
     { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
     { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
     { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/investor/support", icon: SupportIcon, label: "Support" },
 ];
 
 const AGENT_NAV_ITEMS = [
@@ -37,6 +39,7 @@ const AGENT_NAV_ITEMS = [
     { href: "/dashboard/agent/referrals", icon: LeadIcon, label: "Referrals" },
     { href: "/dashboard/agent/transactions", icon: TransactionsIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
+    { href: "/dashboard/agent/support", icon: SupportIcon, label: "Support" },
 ];
 
 export default function Sidebar() {

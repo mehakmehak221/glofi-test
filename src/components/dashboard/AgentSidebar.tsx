@@ -21,6 +21,7 @@ import {
     SecondaryMarketplaceIcon,
     AccountIcon,
     ProfileIcon,
+    SupportIcon,
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
@@ -31,6 +32,7 @@ const NAV_ITEMS = [
     { href: "/dashboard/agent/transactions", icon: AccountIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
     { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
+    { href: "/dashboard/agent/support", icon: SupportIcon, label: "Support" },
 ];
 
 export default function AgentSidebar() {

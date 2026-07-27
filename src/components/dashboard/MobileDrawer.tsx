@@ -19,7 +19,8 @@ import {
     PropertyIcon,
     LeadsIcon,
     DollarIcon,
-    FinancialIcon
+    FinancialIcon,
+    SupportIcon,
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
     { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
     { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
     { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/investor/support", icon: SupportIcon, label: "Support" },
 ];
 
 const PARTNER_NAV_ITEMS = [
@@ -37,6 +39,7 @@ const PARTNER_NAV_ITEMS = [
 
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
     // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
 ];
 
 const AGENT_NAV_ITEMS = [
@@ -44,6 +47,7 @@ const AGENT_NAV_ITEMS = [
     { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Referrals" },
     { href: "/dashboard/agent/transactions", icon: LeadsIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
+    { href: "/dashboard/agent/support", icon: SupportIcon, label: "Support" },
 ];
 
 const drawerVariants: Variants = {

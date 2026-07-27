@@ -19,6 +19,7 @@ import {
     SignOutIcon,
     SecondaryMarketplaceIcon,
     AccountIcon,
+    SupportIcon,
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
     // { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
     // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
 ];
 
 export default function PartnerSidebar() {
