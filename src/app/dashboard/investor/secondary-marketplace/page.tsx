@@ -337,7 +337,7 @@ function DetailModal({ id, onClose, onBuy }) {
                                         <h2 className="text-2xl font-bold text-[var(--header-text)] mb-2 uppercase tracking-tight line-clamp-2">{listing.asset?.title}</h2>
                                         <p className="text-[var(--color-text-muted)] text-sm font-medium">{listing.asset?.location}</p>
                                     </div>
-                                    <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-2">
+                                    <button onClick={onClose} className="flex items-center justify-center w-8 h-8 rounded-full text-[var(--foreground)] opacity-60 hover:opacity-100 hover:bg-[var(--sidebar-border)] transition-all cursor-pointer border-0 bg-transparent shrink-0">
                                         <XIcon className="w-6 h-6" />
                                     </button>
                                 </div>

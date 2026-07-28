@@ -2,11 +2,13 @@
 
 import React from 'react';
 import { Lead, LeadStatus } from '@/types/crm';
-import { Phone, Mail, ChevronRight, Clock, AlertCircle } from 'lucide-react';
+import { Phone, Mail, ChevronRight, Clock, AlertCircle, Pencil, Trash2 } from 'lucide-react';
 
 interface LeadTableProps {
   leads: Lead[];
   onSelectLead: (lead: Lead) => void;
+  onEditLead: (lead: Lead) => void;
+  onDeleteLead: (lead: Lead) => void;
   isLoading?: boolean;
 }
 
@@ -44,7 +46,7 @@ export const getPriorityBadgeClass = (priority?: string) => {
   }
 };
 
-export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, isLoading }) => {
+export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, onEditLead, onDeleteLead, isLoading }) => {
   if (isLoading) {
     return (
       <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-8 text-center">
@@ -143,9 +145,32 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, isLoa
 
 
                 <td className="py-3.5 px-5 text-right">
-                  <span className="inline-flex items-center justify-center w-7 h-7 rounded bg-[var(--background)]/60 border border-[var(--sidebar-border)] text-[var(--sidebar-text)] opacity-60 group-hover:opacity-100 group-hover:text-[var(--color-primary-300)] group-hover:border-[var(--color-primary-300)]/30 transition-all">
-                    <ChevronRight className="w-4 h-4" />
-                  </span>
+                  <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* Edit */}
+                    <button
+                      title="Edit Lead"
+                      onClick={(e) => { e.stopPropagation(); onEditLead(lead); }}
+                      className="inline-flex items-center justify-center w-7 h-7 rounded bg-[var(--background)]/60 border border-[var(--sidebar-border)] text-[var(--sidebar-text)] hover:text-[var(--color-primary-300)] hover:border-[var(--color-primary-300)]/30 hover:bg-[var(--color-primary-300)]/10 transition-all cursor-pointer"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    {/* Delete */}
+                    <button
+                      title="Delete Lead"
+                      onClick={(e) => { e.stopPropagation(); onDeleteLead(lead); }}
+                      className="inline-flex items-center justify-center w-7 h-7 rounded bg-[var(--background)]/60 border border-[var(--sidebar-border)] text-[var(--sidebar-text)] hover:text-rose-400 hover:border-rose-500/30 hover:bg-rose-500/10 transition-all cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                    {/* View / Drawer */}
+                    <button
+                      title="View Details"
+                      onClick={(e) => { e.stopPropagation(); onSelectLead(lead); }}
+                      className="inline-flex items-center justify-center w-7 h-7 rounded bg-[var(--background)]/60 border border-[var(--sidebar-border)] text-[var(--sidebar-text)] hover:text-[var(--color-primary-300)] hover:border-[var(--color-primary-300)]/30 hover:bg-[var(--color-primary-300)]/10 transition-all cursor-pointer"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

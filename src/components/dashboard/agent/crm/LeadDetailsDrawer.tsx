@@ -143,18 +143,18 @@ export const LeadDetailsDrawer: React.FC<LeadDetailsDrawerProps> = ({
             {/* Header */}
             <div className="p-6 border-b border-[var(--sidebar-border)] space-y-4">
               <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-[var(--foreground)]">{lead.name}</h2>
-                    <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${getPriorityBadgeClass(lead.priority)}`}>
+                <div className="min-w-0 flex-1 mr-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h2 className="text-xl font-bold text-[var(--foreground)] truncate">{lead.name}</h2>
+                    <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shrink-0 ${getPriorityBadgeClass(lead.priority)}`}>
                       {lead.priority || 'NORMAL'}
                     </span>
                   </div>
-                  <p className="text-xs text-[var(--sidebar-text)] opacity-50 mt-0.5">Lead ID: {lead.id}</p>
+                  <p className="text-xs text-[var(--sidebar-text)] opacity-50 mt-0.5 truncate">Lead ID: {lead.id}</p>
                 </div>
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 rounded-md text-[var(--sidebar-text)] hover:text-[var(--foreground)] hover:bg-[var(--color-primary-300)]/10 flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-8 h-8 rounded-md text-[var(--sidebar-text)] hover:text-[var(--foreground)] hover:bg-[var(--color-primary-300)]/10 flex items-center justify-center transition-colors cursor-pointer shrink-0"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -197,12 +197,12 @@ export const LeadDetailsDrawer: React.FC<LeadDetailsDrawerProps> = ({
 
               {/* Contact Info */}
               <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="flex items-center gap-2 text-[var(--foreground)] opacity-80">
+                <div className="flex items-center gap-2 text-[var(--foreground)] opacity-80 min-w-0">
                   <Phone className="w-4 h-4 text-[var(--color-primary-300)] shrink-0" />
-                  <span className="font-semibold">{lead.phone}</span>
+                  <span className="font-semibold truncate">{lead.phone}</span>
                 </div>
                 {lead.email && (
-                  <div className="flex items-center gap-2 text-[var(--foreground)] opacity-70 truncate">
+                  <div className="flex items-center gap-2 text-[var(--foreground)] opacity-70 min-w-0">
                     <Mail className="w-4 h-4 text-[var(--color-primary-300)] shrink-0" />
                     <span className="truncate">{lead.email}</span>
                   </div>

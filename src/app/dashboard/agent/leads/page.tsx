@@ -1,13 +1,22 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Lead, QueryLeadsDto, CreateLeadDto } from '@/types/crm';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Lead, QueryLeadsDto, CreateLeadDto, UpdateLeadDto } from '@/types/crm';
 import { agentCrmApi } from '@/services/agentCrmApi';
 import { LeadFilters } from '@/components/dashboard/agent/crm/LeadFilters';
 import { LeadTable } from '@/components/dashboard/agent/crm/LeadTable';
 import { CreateLeadModal } from '@/components/dashboard/agent/crm/CreateLeadModal';
+import { EditLeadModal } from '@/components/dashboard/agent/crm/EditLeadModal';
+import { DeleteLeadModal } from '@/components/dashboard/agent/crm/DeleteLeadModal';
 import { LeadDetailsDrawer } from '@/components/dashboard/agent/crm/LeadDetailsDrawer';
 import { Users, UserPlus, CheckCircle2, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+
+interface LeadStats {
+  totalAssigned: number;
+  newLeads: number;
+  inContact: number;
+  converted: number;
+}
 
 export default function AgentLeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -15,13 +24,40 @@ export default function AgentLeadsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [stats, setStats] = useState<LeadStats>({
+    totalAssigned: 0,
+    newLeads: 0,
+    inContact: 0,
+    converted: 0,
+  });
+
   const [filters, setFilters] = useState<QueryLeadsDto>({ page: 1, limit: 10 });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
+  const [leadForEdit, setLeadForEdit] = useState<Lead | null>(null);
+  const [leadForDelete, setLeadForDelete] = useState<Lead | null>(null);
 
-  useEffect(() => { fetchLeads(); }, [filters]);
 
-  const fetchLeads = async () => {
+  const fetchStats = useCallback(async () => {
+    try {
+      const res = await agentCrmApi.getLeads({ page: 1, limit: 9999 });
+      const allLeads = res.items;
+      setStats({
+        totalAssigned: res.total,
+        newLeads: allLeads.filter((l) => l.status === 'NEW').length,
+        inContact: allLeads.filter(
+          (l) => l.status === 'CONTACTED' || l.status === 'INTERESTED'
+        ).length,
+        converted: allLeads.filter(
+          (l) => l.status === 'INVESTED' || l.status === 'CLOSED'
+        ).length,
+      });
+    } catch (err) {
+      console.error('Failed to fetch lead stats:', err);
+    }
+  }, []);
+
+  const fetchLeads = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await agentCrmApi.getLeads(filters);
@@ -33,7 +69,11 @@ export default function AgentLeadsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => { fetchLeads(); }, [fetchLeads]);
+
+  useEffect(() => { fetchStats(); }, [fetchStats]);
 
   const handleFilterChange = (newFilters: Partial<QueryLeadsDto>) =>
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -42,7 +82,20 @@ export default function AgentLeadsPage() {
 
   const handleCreateLead = async (data: CreateLeadDto) => {
     await agentCrmApi.createLead(data);
-    fetchLeads();
+    // Refresh both the paginated list and the KPI stats
+    await Promise.all([fetchLeads(), fetchStats()]);
+  };
+
+  const handleEditLead = async (data: UpdateLeadDto) => {
+    if (!leadForEdit) return;
+    await agentCrmApi.updateLead(leadForEdit.id, data);
+    await Promise.all([fetchLeads(), fetchStats()]);
+  };
+
+  const handleDeleteLead = async () => {
+    if (!leadForDelete) return;
+    await agentCrmApi.deleteLead(leadForDelete.id);
+    await Promise.all([fetchLeads(), fetchStats()]);
   };
 
   return (
@@ -66,10 +119,10 @@ export default function AgentLeadsPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {[
-          { label: 'Total Assigned', value: total, icon: Users, color: 'text-[var(--color-primary-300)]' },
-          { label: 'New Leads', value: leads.filter((l) => l.status === 'NEW').length, icon: UserPlus, color: 'text-[var(--color-primary-300)]' },
-          { label: 'In Contact', value: leads.filter((l) => l.status === 'CONTACTED' || l.status === 'INTERESTED').length, icon: Clock, color: 'text-amber-400' },
-          { label: 'Converted', value: leads.filter((l) => l.status === 'INVESTED' || l.status === 'CLOSED').length, icon: CheckCircle2, color: 'text-[var(--color-primary-300)]' },
+          { label: 'Total Assigned', value: stats.totalAssigned, icon: Users, color: 'text-[var(--color-primary-300)]' },
+          { label: 'New Leads', value: stats.newLeads, icon: UserPlus, color: 'text-[var(--color-primary-300)]' },
+          { label: 'In Contact', value: stats.inContact, icon: Clock, color: 'text-amber-400' },
+          { label: 'Converted', value: stats.converted, icon: CheckCircle2, color: 'text-[var(--color-primary-300)]' },
         ].map(({ label, value, icon: Icon, color }) => (
           <div key={label} className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-6 flex items-center justify-between">
             <div>
@@ -97,6 +150,8 @@ export default function AgentLeadsPage() {
         leads={leads}
         isLoading={isLoading}
         onSelectLead={(lead) => setSelectedLeadId(lead.id)}
+        onEditLead={(lead) => setLeadForEdit(lead)}
+        onDeleteLead={(lead) => setLeadForDelete(lead)}
       />
 
       {/* Pagination Controls */}
@@ -128,6 +183,20 @@ export default function AgentLeadsPage() {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreateLead}
+      />
+
+      <EditLeadModal
+        isOpen={leadForEdit !== null}
+        lead={leadForEdit}
+        onClose={() => setLeadForEdit(null)}
+        onSubmit={handleEditLead}
+      />
+
+      <DeleteLeadModal
+        isOpen={leadForDelete !== null}
+        lead={leadForDelete}
+        onClose={() => setLeadForDelete(null)}
+        onConfirm={handleDeleteLead}
       />
 
       <LeadDetailsDrawer

@@ -175,6 +175,51 @@ function TicketDrawer({ ticketId, onClose }: { ticketId: string; onClose: () => 
   );
 }
 
+type FieldErrors = {
+  email?: string;
+  subject?: string;
+  description?: string;
+};
+
+function FieldError({ message }: { message?: string }) {
+  return (
+    <AnimatePresence>
+      {message && (
+        <motion.p
+          key={message}
+          initial={{ opacity: 0, y: -4, height: 0 }}
+          animate={{ opacity: 1, y: 0, height: "auto" }}
+          exit={{ opacity: 0, y: -4, height: 0 }}
+          transition={{ duration: 0.18 }}
+          className="flex items-center gap-1.5 text-[11px] text-red-400 font-medium mt-0.5 overflow-hidden"
+        >
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          {message}
+        </motion.p>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function validateEmail(value: string): string | undefined {
+  if (!value.trim()) return "Email is required.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Enter a valid email address.";
+}
+
+function validateSubject(value: string): string | undefined {
+  if (!value.trim()) return "Subject is required.";
+  if (value.trim().length < 5) return "Subject must be at least 5 characters.";
+  if (value.trim().length > 150) return "Subject must be 150 characters or less.";
+}
+
+function validateDescription(value: string): string | undefined {
+  if (!value.trim()) return "Description is required.";
+  if (value.trim().length < 20) return "Please provide at least 20 characters of detail.";
+  if (value.trim().length > 2000) return "Description must be 2000 characters or less.";
+}
+
 function NewTicketModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
   const [createTicket, { isLoading }] = useCreatePublicTicketMutation();
   const { data: profileData } = useGetProfileQuery();
@@ -189,16 +234,50 @@ function NewTicketModal({ onClose, onCreated }: { onClose: () => void; onCreated
     category: TicketCategory.GENERAL,
     priority: TicketPriority.MEDIUM,
   });
-  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const resolvedEmail = form.email || profileData?.email || storedEmail;
+
+  const markTouched = (field: string) =>
+    setTouched((prev) => ({ ...prev, [field]: true }));
+
+  const handleBlur = (field: keyof FieldErrors) => {
+    markTouched(field);
+    let err: string | undefined;
+    if (field === "email") err = validateEmail(resolvedEmail);
+    if (field === "subject") err = validateSubject(form.subject);
+    if (field === "description") err = validateDescription(form.description);
+    setFieldErrors((prev) => ({ ...prev, [field]: err }));
+  };
+
+  const handleChange = (field: keyof typeof form, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (touched[field]) {
+      let err: string | undefined;
+      if (field === "email") err = validateEmail(value || profileData?.email || storedEmail);
+      if (field === "subject") err = validateSubject(value);
+      if (field === "description") err = validateDescription(value);
+      setFieldErrors((prev) => ({ ...prev, [field]: err }));
+    }
+  };
+
+  const runFullValidation = (): boolean => {
+    const errors: FieldErrors = {
+      email: validateEmail(resolvedEmail),
+      subject: validateSubject(form.subject),
+      description: validateDescription(form.description),
+    };
+    setFieldErrors(errors);
+    setTouched({ email: true, subject: true, description: true });
+    return !errors.email && !errors.subject && !errors.description;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    if (!resolvedEmail.trim()) {
-      setError("We could not find your account email. Please refresh and try again.");
-      return;
-    }
+    setSubmitError(null);
+    if (!runFullValidation()) return;
     try {
       await createTicket({
         ...form,
@@ -206,9 +285,12 @@ function NewTicketModal({ onClose, onCreated }: { onClose: () => void; onCreated
       }).unwrap();
       onCreated();
     } catch (err: any) {
-      setError(err?.data?.message ?? "Failed to create ticket. Please try again.");
+      setSubmitError(err?.data?.message ?? "Failed to create ticket. Please try again.");
     }
   };
+
+  const descLen = form.description.length;
+  const descLimit = 2000;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
@@ -219,42 +301,104 @@ function NewTicketModal({ onClose, onCreated }: { onClose: () => void; onCreated
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
-          {error && <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">{error}</div>}
-          <div className="flex flex-col gap-1.5">
+        <form onSubmit={handleSubmit} noValidate className="p-6 flex flex-col gap-4">
+          {submitError && (
+            <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-start gap-2">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+              {submitError}
+            </motion.div>
+          )}
+
+          {/* Email */}
+          <div className="flex flex-col gap-1">
             <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Email</label>
             <input
               type="email"
-              required
               value={resolvedEmail}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={(e) => handleChange("email", e.target.value)}
+              onBlur={() => handleBlur("email")}
               placeholder="name@example.com"
-              className="h-10 px-3 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)] transition"
+              className={`h-10 px-3 rounded-lg border bg-[var(--background)] text-sm text-[var(--foreground)] outline-none transition ${
+                fieldErrors.email
+                  ? "border-red-500/60 focus:border-red-500"
+                  : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"
+              }`}
             />
+            <FieldError message={fieldErrors.email} />
           </div>
-          <div className="flex flex-col gap-1.5">
+
+          {/* Subject */}
+          <div className="flex flex-col gap-1">
             <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Subject</label>
-            <input type="text" required placeholder="Briefly describe your issue" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="h-10 px-3 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)] transition" />
+            <input
+              type="text"
+              placeholder="Briefly describe your issue"
+              value={form.subject}
+              onChange={(e) => handleChange("subject", e.target.value)}
+              onBlur={() => handleBlur("subject")}
+              maxLength={150}
+              className={`h-10 px-3 rounded-lg border bg-[var(--background)] text-sm text-[var(--foreground)] outline-none transition ${
+                fieldErrors.subject
+                  ? "border-red-500/60 focus:border-red-500"
+                  : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"
+              }`}
+            />
+            <FieldError message={fieldErrors.subject} />
           </div>
+
+          {/* Category + Priority */}
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Category</label>
-              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value as TicketCategory })} className="h-10 px-3 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] text-sm text-[var(--foreground)] outline-none cursor-pointer">
+              <select
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value as TicketCategory })}
+                className="h-10 px-3 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] text-sm text-[var(--foreground)] outline-none cursor-pointer"
+              >
                 {Object.values(TicketCategory).map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Priority</label>
-              <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value as TicketPriority })} className="h-10 px-3 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] text-sm text-[var(--foreground)] outline-none cursor-pointer">
+              <select
+                value={form.priority}
+                onChange={(e) => setForm({ ...form, priority: e.target.value as TicketPriority })}
+                className="h-10 px-3 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] text-sm text-[var(--foreground)] outline-none cursor-pointer"
+              >
                 {Object.values(TicketPriority).map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Description</label>
-            <textarea required rows={4} placeholder="Please describe your issue in detail…" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="px-3 py-2.5 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)] transition resize-none" />
+
+          {/* Description */}
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Description</label>
+              <span className={`text-[10px] tabular-nums ${descLen > descLimit * 0.9 ? "text-amber-400" : "text-[var(--color-text-muted)]"}`}>
+                {descLen}/{descLimit}
+              </span>
+            </div>
+            <textarea
+              rows={4}
+              placeholder="Please describe your issue in detail…"
+              value={form.description}
+              onChange={(e) => handleChange("description", e.target.value)}
+              onBlur={() => handleBlur("description")}
+              maxLength={descLimit}
+              className={`px-3 py-2.5 rounded-lg border bg-[var(--background)] text-sm text-[var(--foreground)] outline-none transition resize-none ${
+                fieldErrors.description
+                  ? "border-red-500/60 focus:border-red-500"
+                  : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"
+              }`}
+            />
+            <FieldError message={fieldErrors.description} />
           </div>
-          <button type="submit" disabled={isLoading} className="h-11 w-full rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 cursor-pointer disabled:opacity-50 transition-all hover:opacity-90">
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="h-11 w-full rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 cursor-pointer disabled:opacity-50 transition-all hover:opacity-90"
+          >
             {isLoading ? "Raising Ticket…" : "Raise Ticket"}
           </button>
         </form>

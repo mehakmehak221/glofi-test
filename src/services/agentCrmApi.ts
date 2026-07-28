@@ -71,7 +71,12 @@ export const agentCrmApi = {
     });
   },
 
-  // 5. Add Note to Lead (POST /agent/crm/leads/:id/notes)
+  // 5. Delete Lead (DELETE /agent/crm/leads/:id)
+  deleteLead: async (id: string): Promise<void> => {
+    await fetcher<void>(`/agent/crm/leads/${id}`, { method: 'DELETE' });
+  },
+
+  // 6. Add Note to Lead (POST /agent/crm/leads/:id/notes)
   addNote: async (leadId: string, note: string): Promise<LeadNote> => {
     return fetcher<LeadNote>(`/agent/crm/leads/${leadId}/notes`, {
       method: 'POST',
