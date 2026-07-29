@@ -52,7 +52,6 @@ const AGENT_NAV_ITEMS = [
     { href: "/dashboard/agent/transactions", icon: AccountIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
     { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
-    { href: "/dashboard/agent/support", icon: SupportIcon, label: "Support" },
 ];
 
 const drawerVariants: Variants = {

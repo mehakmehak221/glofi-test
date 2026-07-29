@@ -13,7 +13,6 @@ import {
 const NAV_LINKS = [
     { label: 'Company', href: '/#company' },
     { label: 'Product', href: '/#product' },
-    { label: 'Support', href: '/#support' },
     { label: 'Learn', href: '/#learn' },
 ];
 

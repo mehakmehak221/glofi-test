@@ -98,10 +98,10 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: index * 0.06 }}
-            className="overflow-hidden rounded-3xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-[var(--sidebar-active-text)]/20 hover:shadow-[0_24px_80px_rgba(0,0,0,0.18)]"
+            className="overflow-hidden rounded-[28px] border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-[var(--sidebar-active-text)]/20 hover:shadow-[0_24px_80px_rgba(0,0,0,0.18)]"
         >
             <div className="flex flex-col xl:flex-row">
-                <div className="relative aspect-[16/10] w-full flex-shrink-0 bg-[var(--color-bg-card)] sm:aspect-[4/3] lg:aspect-auto lg:min-h-[220px] lg:w-[260px]">
+                <div className="relative aspect-[16/10] w-full flex-shrink-0 bg-[var(--color-bg-card)] sm:aspect-[4/3] lg:aspect-auto lg:min-h-[240px] lg:w-[300px] xl:w-[320px]">
                     {propertyImage ? (
                         <Image
                             src={propertyImage.startsWith("http") ? propertyImage : `/${propertyImage}`}
@@ -133,16 +133,16 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                     )}
                 </div>
 
-                <div className="min-w-0 flex-1 p-4 sm:p-5 xl:p-6">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0 flex-1 p-4 sm:p-5 xl:p-7">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                         <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                                <h3 className="min-w-0 break-words text-base font-bold text-[var(--foreground)] font-montserrat sm:text-lg">
+                            <div className="flex flex-wrap items-center gap-2.5">
+                                <h3 className="min-w-0 break-words text-base font-bold text-[var(--foreground)] font-montserrat sm:text-[1.35rem] sm:leading-tight">
                                     {property.title}
                                 </h3>
                                 <StatusBadge status={property.status} />
                             </div>
-                            <p className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--sidebar-text)] opacity-65 sm:mt-2 sm:text-sm">
+                            <p className="mt-2 flex items-start gap-1.5 text-xs text-[var(--sidebar-text)] opacity-65 sm:text-sm">
                                 <MapPinIcon className="h-4 w-4 flex-shrink-0" />
                                 <span className="min-w-0 break-words">
                                     {property.location}
@@ -152,44 +152,36 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                             </p>
                         </div>
 
-                        <div className="hidden shrink-0 items-center gap-2 md:flex">
-                            <span className="rounded-full border border-[var(--sidebar-border)] bg-[var(--background)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">
-                                Valuation
-                            </span>
-                            <span className="max-w-[160px] break-words text-sm font-bold leading-tight text-[var(--foreground)] lg:max-w-[180px]">
-                                {formatValuation(property.valuation)}
-                            </span>
-                        </div>
                     </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-3.5">
+                    <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-4">
                             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Valuation</span>
-                            <span className="mt-1.5 block break-words text-sm font-bold leading-tight text-[var(--foreground)] sm:mt-2 sm:text-base">
+                            <span className="mt-2 block break-words text-sm font-bold leading-tight text-[var(--foreground)] sm:text-base">
                                 {formatValuation(property.valuation)}
                             </span>
                         </div>
-                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-3.5">
+                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-4">
                             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Return</span>
-                            <span className="mt-1.5 block text-sm font-bold text-emerald-500 sm:mt-2 sm:text-base">{annualReturn}%</span>
+                            <span className="mt-2 block text-sm font-bold text-emerald-500 sm:text-base">{annualReturn}%</span>
                         </div>
-                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-3.5">
+                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-4">
                             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Fractions</span>
-                            <span className="mt-1.5 block text-sm font-bold leading-tight text-[var(--foreground)] sm:mt-2 sm:text-base">
+                            <span className="mt-2 block text-sm font-bold leading-tight text-[var(--foreground)] sm:text-base">
                                 {soldFractions}
                                 {totalFractions > 0 && (
                                     <span className="text-[10px] font-normal text-[var(--sidebar-text)] opacity-60"> / {totalFractions}</span>
                                 )}
                             </span>
                         </div>
-                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-3.5">
+                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-4">
                             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Investors</span>
-                            <span className="mt-1.5 block text-sm font-bold text-[var(--foreground)] sm:mt-2 sm:text-base">{property.investorCount || 0}</span>
+                            <span className="mt-2 block text-sm font-bold text-[var(--foreground)] sm:text-base">{property.investorCount || 0}</span>
                         </div>
                     </div>
 
                     {isLive && totalFractions > 0 && (
-                        <div className="mt-4">
+                        <div className="mt-5">
                             <div className="mb-2 flex items-center justify-between">
                                 <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Sold Progress</span>
                                 <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-active-text)]">{soldPct.toFixed(1)}%</span>
@@ -205,11 +197,11 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                         </div>
                     )}
 
-                    <div className="mt-4 grid grid-cols-1 gap-3">
+                    <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-stretch">
                         <button
                             type="button"
                             onClick={() => onShare(property)}
-                            className="inline-flex min-h-11 w-full items-center justify-center gap-2.5 rounded-xl bg-[var(--color-primary-300)] px-4 text-sm font-bold leading-none text-black transition hover:brightness-95 hover:scale-[1.01] active:scale-[0.99]"
+                            className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2.5 rounded-xl bg-[var(--color-primary-300)] px-5 py-3 text-sm font-bold leading-none text-black transition hover:brightness-95 hover:scale-[1.01] active:scale-[0.99]"
                         >
                             <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-black/8">
                                 <ShareIcon className="h-4 w-4 flex-shrink-0" />
@@ -217,48 +209,50 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                             <span className="leading-none sm:hidden">{isDraft ? "Generate" : "Share"}</span>
                             <span className="hidden leading-none sm:inline">{isDraft ? "Generate Share" : "Share Asset"}</span>
                         </button>
+                        {(canEdit || isDraft) ? (
+                            <div className="flex flex-wrap gap-2 sm:justify-end">
+                                {canEdit && (
+                                    <button
+                                        type="button"
+                                        onClick={() => onEdit(property.id)}
+                                        className="inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] transition hover:border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--foreground)]"
+                                    >
+                                        <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]">
+                                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </span>
+                                        <span className="hidden sm:inline">Edit Listing</span>
+                                        <span className="sm:hidden">Edit</span>
+                                    </button>
+                                )}
+                                {isDraft && (
+                                    <button
+                                        type="button"
+                                        onClick={() => onSubmitForReview(property.id)}
+                                        className="inline-flex h-11 w-fit items-center gap-1.5 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] transition hover:border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--foreground)]"
+                                    >
+                                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                        Submit
+                                    </button>
+                                )}
+                                {isDraft && (
+                                    <button
+                                        type="button"
+                                        onClick={() => onDelete(property.id)}
+                                        className="inline-flex h-11 w-fit items-center gap-1.5 rounded-xl border border-red-500/10 bg-red-500/5 px-4 text-[10px] font-bold uppercase tracking-[0.18em] text-red-400 transition hover:border-red-500/25 hover:bg-red-500/10 hover:text-red-300"
+                                    >
+                                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        Delete
+                                    </button>
+                                )}
+                            </div>
+                        ) : null}
                     </div>
-
-                    {(canEdit || isDraft) && (
-                        <div className="mt-3 flex flex-wrap gap-2">
-                            {isDraft && (
-                                <button
-                                    type="button"
-                                    onClick={() => onSubmitForReview(property.id)}
-                                    className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--sidebar-border)] bg-[var(--background)] px-3 text-[10px] font-bold uppercase tracking-wide text-[var(--sidebar-text)] transition hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--foreground)]"
-                                >
-                                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                    Submit
-                                </button>
-                            )}
-                            {canEdit && (
-                                <button
-                                    type="button"
-                                    onClick={() => onEdit(property.id)}
-                                    className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--sidebar-border)] bg-[var(--background)] px-3 text-[10px] font-bold uppercase tracking-wide text-[var(--sidebar-text)] transition hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--foreground)]"
-                                >
-                                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                    Edit
-                                </button>
-                            )}
-                            {isDraft && (
-                                <button
-                                    type="button"
-                                    onClick={() => onDelete(property.id)}
-                                    className="inline-flex h-9 items-center gap-1.5 rounded-full border border-red-500/10 bg-red-500/5 px-3 text-[10px] font-bold uppercase tracking-wide text-red-400 transition hover:border-red-500/25 hover:bg-red-500/10 hover:text-red-300"
-                                >
-                                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                    Delete
-                                </button>
-                            )}
-                        </div>
-                    )}
                 </div>
             </div>
         </motion.div>

@@ -32,7 +32,6 @@ const NAV_ITEMS = [
     { href: "/dashboard/agent/transactions", icon: AccountIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
     { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
-    { href: "/dashboard/agent/support", icon: SupportIcon, label: "Support" },
 ];
 
 export default function AgentSidebar() {
@@ -46,7 +45,7 @@ export default function AgentSidebar() {
         try {
             await logout().unwrap();
         } catch (err) {
-           
+
             console.error("Logout error:", err);
         } finally {
             localStorage.removeItem("userType");
@@ -77,7 +76,7 @@ export default function AgentSidebar() {
             <div className="flex items-center justify-center h-16 px-4 border-b border-[var(--sidebar-border)] overflow-hidden">
                 <Link href="/dashboard/agent/overview" className="flex items-center justify-center w-full gap-3 no-underline">
                     <motion.div
-                        animate={{ 
+                        animate={{
                             opacity: collapsed ? 0 : 1,
                             width: collapsed ? 0 : "auto",
                             x: collapsed ? -20 : 0
@@ -92,12 +91,12 @@ export default function AgentSidebar() {
                             height={40}
                             className="h-10 w-auto object-contain"
                         />
-                       
+
                     </motion.div>
-                    
+
                     {/* Optional: Add a small mark/icon that shows only when collapsed */}
                     {collapsed && (
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             className="w-full flex justify-center"
@@ -164,7 +163,7 @@ export default function AgentSidebar() {
                 </motion.button>
 
 
-                <button 
+                <button
                     onClick={handleLogout}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--sidebar-text)] hover:text-[var(--color-status-error)] hover:bg-[var(--color-status-error-bg)] transition-colors cursor-pointer w-full border-0 bg-transparent group"
                 >

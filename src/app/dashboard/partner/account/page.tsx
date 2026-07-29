@@ -3,8 +3,9 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetProfileQuery } from "@/store/api/authApi";
+import SupportTicketComposer from "@/components/dashboard/SupportTicketComposer";
 
-const TABS = ["Profile", "KYB", "Settings"];
+const TABS = ["Profile", "KYB", "Settings", "Support"];
 
 const tabContentVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -146,6 +147,19 @@ export default function PartnerAccountPage() {
                                     <span className="text-xs text-[var(--header-text)]">Platform alerts for property updates</span>
                                 </label>
                             </div>
+                        </div>
+                    )}
+
+                    {activeTab === "Support" && (
+                        <div className="max-w-[980px]">
+                            <SupportTicketComposer
+                                key={profileData?.email || "partner-support"}
+                                title="Partner Support"
+                                subtitle="Raise a request directly from your partner account."
+                                description="Use this form for KYB issues, property publishing help, payment queries, or technical problems."
+                                defaultEmail={profileData?.email || ""}
+                                compact
+                            />
                         </div>
                     )}
                 </motion.div>

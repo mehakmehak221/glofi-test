@@ -1,0 +1,242 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useCreatePublicTicketMutation } from "@/store/api/supportApi";
+import { TicketCategory, TicketPriority } from "@/types/support";
+
+type SupportTicketComposerProps = {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  defaultEmail?: string;
+  compact?: boolean;
+  className?: string;
+};
+
+type FieldErrors = {
+  email?: string;
+  subject?: string;
+  description?: string;
+};
+
+function validateEmail(value: string): string | undefined {
+  if (!value.trim()) return "Email is required.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Enter a valid email address.";
+}
+
+function validateSubject(value: string): string | undefined {
+  if (!value.trim()) return "Subject is required.";
+  if (value.trim().length < 5) return "Subject must be at least 5 characters.";
+  if (value.trim().length > 150) return "Subject must be 150 characters or less.";
+}
+
+function validateDescription(value: string): string | undefined {
+  if (!value.trim()) return "Description is required.";
+  if (value.trim().length < 20) return "Please provide at least 20 characters of detail.";
+  if (value.trim().length > 2000) return "Description must be 2000 characters or less.";
+}
+
+export default function SupportTicketComposer({
+  title = "Raise a Ticket",
+  defaultEmail = "",
+  compact = false,
+  className = "",
+}: SupportTicketComposerProps) {
+  const [createTicket, { isLoading }] = useCreatePublicTicketMutation();
+  const [form, setForm] = useState({
+    email: defaultEmail,
+    subject: "",
+    description: "",
+    category: TicketCategory.GENERAL,
+    priority: TicketPriority.MEDIUM,
+  });
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [submitError, setSubmitError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const resolvedEmail = form.email || defaultEmail;
+  const descLen = form.description.length;
+  const descLimit = 2000;
+  const headerPadding = compact ? "px-4 py-4 sm:px-5 sm:py-5" : "px-5 py-5 sm:px-6 sm:py-6";
+  const contentPadding = compact ? "p-4 sm:p-5" : "p-5 sm:p-6";
+  const fieldGap = compact ? "gap-3" : "gap-4";
+
+  const markTouched = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleBlur = (field: keyof FieldErrors) => {
+    markTouched(field);
+    let err: string | undefined;
+    if (field === "email") err = validateEmail(resolvedEmail);
+    if (field === "subject") err = validateSubject(form.subject);
+    if (field === "description") err = validateDescription(form.description);
+    setFieldErrors((prev) => ({ ...prev, [field]: err }));
+  };
+
+  const handleChange = (field: keyof typeof form, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (touched[field]) {
+      let err: string | undefined;
+      if (field === "email") err = validateEmail(value || defaultEmail);
+      if (field === "subject") err = validateSubject(value);
+      if (field === "description") err = validateDescription(value);
+      setFieldErrors((prev) => ({ ...prev, [field]: err }));
+    }
+  };
+
+  const runFullValidation = (): boolean => {
+    const errors: FieldErrors = {
+      email: validateEmail(resolvedEmail),
+      subject: validateSubject(form.subject),
+      description: validateDescription(form.description),
+    };
+    setFieldErrors(errors);
+    setTouched({ email: true, subject: true, description: true });
+    return !errors.email && !errors.subject && !errors.description;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError("");
+    setSuccessMessage("");
+
+    if (!runFullValidation()) return;
+
+    try {
+      const ticket = await createTicket({
+        ...form,
+        email: resolvedEmail.trim(),
+      }).unwrap();
+
+      setSuccessMessage(ticket?.ticketNumber ? `Ticket ${ticket.ticketNumber} raised successfully.` : "Ticket raised successfully.");
+      setForm((prev) => ({
+        ...prev,
+        subject: "",
+        description: "",
+        category: TicketCategory.GENERAL,
+        priority: TicketPriority.MEDIUM,
+      }));
+      setFieldErrors({});
+      setTouched({});
+    } catch (err: any) {
+      setSubmitError(err?.data?.message ?? "Failed to create ticket. Please try again.");
+    }
+  };
+
+  return (
+    <div className={`overflow-hidden rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-sm ${className}`}>
+      <div className={`border-b border-[var(--sidebar-border)] bg-[linear-gradient(135deg,rgba(0,218,175,0.10),transparent)] ${headerPadding}`}>
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--sidebar-active-text)]">Support</p>
+        <h3 className="mt-1 text-lg font-bold text-[var(--foreground)]">{title}</h3>
+      </div>
+
+      <div className={contentPadding}>
+        <AnimatePresence>
+          {successMessage ? (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className="mb-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400"
+            >
+              {successMessage}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+        {submitError ? (
+          <div className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+            {submitError}
+          </div>
+        ) : null}
+
+        <form onSubmit={handleSubmit} noValidate className={`grid grid-cols-1 ${fieldGap}`}>
+          <div className={`grid grid-cols-1 sm:grid-cols-2 ${fieldGap}`}>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Email</label>
+              <input
+                type="email"
+                value={resolvedEmail}
+                onChange={(e) => handleChange("email", e.target.value)}
+                onBlur={() => handleBlur("email")}
+                placeholder="name@example.com"
+                className={`h-11 rounded-xl border bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none transition ${fieldErrors.email ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
+              />
+              {fieldErrors.email ? <p className="text-[11px] text-red-400">{fieldErrors.email}</p> : null}
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Subject</label>
+              <input
+                type="text"
+                value={form.subject}
+                onChange={(e) => handleChange("subject", e.target.value)}
+                onBlur={() => handleBlur("subject")}
+                placeholder="Short issue summary"
+                maxLength={150}
+                className={`h-11 rounded-xl border bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none transition ${fieldErrors.subject ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
+              />
+              {fieldErrors.subject ? <p className="text-[11px] text-red-400">{fieldErrors.subject}</p> : null}
+            </div>
+          </div>
+
+          <div className={`grid grid-cols-1 sm:grid-cols-2 ${fieldGap}`}>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Category</label>
+              <select
+                value={form.category}
+                onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value as TicketCategory }))}
+                className="h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none cursor-pointer"
+              >
+                {Object.values(TicketCategory).map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Priority</label>
+              <select
+                value={form.priority}
+                onChange={(e) => setForm((prev) => ({ ...prev, priority: e.target.value as TicketPriority }))}
+                className="h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none cursor-pointer"
+              >
+                {Object.values(TicketPriority).map((priority) => (
+                  <option key={priority} value={priority}>{priority}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Description</label>
+              <span className={`text-[10px] tabular-nums ${descLen > descLimit * 0.9 ? "text-amber-400" : "text-[var(--color-text-muted)]"}`}>
+                {descLen}/{descLimit}
+              </span>
+            </div>
+            <textarea
+              rows={compact ? 4 : 5}
+              value={form.description}
+              onChange={(e) => handleChange("description", e.target.value)}
+              onBlur={() => handleBlur("description")}
+              placeholder="Describe the issue in a few lines..."
+              maxLength={descLimit}
+              className={`rounded-xl border bg-[var(--background)] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition resize-none ${fieldErrors.description ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
+            />
+            {fieldErrors.description ? <p className="text-[11px] text-red-400">{fieldErrors.description}</p> : null}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="h-11 w-full rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 cursor-pointer disabled:opacity-50 transition-all hover:opacity-90"
+          >
+            {isLoading ? "Raising Ticket..." : "Raise Ticket"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}

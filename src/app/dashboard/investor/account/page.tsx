@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useGetProfileQuery } from "@/store/api/authApi";
 import { useGetMyCertificatesQuery } from "@/store/api/certificatesApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
+import SupportTicketComposer from "@/components/dashboard/SupportTicketComposer";
 import { API_URL } from "@/constants";
 
-const TABS = ["Profile", "KYC",  "Certificates", "Referrals"];
+const TABS = ["Profile", "KYC", "Certificates", "Referrals", "Support"];
 
 const tabContentVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -386,6 +387,19 @@ export default function AccountPage() {
                                     <p className="text-2xl sm:text-[32px] font-black text-[var(--header-text)]">{profileData?.referralEarnings || 0}</p>
                                 </div>
                             </div>
+                        </div>
+                    )}
+
+                    {activeTab === "Support" && (
+                        <div className="max-w-[980px]">
+                            <SupportTicketComposer
+                                key={profileData?.email || "investor-support"}
+                                title="Need Help?"
+                                subtitle="Raise a support request from your investor account."
+                                description="Use this form for account issues, investment help, payment questions, or technical problems."
+                                defaultEmail={profileData?.email || ""}
+                                compact
+                            />
                         </div>
                     )}
                 </motion.div>

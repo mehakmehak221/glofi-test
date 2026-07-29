@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useGetAgentMeQuery, useGetAgentReferralLinkQuery, useGetAgentDashboardQuery } from "@/store/api/agentApi";
 import {
     ProfileIcon,
@@ -15,6 +16,7 @@ import { useCurrency } from "@/providers/CurrencyProvider";
 import { API_URL } from "@/constants";
 import { useState } from "react";
 import KYCModal from "@/components/dashboard/KYCModal";
+import SupportTicketComposer from "@/components/dashboard/SupportTicketComposer";
 
 const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
@@ -162,7 +164,9 @@ export default function AgentProfilePage() {
                         <div className="relative inline-block mb-6">
                             <div className="w-24 h-24 rounded-2xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] flex items-center justify-center mx-auto overflow-hidden">
                                 {profile?.avatarUrl ? (
-                                    <img src={profile.avatarUrl} alt={profile.fullName || "Agent"} className="w-full h-full object-cover" />
+                                    <div className="relative w-full h-full">
+                                        <Image src={profile.avatarUrl} alt={profile.fullName || "Agent"} fill className="object-cover" />
+                                    </div>
                                 ) : (
                                     <ProfileIcon className="w-10 h-10 text-[var(--color-text-muted)]" />
                                 )}
@@ -378,6 +382,15 @@ export default function AgentProfilePage() {
                                 </div>
                             ))}
                         </div>
+                    </div>
+
+                    <div className="max-w-[980px]">
+                        <SupportTicketComposer
+                            key={email || "agent-support"}
+                            title="Need support?"
+                            defaultEmail={email}
+                            compact
+                        />
                     </div>
                 </motion.div>
             </div>

@@ -32,7 +32,6 @@ const INVESTOR_NAV_ITEMS = [
     { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
     { href: "/dashboard/investor/rewards", icon: DollarIcon, label: "Rewards" },
     { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
-    { href: "/dashboard/investor/support", icon: SupportIcon, label: "Support" },
 ];
 
 const AGENT_NAV_ITEMS = [
@@ -40,7 +39,6 @@ const AGENT_NAV_ITEMS = [
     { href: "/dashboard/agent/referrals", icon: LeadIcon, label: "Referrals" },
     { href: "/dashboard/agent/transactions", icon: TransactionsIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
-    { href: "/dashboard/agent/support", icon: SupportIcon, label: "Support" },
 ];
 
 export default function Sidebar() {
@@ -93,7 +91,7 @@ export default function Sidebar() {
             <div className="flex items-center justify-center h-16 px-4 border-b border-[var(--sidebar-border)] overflow-hidden">
                 <Link href={userRole === "AGENT" ? "/dashboard/agent/overview" : userRole === "PARTNER" ? "/dashboard/partner/overview" : "/dashboard/investor/marketplace"} className="flex items-center justify-center w-full gap-3 no-underline">
                     <motion.div
-                        animate={{ 
+                        animate={{
                             opacity: collapsed ? 0 : 1,
                             width: collapsed ? 0 : "auto",
                             x: collapsed ? -20 : 0
@@ -108,11 +106,11 @@ export default function Sidebar() {
                             height={40}
                             className="h-10 w-auto object-contain"
                         />
-                     
+
                     </motion.div>
-                    
+
                     {collapsed && (
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             className="w-full flex justify-center"
@@ -179,7 +177,7 @@ export default function Sidebar() {
                 </motion.button>
 
 
-                <button 
+                <button
                     onClick={handleLogout}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-status-error)] hover:bg-[var(--color-status-error-bg)] transition-colors cursor-pointer w-full border-0 bg-transparent group"
                 >

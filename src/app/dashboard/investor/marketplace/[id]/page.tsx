@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRef, useState, useEffect } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,6 +23,7 @@ import {
 } from "@/store/api/assetApi";
 import { useGetInvestmentsQuery } from "@/store/api/investmentApi";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
+import { useGetUserCouponsQuery, useValidateCouponMutation } from "@/store/api/rewardsApi";
 
 import { API_URL } from "@/constants";
 
@@ -32,6 +33,7 @@ export default function PropertyDetailPage() {
     const { formatPrice, currency } = useCurrency();
     const params = useParams();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const assetId = params.id as string;
 
     const [isLoggedIn] = useState(() => typeof window !== "undefined" && localStorage.getItem("isLoggedIn") === "true");
@@ -46,6 +48,7 @@ export default function PropertyDetailPage() {
 
     const { data: kycData } = useGetKycStatusQuery(undefined, { skip: !isLoggedIn });
     const { data: investmentsData, refetch: refetchInvestments } = useGetInvestmentsQuery(undefined, { skip: !isLoggedIn });
+    const { data: activeCoupons = [], isLoading: couponsLoading, isError: couponsError } = useGetUserCouponsQuery(undefined, { skip: !isLoggedIn });
     const [activeTab, setActiveTab] = useState("cashflow");
     const [mainTab, setMainTab] = useState("overview");
     const [investOpen, setInvestOpen] = useState(false);
@@ -58,6 +61,19 @@ export default function PropertyDetailPage() {
     const [showComingSoon, setShowComingSoon] = useState(false);
     const [isDescExpanded, setIsDescExpanded] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const couponSectionRef = useRef<HTMLDivElement | null>(null);
+    const [validateCoupon, { isLoading: validatingCoupon }] = useValidateCouponMutation();
+    const sharedCouponCode = searchParams.get("coupon")?.trim() || "";
+    const sharedCouponCampaign = searchParams.get("campaign")?.trim() || "";
+    const [couponCode, setCouponCode] = useState(() => sharedCouponCode);
+    const [couponInvestmentAmount, setCouponInvestmentAmount] = useState("");
+    const [couponValidationState, setCouponValidationState] = useState<{
+        isValid?: boolean;
+        discountAmount?: number;
+        message?: string;
+        coupon?: { code?: string; type?: string; value?: number };
+    } | null>(null);
+    const [couponValidationError, setCouponValidationError] = useState("");
 
     const purchaseMode: "fractional" | "whole" = property?.saleType === 'WHOLE' ? "whole" : "fractional";
     const selectedInvestQuantity = property?.saleType === 'WHOLE' ? (property.totalFractions || 1) : investQuantity;
@@ -207,6 +223,75 @@ export default function PropertyDetailPage() {
     const handleFinalClose = () => {
         setConfirmType(null);
         setInvestStatus("");
+    };
+
+    const handleValidateCoupon = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setCouponValidationError("");
+        setCouponValidationState(null);
+
+        const code = couponCode.trim();
+        const amount = Number(couponInvestmentAmount);
+
+        if (!code) {
+            setCouponValidationError("Please enter a coupon code first.");
+            return;
+        }
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+            setCouponValidationError("Please enter a valid investment amount.");
+            return;
+        }
+
+        try {
+            const result = await validateCoupon({
+                code,
+                investmentAmount: amount,
+                assetId,
+            }).unwrap();
+
+            setCouponValidationState(result);
+            showToast(result.isValid ? "Coupon validated successfully." : "Coupon is invalid.", result.isValid ? "success" : "warning");
+        } catch (err: any) {
+            const message = err?.data?.message || err?.message || "Coupon validation failed.";
+            setCouponValidationError(message);
+        }
+    };
+
+    const handleCopyCouponCode = async () => {
+        const code = couponCode.trim() || sharedCouponCode;
+        if (!code) return;
+
+        try {
+            await navigator.clipboard.writeText(code);
+            showToast("Coupon code copied.");
+        } catch {
+            showToast("Copy failed. Manually select the code.", "warning");
+        }
+    };
+
+    const scrollToCouponSection = () => {
+        couponSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const formatCouponValue = (coupon: { type?: string; value?: number | string; maximumDiscount?: number | string | null }) => {
+        const value = Number(coupon.value || 0);
+        const maxDiscount = Number(coupon.maximumDiscount || 0);
+        if (coupon.type === "PERCENTAGE") {
+            return `${value}% off${maxDiscount > 0 ? ` up to ${formatPrice(maxDiscount)}` : ""}`;
+        }
+        return `${formatPrice(value)} off`;
+    };
+
+    const handleApplyCoupon = async (code: string) => {
+        setCouponCode(code);
+        setCouponValidationError("");
+        setCouponValidationState(null);
+        if (!couponInvestmentAmount) {
+            setCouponInvestmentAmount(String(fractionPrice * selectedInvestQuantity));
+        }
+        scrollToCouponSection();
+        showToast(`Coupon ${code} applied to the form.`);
     };
 
     return (
@@ -790,6 +875,28 @@ export default function PropertyDetailPage() {
                             {formatPrice(fractionPrice, true)}
                         </p>
 
+                        {sharedCouponCode ? (
+                            <div className="mb-5 rounded-2xl border border-[var(--color-primary-300)]/20 bg-[linear-gradient(135deg,rgba(0,218,175,0.14),rgba(0,0,0,0.06))] p-4">
+                                <div className="mt-3 flex flex-wrap items-center gap-2">
+                                    <span className="rounded-full border border-[var(--color-primary-300)]/25 bg-[var(--background)] px-3 py-1 text-xs font-black tracking-[0.14em] text-[var(--header-text)]">
+                                        {sharedCouponCode}
+                                    </span>
+                                    {sharedCouponCampaign ? (
+                                        <span className="text-[11px] font-semibold text-[var(--color-text-muted)]">
+                                            {sharedCouponCampaign}
+                                        </span>
+                                    ) : null}
+                                    <button
+                                        type="button"
+                                        onClick={handleCopyCouponCode}
+                                        className="rounded-full border border-[var(--sidebar-border)] bg-[var(--background)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--header-text)]"
+                                    >
+                                        Copy code
+                                    </button>
+                                </div>
+                            </div>
+                        ) : null}
+
                         <div className="space-y-4 mb-6">
                             {/* Only show the fraction calculator if there are multiple fractions to select (i.e. not a whole asset purchase type or available fractions <= 1) */}
                             {property.saleType !== 'WHOLE' && (property.totalFractions || 1) > 1 && (
@@ -868,11 +975,136 @@ export default function PropertyDetailPage() {
                                 </div>
                             </div>
 
+                            <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
+
+                                {couponsLoading ? (
+                                    <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--color-text-muted)]">
+                                        Loading active coupons...
+                                    </div>
+                                ) : couponsError ? (
+                                    <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">
+                                        Failed to load active coupons.
+                                    </div>
+                                ) : activeCoupons.length === 0 ? (
+                                    <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--color-text-muted)]">
+                                        No active coupons available right now.
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 gap-3">
+                                        {activeCoupons.map((coupon) => (
+                                            <div key={coupon.id} className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
+                                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                                    <div className="min-w-0">
+                                                        <div className="flex flex-wrap items-center gap-2">
+                                                            <span className="rounded-full border border-[var(--color-primary-300)]/20 bg-[var(--color-primary-300)]/10 px-3 py-1 text-[10px] font-black tracking-[0.16em] text-[var(--sidebar-active-text)]">
+                                                                {coupon.code}
+                                                            </span>
+                                                            <span className="rounded-full border border-[var(--sidebar-border)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+                                                                {coupon.type}
+                                                            </span>
+                                                        </div>
+                                                        <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">
+                                                            {formatCouponValue(coupon)}
+                                                        </p>
+                                                        <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
+                                                            Min investment {formatPrice(Number(coupon.minimumInvestment || 0))} · Expires {coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString("en-IN") : "—"}
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleApplyCoupon(coupon.code)}
+                                                            className="inline-flex h-10 items-center justify-center rounded-xl bg-[var(--color-primary-300)] px-4 text-xs font-bold uppercase tracking-wider text-black"
+                                                        >
+                                                            Apply
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={async () => {
+                                                                await navigator.clipboard.writeText(coupon.code);
+                                                                showToast(`Copied ${coupon.code}`);
+                                                            }}
+                                                            className="inline-flex h-10 items-center justify-center rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-xs font-bold uppercase tracking-wider text-[var(--foreground)]"
+                                                        >
+                                                            Copy
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div ref={couponSectionRef} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
+                                <div className="flex items-center justify-between gap-3 mb-3">
+                                    <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Validate Coupon</h3>
+                                    {couponValidationState ? (
+                                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${couponValidationState.isValid ? "border-emerald-500/20 text-emerald-500 bg-emerald-500/10" : "border-red-500/20 text-red-400 bg-red-500/10"}`}>
+                                            {couponValidationState.isValid ? "Valid" : "Invalid"}
+                                        </span>
+                                    ) : null}
+                                </div>
+
+                                <form onSubmit={handleValidateCoupon} className="space-y-3">
+                                    <input
+                                        value={couponCode}
+                                        onChange={(e) => setCouponCode(e.target.value)}
+                                        placeholder="Coupon code"
+                                        className="w-full h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)]"
+                                    />
+                                    <input
+                                        value={couponInvestmentAmount}
+                                        onChange={(e) => setCouponInvestmentAmount(e.target.value)}
+                                        type="text"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        placeholder="Investment amount"
+                                        className="w-full h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+                                    <input
+                                        value={assetId}
+                                        readOnly
+                                        className="w-full h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--color-text-muted)] outline-none opacity-80"
+                                        aria-label="Asset ID"
+                                    />
+                                    {couponValidationError ? (
+                                        <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">
+                                            {couponValidationError}
+                                        </div>
+                                    ) : null}
+                                    {couponValidationState ? (
+                                        <div className="rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--foreground)]">
+                                            <p className="font-semibold">
+                                                {couponValidationState.isValid ? "Coupon valid" : "Coupon invalid"}
+                                            </p>
+                                            <p className="mt-1 text-[var(--color-text-muted)]">
+                                                {couponValidationState.coupon?.code
+                                                    ? `${couponValidationState.coupon.code} · ${couponValidationState.coupon.type}`
+                                                    : couponValidationState.message || "Validation completed."}
+                                            </p>
+                                            {typeof couponValidationState.discountAmount === "number" ? (
+                                                <p className="mt-2 font-bold">
+                                                    Discount: {formatPrice(couponValidationState.discountAmount)}
+                                                </p>
+                                            ) : null}
+                                        </div>
+                                    ) : null}
+                                    <button
+                                        type="submit"
+                                        disabled={validatingCoupon}
+                                        className="w-full h-11 rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 disabled:opacity-50"
+                                    >
+                                        {validatingCoupon ? "Validating..." : "Validate Coupon"}
+                                    </button>
+                                </form>
+                            </div>
+
                             <div className="bg-[var(--color-primary-300)]/10 border border-[var(--color-primary-300)]/20 rounded-xl p-3 flex items-center justify-center gap-2">
                                 <svg className="w-4 h-4 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                 </svg>
-                                                <span className="text-xs font-bold text-[var(--sidebar-active-text)] text-center">
+                                <span className="text-xs font-bold text-[var(--sidebar-active-text)] text-center">
                                     Estimated Returns ({annualReturnPercent.toFixed(1)}% p.a.)
                                 </span>
                             </div>
@@ -905,12 +1137,12 @@ export default function PropertyDetailPage() {
                 isOpen={paymentModalOpen}
                 onClose={() => setPaymentModalOpen(false)}
                 flow="primary"
-                    asset={{
-                        assetId: params.id as string,
-                        name: property.title,
-                        currentValue: formatPrice(fractionPrice * selectedInvestQuantity),
-                        fractions: selectedInvestQuantity,
-                    }}
+                asset={{
+                    assetId: params.id as string,
+                    name: property.title,
+                    currentValue: formatPrice(fractionPrice * selectedInvestQuantity),
+                    fractions: selectedInvestQuantity,
+                }}
                 onSuccess={handlePaymentSuccess}
             />
             <KYCModal
