@@ -34,14 +34,8 @@ export default function PropertyDetailPage() {
     const router = useRouter();
     const assetId = params.id as string;
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn] = useState(() => typeof window !== "undefined" && localStorage.getItem("isLoggedIn") === "true");
     const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
-
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
-        }
-    }, []);
 
     const { data: property, isLoading, isError } = useGetAssetByIdQuery(assetId);
     const { data: returnsData } = useGetAssetReturnsQuery(assetId, { skip: !isLoggedIn });
@@ -65,19 +59,8 @@ export default function PropertyDetailPage() {
     const [isDescExpanded, setIsDescExpanded] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-    const [purchaseMode, setPurchaseMode] = useState<"fractional" | "whole">("fractional");
-
-    useEffect(() => {
-        if (property) {
-            if (property.saleType === 'WHOLE') {
-                setPurchaseMode("whole");
-                setInvestQuantity(property.totalFractions || 1);
-            } else {
-                setPurchaseMode("fractional");
-                setInvestQuantity(1);
-            }
-        }
-    }, [property]);
+    const purchaseMode: "fractional" | "whole" = property?.saleType === 'WHOLE' ? "whole" : "fractional";
+    const selectedInvestQuantity = property?.saleType === 'WHOLE' ? (property.totalFractions || 1) : investQuantity;
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -234,7 +217,7 @@ export default function PropertyDetailPage() {
                         initial={{ opacity: 0, y: -50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -50 }}
-                        className={`fixed top-6 left-1/2 -translate-x-1/2 z-[9999] px-5 py-3 rounded-full shadow-2xl font-montserrat text-sm font-semibold flex items-center gap-2 bg-neutral-900 border border-neutral-700 text-white whitespace-nowrap`}
+                        className={`fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-[9999] px-4 sm:px-5 py-3 rounded-full shadow-2xl font-montserrat text-xs sm:text-sm font-semibold flex items-center gap-2 bg-neutral-900 border border-neutral-700 text-white whitespace-normal text-center max-w-[calc(100vw-1.5rem)]`}
                     >
                         {toast.type === "success" ? (
                             <svg className="w-5 h-5 text-[#00DAAF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -248,7 +231,7 @@ export default function PropertyDetailPage() {
                 )}
             </AnimatePresence>
 
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col xl:flex-row gap-6">
 
                 <motion.div
                     className="flex-1 min-w-0"
@@ -256,12 +239,12 @@ export default function PropertyDetailPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <div className="relative w-full h-80 sm:h-96 lg:h-[450px] rounded-2xl overflow-hidden mb-5 border border-[var(--sidebar-border)]/50 shadow-sm">
+                    <div className="relative w-full aspect-[16/11] sm:aspect-[16/10] xl:aspect-[16/7] xl:h-[450px] rounded-2xl overflow-hidden mb-5 border border-[var(--sidebar-border)]/50 shadow-sm">
                         <Image
                             src={imageUrl}
                             alt={property.title}
                             fill
-                            sizes="(max-width: 1024px) 100vw, 60vw"
+                            sizes="(max-width: 1279px) 100vw, 68vw"
                             className="object-cover"
                             priority
                         />
@@ -306,18 +289,21 @@ export default function PropertyDetailPage() {
                     </div >
 
                     {/* Name and Location Section */}
-                    <div className="mb-5 px-1 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--header-text)] mb-1.5 tracking-tight">{property.title}</h1>
-                            <div className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-xs font-semibold">
+                    <div className="mb-5 px-1 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                        <div className="min-w-0">
+                            <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--header-text)] mb-1.5 tracking-tight break-words leading-tight">
+                                {property.title}
+                            </h1>
+                            <div className="flex items-start gap-1.5 text-[var(--color-text-muted)] text-xs font-semibold break-words">
                                 <MapPinIcon className="w-3.5 h-3.5 text-[var(--sidebar-active-text)]" />
-                                {property.location}
+                                <span className="min-w-0 break-words">{property.location}</span>
                             </div>
-                        </div>                        {/* Share Button & Modal */}
-                        <div>
+                        </div>
+                        {/* Share Button & Modal */}
+                        <div className="w-full sm:w-auto">
                             <button
                                 onClick={() => setIsShareDropdownOpen(true)}
-                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] text-sm font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all cursor-pointer shadow-sm"
+                                className="flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] text-sm font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all cursor-pointer shadow-sm"
                             >
                                 <ShareIcon className="w-4 h-4 text-[var(--sidebar-active-text)]" />
                                 Share
@@ -334,11 +320,11 @@ export default function PropertyDetailPage() {
 
                     {/* Valuation, Per Fraction, and Annual Return Stats Card */}
                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 mb-6 shadow-sm">
-                        <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center items-center">
-                            <div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 sm:divide-x sm:divide-[var(--sidebar-border)]/65 text-left sm:text-center items-stretch">
+                            <div className="min-w-0 rounded-xl sm:rounded-none p-3 sm:p-0">
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Valuation</p>
                                 <div className="relative group inline-block w-full">
-                                    <p className="text-base font-bold text-[var(--header-text)] truncate px-1 cursor-default">{formatPrice(property.valuation, true)}</p>
+                                    <p className="text-sm sm:text-base font-bold text-[var(--header-text)] break-words leading-tight px-1 cursor-default">{formatPrice(property.valuation, true)}</p>
                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden group-hover:block pointer-events-none">
                                         <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] text-[11px] font-semibold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap">
                                             ₹{Number(property.valuation).toLocaleString('en-IN')}
@@ -347,10 +333,10 @@ export default function PropertyDetailPage() {
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div className="min-w-0 rounded-xl sm:rounded-none p-3 sm:p-0">
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">{property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}</p>
                                 <div className="relative group inline-block w-full">
-                                    <p className="text-base font-bold text-[var(--header-text)] truncate px-1 cursor-default">
+                                    <p className="text-sm sm:text-base font-bold text-[var(--header-text)] break-words leading-tight px-1 cursor-default">
                                         {formatPrice(fractionPrice, true)}
                                     </p>
                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden group-hover:block pointer-events-none">
@@ -361,9 +347,9 @@ export default function PropertyDetailPage() {
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div className="min-w-0 rounded-xl sm:rounded-none p-3 sm:p-0">
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Potential Annual Return</p>
-                                <p className="text-base font-bold text-[var(--sidebar-active-text)]">
+                                <p className="text-sm sm:text-base font-bold text-[var(--sidebar-active-text)] break-words leading-tight">
                                     {(
                                         parseFloat(property.expectedYield || 0) +
                                         parseFloat(property.expectedAnnualRent || 0) +
@@ -378,7 +364,7 @@ export default function PropertyDetailPage() {
 
                     {/* Funding Progress Card */}
                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 mb-6 shadow-sm">
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
                             <span className="text-[11px] font-bold uppercase tracking-[1.5px] text-[var(--color-text-muted)]">Funding Progress</span>
                             <span className="text-sm font-bold text-[var(--sidebar-active-text)]">{fundedPercentage}% funded</span>
                         </div>
@@ -405,7 +391,7 @@ export default function PropertyDetailPage() {
                     </div>
 
                     {/* Top Segmented Tab Control */}
-                    <div className="flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-full p-1 mb-6 shadow-sm">
+                    <div className="flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-full p-1 mb-6 shadow-sm overflow-hidden">
                         {[
                             { id: "overview", label: "Overview" },
                             { id: "projection", label: "Projection" },
@@ -414,7 +400,7 @@ export default function PropertyDetailPage() {
                             <button
                                 key={tab.id}
                                 onClick={() => setMainTab(tab.id)}
-                                className={`flex-1 py-2.5 rounded-full text-[13px] font-bold transition-all cursor-pointer ${mainTab === tab.id
+                                className={`flex-1 py-2.5 rounded-full text-[11px] sm:text-[13px] font-bold transition-all cursor-pointer whitespace-nowrap px-2 ${mainTab === tab.id
                                     ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm"
                                     : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
                                     }`}
@@ -438,18 +424,18 @@ export default function PropertyDetailPage() {
                                 {property.images && property.images.length > 0 && (
                                     <div className="mb-6">
                                         <h3 className="text-sm font-bold text-[var(--header-text)] mb-4 px-1">Images</h3>
-                                        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 px-1 snap-x snap-mandatory">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 px-1">
                                             {property.images.map((img, idx) => (
                                                 <div
                                                     key={idx}
-                                                    className="relative w-40 sm:w-48 h-32 sm:h-40 rounded-2xl overflow-hidden flex-shrink-0 border border-[var(--sidebar-border)] shadow-sm snap-start cursor-pointer hover:scale-[1.03] transition-transform duration-200"
+                                                    className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-[var(--sidebar-border)] shadow-sm cursor-pointer hover:scale-[1.01] transition-transform duration-200 min-w-0"
                                                     onClick={() => setLightboxIndex(idx)}
                                                 >
                                                     <Image
                                                         src={img.startsWith('http') ? img : `${API_URL}/${img.replace(/^\/+/, '')}`}
                                                         alt={`${property.title} image ${idx + 1}`}
                                                         fill
-                                                        sizes="(max-width: 768px) 160px, 192px"
+                                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                         className="object-cover"
                                                     />
                                                     {idx === 0 && (
@@ -831,7 +817,7 @@ export default function PropertyDetailPage() {
                                         />
                                     </div>
 
-                                    <div className="flex gap-2 justify-between mb-4">
+                                    <div className="grid grid-cols-3 sm:flex sm:flex-wrap gap-2 mb-4">
                                         {[1, 2, 5, 10, 25, 50].map((num) => {
                                             const isSelected = investQuantity === num;
                                             return (
@@ -886,7 +872,7 @@ export default function PropertyDetailPage() {
                                 <svg className="w-4 h-4 text-[var(--sidebar-active-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                 </svg>
-                                <span className="text-xs font-bold text-[var(--sidebar-active-text)]">
+                                                <span className="text-xs font-bold text-[var(--sidebar-active-text)] text-center">
                                     Estimated Returns ({annualReturnPercent.toFixed(1)}% p.a.)
                                 </span>
                             </div>
@@ -912,19 +898,19 @@ export default function PropertyDetailPage() {
                 onClose={() => setInvestOpen(false)}
                 property={property}
                 purchaseMode={purchaseMode}
-                initialQuantity={investQuantity}
+                initialQuantity={selectedInvestQuantity}
                 onVerifyPay={handleVerifyPay}
             />
             <PaymentModal
                 isOpen={paymentModalOpen}
                 onClose={() => setPaymentModalOpen(false)}
                 flow="primary"
-                asset={{
-                    assetId: params.id as string,
-                    name: property.title,
-                    currentValue: formatPrice(fractionPrice * investQuantity),
-                    fractions: investQuantity,
-                }}
+                    asset={{
+                        assetId: params.id as string,
+                        name: property.title,
+                        currentValue: formatPrice(fractionPrice * selectedInvestQuantity),
+                        fractions: selectedInvestQuantity,
+                    }}
                 onSuccess={handlePaymentSuccess}
             />
             <KYCModal
@@ -976,7 +962,7 @@ export default function PropertyDetailPage() {
 
                     {/* Image */}
                     <div
-                        className="relative w-[90vw] max-w-3xl h-[70vh] rounded-2xl overflow-hidden shadow-2xl"
+                        className="relative w-[92vw] max-w-3xl h-[62vh] sm:h-[70vh] rounded-2xl overflow-hidden shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <Image
@@ -1004,7 +990,7 @@ export default function PropertyDetailPage() {
                     )}
 
                     {/* Thumbnail strip */}
-                    <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 px-4 overflow-x-auto max-w-[90vw]">
+                    <div className="absolute bottom-4 sm:bottom-5 left-1/2 -translate-x-1/2 flex gap-2 px-3 sm:px-4 overflow-x-auto max-w-[calc(100vw-1rem)] sm:max-w-[90vw]">
                         {property.images.map((img, idx) => (
                             <button
                                 key={idx}

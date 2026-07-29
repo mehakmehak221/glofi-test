@@ -74,7 +74,7 @@ function StatusBadge({ status }: { status: string }) {
     );
 }
 
-function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, onShare, onInspect }) {
+function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, onShare }) {
     const propertyImage = property.images && property.images.length > 0 ? property.images[0] : null;
     const status = (property.status || "").toUpperCase();
     const isDraft = status === "DRAFT";
@@ -100,8 +100,8 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
             transition={{ duration: 0.35, delay: index * 0.06 }}
             className="overflow-hidden rounded-3xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-[var(--sidebar-active-text)]/20 hover:shadow-[0_24px_80px_rgba(0,0,0,0.18)]"
         >
-            <div className="lg:flex">
-                <div className="relative h-36 w-full flex-shrink-0 bg-[var(--color-bg-card)] sm:h-40 lg:h-auto lg:min-h-[220px] lg:w-[260px]">
+            <div className="flex flex-col xl:flex-row">
+                <div className="relative aspect-[16/10] w-full flex-shrink-0 bg-[var(--color-bg-card)] sm:aspect-[4/3] lg:aspect-auto lg:min-h-[220px] lg:w-[260px]">
                     {propertyImage ? (
                         <Image
                             src={propertyImage.startsWith("http") ? propertyImage : `/${propertyImage}`}
@@ -133,18 +133,18 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                     )}
                 </div>
 
-                <div className="flex-1 p-3 sm:p-4 lg:p-5">
-                    <div className="flex items-start justify-between gap-4">
-                        <div className="min-w-0">
+                <div className="min-w-0 flex-1 p-4 sm:p-5 xl:p-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
-                                <h3 className="truncate text-base font-bold text-[var(--foreground)] font-montserrat sm:text-lg">
+                                <h3 className="min-w-0 break-words text-base font-bold text-[var(--foreground)] font-montserrat sm:text-lg">
                                     {property.title}
                                 </h3>
                                 <StatusBadge status={property.status} />
                             </div>
                             <p className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--sidebar-text)] opacity-65 sm:mt-2 sm:text-sm">
                                 <MapPinIcon className="h-4 w-4 flex-shrink-0" />
-                                <span className="truncate">
+                                <span className="min-w-0 break-words">
                                     {property.location}
                                     {property.city ? `, ${property.city}` : ""}
                                     {property.country ? `, ${property.country}` : ""}
@@ -156,33 +156,35 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                             <span className="rounded-full border border-[var(--sidebar-border)] bg-[var(--background)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">
                                 Valuation
                             </span>
-                            <span className="text-sm font-bold text-[var(--foreground)]">
+                            <span className="max-w-[160px] break-words text-sm font-bold leading-tight text-[var(--foreground)] lg:max-w-[180px]">
                                 {formatValuation(property.valuation)}
                             </span>
                         </div>
                     </div>
 
-                    <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:gap-2.5 sm:grid-cols-4">
-                        <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-2.5 sm:p-3">
+                    <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-3.5">
                             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Valuation</span>
-                            <span className="mt-1.5 block text-sm font-bold text-[var(--foreground)] sm:mt-2">{formatValuation(property.valuation)}</span>
+                            <span className="mt-1.5 block break-words text-sm font-bold leading-tight text-[var(--foreground)] sm:mt-2 sm:text-base">
+                                {formatValuation(property.valuation)}
+                            </span>
                         </div>
-                        <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-2.5 sm:p-3">
+                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-3.5">
                             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Return</span>
-                            <span className="mt-1.5 block text-sm font-bold text-emerald-500 sm:mt-2">{annualReturn}%</span>
+                            <span className="mt-1.5 block text-sm font-bold text-emerald-500 sm:mt-2 sm:text-base">{annualReturn}%</span>
                         </div>
-                        <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-2.5 sm:p-3">
+                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-3.5">
                             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Fractions</span>
-                            <span className="mt-1.5 block text-sm font-bold text-[var(--foreground)] sm:mt-2">
+                            <span className="mt-1.5 block text-sm font-bold leading-tight text-[var(--foreground)] sm:mt-2 sm:text-base">
                                 {soldFractions}
                                 {totalFractions > 0 && (
                                     <span className="text-[10px] font-normal text-[var(--sidebar-text)] opacity-60"> / {totalFractions}</span>
                                 )}
                             </span>
                         </div>
-                        <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-2.5 sm:p-3">
+                        <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-3.5">
                             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Investors</span>
-                            <span className="mt-1.5 block text-sm font-bold text-[var(--foreground)] sm:mt-2">{property.investorCount || 0}</span>
+                            <span className="mt-1.5 block text-sm font-bold text-[var(--foreground)] sm:mt-2 sm:text-base">{property.investorCount || 0}</span>
                         </div>
                     </div>
 
@@ -203,24 +205,17 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                         </div>
                     )}
 
-                    <div className="mt-3 flex flex-col gap-2.5 sm:mt-4 sm:flex-row sm:gap-3">
+                    <div className="mt-4 grid grid-cols-1 gap-3">
                         <button
                             type="button"
                             onClick={() => onShare(property)}
-                            className="inline-flex min-h-11 w-full items-center justify-center gap-2.5 rounded-xl bg-[var(--color-primary-300)] px-4 text-sm font-bold leading-none text-black transition hover:brightness-95 hover:scale-[1.01] active:scale-[0.99] sm:h-11 sm:flex-1"
+                            className="inline-flex min-h-11 w-full items-center justify-center gap-2.5 rounded-xl bg-[var(--color-primary-300)] px-4 text-sm font-bold leading-none text-black transition hover:brightness-95 hover:scale-[1.01] active:scale-[0.99]"
                         >
                             <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-black/8">
                                 <ShareIcon className="h-4 w-4 flex-shrink-0" />
                             </span>
                             <span className="leading-none sm:hidden">{isDraft ? "Generate" : "Share"}</span>
                             <span className="hidden leading-none sm:inline">{isDraft ? "Generate Share" : "Share Asset"}</span>
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => onInspect(property.id)}
-                            className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm font-bold leading-none text-[var(--foreground)] transition hover:border-[var(--sidebar-active-text)]/35 hover:bg-[var(--sidebar-active-bg)]/20 sm:h-11 sm:flex-1"
-                        >
-                            Inspect Report
                         </button>
                     </div>
 
@@ -279,7 +274,6 @@ export default function PartnerPropertiesPage() {
     const [shareModalSession, setShareModalSession] = useState(0);
     const [selectedShareAsset, setSelectedShareAsset] = useState<any | null>(null);
     const [selectedShareUrl, setSelectedShareUrl] = useState<string | null>(null);
-    const [selectedReportAssetId, setSelectedReportAssetId] = useState<string | null>(null);
     const [copiedShareId, setCopiedShareId] = useState<string | null>(null);
     const { data, isLoading, isError, error, refetch } = useGetMyListingsQuery();
     const { data: kycData, refetch: refetchKyc } = useGetKycStatusQuery();
@@ -308,6 +302,7 @@ export default function PartnerPropertiesPage() {
     const [deleteAsset] = useDeleteAssetMutation();
     const [submitAssetForReview] = useSubmitAssetForReviewMutation();
 
+    const [selectedReportAssetId, setSelectedReportAssetId] = useState<string | null>(null);
     const selectedShareReportAssetId = selectedReportAssetId ?? sharedAssets[0]?.assetId ?? null;
 
     const {
@@ -373,10 +368,6 @@ export default function PartnerPropertiesPage() {
         setShareModalOpen(true);
     };
 
-    const handleInspectReport = (assetId: string | number) => {
-        setSelectedReportAssetId(String(assetId));
-    };
-
     const handleGenerateShareLink = async (customCode?: string) => {
         if (!selectedShareAsset?.id) return;
         const response = await generateShareLink({
@@ -394,7 +385,7 @@ export default function PartnerPropertiesPage() {
     };
 
     return (
-        <div className="p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen font-montserrat">
+        <div className="mx-auto min-h-screen w-full max-w-screen-2xl px-4 py-4 font-montserrat sm:px-6 sm:py-6 lg:px-8 xl:px-10">
             <AnimatePresence mode="wait">
                 {isAddingNew || editId ? (
                     <NewListingForm
@@ -417,7 +408,7 @@ export default function PartnerPropertiesPage() {
                         exit={{ opacity: 0, y: 10 }}
                     >
 
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
@@ -526,16 +517,12 @@ export default function PartnerPropertiesPage() {
                                         onSubmitForReview={handleSubmitForReview}
                                         onEdit={setEditId}
                                         onShare={handleShare}
-                                        onInspect={handleInspectReport}
                                     />
                                 ))
                             )}
                         </div>
 
-                        <div
-                            className="mt-8 w-full"
-                            style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
-                        >
+                        <div className="mt-8 flex w-full flex-col gap-6">
                             <section className="w-full rounded-3xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
                                 <div className="mb-6 flex items-center justify-between gap-3">
                                     <div>
@@ -635,14 +622,14 @@ export default function PartnerPropertiesPage() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                     {shareSummary.map((item) => (
-                                        <div key={item.label} className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
+                                        <div key={item.label} className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
                                             <div className="flex items-center justify-between">
                                                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">{item.label}</p>
                                                 <item.icon className="h-4 w-4 text-[var(--sidebar-text)] opacity-50" />
                                             </div>
-                                            <p className="mt-4 text-2xl font-bold text-[var(--foreground)] font-montserrat">{item.value}</p>
+                                            <p className="mt-4 break-words text-xl font-bold text-[var(--foreground)] font-montserrat sm:text-2xl">{item.value}</p>
                                         </div>
                                     ))}
                                 </div>

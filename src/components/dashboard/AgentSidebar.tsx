@@ -74,7 +74,7 @@ export default function AgentSidebar() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
 
-            <div className="flex items-center justify-center h-16 px-4 border-b border-[var(--color-border-subtle)] overflow-hidden">
+            <div className="flex items-center justify-center h-16 px-4 border-b border-[var(--sidebar-border)] overflow-hidden">
                 <Link href="/dashboard/agent/overview" className="flex items-center justify-center w-full gap-3 no-underline">
                     <motion.div
                         animate={{ 
@@ -120,7 +120,7 @@ export default function AgentSidebar() {
                 animate={{ opacity: collapsed ? 0 : 1 }}
                 transition={{ duration: 0.2 }}
             >
-                <span className="text-[10px] font-normal text-[var(--badge-text)] tracking-[0.15em] uppercase border border-[var(--badge-border)] font-montserrat bg-[var(--badge-bg)] rounded-full px-3 py-1 inline-block">
+                <span className="text-[10px] font-medium text-[var(--panel-chip-text)] tracking-[0.15em] uppercase border border-[var(--panel-chip-border)] font-montserrat bg-[var(--panel-chip-bg)] rounded-full px-3 py-1 inline-block">
                     Agent Panel
                 </span>
             </motion.div>

@@ -66,16 +66,41 @@ export default function PartnerSidebar() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
 
-            <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[var(--color-border-subtle)]">
-                <Link href="/dashboard/partner/overview" className="flex items-center gap-3 no-underline">
-                    <Image
-                        src={isLight ? "/assets/images/branding/light-logo.png" : "/assets/images/branding/logo.png"}
-                        alt="Glofi Logo"
-                        width={120}
-                        height={40}
-                        className="h-10 w-auto flex-shrink-0 object-contain"
-                    />
+            <div className="flex items-center justify-center h-16 px-4 border-b border-[var(--sidebar-border)] overflow-hidden">
+                <Link href="/dashboard/partner/overview" className="flex items-center justify-center w-full gap-3 no-underline">
+                    <motion.div
+                        animate={{
+                            opacity: collapsed ? 0 : 1,
+                            width: collapsed ? 0 : "auto",
+                            x: collapsed ? -20 : 0,
+                        }}
+                        transition={{ duration: 0.2 }}
+                        className="flex items-center justify-center gap-3 flex-shrink-0"
+                    >
+                        <Image
+                            src={isLight ? "/assets/images/branding/light-logo.png" : "/assets/images/branding/logo.png"}
+                            alt="Glofi Logo"
+                            width={120}
+                            height={40}
+                            className="h-10 w-auto object-contain"
+                        />
+                    </motion.div>
 
+                    {collapsed && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="w-full flex justify-center"
+                        >
+                            <Image
+                                src="/assets/images/branding/favicon.png"
+                                alt="Glofi Mark"
+                                width={32}
+                                height={32}
+                                className="w-8 h-8 object-contain"
+                            />
+                        </motion.div>
+                    )}
                 </Link>
             </div>
 
@@ -85,7 +110,7 @@ export default function PartnerSidebar() {
                 animate={{ opacity: collapsed ? 0 : 1 }}
                 transition={{ duration: 0.2 }}
             >
-                <span className="text-[10px] font-normal text-[var(--badge-text)] tracking-[0.15em] uppercase border border-[var(--badge-border)] font-montserrat bg-[var(--badge-bg)] rounded-full px-3 py-1 inline-block">
+                <span className="text-[10px] font-medium text-[var(--panel-chip-text)] tracking-[0.15em] uppercase border border-[var(--panel-chip-border)] font-montserrat bg-[var(--panel-chip-bg)] rounded-full px-3 py-1 inline-block">
                     Developer Panel
                 </span>
             </motion.div>
