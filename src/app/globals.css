@@ -1528,7 +1528,7 @@
 
   .asset-partner-item:hover {
     opacity: 1;
-    filter: grayscale(0);
+    filter: grayscale(0) sepia(1) saturate(6) hue-rotate(85deg) brightness(0.88) contrast(1.08);
   }
 
   .asset-partner-logo-box {

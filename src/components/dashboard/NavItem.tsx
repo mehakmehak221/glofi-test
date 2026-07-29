@@ -37,7 +37,7 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
                 <span
                     className={`flex-shrink-0 ml-0.5 ${
                         isActive ? "text-[var(--sidebar-active-text)]" : "text-[var(--sidebar-text)]"
-                    }`}
+                    } transition-colors duration-200 group-hover:text-[var(--sidebar-active-text)]`}
                 >
                     <Icon className="w-5 h-5" />
                 </span>
