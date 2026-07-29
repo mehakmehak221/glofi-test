@@ -340,7 +340,8 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  section[id], footer[id] {
+  section[id],
+  footer[id] {
     scroll-margin-top: 90px;
   }
 
@@ -1507,9 +1508,9 @@
 
   @media (min-width: 1024px) {
     .asset-partners-grid {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       max-width: 100%;
-      gap: 1.25rem 1.5rem;
+      gap: 2.25rem clamp(2rem, 3vw, 4rem);
     }
   }
 
@@ -1548,8 +1549,8 @@
 
   @media (min-width: 1024px) {
     .asset-partner-logo-box {
-      width: 10rem;
-      height: 3.75rem;
+      width: min(100%, 11rem);
+      height: 4rem;
     }
   }
 
@@ -1558,15 +1559,10 @@
     display: block;
     max-width: 100% !important;
     max-height: 100% !important;
-    width: auto !important;
-    height: auto !important;
+    width: 100% !important;
+    height: 100% !important;
     min-width: 0 !important;
     object-fit: contain;
-  }
-
-  .asset-partner-logo-box svg {
-    width: 100%;
-    height: 100%;
   }
 
   /* ---------- About / Working Instructions Section (Figma) ---------- */

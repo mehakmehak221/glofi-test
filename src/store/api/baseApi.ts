@@ -36,6 +36,10 @@ const baseQuery = fetchBaseQuery({
 
 
     headers.set('accept', '*/*');
+    const storedAttrId = typeof window !== 'undefined' ? localStorage.getItem('glofi_attr_id') : null;
+    if (storedAttrId) {
+      headers.set('X-Attribution-ID', storedAttrId);
+    }
     return headers;
   },
 });
@@ -101,7 +105,7 @@ export const baseApi = createApi({
     'User', 'Post', 'Kyb', 'Kyc', 'Investment', 'SecondaryMarketplace',
     'MySecondaryListings', 'PendingApprovals', 'Certificates', 'Commission',
     'PartnerFinance', 'Payout', 'Asset', 'AssetShare', 'Lead', 'LeadNote', 'FollowUp', 'LeadActivity',
-    'Support', 'Rewards',
+    'Support', 'Rewards', 'ReferralLink',
   ],
   endpoints: () => ({}),
 });

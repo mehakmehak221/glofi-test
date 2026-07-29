@@ -43,7 +43,7 @@ export const rewardsApi = baseApi.injectEndpoints({
     getRewardsLog: builder.query<RewardsLogResponse, RewardsLogParams | void>({
       query: (params) => ({
         url: "admin/rewards",
-        params: params || {},
+        params: params || undefined,
       }),
       providesTags: ["Rewards"],
     }),

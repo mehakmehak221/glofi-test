@@ -52,8 +52,18 @@ export function openWhatsAppShare(shareUrl: string, assetTitle: string) {
 }
 
 export async function trackReferralClick(searchParams: URLSearchParams) {
-  const ref = searchParams.get("ref");
-  if (!ref || typeof window === "undefined") return null;
+  if (typeof window === "undefined") return null;
+
+  const referralCode = searchParams.get("ref") || searchParams.get("referral");
+  const utmSource = searchParams.get("utm_source");
+  const utmMedium = searchParams.get("utm_medium");
+  const utmCampaign = searchParams.get("utm_campaign");
+  const utmTerm = searchParams.get("utm_term");
+  const utmContent = searchParams.get("utm_content");
+
+  if (!referralCode && !utmSource && !utmMedium && !utmCampaign && !utmTerm && !utmContent) {
+    return null;
+  }
 
   const urlKey = `glofi-tracking:${window.location.pathname}${window.location.search}`;
   try {
@@ -63,16 +73,26 @@ export async function trackReferralClick(searchParams: URLSearchParams) {
     // Session storage may be unavailable in some private browsing contexts.
   }
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  const storedAttrId = localStorage.getItem("glofi_attr_id");
+  if (storedAttrId) {
+    headers["X-Attribution-ID"] = storedAttrId;
+  }
+
   const response = await fetch(`${API_URL}/tracking/click`, {
     method: "POST",
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers,
     keepalive: true,
     body: JSON.stringify({
-      referralCode: ref,
-      utmSource: searchParams.get("utm_source") ?? undefined,
-      utmMedium: searchParams.get("utm_medium") ?? undefined,
-      utmCampaign: searchParams.get("utm_campaign") ?? undefined,
+      referralCode: referralCode || undefined,
+      utmSource: utmSource || undefined,
+      utmMedium: utmMedium || undefined,
+      utmCampaign: utmCampaign || undefined,
+      utmTerm: utmTerm || undefined,
+      utmContent: utmContent || undefined,
       landingPage: window.location.pathname,
       firstLandingUrl: window.location.href,
       referrer: document.referrer || undefined,
@@ -83,6 +103,10 @@ export async function trackReferralClick(searchParams: URLSearchParams) {
     throw new Error(`Tracking failed with status ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  if (data?.attributionId) {
+    localStorage.setItem("glofi_attr_id", data.attributionId);
+  }
+  return data;
 }
 

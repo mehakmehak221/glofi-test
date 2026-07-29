@@ -8,6 +8,7 @@ import {
     ElequeLogo,
     NestoriaLogo,
     PartnerLogo,
+    DamacLogo,
 } from '@/components/VectorImages';
 import {
     fadeUp,
@@ -20,10 +21,9 @@ import {
 const PARTNERS = [
     { id: 'aum', Logo: AumRealties },
     { id: 'rav', Logo: RavLogo },
-    { id: 'rsc', Logo: RscLogo },
-    { id: 'eleque', Logo: ElequeLogo },
     { id: 'nestoria', Logo: NestoriaLogo },
     { id: 'partner', Logo: PartnerLogo },
+    { id: 'damac', Logo: DamacLogo }
 ] as const;
 
 export default function AssetPartnersSection() {

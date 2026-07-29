@@ -10,8 +10,16 @@ export default function TrackingBootstrap() {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    const ref = params.get("ref");
-    if (!ref) return;
+    const referralCode = params.get("ref") || params.get("referral");
+    const utmSource = params.get("utm_source");
+    const utmMedium = params.get("utm_medium");
+    const utmCampaign = params.get("utm_campaign");
+    const utmTerm = params.get("utm_term");
+    const utmContent = params.get("utm_content");
+
+    if (!referralCode && !utmSource && !utmMedium && !utmCampaign && !utmTerm && !utmContent) {
+      return;
+    }
 
     trackReferralClick(params).catch((error) => {
       console.warn("Referral click tracking failed", error);

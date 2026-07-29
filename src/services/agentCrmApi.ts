@@ -15,13 +15,17 @@ import { API_URL } from '@/constants';
 const BASE_URL = API_URL;
 
 async function fetcher<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const storedAttrId = typeof window !== 'undefined' ? localStorage.getItem('glofi_attr_id') : null;
+  const headers = new Headers(options?.headers);
+  headers.set('Content-Type', 'application/json');
+  if (storedAttrId) {
+    headers.set('X-Attribution-ID', storedAttrId);
+  }
+
   const res = await fetch(`${BASE_URL}${endpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-    credentials: 'include',
     ...options,
+    headers,
+    credentials: 'include',
   });
 
   if (!res.ok) {

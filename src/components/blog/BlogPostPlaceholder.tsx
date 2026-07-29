@@ -12,7 +12,7 @@ export default function BlogPostPlaceholder({ className = '', compact = false }:
             aria-hidden
         >
             <Image
-                src="/assets/images/branding/light-logo.png"
+                src="/assets/images/branding/logo.png"
                 alt=""
                 width={compact ? 80 : 160}
                 height={compact ? 28 : 56}

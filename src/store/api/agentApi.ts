@@ -8,7 +8,8 @@ import {
     AgentTransactionsResponse,
     CommissionSummary,
     Commission,
-    WithdrawalRequestResponse
+    WithdrawalRequestResponse,
+    ReferralLink
 } from '@/types/agent';
 import { AssetShareReport, ShareAssetRequest, ShareLinkResponse } from '@/types/assetShare';
 
@@ -78,6 +79,46 @@ export const agentApi = baseApi.injectEndpoints({
             query: (assetId) => `agent/assets/${assetId}/share-report`,
             providesTags: (_result, _error, assetId) => [{ type: 'AssetShare', id: String(assetId) }],
         }),
+        getReferralLinks: builder.query<ReferralLink[], void>({
+            query: () => 'agent/referrals',
+            providesTags: (result) =>
+                result
+                    ? [
+                        { type: 'ReferralLink' as const, id: 'LIST' },
+                        ...result.map((item) => ({ type: 'ReferralLink' as const, id: item.id })),
+                    ]
+                    : [{ type: 'ReferralLink' as const, id: 'LIST' }],
+        }),
+        getReferralLinkById: builder.query<ReferralLink, string>({
+            query: (id) => `agent/referrals/${id}`,
+            providesTags: (_result, _error, id) => [{ type: 'ReferralLink', id }],
+        }),
+        createReferralLink: builder.mutation<ReferralLink, { destinationUrl: string; customCode?: string }>({
+            query: (body) => ({
+                url: 'agent/referrals',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: [{ type: 'ReferralLink', id: 'LIST' }],
+        }),
+        updateReferralLink: builder.mutation<ReferralLink, { id: string; destinationUrl?: string; isActive?: boolean }>({
+            query: ({ id, ...body }) => ({
+                url: `agent/referrals/${id}`,
+                method: 'PATCH',
+                body,
+            }),
+            invalidatesTags: (_result, _error, { id }) => [
+                { type: 'ReferralLink', id: 'LIST' },
+                { type: 'ReferralLink', id },
+            ],
+        }),
+        deleteReferralLink: builder.mutation<{ message: string }, string>({
+            query: (id) => ({
+                url: `agent/referrals/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: [{ type: 'ReferralLink', id: 'LIST' }],
+        }),
     }),
 });
 
@@ -95,4 +136,9 @@ export const {
     useGenerateAssetShareLinkMutation,
     useGetSharedAssetsQuery,
     useGetAgentAssetShareReportQuery,
+    useGetReferralLinksQuery,
+    useGetReferralLinkByIdQuery,
+    useCreateReferralLinkMutation,
+    useUpdateReferralLinkMutation,
+    useDeleteReferralLinkMutation,
 } = agentApi;

@@ -156,3 +156,23 @@ export interface WithdrawalRequestResponse {
   status: string;
   createdAt: string;
 }
+
+export interface ReferralLinkStats {
+  totalClicks: number;
+  leadsCount: number;
+  registeredUsersCount: number;
+  kycCompletedCount: number;
+  investmentsCount: number;
+  totalInvestmentAmount: number;
+  conversionRate: number;
+}
+
+export interface ReferralLink {
+  id: string;
+  agentId?: string;
+  code: string;
+  destinationUrl: string;
+  isActive: boolean;
+  createdAt: string;
+  stats?: ReferralLinkStats;
+}

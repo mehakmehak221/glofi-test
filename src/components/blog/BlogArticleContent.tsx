@@ -136,18 +136,7 @@ export default function BlogArticleContent({ post, relatedPosts }: BlogArticleCo
                     </motion.aside>
                 </div>
 
-                {relatedPosts.length > 0 ? (
-                    <motion.section
-                        className="blog-article__related"
-                        {...viewProps}
-                        variants={fadeUp}
-                    >
-                        <div className="blog-archive__list-header">
-                            <h2 className="blog-archive__list-title">Related articles</h2>
-                        </div>
-                        <BlogGrid posts={relatedPosts} />
-                    </motion.section>
-                ) : null}
+
             </section>
         </main>
     );
