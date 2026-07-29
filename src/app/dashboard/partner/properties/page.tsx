@@ -276,6 +276,7 @@ export default function PartnerPropertiesPage() {
     const [showKycModal, setShowKycModal] = useState(false);
     const [showKybModal, setShowKybModal] = useState(false);
     const [shareModalOpen, setShareModalOpen] = useState(false);
+    const [shareModalSession, setShareModalSession] = useState(0);
     const [selectedShareAsset, setSelectedShareAsset] = useState<any | null>(null);
     const [selectedShareUrl, setSelectedShareUrl] = useState<string | null>(null);
     const [selectedReportAssetId, setSelectedReportAssetId] = useState<string | null>(null);
@@ -368,6 +369,7 @@ export default function PartnerPropertiesPage() {
         const existing = sharedAssets.find((item) => String(item.assetId) === String(asset.id));
         setSelectedShareAsset(asset);
         setSelectedShareUrl(existing?.shareUrl ?? null);
+        setShareModalSession((session) => session + 1);
         setShareModalOpen(true);
     };
 
@@ -701,10 +703,11 @@ export default function PartnerPropertiesPage() {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <ShareAssetModal
-                isOpen={shareModalOpen}
-                onClose={() => setShareModalOpen(false)}
-                assetTitle={selectedShareAsset?.title || "Selected asset"}
+      <ShareAssetModal
+        key={shareModalSession}
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        assetTitle={selectedShareAsset?.title || "Selected asset"}
                 assetValuation={String(selectedShareAsset?.valuation || 0)}
                 shareUrl={selectedShareUrl}
                 isGenerating={isGeneratingShare}

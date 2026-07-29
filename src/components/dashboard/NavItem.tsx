@@ -34,16 +34,18 @@ export default function NavItem({ href, icon: Icon, label, isActive, collapsed =
                     />
                 )}
 
-                <span
-                    className={`flex-shrink-0 ml-0.5 ${
-                        isActive ? "text-[var(--sidebar-active-text)]" : "text-[var(--sidebar-text)]"
-                    } transition-colors duration-200 group-hover:text-[var(--sidebar-active-text)]`}
-                >
-                    <Icon className="w-5 h-5" />
+                <span className="flex-shrink-0 ml-0.5">
+                    <Icon
+                        className={`w-5 h-5 transition-colors duration-200 ${
+                            isActive ? "text-[var(--sidebar-active-text)]" : "text-[var(--sidebar-text)]"
+                        } group-hover:!text-[var(--color-primary-300)]`}
+                    />
                 </span>
 
                 <motion.span
-                    className="text-sm font-medium whitespace-nowrap overflow-hidden"
+                    className={`text-sm font-medium whitespace-nowrap overflow-hidden transition-colors duration-200 ${
+                        isActive ? "text-[var(--sidebar-active-text)]" : "text-[var(--sidebar-text)]"
+                    } group-hover:!text-[var(--color-primary-300)]`}
                     animate={{
                         opacity: collapsed ? 0 : 1,
                         width: collapsed ? 0 : "auto",

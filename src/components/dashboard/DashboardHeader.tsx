@@ -56,7 +56,7 @@ export default function DashboardHeader() {
     }
 
     return (
-        <header className="hidden lg:flex items-center justify-end px-6 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-30">
+        <header className="hidden md:flex items-center justify-end px-6 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-30">
             <div className="flex items-center gap-4">
                 <button
                     onClick={() => setIsLight(!isLight)}

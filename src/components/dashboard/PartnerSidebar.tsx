@@ -13,24 +13,17 @@ import { removeCookie } from "@/utils/cookieUtils";
 import {
     OverviewIcon,
     PropertyIcon,
-    LeadsIcon,
     FinancialIcon,
     CollapseIcon,
     SignOutIcon,
-    SecondaryMarketplaceIcon,
-    AccountIcon,
     SupportIcon,
-    DollarIcon,
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
     { href: "/dashboard/partner/overview", icon: OverviewIcon, label: "Overview" },
     { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
 
-    // { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
-    { href: "/dashboard/partner/rewards", icon: DollarIcon, label: "Rewards" },
-    // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
     { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
 ];
 
@@ -68,7 +61,7 @@ export default function PartnerSidebar() {
 
     return (
         <motion.aside
-            className="hidden lg:flex flex-col h-screen sticky top-0 bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] z-40 overflow-hidden"
+            className="hidden md:flex flex-col h-screen sticky top-0 bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] z-40 overflow-hidden"
             animate={{ width: collapsed ? 80 : 220 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >

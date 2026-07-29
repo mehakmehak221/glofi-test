@@ -62,6 +62,7 @@ export default function AgentReferralsPage() {
   // Asset Sharing States
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareModalSession, setShareModalSession] = useState(0);
   const [selectedAsset, setSelectedAsset] = useState<any | null>(null);
   const [selectedShareUrl, setSelectedShareUrl] = useState<string | null>(null);
   const [reportAssetId, setReportAssetId] = useState<string | null>(null);
@@ -167,6 +168,7 @@ export default function AgentReferralsPage() {
     const existing = sharedList.find((item) => String(item.assetId) === String(asset.id));
     setSelectedAsset(asset);
     setSelectedShareUrl(existing?.shareUrl ?? null);
+    setShareModalSession((session) => session + 1);
     setShareModalOpen(true);
   };
 
@@ -632,11 +634,11 @@ export default function AgentReferralsPage() {
                             </p>
                           </div>
 
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:justify-end">
                             <button
                               type="button"
                               onClick={() => handleCopy(referralUrl, link.id)}
-                              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-[var(--sidebar-border)] px-3 text-xs font-semibold text-[var(--foreground)] hover:border-[var(--color-primary-300)]/40 transition"
+                              className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md border border-[var(--sidebar-border)] px-3 text-xs font-semibold text-[var(--foreground)] hover:border-[var(--color-primary-300)]/40 transition md:w-auto md:min-w-[104px]"
                             >
                               <CopyIcon className="h-3.5 w-3.5" />
                               {copiedId === link.id ? "Copied" : "Copy Link"}
@@ -644,14 +646,14 @@ export default function AgentReferralsPage() {
                             <button
                               type="button"
                               onClick={() => handleOpenEditModal(link)}
-                              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md border border-[var(--sidebar-border)] px-3 text-xs font-semibold text-[var(--foreground)] hover:border-[var(--color-primary-300)]/40 transition"
+                              className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md border border-[var(--sidebar-border)] px-3 text-xs font-semibold text-[var(--foreground)] hover:border-[var(--color-primary-300)]/40 transition md:w-auto md:min-w-[72px]"
                             >
                               Edit
                             </button>
                             <button
                               type="button"
                               onClick={() => handleToggleActive(link)}
-                              className={`inline-flex h-9 items-center justify-center px-3 text-xs font-semibold rounded-md border transition ${
+                              className={`inline-flex h-9 w-full items-center justify-center px-3 text-xs font-semibold rounded-md border transition md:w-auto md:min-w-[104px] ${
                                 link.isActive
                                   ? "border-red-500/20 text-red-500 hover:bg-red-500/5"
                                   : "border-green-500/20 text-green-500 hover:bg-green-500/5"
@@ -662,7 +664,7 @@ export default function AgentReferralsPage() {
                             <button
                               type="button"
                               onClick={() => handleDeleteLink(link.id)}
-                              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-red-500/20 text-red-500 hover:bg-red-500/5 transition"
+                              className="inline-flex h-9 w-full items-center justify-center rounded-md border border-red-500/20 text-red-500 hover:bg-red-500/5 transition md:w-9 md:min-w-9"
                             >
                               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -747,6 +749,7 @@ export default function AgentReferralsPage() {
       </div>
 
       <ShareAssetModal
+        key={shareModalSession}
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
         assetTitle={selectedAsset?.title || "Selected asset"}
@@ -790,14 +793,14 @@ export default function AgentReferralsPage() {
                 <button
                   type="button"
                   onClick={() => setEditingLink(null)}
-                  className="inline-flex h-10 items-center justify-center rounded-md border border-[var(--sidebar-border)] px-4 text-xs font-bold uppercase tracking-wider text-[var(--foreground)] hover:bg-neutral-800 transition"
+                  className="inline-flex h-10 items-center justify-center rounded-md border border-[var(--sidebar-border)] px-4 text-xs font-bold uppercase tracking-wider text-[var(--foreground)] transition hover:bg-neutral-800 hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isUpdatingLink}
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-[var(--color-primary-300)] px-5 text-xs font-bold uppercase tracking-wider text-black hover:scale-[1.01] transition disabled:opacity-50"
+                  className="inline-flex h-10 items-center justify-center rounded-md bg-[var(--color-primary-300)] px-5 text-xs font-bold uppercase tracking-wider text-black transition hover:scale-[1.01] hover:text-white disabled:opacity-50"
                 >
                   {isUpdatingLink ? <LoadingSpinner /> : "Save Changes"}
                 </button>

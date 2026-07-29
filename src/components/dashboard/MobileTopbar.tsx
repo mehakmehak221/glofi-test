@@ -24,7 +24,7 @@ export default function MobileTopbar() {
 
     return (
         <>
-            <header className="flex lg:hidden items-center justify-between px-4 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-40">
+            <header className="flex md:hidden items-center justify-between px-4 py-3 bg-[var(--header-bg)]/80 backdrop-blur-md border-b border-[var(--header-border)] sticky top-0 z-40">
 
                 <Link href="/dashboard" className="flex items-center gap-3 no-underline">
                     <Image

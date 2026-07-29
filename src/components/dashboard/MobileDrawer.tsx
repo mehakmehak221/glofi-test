@@ -14,11 +14,12 @@ import {
     TransactionsIcon,
     AccountIcon,
     SignOutIcon,
-    SecondaryMarketplaceIcon,
     OverviewIcon,
     PropertyIcon,
     LeadsIcon,
     DollarIcon,
+    ProfileIcon,
+    SecondaryMarketplaceIcon,
     FinancialIcon,
     SupportIcon,
 } from "@/components/VectorImages";
@@ -39,16 +40,18 @@ const PARTNER_NAV_ITEMS = [
     // { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
 
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
-    { href: "/dashboard/partner/rewards", icon: DollarIcon, label: "Rewards" },
     // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
     { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
 ];
 
 const AGENT_NAV_ITEMS = [
     { href: "/dashboard/agent/overview", icon: OverviewIcon, label: "Overview" },
-    { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Referrals" },
-    { href: "/dashboard/agent/transactions", icon: LeadsIcon, label: "Transactions" },
+    { href: "/dashboard/agent/leads", icon: LeadsIcon, label: "Leads & CRM" },
+    { href: "/dashboard/agent/followups", icon: FinancialIcon, label: "Follow-ups" },
+    { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Asset Sharing" },
+    { href: "/dashboard/agent/transactions", icon: AccountIcon, label: "Transactions" },
     { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
+    { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
     { href: "/dashboard/agent/support", icon: SupportIcon, label: "Support" },
 ];
 
@@ -113,7 +116,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                 <>
 
                     <motion.div
-                        className="fixed inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm z-50 lg:hidden"
+                        className="fixed inset-0 bg-[var(--color-bg-overlay)] backdrop-blur-sm z-50 md:hidden"
                         variants={backdropVariants}
                         initial="hidden"
                         animate="visible"
@@ -123,14 +126,14 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 
 
                     <motion.div
-                        className="fixed top-0 right-0 bottom-0 w-[280px] bg-[var(--sidebar-bg)] border-l border-[var(--sidebar-border)] z-50 flex flex-col lg:hidden"
+                        className="fixed top-0 right-0 bottom-0 w-[280px] bg-[var(--sidebar-bg)] border-l border-[var(--sidebar-border)] z-50 flex flex-col shadow-2xl sm:w-[320px] md:w-[380px] md:hidden"
                         variants={drawerVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--sidebar-border)]">
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--sidebar-border)] sm:px-6 sm:py-5">
                             <div className="flex items-center gap-3">
                                 <Avatar name={fullName} size="md" />
                                 <div className="flex flex-col">
@@ -149,7 +152,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                         </div>
 
                         {/* Nav Items */}
-                        <nav className="flex-1 px-4 py-5 flex flex-col gap-1">
+                        <nav className="flex-1 min-h-0 overflow-y-auto px-4 py-5 flex flex-col gap-1 sm:px-5 sm:py-6">
                             <motion.div
                                 className="px-4 pt-5 pb-2 overflow-hidden"
 
@@ -185,7 +188,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                         </nav>
 
                         {/* Footer */}
-                        <div className="px-4 pb-6 pt-3 border-t border-[var(--color-border-subtle)]">
+                        <div className="px-4 pb-6 pt-3 border-t border-[var(--color-border-subtle)] sm:px-5">
                             <motion.div
                                 custom={NAV_ITEMS.length}
                                 variants={itemVariants}
