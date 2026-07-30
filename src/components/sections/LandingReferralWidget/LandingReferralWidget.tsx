@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const GiftIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -11,6 +12,7 @@ const GiftIcon = ({ className }: { className?: string }) => (
 
 export default function LandingReferralWidget() {
   const router = useRouter();
+  const { t } = useI18n();
 
   return (
     <motion.button
@@ -20,7 +22,7 @@ export default function LandingReferralWidget() {
       className="fixed bottom-8 right-8 z-[90] bg-[#056346] text-white px-5 py-3.5 rounded-full shadow-2xl flex items-center gap-2 hover:bg-[#044c36] hover:scale-105 transition-all group"
     >
       <GiftIcon className="w-5 h-5 animate-pulse" />
-      <span className="font-semibold text-[15px]">Refer & Earn</span>
+      <span className="font-semibold text-[15px]">{t('Refer & Earn')}</span>
     </motion.button>
   );
 }

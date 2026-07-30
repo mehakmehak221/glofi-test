@@ -3,6 +3,7 @@
 import React from 'react';
 import { Lead, LeadStatus } from '@/types/crm';
 import { Phone, Mail, ChevronRight, Clock, AlertCircle, Pencil, Trash2 } from 'lucide-react';
+import { useI18n } from '@/providers/LocaleProvider';
 
 interface LeadTableProps {
   leads: Lead[];
@@ -47,11 +48,13 @@ export const getPriorityBadgeClass = (priority?: string) => {
 };
 
 export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, onEditLead, onDeleteLead, isLoading }) => {
+  const { t } = useI18n();
+
   if (isLoading) {
     return (
       <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-8 text-center">
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[var(--color-primary-300)] border-t-transparent mb-3" />
-        <p className="text-sm text-[var(--sidebar-text)] opacity-60 font-montserrat">Fetching assigned leads...</p>
+        <p className="text-sm text-[var(--sidebar-text)] opacity-60 font-montserrat">{t("Fetching assigned leads...")}</p>
       </div>
     );
   }
@@ -62,9 +65,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, onEdi
         <div className="w-12 h-12 rounded-full bg-[var(--color-primary-300)]/10 flex items-center justify-center mx-auto mb-3">
           <AlertCircle className="w-6 h-6 text-[var(--color-primary-300)]" />
         </div>
-        <h4 className="text-base font-bold text-[var(--foreground)] mb-1 font-montserrat">No Leads Found</h4>
+        <h4 className="text-base font-bold text-[var(--foreground)] mb-1 font-montserrat">{t("No Leads Found")}</h4>
         <p className="text-xs text-[var(--sidebar-text)] opacity-60 max-w-sm mx-auto font-montserrat">
-          No leads match your active filters or you haven't been assigned any leads yet.
+          {t("No leads match your active filters or you haven't been assigned any leads yet.")}
         </p>
       </div>
     );
@@ -76,13 +79,13 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, onEdi
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="bg-[var(--background)]/35 border-b border-[var(--sidebar-border)] text-[var(--sidebar-text)] uppercase tracking-widest font-bold text-[10px] opacity-60">
-              <th className="py-3.5 px-5">Lead Info</th>
-              <th className="py-3.5 px-5">Contact</th>
-              <th className="py-3.5 px-5">Source</th>
-              <th className="py-3.5 px-5">Priority</th>
-              <th className="py-3.5 px-5">Status</th>
-              <th className="py-3.5 px-5">Last Activity</th>
-              <th className="py-3.5 px-5 text-right">Actions</th>
+              <th className="py-3.5 px-5">{t("Lead Info")}</th>
+              <th className="py-3.5 px-5">{t("Contact")}</th>
+              <th className="py-3.5 px-5">{t("Source")}</th>
+              <th className="py-3.5 px-5">{t("Priority")}</th>
+              <th className="py-3.5 px-5">{t("Status")}</th>
+              <th className="py-3.5 px-5">{t("Last Activity")}</th>
+              <th className="py-3.5 px-5 text-right">{t("Actions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--sidebar-border)]">
@@ -116,20 +119,20 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, onEdi
 
                 <td className="py-3.5 px-5">
                   <span className="px-2 py-0.5 rounded bg-[var(--background)]/60 text-[var(--sidebar-text)] font-medium text-[11px] border border-[var(--sidebar-border)]">
-                    {lead.source || 'Direct'}
+                    {t(lead.source || 'Direct')}
                   </span>
                 </td>
 
 
                 <td className="py-3.5 px-5">
                   <span className={`px-2 py-0.5 rounded text-[10px] tracking-wide ${getPriorityBadgeClass(lead.priority)}`}>
-                    {lead.priority || 'NORMAL'}
+                    {t(lead.priority || 'NORMAL')}
                   </span>
                 </td>
 
                 <td className="py-3.5 px-5">
                   <span className={`px-2.5 py-1 rounded text-[10px] font-bold inline-block ${getStatusBadgeClass(lead.status)}`}>
-                    {lead.status.replace('_', ' ')}
+                    {t(lead.status.replace('_', ' '))}
                   </span>
                 </td>
 
@@ -148,7 +151,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, onEdi
                   <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     {/* Edit */}
                     <button
-                      title="Edit Lead"
+                      title={t("Edit Lead")}
                       onClick={(e) => { e.stopPropagation(); onEditLead(lead); }}
                       className="inline-flex items-center justify-center w-7 h-7 rounded bg-[var(--background)]/60 border border-[var(--sidebar-border)] text-[var(--sidebar-text)] hover:text-[var(--color-primary-300)] hover:border-[var(--color-primary-300)]/30 hover:bg-[var(--color-primary-300)]/10 transition-all cursor-pointer"
                     >
@@ -156,7 +159,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, onEdi
                     </button>
                     {/* Delete */}
                     <button
-                      title="Delete Lead"
+                      title={t("Delete Lead")}
                       onClick={(e) => { e.stopPropagation(); onDeleteLead(lead); }}
                       className="inline-flex items-center justify-center w-7 h-7 rounded bg-[var(--background)]/60 border border-[var(--sidebar-border)] text-[var(--sidebar-text)] hover:text-rose-400 hover:border-rose-500/30 hover:bg-rose-500/10 transition-all cursor-pointer"
                     >
@@ -164,7 +167,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, onSelectLead, onEdi
                     </button>
                     {/* View / Drawer */}
                     <button
-                      title="View Details"
+                      title={t("View Details")}
                       onClick={(e) => { e.stopPropagation(); onSelectLead(lead); }}
                       className="inline-flex items-center justify-center w-7 h-7 rounded bg-[var(--background)]/60 border border-[var(--sidebar-border)] text-[var(--sidebar-text)] hover:text-[var(--color-primary-300)] hover:border-[var(--color-primary-300)]/30 hover:bg-[var(--color-primary-300)]/10 transition-all cursor-pointer"
                     >

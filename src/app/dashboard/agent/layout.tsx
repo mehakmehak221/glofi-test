@@ -7,11 +7,13 @@ import AgentSidebar from "@/components/dashboard/AgentSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import MobileTopbar from "@/components/dashboard/MobileTopbar";
 import KYCModal from "@/components/dashboard/KYCModal";
+import { useI18n } from "@/providers/LocaleProvider";
 
 export default function AgentDashboardLayout({ children }: { children: React.ReactNode }) {
     const { data: agentData, refetch: refetchKyc } = useGetAgentMeQuery();
     const kycData = agentData?.kyc ? { status: agentData.kyc.status } : undefined;
     const [showKycModal, setShowKycModal] = useState(false);
+    const { t } = useI18n();
 
     return (
         <div className="flex h-screen bg-[var(--background)] theme-purple overflow-hidden">
@@ -47,11 +49,11 @@ export default function AgentDashboardLayout({ children }: { children: React.Rea
                                         )}
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">Agent Verification: {kycData.status.replace("_", " ")}</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">{t("Agent Verification: {status}", { status: kycData.status.replace("_", " ") })}</p>
                                         <p className="text-[11px] opacity-80 leading-relaxed max-w-2xl">
                                             {kycData.status === "UNDER_REVIEW"
-                                                ? "Your agent verification is currently being processed. This typically takes 24-48 hours."
-                                                : "You need to complete your identity verification before you can manage leads or earn commissions."}
+                                                ? t("Your agent verification is currently being processed. This typically takes 24-48 hours.")
+                                                : t("You need to complete your identity verification before you can manage leads or earn commissions.")}
                                         </p>
                                     </div>
                                 </div>
@@ -60,7 +62,7 @@ export default function AgentDashboardLayout({ children }: { children: React.Rea
                                         onClick={() => setShowKycModal(true)}
                                         className="px-4 py-2 rounded-lg bg-white text-black text-[10px] font-bold uppercase transition-all hover:bg-white/90 whitespace-nowrap border-0 cursor-pointer shadow-sm"
                                     >
-                                        Verify Identity
+                                        {t("Verify Identity")}
                                     </button>
                                 )}
                             </motion.div>

@@ -7,11 +7,13 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import MobileTopbar from "@/components/dashboard/MobileTopbar";
 import KYCModal from "@/components/dashboard/KYCModal";
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
+import { useI18n } from "@/providers/LocaleProvider";
 
 export default function DashboardLayout({ children }) {
     const { data: kycData, refetch: refetchKyc } = useGetKycStatusQuery();
     const [showKycModal, setShowKycModal] = useState(false);
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+    const { t } = useI18n();
 
     useEffect(() => {
         const handleOpenKyc = () => setShowKycModal(true);
@@ -78,11 +80,11 @@ export default function DashboardLayout({ children }) {
                                         )}
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">Identity Verification: {kycData.status.replace("_", " ")}</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">{t("Identity Verification: {status}", { status: kycData.status.replace("_", " ") })}</p>
                                         <p className="text-[11px] opacity-80 leading-relaxed max-w-2xl">
                                             {kycData.status === "UNDER_REVIEW"
-                                                ? "Your identity verification is currently being processed. You can't make investments until approved."
-                                                : "You need to complete your identity verification before you can start investing."}
+                                                ? t("Your identity verification is currently being processed. You can't make investments until approved.")
+                                                : t("You need to complete your identity verification before you can start investing.")}
                                         </p>
                                     </div>
                                 </div>
@@ -94,7 +96,7 @@ export default function DashboardLayout({ children }) {
                                             : "bg-[var(--color-status-error)]"
                                             }`}
                                     >
-                                        Verify Now
+                                        {t("Verify Now")}
                                     </button>
                                 )}
                             </motion.div>
@@ -110,7 +112,7 @@ export default function DashboardLayout({ children }) {
                 onSubmit={() => {
                     setShowKycModal(false);
                     refetchKyc();
-                    showToast("KYC submitted successfully!", "success");
+                    showToast(t("KYC submitted successfully!"), "success");
                 }}
             />
         </div>

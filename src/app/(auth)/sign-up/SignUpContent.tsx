@@ -29,6 +29,7 @@ import {
     validateSignUpFields,
 } from "@/utils/authFormErrors";
 import { extractAccessToken, persistAuthSession } from "@/utils/authSession";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const SIGNUP_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SignupRole = (typeof SIGNUP_ROLES)[number];
@@ -43,6 +44,7 @@ function parseRoleQuery(raw: string | null): SignupRole | null {
 function SignUpPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { t } = useI18n();
     const roleParam = searchParams.get("role");
     const [userType, setUserType] = useState<SignupRole>(() => parseRoleQuery(roleParam) ?? "Investor");
     const [step, setStep] = useState<SignUpStep>("DETAILS");
@@ -327,7 +329,7 @@ function SignUpPageContent() {
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
-                applySignUpApiErrors(apiErr, {
+                applySignUpApiErrors(apiErr, t, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
@@ -398,7 +400,7 @@ function SignUpPageContent() {
                 setErrorMsg("Too many attempts. This phone number has been temporarily blocked by Firebase due to too many request attempts. Please try again in a few minutes.");
             } else {
                 const friendlyMsg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
-                applySignUpApiErrors(apiErr, {
+                applySignUpApiErrors(apiErr, t, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
@@ -472,7 +474,7 @@ function SignUpPageContent() {
             const result = await verifyRegistrationOtp({ email: form.email.trim(), otp: normalizedOtp }).unwrap();
             completeRegistration(result);
         } catch (err: unknown) {
-            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, {
+            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, t, {
                 setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                 setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
             });

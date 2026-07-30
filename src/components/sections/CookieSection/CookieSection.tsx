@@ -4,9 +4,11 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LANDING_EASE } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 export default function CookieSection() {
     const [isVisible, setIsVisible] = useState(false);
+    const { t } = useI18n();
 
     useEffect(() => {
         const consent = localStorage.getItem('cookie_consent');
@@ -27,7 +29,7 @@ export default function CookieSection() {
             {isVisible && (
                 <motion.section
                     className="fixed bottom-0 left-0 right-0 z-(--z-nav) flex justify-center bg-transparent"
-                    aria-label="Cookie consent"
+                    aria-label={t('Cookie consent')}
                     initial={{ y: 120, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 120, opacity: 0 }}
@@ -40,14 +42,13 @@ export default function CookieSection() {
                         transition={{ duration: 0.4, ease: LANDING_EASE, delay: 0.1 }}
                     >
                         <span className="cookie-text text-xs sm:text-sm lg:text-base text-[#F5F5F5] flex-1">
-                            We use cookies to enhance your experience, analyze site traffic, and for marketing
-                            purposes.{' '}
+                            {t('We use cookies to enhance your experience, analyze site traffic, and for marketing purposes.')} {' '}
                             <Link
                                 href="/privacy-policy#cookies"
                                 className="cookie-link relative z-10 inline-flex text-[var(--color-primary-200)] no-underline font-medium hover:underline"
                                 prefetch={false}
                             >
-                                Learn more
+                                {t('Learn more')}
                             </Link>
                         </span>
 
@@ -58,7 +59,7 @@ export default function CookieSection() {
                                 whileHover={{ scale: 1.04 }}
                                 whileTap={{ scale: 0.96 }}
                             >
-                                <span className="text-cookie-reject">Reject</span>
+                                <span className="text-cookie-reject">{t('Reject')}</span>
                             </motion.button>
                             <motion.button
                                 className="btn-cookie-accept h-8 sm:h-10 min-w-20 sm:min-w-24 px-3 sm:px-4 rounded border border-[var(--color-primary-200)] bg-transparent flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80 text-xs sm:text-sm text-[var(--color-primary-200)]"
@@ -66,7 +67,7 @@ export default function CookieSection() {
                                 whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(0, 244, 196, 0.25)' }}
                                 whileTap={{ scale: 0.96 }}
                             >
-                                <span className="text-cookie-accept">Accept All</span>
+                                <span className="text-cookie-accept">{t('Accept All')}</span>
                             </motion.button>
                         </div>
                     </motion.div>

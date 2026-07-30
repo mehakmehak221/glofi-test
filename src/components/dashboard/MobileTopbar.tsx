@@ -5,12 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { SearchIcon, MenuIcon, BellIcon } from "@/components/VectorImages";
+import { useI18n } from "@/providers/LocaleProvider";
 import MobileDrawer from "./MobileDrawer";
 
 export default function MobileTopbar() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [isLight, setIsLight] = useState(false);
+    const { t } = useI18n();
 
     useEffect(() => {
         const checkTheme = () => {
@@ -42,7 +44,7 @@ export default function MobileTopbar() {
                         <div className="relative animate-fade-in">
                             <input
                                 type="text"
-                                placeholder="Search..."
+                                placeholder={t("Search...")}
                                 autoFocus
                                 onBlur={() => setSearchOpen(false)}
                                 className="w-40 sm:w-56 rounded-lg pl-8 pr-3 py-2 text-sm text-[var(--header-text)] placeholder:[var(--color-text-muted)] bg-[var(--field-surface)] border border-[var(--sidebar-border)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50"
@@ -63,7 +65,7 @@ export default function MobileTopbar() {
                     <button
                         onClick={() => setDrawerOpen(true)}
                         className="p-2 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)] transition-colors bg-transparent border-0 cursor-pointer"
-                        aria-label="Open menu"
+                        aria-label={t("Open menu")}
                     >
                         <MenuIcon className="w-6 h-6" />
                     </button>

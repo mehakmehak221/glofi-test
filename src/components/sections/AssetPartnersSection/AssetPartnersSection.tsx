@@ -17,6 +17,7 @@ import {
     staggerContainer,
     useLandingMotion,
 } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 const PARTNERS = [
     { id: 'aum', Logo: AumRealties },
@@ -28,6 +29,7 @@ const PARTNERS = [
 
 export default function AssetPartnersSection() {
     const { reduceMotion, viewProps } = useLandingMotion();
+    const { t } = useI18n();
 
     return (
         <section className="asset-partners-section w-full flex flex-col items-center bg-[#F6F9F8] py-20 sm:py-24 lg:py-32">
@@ -37,7 +39,7 @@ export default function AssetPartnersSection() {
                     {...viewProps}
                     variants={fadeUp}
                 >
-                    Asset Partners &amp; Supporters
+                    {t('Asset Partners & Supporters')}
                 </motion.h2>
 
                 <motion.div

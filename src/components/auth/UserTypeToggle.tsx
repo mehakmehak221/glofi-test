@@ -1,7 +1,10 @@
 "use client";
 
+import { useI18n } from "@/providers/LocaleProvider";
 
 export default function UserTypeToggle({ options = ["Investor", "Developer", "Agent"], value, onChange }) {
+  const { t } = useI18n();
+
   return (
     <div className="flex w-full bg-[var(--color-primary-300)]/5 border border-[var(--color-primary-300)]/10 rounded-lg p-1.5 gap-1.5 overflow-hidden">
       {options.map((opt) => {
@@ -24,7 +27,7 @@ export default function UserTypeToggle({ options = ["Investor", "Developer", "Ag
                   ].join(" "),
             ].join(" ")}
           >
-            {opt}
+            {t(opt)}
           </button>
         );
       })}

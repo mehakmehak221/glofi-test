@@ -9,6 +9,7 @@ import {
     staggerContainer,
     useLandingMotion,
 } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 const NAV_LINKS = [
     { label: 'Company', href: '/#company' },
@@ -27,6 +28,7 @@ const LEGAL_LINKS = [
 export default function GlofiCopyrightSection() {
     const pathname = usePathname();
     const { viewProps } = useLandingMotion();
+    const { t } = useI18n();
 
     const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         if (href.startsWith('/#')) {
@@ -80,8 +82,8 @@ export default function GlofiCopyrightSection() {
                                 />
                             </svg>
                             <span className="hero-app-btn__text">
-                                <span className="hero-app-btn__label">Download on the</span>
-                                <span className="hero-app-btn__store">App Store</span>
+                                <span className="hero-app-btn__label">{t('Download on the')}</span>
+                                <span className="hero-app-btn__store">{t('App Store')}</span>
                             </span>
                         </Link>
                     </motion.div>
@@ -100,22 +102,22 @@ export default function GlofiCopyrightSection() {
                                 <path d="M11.8522 14.4001L17.8855 8.23148L4.77861 0.460464C4.30229 0.168211 3.74604 0.000250816 3.15147 0.000250816C1.69514 0.000250816 0.466575 1.01362 0.108516 2.38866C0.108516 2.38978 0.107422 2.3909 0.107422 2.39202L11.8522 14.4001Z" fill="#34A853" />
                             </svg>
                             <span className="hero-app-btn__text">
-                                <span className="hero-app-btn__label site-footer__play-label">GET IT ON</span>
-                                <span className="hero-app-btn__store">Google Play</span>
+                                <span className="hero-app-btn__label site-footer__play-label">{t('Get it on')}</span>
+                                <span className="hero-app-btn__store">{t('Google Play')}</span>
                             </span>
                         </Link>
                     </motion.div>
                 </motion.div>
 
                 <motion.p className="site-footer__powered-by" variants={fadeUpSubtle}>
-                    Powered By Maxtron
+                    {t('Powered By Maxtron')}
                 </motion.p>
 
                 <motion.nav className="site-footer__nav" aria-label="Footer navigation" variants={fadeUpSubtle}>
                     {NAV_LINKS.map((link) => (
                         <motion.span key={link.label} whileHover={{ y: -2 }} className="inline-block">
                             <Link href={link.href} className="site-footer__nav-link">
-                                {link.label}
+                                {t(link.label)}
                             </Link>
                         </motion.span>
                     ))}
@@ -126,14 +128,14 @@ export default function GlofiCopyrightSection() {
                         <span key={link.label} className="site-footer__legal-item">
                             {index > 0 && <span className="site-footer__legal-sep" aria-hidden>|</span>}
                             <Link href={link.href} className="site-footer__legal-link">
-                                {link.label}
+                                {t(link.label)}
                             </Link>
                         </span>
                     ))}
                 </motion.nav>
 
                 <motion.p className="site-footer__copyright" variants={fadeUpSubtle}>
-                    Copyright © 2026 GloFi Estates
+                    {t('Copyright © 2026 GloFi Estates')}
                 </motion.p>
             </motion.div>
         </footer>

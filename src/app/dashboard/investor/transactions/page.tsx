@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { useGetTransactionsQuery } from "@/store/api/investmentApi";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -43,6 +44,7 @@ function formatAmount(amount, currency) {
 
 export default function TransactionsPage() {
     const { data, isLoading, isError } = useGetTransactionsQuery();
+    const { t } = useI18n();
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 8;
 
@@ -75,7 +77,7 @@ export default function TransactionsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-2xl sm:text-3xl font-bold text-[var(--header-text)] mb-6"
             >
-                Transactions
+                {t("Transactions")}
             </motion.h1>
 
             {isLoading && (
@@ -86,13 +88,13 @@ export default function TransactionsPage() {
 
             {isError && (
                 <div className="bg-[var(--color-status-error-bg)] border border-[var(--color-status-error-border)] text-[var(--color-status-error)] rounded-xl p-4 text-sm">
-                    Failed to load transactions.
+                    {t("Failed to load transactions.")}
                 </div>
             )}
 
             {!isLoading && !isError && transactions.length === 0 && (
                 <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-xl p-12 text-center text-[var(--color-text-muted)] text-sm">
-                    No transactions found.
+                    {t("No transactions found.")}
                 </div>
             )}
 
@@ -109,12 +111,12 @@ export default function TransactionsPage() {
                             <table className="w-full whitespace-nowrap min-w-[800px]">
                                 <thead>
                                     <tr className="border-b border-[var(--sidebar-border)] bg-[var(--background)]/50">
-                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Date</th>
-                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Type</th>
-                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Asset</th>
-                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Amount</th>
-                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Method</th>
-                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">Status</th>
+                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">{t("Date")}</th>
+                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">{t("Type")}</th>
+                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">{t("Asset")}</th>
+                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">{t("Amount")}</th>
+                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">{t("Method")}</th>
+                                        <th className="text-left px-5 py-4 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-semibold">{t("Status")}</th>
                                     </tr>
                                 </thead>
                                 <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
@@ -177,15 +179,15 @@ export default function TransactionsPage() {
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4 text-xs bg-[var(--sidebar-active-bg)]/30 rounded-lg p-3">
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Date</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Date")}</p>
                                         <p className="text-[var(--header-text)] font-bold">{formatDate(tx.createdAt || tx.date)}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Amount</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Amount")}</p>
                                         <p className="text-[var(--header-text)] font-bold">{formatAmount(tx.amount, tx.currency)}</p>
                                     </div>
                                     <div className="col-span-2">
-                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Method</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Method")}</p>
                                         <p className="text-[var(--header-text)] font-bold">{tx.paymentMethod || tx.method || "-"}</p>
                                     </div>
                                 </div>
@@ -196,8 +198,8 @@ export default function TransactionsPage() {
                     {showPagination && (
                         <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
                             <p className="text-xs text-[var(--color-text-muted)]">
-                                Showing {(safeCurrentPage - 1) * ITEMS_PER_PAGE + 1}-
-                                {Math.min(safeCurrentPage * ITEMS_PER_PAGE, transactions.length)} of {transactions.length}
+                                {t("Showing")} {(safeCurrentPage - 1) * ITEMS_PER_PAGE + 1}-
+                                {Math.min(safeCurrentPage * ITEMS_PER_PAGE, transactions.length)} {t("of")} {transactions.length}
                             </p>
                             <div className="flex items-center gap-1.5">
                                 <button
@@ -205,7 +207,7 @@ export default function TransactionsPage() {
                                     disabled={safeCurrentPage === 1}
                                     className="px-3 py-1.5 rounded-md text-xs font-semibold border border-[var(--sidebar-border)] bg-[var(--card-surface)] text-[var(--header-text)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                 >
-                                    Prev
+                                    {t("Prev")}
                                 </button>
                                 {visiblePages.map((page) => (
                                     <button
@@ -225,7 +227,7 @@ export default function TransactionsPage() {
                                     disabled={safeCurrentPage === totalPages}
                                     className="px-3 py-1.5 rounded-md text-xs font-semibold border border-[var(--sidebar-border)] bg-[var(--card-surface)] text-[var(--header-text)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                 >
-                                    Next
+                                    {t("Next")}
                                 </button>
                             </div>
                         </div>

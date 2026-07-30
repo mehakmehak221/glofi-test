@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import NavItem from "./NavItem";
 import { useLogoutMutation } from "@/store/api/authApi";
 import { removeCookie } from "@/utils/cookieUtils";
+import { useI18n } from "@/providers/LocaleProvider";
 
 import {
     MarketplaceIcon,
@@ -26,19 +27,19 @@ import {
 } from "@/components/VectorImages";
 
 const INVESTOR_NAV_ITEMS = [
-    { href: "/dashboard/investor/marketplace", icon: MarketplaceIcon, label: "Marketplace" },
-    { href: "/dashboard/investor/secondary-marketplace", icon: SecondaryMarketplaceIcon, label: "Secondary Marketplace" },
-    { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
-    { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
-    { href: "/dashboard/investor/rewards", icon: DollarIcon, label: "Rewards" },
-    { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/investor/marketplace", icon: MarketplaceIcon, labelKey: "Marketplace" },
+    { href: "/dashboard/investor/secondary-marketplace", icon: SecondaryMarketplaceIcon, labelKey: "Secondary Marketplace" },
+    { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, labelKey: "Portfolio" },
+    { href: "/dashboard/investor/transactions", icon: TransactionsIcon, labelKey: "Transactions" },
+    { href: "/dashboard/investor/rewards", icon: DollarIcon, labelKey: "Rewards" },
+    { href: "/dashboard/investor/account", icon: AccountIcon, labelKey: "Account" },
 ];
 
 const AGENT_NAV_ITEMS = [
-    { href: "/dashboard/agent/overview", icon: OverviewIcon, label: "Overview" },
-    { href: "/dashboard/agent/referrals", icon: LeadIcon, label: "Referrals" },
-    { href: "/dashboard/agent/transactions", icon: TransactionsIcon, label: "Transactions" },
-    { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
+    { href: "/dashboard/agent/overview", icon: OverviewIcon, labelKey: "Overview" },
+    { href: "/dashboard/agent/referrals", icon: LeadIcon, labelKey: "Referrals" },
+    { href: "/dashboard/agent/transactions", icon: TransactionsIcon, labelKey: "Transactions" },
+    { href: "/dashboard/agent/earnings", icon: DollarIcon, labelKey: "Earnings" },
 ];
 
 export default function Sidebar() {
@@ -48,6 +49,7 @@ export default function Sidebar() {
     const router = useRouter();
     const [userRole, setUserRole] = useState("INVESTOR");
     const [logout] = useLogoutMutation();
+    const { t } = useI18n();
 
     useEffect(() => {
         const role = localStorage.getItem("userType");
@@ -64,7 +66,7 @@ export default function Sidebar() {
             localStorage.removeItem("isLoggedIn");
             removeCookie("isLoggedIn");
             removeCookie("access_token");
-            localStorage.setItem("toastMessage", "Logged out successfully");
+            localStorage.setItem("toastMessage", t("Logged out successfully"));
             router.push("/sign-in");
         }
     };
@@ -134,7 +136,7 @@ export default function Sidebar() {
                 transition={{ duration: 0.2 }}
             >
                 <span className="text-[10px] font-medium text-[var(--panel-chip-text)] tracking-[0.15em] uppercase border border-[var(--panel-chip-border)] font-montserrat bg-[var(--panel-chip-bg)] rounded-full px-3 py-1 inline-block">
-                    {userRole === "AGENT" ? "Agent Panel" : "Investor Panel"}
+                    {userRole === "AGENT" ? t("Agent Panel") : t("Investor Panel")}
                 </span>
             </motion.div>
 
@@ -145,7 +147,7 @@ export default function Sidebar() {
                         key={item.href}
                         href={item.href}
                         icon={item.icon}
-                        label={item.label}
+                        label={t(item.labelKey)}
                         isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
                         collapsed={collapsed}
                     />
@@ -172,7 +174,7 @@ export default function Sidebar() {
                         animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
                         transition={{ duration: 0.2 }}
                     >
-                        Collapse
+                        {t("Collapse")}
                     </motion.span>
                 </motion.button>
 
@@ -189,7 +191,7 @@ export default function Sidebar() {
                         animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
                         transition={{ duration: 0.2 }}
                     >
-                        Sign Out
+                        {t("Sign Out")}
                     </motion.span>
                 </button>
             </div>

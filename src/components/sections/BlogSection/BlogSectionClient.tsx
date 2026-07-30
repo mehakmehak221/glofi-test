@@ -10,6 +10,7 @@ import {
     staggerContainer,
     useLandingMotion,
 } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 type BlogSectionClientProps = {
     posts: BlogPost[];
@@ -17,6 +18,7 @@ type BlogSectionClientProps = {
 
 export default function BlogSectionClient({ posts }: BlogSectionClientProps) {
     const { viewProps } = useLandingMotion();
+    const { t } = useI18n();
 
     return (
         <section id="blog" className="blog-section" aria-labelledby="blog-section-heading">
@@ -26,12 +28,12 @@ export default function BlogSectionClient({ posts }: BlogSectionClientProps) {
                     {...viewProps}
                     variants={fadeUp}
                 >
-                    <p className="blog-section__eyebrow">Insights &amp; Updates</p>
+                    <p className="blog-section__eyebrow">{t('Insights & Updates')}</p>
                     <h2 id="blog-section-heading" className="blog-section__title">
-                        From Our Blog
+                        {t('From Our Blog')}
                     </h2>
                     <p className="blog-section__subtitle">
-                        Latest articles on real estate, PropTech, and fractional investing from GloFi Estates.
+                        {t('Latest articles on real estate, PropTech, and fractional investing from GloFi Estates.')}
                     </p>
                 </motion.header>
 
@@ -43,7 +45,7 @@ export default function BlogSectionClient({ posts }: BlogSectionClientProps) {
                     {posts.length > 0 ? (
                         <motion.div className="blog-section__footer" variants={fadeUpSubtle}>
                             <Link href="/blog" className="blog-section__view-all">
-                                View all articles
+                                {t('View all articles')}
                             </Link>
                         </motion.div>
                     ) : null}

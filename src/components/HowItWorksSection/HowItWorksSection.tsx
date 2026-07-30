@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { useI18n } from '@/providers/LocaleProvider';
 
 const STEPS = {
     createAccount: {
@@ -222,6 +223,7 @@ function StepCard({ className, children, reduceMotion }: StepCardProps) {
 export default function HowItWorksSection() {
     const reduceMotion = useReducedMotion();
     const { createAccount, explore, invest, track } = STEPS;
+    const { t } = useI18n();
 
     const viewport = { once: true, margin: '-60px' as const };
     const motionProps = reduceMotion
@@ -238,10 +240,10 @@ export default function HowItWorksSection() {
                 >
                     <span className="how-it-works__badge">
                         <FlameIcon />
-                        SERVICES
+                        {t('Services')}
                     </span>
                     <h2 id="how-it-works-heading" className="how-it-works__title">
-                        How It Works
+                        {t('How It Works')}
                     </h2>
                 </motion.header>
 
@@ -260,8 +262,8 @@ export default function HowItWorksSection() {
                         <div className="how-it-works__card-body">
                             <StepCopy
                                 number={createAccount.number}
-                                title={createAccount.title}
-                                description={createAccount.description}
+                                title={t(createAccount.title)}
+                                description={t(createAccount.description)}
                             />
                         </div>
                     </StepCard>
@@ -274,8 +276,8 @@ export default function HowItWorksSection() {
                             <div className="how-it-works__card-body">
                                 <StepCopy
                                     number={explore.number}
-                                    title={explore.title}
-                                    description={explore.description}
+                                    title={t(explore.title)}
+                                    description={t(explore.description)}
                                 />
                             </div>
                             <StepMedia
@@ -294,8 +296,8 @@ export default function HowItWorksSection() {
                             <div className="how-it-works__card-body">
                                 <StepCopy
                                     number={invest.number}
-                                    title={invest.title}
-                                    description={invest.description}
+                                    title={t(invest.title)}
+                                    description={t(invest.description)}
                                     variant="dark"
                                 />
                             </div>
@@ -316,8 +318,8 @@ export default function HowItWorksSection() {
                         <div className="how-it-works__card-body">
                             <StepCopy
                                 number={track.number}
-                                title={track.title}
-                                description={track.description}
+                                title={t(track.title)}
+                                description={t(track.description)}
                             />
                         </div>
                         <StepMedia

@@ -18,6 +18,7 @@ import {
 } from "@/components/VectorImages";
 import { useGetAgentDashboardQuery, useGetAgentMeQuery } from "@/store/api/agentApi";
 import { useGetAssetsQuery } from "@/store/api/assetApi";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const formatCurrency = (val: number) => {
     if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
@@ -39,6 +40,7 @@ export default function AgentOverviewPage() {
     const { data: dashboardData, isLoading: dashLoading } = useGetAgentDashboardQuery();
     const { data: agentData, isLoading: agentLoading } = useGetAgentMeQuery();
     const { data: assetsData, isLoading: assetsLoading } = useGetAssetsQuery({ limit: 3 });
+    const { t } = useI18n();
 
     const handleCopy = () => {
         if (dashboardData?.referralCode) {
@@ -53,7 +55,7 @@ export default function AgentOverviewPage() {
     if (isLoading) {
         return (
             <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen flex items-center justify-center">
-                <div className="text-[var(--foreground)] opacity-50 font-montserrat animate-pulse">Loading dashboard...</div>
+                <div className="text-[var(--foreground)] opacity-50 font-montserrat animate-pulse">{t("Loading dashboard...")}</div>
             </div>
         );
     }
@@ -62,30 +64,30 @@ export default function AgentOverviewPage() {
 
     const STAT_CARDS = [
         {
-            label: "Total Sales",
+            label: t("Total Sales"),
             value: formatCurrency(dashboardData?.totalSales || 0),
             delta: "+12.5%",
             icon: TrendingUpIcon,
             iconColor: "text-blue-500",
         },
         {
-            label: "Total Earnings",
+            label: t("Total Earnings"),
             value: formatCurrency(dashboardData?.totalEarnings || 0),
             delta: "+8.3%",
             icon: DollarIcon,
             iconColor: "text-[#00DAAF]",
         },
         {
-            label: "Referrals",
+            label: t("Referrals"),
             value: dashboardData?.referralsCount?.toString() || "0",
             delta: "+3 this month",
             icon: PeopleIcon,
             iconColor: "text-purple-500",
         },
         {
-            label: "Commission Rate",
+            label: t("Commission Rate"),
             value: `${dashboardData?.commissionRate || 0}%`,
-            delta: "First 100 Agent",
+            delta: t("First 100 Agent"),
             icon: RibbonIcon,
             iconColor: "text-[var(--foreground)] opacity-20",
         },
@@ -132,7 +134,7 @@ export default function AgentOverviewPage() {
                 className="mb-8"
             >
                 <h1 className="text-3xl font-bold text-[var(--foreground)] font-montserrat tracking-tight">
-                    Overview
+                    {t("Overview")}
                 </h1>
             </motion.div>
 
@@ -148,16 +150,16 @@ export default function AgentOverviewPage() {
                         <RibbonIcon className="w-6 h-6 text-[var(--color-primary-300)]" />
                     </div>
                     <div className="flex-1">
-                        <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-1">First 100 Agent</h2>
+                        <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-1">{t("First 100 Agent")}</h2>
                         <p className="text-sm text-[var(--sidebar-text)] font-montserrat opacity-80">
-                            You&apos;re earning higher commission rates as one of our first 100 verified agents!
+                            {t("You're earning higher commission rates as one of our first 100 verified agents!")}
                         </p>
                         <div className="flex flex-wrap items-center gap-6 mt-4">
                             {getStatusBadge("KYC", kycStatus, "PENDING")}
                             {getStatusBadge("RERA", reraStatus, "PENDING")}
                             <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-wider">
                                 <CalendarIcon className="w-3.5 h-3.5" />
-                                Expires: {agentData?.profile?.expiryDate ? formatDate(agentData.profile.expiryDate) : dashboardData?.expiryDate || "2027-12-31"}
+                                {t("Expires")}: {agentData?.profile?.expiryDate ? formatDate(agentData.profile.expiryDate) : dashboardData?.expiryDate || "2027-12-31"}
                             </div>
                         </div>
                     </div>
@@ -192,10 +194,10 @@ export default function AgentOverviewPage() {
                     transition={{ duration: 0.35, delay: 0.4 }}
                     className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-8"
                 >
-                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-8">Your Referral Code</h2>
+                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat mb-8">{t("Your Referral Code")}</h2>
                     <div className="flex flex-col items-center justify-between gap-6 p-1 bg-[var(--background)] rounded-md border border-[var(--sidebar-border)] pr-4">
                         <div className="px-6 py-4 w-full">
-                            <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-[0.15em] mb-1.5">Referral Code</p>
+                            <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-[0.15em] mb-1.5">{t("Referral Code")}</p>
                             <p className="text-2xl font-bold text-[var(--color-primary-300)] font-montserrat tracking-wider">{referralCode}</p>
                         </div>
                         <button
@@ -203,13 +205,13 @@ export default function AgentOverviewPage() {
                             className="w-full h-12 px-8 rounded-md bg-[var(--color-primary-300)]/5 border border-[var(--color-primary-300)]/20 text-[var(--color-primary-300)] font-bold text-xs font-montserrat hover:bg-[var(--color-primary-300)]/10 transition-all flex items-center justify-center gap-3"
                         >
                             <CopyIcon className="w-4 h-4" />
-                            {copied ? "COPIED" : "COPY CODE"}
+                            {copied ? t("COPIED") : t("COPY CODE")}
                         </button>
                     </div>
                     <div className="flex items-start gap-3 mt-8 text-[var(--sidebar-text)] opacity-60">
                         <InfoIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-[var(--color-primary-300)]" />
                         <p className="text-xs leading-relaxed font-montserrat">
-                            Investors using your code earn you 1% commission on their purchases.
+                            {t("Investors using your code earn you 1% commission on their purchases.")}
                         </p>
                     </div>
                 </motion.div>
@@ -222,8 +224,8 @@ export default function AgentOverviewPage() {
                     className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-8"
                 >
                     <div className="flex items-center justify-between mb-8">
-                        <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">Live Assets</h2>
-                        <span className="text-[10px] font-bold text-[var(--color-primary-300)] uppercase tracking-widest opacity-70">Marketplace</span>
+                        <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">{t("Live Assets")}</h2>
+                        <span className="text-[10px] font-bold text-[var(--color-primary-300)] uppercase tracking-widest opacity-70">{t("Marketplace")}</span>
                     </div>
                     <div className="space-y-4">
                         {assetsData?.data?.slice(0, 3).map((asset: any) => (
@@ -246,7 +248,7 @@ export default function AgentOverviewPage() {
                                         {asset.location}{asset.city ? `, ${asset.city}` : ""}
                                     </div>
                                     <p className="text-xs font-bold text-[var(--color-primary-300)] mt-2 font-montserrat">
-                                        {formatCurrency(Number(asset.fractionPrice))} / Fraction
+                                        {formatCurrency(Number(asset.fractionPrice))} {t("/ Fraction")}
                                     </p>
                                 </div>
                             </div>
@@ -263,8 +265,8 @@ export default function AgentOverviewPage() {
                 className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-8"
             >
                 <div className="flex items-center justify-between mb-10">
-                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">Recent Referral Transactions</h2>
-                    <button className="text-[11px] font-bold text-[var(--sidebar-text)] opacity-60 hover:opacity-100 hover:text-[var(--foreground)] transition-all uppercase tracking-widest font-montserrat">View All</button>
+                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">{t("Recent Referral Transactions")}</h2>
+                    <button className="text-[11px] font-bold text-[var(--sidebar-text)] opacity-60 hover:opacity-100 hover:text-[var(--foreground)] transition-all uppercase tracking-widest font-montserrat">{t("View All")}</button>
                 </div>
                 <div className="space-y-10">
                     {dashboardData?.recentTransactions?.length ? (
@@ -273,7 +275,7 @@ export default function AgentOverviewPage() {
                                 <div className="space-y-1.5">
                                     <p className="text-base font-bold text-[var(--foreground)] font-montserrat">{tx.assetName}</p>
                                     <p className="text-xs text-[var(--sidebar-text)] opacity-70 font-medium font-montserrat">
-                                        Referred: {tx.referredUser} • {tx.date}
+                                        {t("Referred")}: {tx.referredUser} • {tx.date}
                                     </p>
                                 </div>
                                 <div className="text-right space-y-1">
@@ -283,7 +285,7 @@ export default function AgentOverviewPage() {
                             </div>
                         ))
                     ) : (
-                        <div className="text-sm text-[var(--sidebar-text)] opacity-60 font-montserrat italic">No recent transactions found.</div>
+                        <div className="text-sm text-[var(--sidebar-text)] opacity-60 font-montserrat italic">{t("No recent transactions found.")}</div>
                     )}
                 </div>
             </motion.div>

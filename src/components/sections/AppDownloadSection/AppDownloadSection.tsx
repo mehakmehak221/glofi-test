@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import QRCode from 'react-qr-code';
 import { motion } from 'framer-motion';
+import { useI18n } from '@/providers/LocaleProvider';
 
 export default function AppDownloadSection() {
     const APP_LINK = "https://apps.apple.com/in/app/glofi-estate/id6764258977"; 
+    const { t } = useI18n();
 
     return (
         <section className="w-full bg-black py-12 sm:py-16 lg:py-20 border-t border-white/10">
@@ -21,11 +23,11 @@ export default function AppDownloadSection() {
                         >
                           
                             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-Montserrat font-bold text-white mb-6 leading-tight tracking-tight">
-                                INVEST ON THE GO. <br />
-                                <span className="text-hero-cyan">DOWNLOAD GLOFI APP.</span>
+                                {t('Invest on the go.')} <br />
+                                <span className="text-hero-cyan">{t('Download Glofi App.')}</span>
                             </h2>
                             <p className="text-[var(--color-text-secondary)] text-sm sm:text-base lg:text-lg mb-10 max-w-lg leading-relaxed">
-                                Take control of your portfolio from anywhere. Experience seamless investing with our high-performance mobile application.
+                                {t('Take control of your portfolio from anywhere. Experience seamless investing with our high-performance mobile application.')}
                             </p>
                           
                             
@@ -43,8 +45,8 @@ export default function AppDownloadSection() {
                                             <path d="M16.3452 4.61656C17.4446 3.32811 17.9862 1.67203 17.8551 0C16.1755 0.172223 14.6241 0.955915 13.5099 2.19493C12.9651 2.80022 12.5479 3.50439 12.282 4.26721C12.0162 5.03002 11.9069 5.83651 11.9605 6.64056C12.8006 6.649 13.6317 6.47124 14.3912 6.12064C15.1507 5.77005 15.8188 5.25578 16.3452 4.61656Z" fill="white"/>
                                         </svg>
                                         <div className="text-left flex flex-col justify-center">
-                                            <span className="text-[10px] tracking-wide text-white/90 font-Montserrat font-normal leading-tight">Download on the</span>
-                                            <span className="text-xl font-semibold leading-tight text-white font-Montserrat mt-0.5">App Store</span>
+                                            <span className="text-[10px] tracking-wide text-white/90 font-Montserrat font-normal leading-tight">{t('Download on the')}</span>
+                                            <span className="text-xl font-semibold leading-tight text-white font-Montserrat mt-0.5">{t('App Store')}</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -64,8 +66,8 @@ export default function AppDownloadSection() {
                                             <path d="M11.8522 14.4001L17.8855 8.23148L4.77861 0.460464C4.30229 0.168211 3.74604 0.000250816 3.15147 0.000250816C1.69514 0.000250816 0.466575 1.01362 0.108516 2.38866C0.108516 2.38978 0.107422 2.3909 0.107422 2.39202L11.8522 14.4001Z" fill="#34A853"/>
                                         </svg>
                                         <div className="text-left flex flex-col justify-center">
-                                            <span className="text-[10px] tracking-[0.08em] text-white/90 font-Montserrat font-normal leading-tight uppercase">GET IT ON</span>
-                                            <span className="text-xl font-semibold leading-tight text-white font-Montserrat mt-0.5">Google Play</span>
+                                            <span className="text-[10px] tracking-[0.08em] text-white/90 font-Montserrat font-normal leading-tight uppercase">{t('Get it on')}</span>
+                                            <span className="text-xl font-semibold leading-tight text-white font-Montserrat mt-0.5">{t('Google Play')}</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -114,12 +116,12 @@ export default function AppDownloadSection() {
                                         <div className="absolute inset-0 w-2 h-2 rounded-full bg-hero-cyan animate-ping opacity-75" />
                                     </div>
                                     <span className="text-white font-Montserrat font-bold text-xs sm:text-sm tracking-[0.25em] uppercase">
-                                        Scan to Download
+                                        {t('Scan to Download')}
                                     </span>
                                 </div>
                                 <div className="h-px w-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                                 <span className="text-[var(--color-text-secondary)] font-Montserrat text-[10px] sm:text-xs font-medium">
-                                    AVAILABLE ON iOS & ANDROID
+                                    {t('AVAILABLE ON iOS & ANDROID')}
                                 </span>
                             </div>
                         </div>

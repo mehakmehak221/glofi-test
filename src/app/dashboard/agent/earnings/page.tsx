@@ -15,6 +15,7 @@ import {
     ClockIcon,
     VerifiedIcon
 } from "@/components/VectorImages";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const formatCurrency = (val: number) => {
     if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
@@ -23,6 +24,7 @@ const formatCurrency = (val: number) => {
 };
 
 export default function AgentEarningsPage() {
+    const { t } = useI18n();
     const { data: earningsData, isLoading: earningsLoading } = useGetAgentEarningsQuery();
     const { data: dashboardData, isLoading: dashLoading } = useGetAgentDashboardQuery();
     const { data: commissionsData, isLoading: commissionsLoading } = useGetAgentCommissionsQuery();
@@ -39,7 +41,7 @@ export default function AgentEarningsPage() {
     if (isLoading) {
         return (
             <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen flex items-center justify-center">
-                <div className="text-[var(--foreground)] opacity-50 font-montserrat animate-pulse">Loading earnings and commissions...</div>
+                <div className="text-[var(--foreground)] opacity-50 font-montserrat animate-pulse">{t("Loading earnings and commissions...")}</div>
             </div>
         );
     }
@@ -121,18 +123,18 @@ export default function AgentEarningsPage() {
 
         const amountNum = parseFloat(withdrawAmount);
         if (isNaN(amountNum) || amountNum <= 0) {
-            setWithdrawError("Please enter a valid amount.");
+            setWithdrawError(t("Please enter a valid amount."));
             return;
         }
 
         if (amountNum > summary.Withdrawable) {
-            setWithdrawError("Withdrawal request exceeds your withdrawable balance.");
+            setWithdrawError(t("Withdrawal request exceeds your withdrawable balance."));
             return;
         }
 
         try {
             await requestWithdrawal({ amount: amountNum }).unwrap();
-            setWithdrawSuccess("Withdrawal request submitted successfully!");
+            setWithdrawSuccess(t("Withdrawal request submitted successfully!"));
             setWithdrawAmount("");
             refetchSummary();
             setTimeout(() => {
@@ -140,7 +142,7 @@ export default function AgentEarningsPage() {
                 setWithdrawSuccess(null);
             }, 2000);
         } catch (err: any) {
-            setWithdrawError(err?.data?.message || "Failed to submit withdrawal request.");
+            setWithdrawError(err?.data?.message || t("Failed to submit withdrawal request."));
         }
     };
 
@@ -154,10 +156,10 @@ export default function AgentEarningsPage() {
             >
                 <div>
                     <h1 className="text-3xl font-bold text-[var(--foreground)] font-montserrat tracking-tight">
-                        Commissions & Earnings
+                        {t("Commissions & Earnings")}
                     </h1>
                     <p className="text-sm text-[var(--color-text-muted)] mt-1 font-medium">
-                        Track and withdraw your agent rewards.
+                        {t("Track and withdraw your agent rewards.")}
                     </p>
                 </div>
             </motion.div>
@@ -174,9 +176,9 @@ export default function AgentEarningsPage() {
                             <DollarIcon className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-[var(--foreground)] font-montserrat">Payout Available!</h3>
+                            <h3 className="text-base font-bold text-[var(--foreground)] font-montserrat">{t("Payout Available!")}</h3>
                             <p className="text-sm text-[var(--color-text-muted)] mt-0.5 font-medium">
-                                You have <span className="text-emerald-500 font-bold">{formatCurrency(summary.Withdrawable)}</span> ready for withdrawal.
+                                {t("You have {amount} ready for withdrawal.", { amount: formatCurrency(summary.Withdrawable) })}
                             </p>
                         </div>
                     </div>
@@ -184,7 +186,7 @@ export default function AgentEarningsPage() {
                         onClick={() => setIsModalOpen(true)}
                         className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md hover:shadow-emerald-500/20 cursor-pointer border-0 shrink-0"
                     >
-                        Withdraw to Bank
+                        {t("Withdraw to Bank")}
                     </button>
                 </motion.div>
             )}
@@ -201,7 +203,7 @@ export default function AgentEarningsPage() {
                     >
                         <div className="flex items-center justify-between mb-3">
                             <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${stat.badgeStyle}`}>
-                                {stat.label}
+                                {t(stat.label)}
                             </span>
                             <div className="opacity-60 group-hover:scale-110 transition-transform">
                                 <stat.icon className={`w-4 h-4 ${stat.iconColor}`} />
@@ -222,18 +224,18 @@ export default function AgentEarningsPage() {
                 className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl overflow-hidden shadow-sm"
             >
                 <div className="p-6 border-b border-[var(--sidebar-border)]">
-                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">Commissions History</h2>
+                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">{t("Commissions History")}</h2>
                 </div>
                 <div className="overflow-x-auto">
                     {commissionsData && commissionsData.length > 0 ? (
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-[var(--sidebar-border)] bg-[var(--field-surface)]/50">
-                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Date</th>
-                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Investment / Asset</th>
-                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Type</th>
-                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Amount</th>
-                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Status</th>
+                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Date")}</th>
+                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Investment / Asset")}</th>
+                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Type")}</th>
+                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Amount")}</th>
+                                    <th className="p-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Status")}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-[var(--sidebar-border)]">
@@ -244,7 +246,7 @@ export default function AgentEarningsPage() {
                                         </td>
                                         <td className="p-4">
                                             <div className="text-xs font-bold text-[var(--foreground)]">
-                                                {item.investment?.asset?.title || "Direct Referrals"}
+                                                {item.investment?.asset?.title ? t(item.investment.asset.title) : t("Direct Referrals")}
                                             </div>
                                             {item.investmentId && (
                                                 <div className="text-[10px] text-[var(--color-text-muted)] font-mono mt-0.5">
@@ -254,7 +256,7 @@ export default function AgentEarningsPage() {
                                         </td>
                                         <td className="p-4">
                                             <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] bg-[var(--field-surface)] px-2 py-0.5 rounded border border-[var(--sidebar-border)]">
-                                                {item.type}
+                                                {t(item.type)}
                                             </span>
                                         </td>
                                         <td className="p-4 text-xs font-bold text-[var(--foreground)]">
@@ -262,7 +264,7 @@ export default function AgentEarningsPage() {
                                         </td>
                                         <td className="p-4">
                                             <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${getStatusBadgeClass(item.status)}`}>
-                                                {item.status}
+                                                {t(item.status)}
                                             </span>
                                         </td>
                                     </tr>
@@ -271,7 +273,7 @@ export default function AgentEarningsPage() {
                         </table>
                     ) : (
                         <div className="p-12 text-center text-sm text-[var(--color-text-muted)] italic font-montserrat">
-                            No commissions found.
+                            {t("No commissions found.")}
                         </div>
                     )}
                 </div>
@@ -295,16 +297,16 @@ export default function AgentEarningsPage() {
                             className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative z-10 p-6 sm:p-8"
                         >
                             <h3 className="text-lg font-bold text-[var(--foreground)] font-montserrat mb-2">
-                                Request Withdrawal
+                                {t("Request Withdrawal")}
                             </h3>
                             <p className="text-xs text-[var(--color-text-muted)] mb-6 font-medium">
-                                Funds will be sent directly to your verified primary bank account.
+                                {t("Funds will be sent directly to your verified primary bank account.")}
                             </p>
 
                             <form onSubmit={handleWithdrawSubmit} className="space-y-5">
                                 <div className="space-y-1.5">
                                     <label className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] font-bold">
-                                        Amount to Withdraw
+                                        {t("Amount to Withdraw")}
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--color-text-muted)] font-bold text-sm">
@@ -314,13 +316,13 @@ export default function AgentEarningsPage() {
                                             type="number"
                                             value={withdrawAmount}
                                             onChange={(e) => setWithdrawAmount(e.target.value)}
-                                            placeholder="Enter amount"
+                                            placeholder={t("Enter amount")}
                                             className="w-full rounded-xl pl-8 pr-4 py-3 text-sm font-medium text-[var(--foreground)] bg-[var(--field-surface)] border border-[var(--sidebar-border)] focus:outline-none focus:border-[var(--color-primary-300)]"
                                             required
                                         />
                                     </div>
                                     <div className="flex justify-between text-[10px] text-[var(--color-text-muted)] font-medium mt-1">
-                                        <span>Withdrawable Balance: {formatCurrency(summary.Withdrawable)}</span>
+                                        <span>{t("Withdrawable Balance: {balance}", { balance: formatCurrency(summary.Withdrawable) })}</span>
                                     </div>
                                 </div>
 
@@ -342,14 +344,14 @@ export default function AgentEarningsPage() {
                                         onClick={() => setIsModalOpen(false)}
                                         className="flex-1 py-3 border border-[var(--sidebar-border)] hover:bg-[var(--field-surface)] text-[var(--foreground)] font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer bg-transparent"
                                     >
-                                        Cancel
+                                        {t("Cancel")}
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={isWithdrawing}
                                         className="flex-1 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-black font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer border-0 shadow-md"
                                     >
-                                        {isWithdrawing ? "Submitting..." : "Submit Payout"}
+                                        {isWithdrawing ? t("Submitting...") : t("Submit Payout")}
                                     </button>
                                 </div>
                             </form>

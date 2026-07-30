@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import NavItem from "./NavItem";
 import { useLogoutMutation } from "@/store/api/authApi";
 import { removeCookie } from "@/utils/cookieUtils";
+import { useI18n } from "@/providers/LocaleProvider";
 
 import {
     OverviewIcon,
@@ -20,11 +21,10 @@ import {
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
-    { href: "/dashboard/partner/overview", icon: OverviewIcon, label: "Overview" },
-    { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
-
-    { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
-    { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
+    { href: "/dashboard/partner/overview", icon: OverviewIcon, labelKey: "Overview" },
+    { href: "/dashboard/partner/properties", icon: PropertyIcon, labelKey: "Properties" },
+    { href: "/dashboard/partner/finance", icon: FinancialIcon, labelKey: "Finance" },
+    { href: "/dashboard/partner/support", icon: SupportIcon, labelKey: "Support" },
 ];
 
 export default function PartnerSidebar() {
@@ -33,6 +33,7 @@ export default function PartnerSidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const [logout] = useLogoutMutation();
+    const { t } = useI18n();
 
     const handleLogout = async () => {
         try {
@@ -45,7 +46,7 @@ export default function PartnerSidebar() {
             localStorage.removeItem("isLoggedIn");
             removeCookie("isLoggedIn");
             removeCookie("access_token");
-            localStorage.setItem("toastMessage", "Logged out successfully");
+            localStorage.setItem("toastMessage", t("Logged out successfully"));
             router.push("/sign-in");
         }
     };
@@ -111,7 +112,7 @@ export default function PartnerSidebar() {
                 transition={{ duration: 0.2 }}
             >
                 <span className="text-[10px] font-medium text-[var(--panel-chip-text)] tracking-[0.15em] uppercase border border-[var(--panel-chip-border)] font-montserrat bg-[var(--panel-chip-bg)] rounded-full px-3 py-1 inline-block">
-                    Developer Panel
+                    {t("Developer Panel")}
                 </span>
             </motion.div>
 
@@ -122,7 +123,7 @@ export default function PartnerSidebar() {
                         key={item.href}
                         href={item.href}
                         icon={item.icon}
-                        label={item.label}
+                        label={t(item.labelKey)}
                         isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
                         collapsed={collapsed}
                     />
@@ -149,7 +150,7 @@ export default function PartnerSidebar() {
                         animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
                         transition={{ duration: 0.2 }}
                     >
-                        Collapse
+                        {t("Collapse")}
                     </motion.span>
                 </motion.button>
 
@@ -166,7 +167,7 @@ export default function PartnerSidebar() {
                         animate={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : "auto" }}
                         transition={{ duration: 0.2 }}
                     >
-                        Sign Out
+                        {t("Sign Out")}
                     </motion.span>
                 </button>
             </div>

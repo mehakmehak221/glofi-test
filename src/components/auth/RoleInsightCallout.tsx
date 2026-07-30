@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/providers/LocaleProvider";
+
 const USER_ROLE_INSIGHT: Record<string, string> = {
     Investor:
         "Own fractions of premium properties. Track your portfolio and monitor returns.",
@@ -27,7 +29,8 @@ function SparkleCluster({ className = "" }: { className?: string }) {
 }
 
 export default function RoleInsightCallout({ role }: { role: string }) {
-    const text = USER_ROLE_INSIGHT[role] ?? USER_ROLE_INSIGHT.Investor;
+    const { t } = useI18n();
+    const text = t(USER_ROLE_INSIGHT[role] ?? USER_ROLE_INSIGHT.Investor);
 
     return (
         <div className="flex gap-3 p-4 rounded-xl border border-neutral-200 bg-neutral-50">

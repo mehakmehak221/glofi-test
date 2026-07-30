@@ -4,6 +4,7 @@ import type { ComponentType } from "react";
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/providers/LocaleProvider";
 import {
   ShareIcon,
   CopyIcon,
@@ -42,21 +43,23 @@ function MetricCard({
   hint: string;
   icon: ComponentType<{ className?: string }>;
 }) {
+  const { t } = useI18n();
   return (
     <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-5">
       <div className="flex items-center justify-between">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">{label}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">{t(label)}</p>
         <span className="rounded-lg bg-[var(--sidebar-active-bg)] p-2 text-[var(--sidebar-active-text)]">
           <Icon className="h-4 w-4" />
         </span>
       </div>
       <p className="mt-5 text-3xl font-bold text-[var(--foreground)] font-montserrat">{value}</p>
-      <p className="mt-2 text-xs font-medium text-[var(--sidebar-text)] opacity-60">{hint}</p>
+      <p className="mt-2 text-xs font-medium text-[var(--sidebar-text)] opacity-60">{t(hint)}</p>
     </div>
   );
 }
 
 export default function AgentReferralsPage() {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<"asset" | "campaign">("asset");
 
   // Asset Sharing States
@@ -194,7 +197,7 @@ export default function AgentReferralsPage() {
     setCreateSuccess("");
 
     if (!createDestUrl) {
-      setCreateError("Destination URL is required.");
+      setCreateError(t("Destination URL is required."));
       return;
     }
 
@@ -204,11 +207,11 @@ export default function AgentReferralsPage() {
         customCode: createCustomCode.trim() || undefined,
       }).unwrap();
 
-      setCreateSuccess(`Referral link created successfully! Code: ${response.code}`);
+      setCreateSuccess(t("Referral link created successfully! Code: {code}", { code: response.code }));
       setCreateDestUrl("");
       setCreateCustomCode("");
     } catch (err: any) {
-      setCreateError(err.data?.message || err.message || "Failed to create referral link.");
+      setCreateError(err.data?.message || err.message || t("Failed to create referral link."));
     }
   };
 
@@ -243,16 +246,16 @@ export default function AgentReferralsPage() {
       }).unwrap();
       setEditingLink(null);
     } catch (err: any) {
-      setEditError(err.data?.message || err.message || "Failed to update referral link.");
+      setEditError(err.data?.message || err.message || t("Failed to update referral link."));
     }
   };
 
   const handleDeleteLink = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this referral link?")) return;
+    if (!window.confirm(t("Are you sure you want to delete this referral link?"))) return;
     try {
       await deleteReferralLink(id).unwrap();
     } catch (err: any) {
-      alert(err.data?.message || err.message || "Failed to delete referral link.");
+      alert(err.data?.message || err.message || t("Failed to delete referral link."));
     }
   };
 
@@ -261,7 +264,7 @@ export default function AgentReferralsPage() {
       <div className="flex min-h-screen items-center justify-center p-6">
         <div className="flex items-center gap-3 text-[var(--foreground)] opacity-60 font-montserrat">
           <LoadingSpinner />
-          Loading referrals dashboard...
+          {t("Loading referrals dashboard...")}
         </div>
       </div>
     );
@@ -275,13 +278,13 @@ export default function AgentReferralsPage() {
         className="mb-8 flex flex-col gap-3"
       >
         <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--sidebar-text)] opacity-60">
-          Agent Panel
+          {t("Agent Panel")}
         </p>
         <h1 className="text-3xl font-bold tracking-tight text-[var(--foreground)] font-montserrat">
-          Referrals & Marketing
+          {t("Referrals & Marketing")}
         </h1>
         <p className="max-w-3xl text-sm text-[var(--sidebar-text)] opacity-60">
-          Generate unique referral codes and custom destination links. Track your campaign conversions, clicks, registrations, and investor activities in real time.
+          {t("Generate unique referral codes and custom destination links. Track your campaign conversions, clicks, registrations, and investor activities in real time.")}
         </p>
       </motion.div>
 
@@ -301,7 +304,7 @@ export default function AgentReferralsPage() {
               : "border-transparent text-[var(--sidebar-text)] opacity-60 hover:opacity-100"
           }`}
         >
-          Asset-Specific Links
+          {t("Asset-Specific Links")}
         </button>
         <button
           onClick={() => setActiveTab("campaign")}
@@ -311,7 +314,7 @@ export default function AgentReferralsPage() {
               : "border-transparent text-[var(--sidebar-text)] opacity-60 hover:opacity-100"
           }`}
         >
-          Custom Campaign Links
+          {t("Custom Campaign Links")}
         </button>
       </div>
 
@@ -327,11 +330,11 @@ export default function AgentReferralsPage() {
             <section className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
               <div className="mb-6 flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">Live Assets</p>
-                  <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">Shareable inventory</h2>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">{t("Live Assets")}</p>
+                  <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">{t("Shareable inventory")}</h2>
                 </div>
                 <span className="rounded-full border border-[var(--color-primary-300)]/20 bg-[var(--color-primary-300)]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--color-primary-300)]">
-                  {liveAssets.length} live
+                  {t("{count} live", { count: liveAssets.length })}
                 </span>
               </div>
 
@@ -366,16 +369,16 @@ export default function AgentReferralsPage() {
                           <div className="min-w-0">
                             <p className="truncate text-base font-bold text-[var(--foreground)] font-montserrat">{asset.title}</p>
                             <p className="mt-1 text-xs text-[var(--sidebar-text)] opacity-60">
-                              {asset.location || "Location unavailable"}
+                              {asset.location || t("Location unavailable")}
                             </p>
                           </div>
                           <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
-                            {asset.category || "Asset"}
+                            {t(asset.category || "Asset")}
                           </span>
                         </div>
 
                         <div className="mt-4 flex items-center justify-between text-xs text-[var(--sidebar-text)] opacity-60">
-                          <span>Valuation</span>
+                          <span>{t("Valuation")}</span>
                           <span className="font-bold text-[var(--foreground)]">
                             {formatCurrency(Number(asset.valuation || 0))}
                           </span>
@@ -388,14 +391,14 @@ export default function AgentReferralsPage() {
                             className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-md bg-[var(--color-primary-300)] px-3 text-xs font-bold leading-none text-black transition hover:scale-[1.01]"
                           >
                             <ShareIcon className="h-4 w-4" />
-                            {existing ? "Open Share" : "Generate"}
+                            {existing ? t("Open Share") : t("Generate")}
                           </button>
                           <button
                             type="button"
                             onClick={() => setReportAssetId(String(asset.id))}
                             className="inline-flex min-h-11 items-center justify-center rounded-md border border-[var(--sidebar-border)] px-3 text-xs font-bold leading-none text-[var(--foreground)] transition hover:border-[var(--color-primary-300)]/40"
                           >
-                            Inspect Report
+                            {t("Inspect Report")}
                           </button>
                         </div>
                       </div>
@@ -409,15 +412,15 @@ export default function AgentReferralsPage() {
               <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
                 <div className="mb-6 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">Share Activity</p>
-                    <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">Shared assets</h2>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">{t("Share Activity")}</p>
+                    <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">{t("Shared assets")}</h2>
                   </div>
                   <GuideIcon className="h-5 w-5 text-[var(--sidebar-text)] opacity-50" />
                 </div>
 
                 {sharedList.length === 0 ? (
                   <div className="rounded-2xl border border-dashed border-[var(--sidebar-border)] bg-[var(--background)]/60 p-6 text-sm text-[var(--sidebar-text)] opacity-60">
-                    No share links yet. Pick a live asset and generate your first link.
+                    {t("No share links yet. Pick a live asset and generate your first link.")}
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -435,7 +438,7 @@ export default function AgentReferralsPage() {
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                           <div className="min-w-0">
                             <p className="truncate text-sm font-bold text-[var(--foreground)] font-montserrat">
-                              {item.asset?.title || "Untitled asset"}
+                              {item.asset?.title || t("Untitled asset")}
                             </p>
                             <p className="mt-1 text-[11px] text-[var(--sidebar-text)] opacity-60">
                               {item.code} • {new Date(item.createdAt).toLocaleDateString()}
@@ -443,10 +446,10 @@ export default function AgentReferralsPage() {
                           </div>
                           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                             <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
-                              {item.stats?.totalClicks || 0} clicks
+                              {t("{clicks} clicks", { clicks: item.stats?.totalClicks || 0 })}
                             </span>
                             <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
-                              {item.stats?.investmentsCount || 0} invests
+                              {t("{invests} invests", { invests: item.stats?.investmentsCount || 0 })}
                             </span>
                           </div>
                         </div>
@@ -464,7 +467,7 @@ export default function AgentReferralsPage() {
                             className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-[var(--sidebar-border)] px-4 text-xs font-bold uppercase tracking-wider text-[var(--foreground)] sm:w-auto sm:self-end"
                           >
                             <CopyIcon className="h-4 w-4" />
-                            {copiedId === item.id ? "Copied" : "Copy"}
+                            {copiedId === item.id ? t("Copied") : t("Copy")}
                           </button>
                         </div>
                       </button>
@@ -476,24 +479,24 @@ export default function AgentReferralsPage() {
               <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
                 <div className="mb-6 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">Performance</p>
-                    <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">Asset report</h2>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">{t("Performance")}</p>
+                    <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">{t("Asset report")}</h2>
                   </div>
                   <ChartLineIcon className="h-5 w-5 text-[var(--sidebar-text)] opacity-50" />
                 </div>
 
                 {!selectedReportAssetId ? (
                   <div className="rounded-2xl border border-dashed border-[var(--sidebar-border)] bg-[var(--background)]/60 p-6 text-sm text-[var(--sidebar-text)] opacity-60">
-                    Select a shared asset to view its report.
+                    {t("Select a shared asset to view its report.")}
                   </div>
                 ) : reportLoading ? (
                   <div className="flex items-center gap-3 text-sm text-[var(--sidebar-text)] opacity-60">
                     <LoadingSpinner />
-                    Loading report...
+                    {t("Loading report...")}
                   </div>
                 ) : report404 ? (
                   <div className="rounded-2xl border border-dashed border-[var(--sidebar-border)] bg-[var(--background)]/60 p-6 text-sm text-[var(--sidebar-text)] opacity-60">
-                    No share links yet. Click Share to get started.
+                    {t("No share links yet. Click Share to get started.")}
                   </div>
                 ) : (
                   <div className="space-y-5">
@@ -505,14 +508,14 @@ export default function AgentReferralsPage() {
                         { label: "Volume", value: formatCurrency(shareReport?.summary.totalInvestmentAmount || 0) },
                       ].map((item) => (
                         <div key={item.label} className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">{item.label}</p>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">{t(item.label)}</p>
                           <p className="mt-3 text-2xl font-bold text-[var(--foreground)] font-montserrat">{item.value}</p>
                         </div>
                       ))}
                     </div>
 
                     <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">Conversion Rate</p>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">{t("Conversion Rate")}</p>
                       <p className="mt-3 text-2xl font-bold text-[var(--color-primary-300)] font-montserrat">
                         {shareReport?.summary.conversionRate || 0}%
                       </p>
@@ -527,7 +530,7 @@ export default function AgentReferralsPage() {
                               <p className="mt-1 text-xs text-[var(--sidebar-text)] opacity-60 break-all">{link.shareUrl}</p>
                             </div>
                             <span className="rounded-full bg-[var(--sidebar-active-bg)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sidebar-active-text)] whitespace-nowrap">
-                              {link.stats.totalClicks} clicks
+                              {t("{clicks} clicks", { clicks: link.stats.totalClicks })}
                             </span>
                           </div>
                         </div>
@@ -548,11 +551,11 @@ export default function AgentReferralsPage() {
           >
             {/* Create Custom Link Form */}
             <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
-              <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-4">Create Custom Campaign Referral Link</h2>
+              <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-4">{t("Create Custom Campaign Referral Link")}</h2>
               <form onSubmit={handleCreateCustomLink} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60 mb-2">Destination URL *</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60 mb-2">{t("Destination URL *")}</label>
                     <input
                       type="url"
                       placeholder="e.g. https://glofi.com/properties/dubai-skyline"
@@ -562,7 +565,7 @@ export default function AgentReferralsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60 mb-2">Custom Code (Optional)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60 mb-2">{t("Custom Code (Optional)")}</label>
                     <input
                       type="text"
                       placeholder="e.g. MYDUBAI2026"
@@ -581,18 +584,18 @@ export default function AgentReferralsPage() {
                   disabled={isCreatingLink}
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[var(--color-primary-300)] px-6 text-xs font-bold uppercase tracking-wider text-black transition hover:scale-[1.01] disabled:opacity-50"
                 >
-                  {isCreatingLink ? <LoadingSpinner /> : "Generate Referral Link"}
+                  {isCreatingLink ? <LoadingSpinner /> : t("Generate Referral Link")}
                 </button>
               </form>
             </div>
 
             {/* Custom Links List */}
             <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
-              <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-6">Your Campaign Links</h2>
+              <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-6">{t("Your Campaign Links")}</h2>
 
               {customLinksList.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-[var(--sidebar-border)] bg-[var(--background)]/60 p-6 text-sm text-[var(--sidebar-text)] opacity-60 text-center">
-                  No custom campaign referral links generated yet. Use the form above to generate your first link!
+                  {t("No custom campaign referral links generated yet. Use the form above to generate your first link!")}
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -626,11 +629,11 @@ export default function AgentReferralsPage() {
                                     : "bg-red-500/10 text-red-500 border border-red-500/20"
                                 }`}
                               >
-                                {link.isActive ? "Active" : "Inactive"}
+                                {link.isActive ? t("Active") : t("Inactive")}
                               </span>
                             </div>
                             <p className="mt-1 text-xs text-[var(--sidebar-text)] opacity-60 truncate max-w-xl">
-                              Destination: <a href={link.destinationUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-[var(--color-primary-300)]">{link.destinationUrl}</a>
+                              {t("Destination:")} <a href={link.destinationUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-[var(--color-primary-300)]">{link.destinationUrl}</a>
                             </p>
                           </div>
 
@@ -641,14 +644,14 @@ export default function AgentReferralsPage() {
                               className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md border border-[var(--sidebar-border)] px-3 text-xs font-semibold text-[var(--foreground)] hover:border-[var(--color-primary-300)]/40 transition md:w-auto md:min-w-[104px]"
                             >
                               <CopyIcon className="h-3.5 w-3.5" />
-                              {copiedId === link.id ? "Copied" : "Copy Link"}
+                              {copiedId === link.id ? t("Copied") : t("Copy Link")}
                             </button>
                             <button
                               type="button"
                               onClick={() => handleOpenEditModal(link)}
                               className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md border border-[var(--sidebar-border)] px-3 text-xs font-semibold text-[var(--foreground)] hover:border-[var(--color-primary-300)]/40 transition md:w-auto md:min-w-[72px]"
                             >
-                              Edit
+                              {t("Edit")}
                             </button>
                             <button
                               type="button"
@@ -659,7 +662,7 @@ export default function AgentReferralsPage() {
                                   : "border-green-500/20 text-green-500 hover:bg-green-500/5"
                               }`}
                             >
-                              {link.isActive ? "Deactivate" : "Activate"}
+                              {link.isActive ? t("Deactivate") : t("Activate")}
                             </button>
                             <button
                               type="button"
@@ -676,27 +679,27 @@ export default function AgentReferralsPage() {
                         {/* Real-time Stats Grid */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 pt-3 border-t border-[var(--sidebar-border)]">
                           <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--card-surface)]/40 p-3">
-                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">Clicks</p>
+                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">{t("Clicks")}</p>
                             <p className="mt-1 text-lg font-bold text-[var(--foreground)] font-montserrat">{stats.totalClicks}</p>
                           </div>
                           <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--card-surface)]/40 p-3">
-                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">Leads</p>
+                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">{t("Leads")}</p>
                             <p className="mt-1 text-lg font-bold text-[var(--foreground)] font-montserrat">{stats.leadsCount}</p>
                           </div>
                           <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--card-surface)]/40 p-3">
-                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">Signups</p>
+                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">{t("Signups")}</p>
                             <p className="mt-1 text-lg font-bold text-[var(--foreground)] font-montserrat">{stats.registeredUsersCount}</p>
                           </div>
                           <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--card-surface)]/40 p-3">
-                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">KYC</p>
+                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">{t("KYC")}</p>
                             <p className="mt-1 text-lg font-bold text-[var(--foreground)] font-montserrat">{stats.kycCompletedCount}</p>
                           </div>
                           <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--card-surface)]/40 p-3">
-                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">Invests</p>
+                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">{t("Invests")}</p>
                             <p className="mt-1 text-lg font-bold text-[var(--foreground)] font-montserrat">{stats.investmentsCount}</p>
                           </div>
                           <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--card-surface)]/40 p-3 sm:col-span-2">
-                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">Volume</p>
+                            <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60">{t("Volume")}</p>
                             <p className="mt-1 text-base font-bold text-[var(--color-primary-300)] font-montserrat truncate">
                               {formatCurrency(stats.totalInvestmentAmount)}
                             </p>
@@ -704,8 +707,8 @@ export default function AgentReferralsPage() {
                         </div>
 
                         <div className="flex items-center justify-between text-[11px] text-[var(--sidebar-text)] opacity-60">
-                          <span>Created {new Date(link.createdAt).toLocaleDateString()}</span>
-                          <span className="font-semibold text-[var(--foreground)]">Conversion Rate: {stats.conversionRate || 0}%</span>
+                          <span>{t("Created {date}", { date: new Date(link.createdAt).toLocaleDateString() })}</span>
+                          <span className="font-semibold text-[var(--foreground)]">{t("Conversion Rate: {rate}%", { rate: stats.conversionRate || 0 })}</span>
                         </div>
                       </div>
                     );
@@ -721,28 +724,28 @@ export default function AgentReferralsPage() {
         <div className="mb-6 flex items-center gap-3">
           <SparkleIcon className="h-5 w-5 text-[var(--color-primary-300)]" />
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">Workflow</p>
-            <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">How sharing works</h2>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">{t("Workflow")}</p>
+            <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">{t("How sharing works")}</h2>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">1. Generate</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">{t("1. Generate")}</p>
             <p className="mt-3 text-sm text-[var(--sidebar-text)] opacity-70">
-              Create a custom code or pick a live asset, then set a target page for the tracking source.
+              {t("Create a custom code or pick a live asset, then set a target page for the tracking source.")}
             </p>
           </div>
           <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">2. Distribute</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">{t("2. Distribute")}</p>
             <p className="mt-3 text-sm text-[var(--sidebar-text)] opacity-70">
-              Share the generated referral links with prospective leads or on campaigns.
+              {t("Share the generated referral links with prospective leads or on campaigns.")}
             </p>
           </div>
           <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">3. Attribute</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">{t("3. Attribute")}</p>
             <p className="mt-3 text-sm text-[var(--sidebar-text)] opacity-70">
-              The platform captures clicks on landing and records signup, lead, and investment events automatically.
+              {t("The platform captures clicks on landing and records signup, lead, and investment events automatically.")}
             </p>
           </div>
         </div>
@@ -752,7 +755,7 @@ export default function AgentReferralsPage() {
         key={shareModalSession}
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
-        assetTitle={selectedAsset?.title || "Selected asset"}
+        assetTitle={selectedAsset?.title || t("Selected asset")}
         assetValuation={String(selectedAsset?.valuation || 0)}
         shareUrl={selectedShareUrl}
         isGenerating={isGenerating}
@@ -763,10 +766,10 @@ export default function AgentReferralsPage() {
       {editingLink && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-[var(--foreground)] font-montserrat mb-4">Edit Referral Link: {editingLink.code}</h3>
+            <h3 className="text-lg font-bold text-[var(--foreground)] font-montserrat mb-4">{t("Edit Referral Link: {code}", { code: editingLink.code })}</h3>
             <form onSubmit={handleSaveEdit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60 mb-2">Destination URL</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60 mb-2">{t("Destination URL")}</label>
                 <input
                   type="url"
                   required
@@ -784,7 +787,7 @@ export default function AgentReferralsPage() {
                   onChange={(e) => setEditIsActive(e.target.checked)}
                   className="rounded border-[var(--sidebar-border)] bg-[var(--background)] text-[var(--color-primary-300)] focus:ring-0"
                 />
-                <label htmlFor="editIsActive" className="text-sm font-semibold text-[var(--foreground)] cursor-pointer">Active State</label>
+                <label htmlFor="editIsActive" className="text-sm font-semibold text-[var(--foreground)] cursor-pointer">{t("Active State")}</label>
               </div>
 
               {editError && <p className="text-xs font-medium text-red-500">{editError}</p>}
@@ -795,14 +798,14 @@ export default function AgentReferralsPage() {
                   onClick={() => setEditingLink(null)}
                   className="inline-flex h-10 items-center justify-center rounded-md border border-[var(--sidebar-border)] px-4 text-xs font-bold uppercase tracking-wider text-[var(--foreground)] transition hover:bg-neutral-800 hover:text-white"
                 >
-                  Cancel
+                  {t("Cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={isUpdatingLink}
                   className="inline-flex h-10 items-center justify-center rounded-md bg-[var(--color-primary-300)] px-5 text-xs font-bold uppercase tracking-wider text-black transition hover:scale-[1.01] hover:text-white disabled:opacity-50"
                 >
-                  {isUpdatingLink ? <LoadingSpinner /> : "Save Changes"}
+                  {isUpdatingLink ? <LoadingSpinner /> : t("Save Changes")}
                 </button>
               </div>
             </form>

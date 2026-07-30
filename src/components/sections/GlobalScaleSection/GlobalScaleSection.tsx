@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { useI18n } from '@/providers/LocaleProvider';
 
 function FlameIcon() {
     return (
@@ -24,6 +25,7 @@ function FlameIcon() {
 }
 
 export default function GlobalScaleSection() {
+    const { t } = useI18n();
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -70,15 +72,15 @@ export default function GlobalScaleSection() {
                     <div className="flex flex-col items-start max-w-xl w-full lg:w-[45%] z-20">
                         <motion.div variants={itemVariants} className="flex items-center gap-2 bg-white rounded-full px-4 py-1.5 mb-6 sm:mb-8 border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)] w-max">
                             <FlameIcon />
-                            <span className="text-[#1A1F1C] text-[11px] sm:text-xs font-bold tracking-wider uppercase">Global Access</span>
+                            <span className="text-[#1A1F1C] text-[11px] sm:text-xs font-bold tracking-wider uppercase">{t('Global Access')}</span>
                         </motion.div>
 
                         <motion.h2 variants={itemVariants} className="text-[#1A1F1C] text-4xl sm:text-5xl lg:text-[3.5rem] font-bold leading-tight tracking-tight mb-6">
-                            A Smarter Way to Own<br className="hidden sm:block" /> Real Estate
+                            {t('A Smarter Way to Own')}<br className="hidden sm:block" /> {t('Real Estate')}
                         </motion.h2>
 
                         <motion.p variants={itemVariants} className="text-[#4A5568] text-lg sm:text-xl leading-relaxed">
-                            Glofi simplifies premium real estate investing through structured fractional ownership, transparent transactions, and curated global opportunities.
+                            {t('Glofi simplifies premium real estate investing through structured fractional ownership, transparent transactions, and curated global opportunities.')}
                         </motion.p>
                     </div>
 

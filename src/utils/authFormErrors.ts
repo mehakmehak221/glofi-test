@@ -1,5 +1,11 @@
 /** Shared validation + API error formatting for auth forms (sign-in / sign-up). */
 
+export type AuthTranslator = (key: string, values?: Record<string, string | number>) => string;
+
+function translateMessage(t: AuthTranslator | undefined, key: string, values?: Record<string, string | number>) {
+    return t ? t(key, values) : key;
+}
+
 export const EMAIL_PATTERN =
     /^(?!.*\.\.)(?!.*\.$)[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
 export const NAME_PATTERN = /^(?=.{2,100}$)(?=.*\p{L})[\p{L}]+(?:[ .'-][\p{L}]+)*$/u;
@@ -27,10 +33,10 @@ export function passwordMeetsSignUpStrength(password: string): boolean {
     return SIGNUP_PASSWORD_REQUIREMENTS.every((r) => r.test(password));
 }
 
-export function getSignUpPasswordCriteria(password: string) {
+export function getSignUpPasswordCriteria(password: string, t?: AuthTranslator) {
     return SIGNUP_PASSWORD_REQUIREMENTS.map((r) => ({
         id: r.id,
-        label: r.label,
+        label: translateMessage(t, r.label),
         met: r.test(password),
     }));
 }
@@ -173,20 +179,20 @@ export function isMachinePasswordLengthMessage(text: string): boolean {
     );
 }
 
-export function humanizeValidationLine(line: string, minPasswordLen: number): string {
-    if (isMachineOtpValidationMessage(line)) return "Please enter the 6-digit code from your email.";
-    if (isMachineEmailValidationMessage(line)) return EMAIL_FORMAT_ERROR;
-    if (isMachineNameValidationMessage(line)) return NAME_FORMAT_ERROR;
-    if (isMachineReraValidationMessage(line)) return RERA_FORMAT_ERROR;
+export function humanizeValidationLine(line: string, minPasswordLen: number, t?: AuthTranslator): string {
+    if (isMachineOtpValidationMessage(line)) return translateMessage(t, "Please enter the 6-digit code from your email.");
+    if (isMachineEmailValidationMessage(line)) return translateMessage(t, EMAIL_FORMAT_ERROR);
+    if (isMachineNameValidationMessage(line)) return translateMessage(t, NAME_FORMAT_ERROR);
+    if (isMachineReraValidationMessage(line)) return translateMessage(t, RERA_FORMAT_ERROR);
     if (isMachinePasswordComplexityMessage(line)) {
-        return "Password must include upper and lowercase letters, a number, a special character, and be at least 8 characters long.";
+        return translateMessage(t, "Password must include upper and lowercase letters, a number, a special character, and be at least 8 characters long.");
     }
-    if (isMachinePasswordLengthMessage(line)) return `Password must be at least ${minPasswordLen} characters.`;
+    if (isMachinePasswordLengthMessage(line)) return translateMessage(t, "Password must be at least {minPasswordLen} characters.", { minPasswordLen });
     return line;
 }
 
 /** Extra pass for common class-validator / NestJS wording. */
-function humanizeRequiredEmptyLine(raw: string): string | null {
+function humanizeRequiredEmptyLine(raw: string, t?: AuthTranslator): string | null {
     const low = raw.toLowerCase();
     const empty =
         low.includes("should not be empty") ||
@@ -194,29 +200,29 @@ function humanizeRequiredEmptyLine(raw: string): string | null {
         /\bis required\b/.test(low) ||
         (low.includes("should not be") && (low.includes("empty") || low.includes("blank")));
     if (!empty) return null;
-    if (low.includes("email")) return "Please enter your email address.";
-    if (low.includes("password")) return "Please enter a password.";
-    if (low.includes("rera")) return "Please enter your RERA registration number.";
+    if (low.includes("email")) return translateMessage(t, "Please enter your email address.");
+    if (low.includes("password")) return translateMessage(t, "Please enter a password.");
+    if (low.includes("rera")) return translateMessage(t, "Please enter your RERA registration number.");
     if (low.includes("expiry") || low.includes("expire") || (low.includes("date") && low.includes("rera")))
-        return "Please select your RERA expiry date.";
+        return translateMessage(t, "Please select your RERA expiry date.");
     if (
         low.includes("fullname") ||
         low.includes("full_name") ||
         low.includes("full name") ||
         (low.includes("name") && !low.includes("username") && !low.includes("user name"))
     ) {
-        return "Please enter your full name.";
+        return translateMessage(t, "Please enter your full name.");
     }
     return null;
 }
 
-export function humanizeApiValidationLine(raw: string, minPasswordLen: number): string {
-    const fromEmpty = humanizeRequiredEmptyLine(raw);
+export function humanizeApiValidationLine(raw: string, minPasswordLen: number, t?: AuthTranslator): string {
+    const fromEmpty = humanizeRequiredEmptyLine(raw, t);
     if (fromEmpty) return fromEmpty;
-    return humanizeValidationLine(raw, minPasswordLen);
+    return humanizeValidationLine(raw, minPasswordLen, t);
 }
 
-export function partitionSignInValidationLines(lines: string[], minPasswordLen: number) {
+export function partitionSignInValidationLines(lines: string[], minPasswordLen: number, t?: AuthTranslator) {
     let emailLine = "";
     let passwordLine = "";
     const generalLines: string[] = [];
@@ -224,21 +230,21 @@ export function partitionSignInValidationLines(lines: string[], minPasswordLen: 
         const low = raw.toLowerCase();
         if (low.includes("email")) {
             if (low.includes("empty") || low.includes("require") || low.includes("blank")) {
-                emailLine = "Please enter email ID";
+                emailLine = translateMessage(t, "Please enter email ID");
             } else {
-                emailLine = "Email format is invalid";
+                emailLine = translateMessage(t, "Email format is invalid");
             }
         } else if (low.includes("password")) {
-            passwordLine = "Please enter valid password";
+            passwordLine = translateMessage(t, "Please enter valid password");
         } else {
-            const friendly = humanizeApiValidationLine(raw, minPasswordLen);
+            const friendly = humanizeApiValidationLine(raw, minPasswordLen, t);
             generalLines.push(friendly);
         }
     }
     return { emailLine, passwordLine, generalLines };
 }
 
-export function partitionSignUpValidationLines(lines: string[], minPasswordLen: number) {
+export function partitionSignUpValidationLines(lines: string[], minPasswordLen: number, t?: AuthTranslator) {
     let nameLine = "";
     let emailLine = "";
     let phoneLine = "";
@@ -249,7 +255,7 @@ export function partitionSignUpValidationLines(lines: string[], minPasswordLen: 
     let referralLine = "";
     const generalLines: string[] = [];
     for (const raw of lines) {
-        const friendly = humanizeApiValidationLine(raw, minPasswordLen);
+        const friendly = humanizeApiValidationLine(raw, minPasswordLen, t);
         const low = raw.toLowerCase();
         if (low.includes("otp")) otpLine = friendly;
         else if (low.includes("email")) emailLine = friendly;
@@ -265,21 +271,21 @@ export function partitionSignUpValidationLines(lines: string[], minPasswordLen: 
     return { nameLine, emailLine, phoneLine, passwordLine, otpLine, reraLine, expiryLine, referralLine, generalLines };
 }
 
-export function validateSignInFields(email: string, password: string, minPasswordLen = MIN_PASSWORD_SIGNIN_LEN) {
+export function validateSignInFields(email: string, password: string, minPasswordLen = MIN_PASSWORD_SIGNIN_LEN, t?: AuthTranslator) {
     const trimmedEmail = email.trim();
     let emailError = "";
     let passwordError = "";
 
     if (!trimmedEmail) {
-        emailError = "Please enter email ID";
+        emailError = translateMessage(t, "Please enter email ID");
     } else if (!EMAIL_PATTERN.test(trimmedEmail)) {
-        emailError = EMAIL_FORMAT_ERROR;
+        emailError = translateMessage(t, EMAIL_FORMAT_ERROR);
     }
 
     if (!password.trim()) {
-        passwordError = "Please enter valid password";
+        passwordError = translateMessage(t, "Please enter valid password");
     } else if (password.trim().length < minPasswordLen) {
-        passwordError = "Please enter valid password";
+        passwordError = translateMessage(t, "Please enter valid password");
     }
 
     return { emailError, passwordError };
@@ -296,7 +302,11 @@ export type SignUpFormShape = {
     expiryDate: string;
 };
 
-export function validateSignUpFields(form: SignUpFormShape, userType: "Investor" | "Partner" | "Developer" | "Agent") {
+export function validateSignUpFields(
+    form: SignUpFormShape,
+    userType: "Investor" | "Partner" | "Developer" | "Agent",
+    t?: AuthTranslator
+) {
     const trimmedName = form.name.trim();
     const trimmedEmail = form.email.trim();
     let nameError = "";
@@ -309,41 +319,41 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
     let referralError = "";
 
     if (!trimmedName) {
-        nameError = "Please enter your full name.";
+        nameError = translateMessage(t, "Please enter your full name.");
     } else if (trimmedName.length < 2) {
-        nameError = "Please enter a name that is at least 2 characters.";
+        nameError = translateMessage(t, "Please enter a name that is at least 2 characters.");
     } else if (!NAME_PATTERN.test(trimmedName)) {
-        nameError = NAME_FORMAT_ERROR;
+        nameError = translateMessage(t, NAME_FORMAT_ERROR);
     }
 
     if (!trimmedEmail) {
-        emailError = "Please enter your email address.";
+        emailError = translateMessage(t, "Please enter your email address.");
     } else if (!EMAIL_PATTERN.test(trimmedEmail)) {
-        emailError = EMAIL_FORMAT_ERROR;
+        emailError = translateMessage(t, EMAIL_FORMAT_ERROR);
     }
 
     if (!form.phone.trim()) {
-        phoneError = "Please enter your phone number.";
+        phoneError = translateMessage(t, "Please enter your phone number.");
     } else if (!/^\+?[1-9]\d{7,14}$/.test(form.phone.trim().replace(/[\s-]/g, ""))) {
-        phoneError = "Please enter a valid phone number with country code (e.g. +1234567890).";
+        phoneError = translateMessage(t, "Please enter a valid phone number with country code (e.g. +1234567890).");
     }
 
     if (!form.password.trim()) {
-        passwordError = "Please enter a password.";
+        passwordError = translateMessage(t, "Please enter a password.");
     } else if (!passwordMeetsSignUpStrength(form.password)) {
-        passwordError = "Password must meet all requirements below.";
+        passwordError = translateMessage(t, "Password must meet all requirements below.");
     }
 
     if (!form.confirmPassword.trim()) {
-        confirmPasswordError = "Please confirm your password.";
+        confirmPasswordError = translateMessage(t, "Please confirm your password.");
     } else if (form.confirmPassword !== form.password) {
-        confirmPasswordError = "Passwords do not match.";
+        confirmPasswordError = translateMessage(t, "Passwords do not match.");
     }
 
     if (userType === "Agent") {
         const trimmedRera = form.reraNumber.trim();
         if (trimmedRera && !RERA_PATTERN.test(trimmedRera)) {
-            reraError = RERA_FORMAT_ERROR;
+            reraError = translateMessage(t, RERA_FORMAT_ERROR);
         }
 
         const trimmedExpiry = form.expiryDate.trim();
@@ -352,9 +362,9 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             if (isNaN(expiry.getTime())) {
-                expiryError = "Please enter a valid RERA expiry date.";
+                expiryError = translateMessage(t, "Please enter a valid RERA expiry date.");
             } else if (expiry <= today) {
-                expiryError = "RERA expiry date must be in the future.";
+                expiryError = translateMessage(t, "RERA expiry date must be in the future.");
             }
         }
     }
@@ -364,6 +374,7 @@ export function validateSignUpFields(form: SignUpFormShape, userType: "Investor"
 
 export function applySignInApiErrors(
     err: { status?: number | string; data?: unknown; message?: string },
+    t: AuthTranslator | undefined,
     setters: {
         setEmailError: (s: string) => void;
         setPasswordError: (s: string) => void;
@@ -383,68 +394,71 @@ export function applySignInApiErrors(
     if (status === 401) {
         setEmailError("");
         setPasswordError("");
-        setErrorMsg("Invalid email or password");
+        setErrorMsg(translateMessage(t, "Invalid email or password"));
     } else if (status === 403) {
         setEmailError("");
         setPasswordError("");
-        setErrorMsg("Incorrect credentials");
+        setErrorMsg(translateMessage(t, "Incorrect credentials"));
     } else if (status === 400) {
         if (validationLines.length > 0) {
             const { emailLine, passwordLine, generalLines } = partitionSignInValidationLines(
                 validationLines,
-                MIN_PASSWORD_SIGNIN_LEN
+                MIN_PASSWORD_SIGNIN_LEN,
+                t
             );
             setEmailError(emailLine);
             setPasswordError(passwordLine);
             setErrorMsg(generalLines.length > 0 ? generalLines.join("\n\n") : "");
         } else if (isMachineEmailValidationMessage(flatMessage)) {
-            setEmailError("Email format is invalid");
+            setEmailError(translateMessage(t, "Email format is invalid"));
             setPasswordError("");
             setErrorMsg("");
         } else if (isMachinePasswordLengthMessage(flatMessage)) {
             setEmailError("");
-            setPasswordError("Please enter valid password");
+            setPasswordError(translateMessage(t, "Please enter valid password"));
             setErrorMsg("");
         } else {
             setEmailError("");
             setPasswordError("");
-            setErrorMsg(flatMessage || "Invalid email or password");
+            setErrorMsg(flatMessage || translateMessage(t, "Invalid email or password"));
         }
     } else if (status === 404) {
         setEmailError("");
         setPasswordError("");
-        setErrorMsg("Account not found. Please check your email or sign up.");
+        setErrorMsg(translateMessage(t, "Account not found. Please check your email or sign up."));
     } else if (status === "FETCH_ERROR") {
         setEmailError("");
         setPasswordError("");
-        setErrorMsg("Connecting to server failed. Please check your internet connection.");
+        setErrorMsg(translateMessage(t, "Connecting to server failed. Please check your internet connection."));
     } else {
         if (validationLines.length > 0) {
             const { emailLine, passwordLine, generalLines } = partitionSignInValidationLines(
                 validationLines,
-                MIN_PASSWORD_SIGNIN_LEN
+                MIN_PASSWORD_SIGNIN_LEN,
+                t
             );
             setEmailError(emailLine);
             setPasswordError(passwordLine);
             setErrorMsg(generalLines.length > 0 ? generalLines.join("\n\n") : "");
         } else if (isMachineEmailValidationMessage(flatMessage)) {
-            setEmailError("Email format is invalid");
+            setEmailError(translateMessage(t, "Email format is invalid"));
             setPasswordError("");
             setErrorMsg("");
         } else if (isMachinePasswordLengthMessage(flatMessage)) {
             setEmailError("");
-            setPasswordError("Please enter valid password");
+            setPasswordError(translateMessage(t, "Please enter valid password"));
             setErrorMsg("");
         } else {
             setEmailError("");
             setPasswordError("");
-            setErrorMsg(flatMessage || "An unexpected error occurred. Please try again later.");
+            setErrorMsg(flatMessage || translateMessage(t, "An unexpected error occurred. Please try again later."));
         }
     }
 }
 
 export function applySignUpApiErrors(
     err: { status?: number | string; data?: unknown; message?: string },
+    t: AuthTranslator | undefined,
     setters: {
         setNameError: (s: string) => void;
         setEmailError: (s: string) => void;
@@ -497,14 +511,14 @@ export function applySignUpApiErrors(
 
     if (invalidOtp) {
         clearFields();
-        if (setOtpError) setOtpError("Invalid or expired code. Please try again or request a new one.");
-        else setErrorMsg("Invalid or expired code. Please try again or request a new one.");
+        if (setOtpError) setOtpError(translateMessage(t, "Invalid or expired code. Please try again or request a new one."));
+        else setErrorMsg(translateMessage(t, "Invalid or expired code. Please try again or request a new one."));
         return;
     }
 
     if (status === 400 || status === 422) {
         if (validationLines.length > 0) {
-            const p = partitionSignUpValidationLines(validationLines, MIN_PASSWORD_SIGNUP_LEN);
+            const p = partitionSignUpValidationLines(validationLines, MIN_PASSWORD_SIGNUP_LEN, t);
             setConfirmPasswordError("");
             setNameError(p.nameLine);
             setEmailError(p.emailLine);
@@ -517,32 +531,32 @@ export function applySignUpApiErrors(
             setErrorMsg(p.generalLines.length > 0 ? p.generalLines.join("\n\n") : "");
         } else if (isMachineEmailValidationMessage(flatMessage)) {
             clearFields();
-            setEmailError("Please enter a valid email address.");
+            setEmailError(translateMessage(t, "Please enter a valid email address."));
             setErrorMsg("");
         } else if (isMachinePasswordLengthMessage(flatMessage)) {
             clearFields();
-            setPasswordError(`Password must be at least ${MIN_PASSWORD_SIGNUP_LEN} characters.`);
+            setPasswordError(translateMessage(t, "Password must be at least {minPasswordLen} characters.", { minPasswordLen: MIN_PASSWORD_SIGNUP_LEN }));
             setErrorMsg("");
         } else if (isMachinePasswordComplexityMessage(flatMessage)) {
             clearFields();
             setPasswordError(
-                "Password must include upper and lowercase letters, a number, a special character, and be at least 8 characters long."
+                translateMessage(t, "Password must include upper and lowercase letters, a number, a special character, and be at least 8 characters long.")
             );
             setErrorMsg("");
         } else {
             clearFields();
-            setErrorMsg(flatMessage || "We couldn't create your account. Please check your details and try again.");
+            setErrorMsg(flatMessage || translateMessage(t, "We couldn't create your account. Please check your details and try again."));
         }
     } else if (status === 409) {
         clearFields();
-        setErrorMsg("An account with this email may already exist. Try signing in or use a different email.");
+        setErrorMsg(translateMessage(t, "An account with this email may already exist. Try signing in or use a different email."));
     } else if (status === "FETCH_ERROR") {
         clearFields();
-        setErrorMsg("Connecting to the server failed. Please check your internet connection.");
+        setErrorMsg(translateMessage(t, "Connecting to the server failed. Please check your internet connection."));
     } else {
         clearFields();
         if (validationLines.length > 0) {
-            const p = partitionSignUpValidationLines(validationLines, MIN_PASSWORD_SIGNUP_LEN);
+            const p = partitionSignUpValidationLines(validationLines, MIN_PASSWORD_SIGNUP_LEN, t);
             setConfirmPasswordError("");
             setNameError(p.nameLine);
             setEmailError(p.emailLine);
@@ -554,18 +568,21 @@ export function applySignUpApiErrors(
             setReferralError(p.referralLine);
             setErrorMsg(p.generalLines.length > 0 ? p.generalLines.join("\n\n") : "");
         } else {
-            setErrorMsg(flatMessage || "Something went wrong. Please try again.");
+            setErrorMsg(flatMessage || translateMessage(t, "Something went wrong. Please try again."));
         }
     }
 }
 
-export function formatResendCooldownMessage(retryAfterSeconds?: number): string {
+export function formatResendCooldownMessage(retryAfterSeconds?: number, t?: AuthTranslator): string {
     if (!retryAfterSeconds || retryAfterSeconds <= 0) {
-        return "Please wait a moment before requesting another code.";
+        return translateMessage(t, "Please wait a moment before requesting another code.");
     }
     if (retryAfterSeconds < 60) {
-        return `Please wait ${retryAfterSeconds} seconds before requesting another code.`;
+        return translateMessage(t, "Please wait {retryAfterSeconds} seconds before requesting another code.", { retryAfterSeconds });
     }
     const minutes = Math.ceil(retryAfterSeconds / 60);
-    return `Please wait ${minutes} minute${minutes === 1 ? "" : "s"} before requesting another code.`;
+    return translateMessage(t, "Please wait {minutes} minute{plural} before requesting another code.", {
+        minutes,
+        plural: minutes === 1 ? "" : "s",
+    });
 }

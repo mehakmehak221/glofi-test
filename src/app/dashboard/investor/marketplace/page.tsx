@@ -10,7 +10,7 @@ import { InvestorBanners } from "@/components/dashboard/investor/InvestorBanners
 import { useGetAssetsQuery } from "@/store/api/assetApi";
 import { CATEGORIES } from "@/data/propertyData";
 import { useCurrency } from "@/providers/CurrencyProvider";
-
+import { useI18n } from "@/providers/LocaleProvider";
 import { API_URL } from "@/constants";
 
 const CATEGORY_MAP: Record<string, string> = {
@@ -20,19 +20,19 @@ const CATEGORY_MAP: Record<string, string> = {
     "Residential": "RESIDENTIAL",
 };
 
-const RISK_OPTIONS = [
-    { label: "All Risk", value: "" },
-    { label: "Low Risk", value: "LOW" },
-    { label: "Medium Risk", value: "MEDIUM" },
-    { label: "High Risk", value: "HIGH" },
+const RISK_OPTIONS = (t: (k: string) => string) => [
+    { label: t("All Risk"), value: "" },
+    { label: t("Low Risk"), value: "LOW" },
+    { label: t("Medium Risk"), value: "MEDIUM" },
+    { label: t("High Risk"), value: "HIGH" },
 ];
 
-const SORT_OPTIONS = [
-    { label: "Newest", value: "createdAt", order: "desc" as const },
-    { label: "Oldest", value: "createdAt", order: "asc" as const },
-    { label: "Price: Low to High", value: "fractionPrice", order: "asc" as const },
-    { label: "Price: High to Low", value: "fractionPrice", order: "desc" as const },
-    { label: "Yield: High to Low", value: "expectedYield", order: "desc" as const },
+const SORT_OPTIONS = (t: (k: string) => string) => [
+    { label: t("Newest"), value: "createdAt", order: "desc" as const },
+    { label: t("Oldest"), value: "createdAt", order: "asc" as const },
+    { label: t("Price: Low to High"), value: "fractionPrice", order: "asc" as const },
+    { label: t("Price: High to Low"), value: "fractionPrice", order: "desc" as const },
+    { label: t("Yield: High to Low"), value: "expectedYield", order: "desc" as const },
 ];
 
 const containerVariants: Variants = {
@@ -116,7 +116,11 @@ function FilterDropdown({
 
 export default function MarketplacePage() {
     const { formatPrice, currency } = useCurrency();
+    const { t } = useI18n();
     const router = useRouter();
+
+    const riskOptions = RISK_OPTIONS(t);
+    const sortOptions = SORT_OPTIONS(t);
 
     const [saleTypeFilter, setSaleTypeFilter] = useState<"FRACTIONAL" | "WHOLE">("FRACTIONAL");
     const [activeCategory, setActiveCategory] = useState("All");
@@ -140,7 +144,7 @@ export default function MarketplacePage() {
         setTimeout(() => setCopiedId(null), 2000);
     };
 
-    const sortOpt = SORT_OPTIONS[sortIndex];
+    const sortOpt = sortOptions[sortIndex];
     const apiCategory = activeCategory === "All" ? undefined : CATEGORY_MAP[activeCategory];
 
     const { data: assetsData, isLoading, isError } = useGetAssetsQuery({
@@ -174,12 +178,12 @@ export default function MarketplacePage() {
 
             <div className="max-w-6xl mx-auto mb-5">
                 <h1 className="text-2xl sm:text-3xl font-black text-[var(--header-text)] tracking-tight mb-1">
-                    Discover Assets
+                    {t("Discover Assets")}
                 </h1>
                 <p className="text-sm text-[var(--color-text-muted)] font-medium">
                     {saleTypeFilter === "FRACTIONAL"
-                        ? `Institutional-grade real estate. Invest fractionally from ${currency.symbol}10,000.`
-                        : "Acquire complete institutional assets as a single whole transaction."}
+                        ? `${t("Institutional-grade real estate. Invest fractionally from")} ${currency.symbol}10,000.`
+                        : t("Acquire complete institutional assets as a single whole transaction.")}
                 </p>
             </div>
 
@@ -204,7 +208,7 @@ export default function MarketplacePage() {
                                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                     />
                                 )}
-                                {type === "FRACTIONAL" ? "Fractional Real Estate" : "Whole Properties"}
+                                {type === "FRACTIONAL" ? t("Fractional Real Estate") : t("Whole Properties")}
                             </button>
                         );
                     })}
@@ -238,7 +242,7 @@ export default function MarketplacePage() {
                                         transition={{ type: "spring", stiffness: 350, damping: 28 }}
                                     />
                                 )}
-                                {cat}
+                                {t(cat)}
                             </button>
                         );
                     })}
@@ -259,7 +263,7 @@ export default function MarketplacePage() {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search properties..."
+                            placeholder={t("Search properties...")}
                             className="w-full pl-10 pr-9 py-2 rounded-full text-xs bg-[var(--field-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50 focus:ring-1 focus:ring-[var(--sidebar-active-text)]/15 transition-all font-medium"
                         />
                         {searchQuery && (
@@ -275,17 +279,17 @@ export default function MarketplacePage() {
                     </div>
 
                     <FilterDropdown
-                        options={RISK_OPTIONS}
+                        options={riskOptions}
                         value={riskFilter}
                         onChange={setRiskFilter}
-                        placeholder="Risk Rating"
+                        placeholder={t("Risk Rating")}
                     />
 
                     <FilterDropdown
-                        options={SORT_OPTIONS.map((o, i) => ({ label: o.label, value: String(i) }))}
+                        options={sortOptions.map((o, i) => ({ label: o.label, value: String(i) }))}
                         value={String(sortIndex)}
                         onChange={(v) => setSortIndex(Number(v))}
-                        placeholder="Sort By"
+                        placeholder={t("Sort By")}
                     />
 
                     {hasActiveFilters && (
@@ -296,7 +300,7 @@ export default function MarketplacePage() {
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                             </svg>
-                            Clear
+                            {t("Clear")}
                         </button>
                     )}
 
@@ -325,7 +329,7 @@ export default function MarketplacePage() {
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="text-center p-12 text-[var(--color-text-muted)] border border-dashed border-[var(--sidebar-border)] rounded-2xl"
                         >
-                            Error loading assets. Please try again.
+                            {t("Error loading assets. Please try again.")}
                         </motion.div>
                     ) : assets.length === 0 ? (
                         <motion.div
@@ -336,8 +340,8 @@ export default function MarketplacePage() {
                             <svg className="w-10 h-10 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
                             </svg>
-                            <p className="font-semibold">No assets found</p>
-                            <p className="text-xs mt-1">Try adjusting your filters</p>
+                            <p className="font-semibold">{t("No assets found")}</p>
+                            <p className="text-xs mt-1">{t("Try adjusting your filters")}</p>
                         </motion.div>
                     ) : (
                         <motion.div
@@ -397,7 +401,7 @@ export default function MarketplacePage() {
 
                                             <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
                                                 <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${riskColor}`} />
-                                                {property.riskRating} RISK
+                                                {property.riskRating} {t("RISK")}
                                             </span>
 
                                             <button
@@ -406,7 +410,7 @@ export default function MarketplacePage() {
                                                 aria-label="Share property"
                                             >
                                                 {copiedId === property.id ? (
-                                                    <span className="text-[10px] font-bold px-1.5 text-[#00DAAF]">Copied!</span>
+                                                    <span className="text-[10px] font-bold px-1.5 text-[#00DAAF]">{t("Copied!")}</span>
                                                 ) : (
                                                     <ShareIcon className="w-4 h-4 text-white group-hover:text-[#00DAAF] transition-colors" />
                                                 )}
@@ -427,12 +431,12 @@ export default function MarketplacePage() {
                                             <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[16px] p-4 mb-5 shadow-sm">
                                                 <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center">
                                                     <div className="min-w-0 px-1">
-                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">Valuation</p>
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">{t("Valuation")}</p>
                                                         <p className="text-[13px] font-extrabold text-[var(--header-text)] break-all leading-tight">{formatPrice(property.valuation, true)}</p>
                                                     </div>
                                                     <div className="min-w-0 px-1">
                                                         <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">
-                                                            {property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}
+                                                            {property.saleType === 'WHOLE' ? t('Whole Price') : t('Per Fraction')}
                                                         </p>
                                                         <p className="text-[13px] font-extrabold text-[var(--header-text)] break-all leading-tight">
                                                             {formatPrice(
@@ -444,7 +448,7 @@ export default function MarketplacePage() {
                                                         </p>
                                                     </div>
                                                     <div className="min-w-0 px-1">
-                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">Potential Annual Return</p>
+                                                        <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">{t("Potential Annual Return")}</p>
                                                         <p className="text-[13px] font-extrabold text-[var(--sidebar-active-text)] break-all leading-tight">{formattedYield}%</p>
                                                     </div>
                                                 </div>
@@ -452,8 +456,8 @@ export default function MarketplacePage() {
 
                                             <div className="mb-5">
                                                 <div className="flex justify-between items-center mb-2 text-[12px] font-bold text-[var(--color-text-muted)]">
-                                                    <span>{fundedPct}% funded</span>
-                                                    <span>{available?.toLocaleString()} left</span>
+                                                    <span>{fundedPct}% {t("funded")}</span>
+                                                    <span>{available?.toLocaleString()} {t("left")}</span>
                                                 </div>
                                                 <div className="w-full h-2 bg-[var(--sidebar-active-text)]/15 rounded-full overflow-hidden">
                                                     <motion.div
@@ -471,7 +475,7 @@ export default function MarketplacePage() {
                                                 onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/investor/marketplace/${property.id}`); }}
                                                 className="w-full py-3.5 rounded-full border-[1.5px] border-[var(--sidebar-active-text)] bg-transparent text-sm font-extrabold uppercase tracking-wide cursor-pointer transition-colors duration-300 text-[var(--header-text)] hover:bg-[var(--sidebar-active-text)]/10"
                                             >
-                                                View Details
+                                                {t("View Details")}
                                             </motion.button>
                                         </div>
                                     </motion.div>

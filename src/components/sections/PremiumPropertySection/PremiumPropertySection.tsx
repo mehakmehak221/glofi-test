@@ -10,6 +10,7 @@ import {
     staggerContainer,
     useLandingMotion,
 } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 const PROPERTIES = [
     {
@@ -32,6 +33,7 @@ const PROPERTIES = [
 
 export default function PremiumPropertySection() {
     const { reduceMotion, viewProps } = useLandingMotion();
+    const { t } = useI18n();
 
     const reveal3D = {
         hidden: {
@@ -69,10 +71,10 @@ export default function PremiumPropertySection() {
             <div className="premium-section__inner relative z-10">
                 <motion.header className="premium-header-container" {...viewProps} variants={fadeUp}>
                     <h2 id="premium-properties-heading" className="premium-title">
-                        Premium Properties. Structured Access.
+                        {t('Premium Properties. Structured Access.')}
                     </h2>
                     <p className="premium-subtitle">
-                        Institutional-grade assets. Digitally simplified.
+                        {t('Institutional-grade assets. Digitally simplified.')}
                     </p>
                 </motion.header>
 

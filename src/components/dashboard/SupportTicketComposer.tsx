@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCreatePublicTicketMutation } from "@/store/api/supportApi";
 import { TicketCategory, TicketPriority } from "@/types/support";
+import { useI18n } from "@/providers/LocaleProvider";
 
 type SupportTicketComposerProps = {
   title?: string;
@@ -20,30 +21,32 @@ type FieldErrors = {
   description?: string;
 };
 
-function validateEmail(value: string): string | undefined {
-  if (!value.trim()) return "Email is required.";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Enter a valid email address.";
+function validateEmail(value: string, t: (k: string) => string): string | undefined {
+  if (!value.trim()) return t("Email is required.");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return t("Enter a valid email address.");
 }
 
-function validateSubject(value: string): string | undefined {
-  if (!value.trim()) return "Subject is required.";
-  if (value.trim().length < 5) return "Subject must be at least 5 characters.";
-  if (value.trim().length > 150) return "Subject must be 150 characters or less.";
+function validateSubject(value: string, t: (k: string) => string): string | undefined {
+  if (!value.trim()) return t("Subject is required.");
+  if (value.trim().length < 5) return t("Subject must be at least 5 characters.");
+  if (value.trim().length > 150) return t("Subject must be 150 characters or less.");
 }
 
-function validateDescription(value: string): string | undefined {
-  if (!value.trim()) return "Description is required.";
-  if (value.trim().length < 20) return "Please provide at least 20 characters of detail.";
-  if (value.trim().length > 2000) return "Description must be 2000 characters or less.";
+function validateDescription(value: string, t: (k: string) => string): string | undefined {
+  if (!value.trim()) return t("Description is required.");
+  if (value.trim().length < 20) return t("Please provide at least 20 characters of detail.");
+  if (value.trim().length > 2000) return t("Description must be 2000 characters or less.");
 }
 
 export default function SupportTicketComposer({
-  title = "Raise a Ticket",
+  title,
   defaultEmail = "",
   compact = false,
   className = "",
 }: SupportTicketComposerProps) {
+  const { t } = useI18n();
   const [createTicket, { isLoading }] = useCreatePublicTicketMutation();
+  const resolvedTitle = title ?? t("Raise a Ticket");
   const [form, setForm] = useState({
     email: defaultEmail,
     subject: "",
@@ -57,6 +60,7 @@ export default function SupportTicketComposer({
   const [successMessage, setSuccessMessage] = useState("");
 
   const resolvedEmail = form.email || defaultEmail;
+  // resolvedTitle defined above
   const descLen = form.description.length;
   const descLimit = 2000;
   const headerPadding = compact ? "px-4 py-4 sm:px-5 sm:py-5" : "px-5 py-5 sm:px-6 sm:py-6";
@@ -70,9 +74,9 @@ export default function SupportTicketComposer({
   const handleBlur = (field: keyof FieldErrors) => {
     markTouched(field);
     let err: string | undefined;
-    if (field === "email") err = validateEmail(resolvedEmail);
-    if (field === "subject") err = validateSubject(form.subject);
-    if (field === "description") err = validateDescription(form.description);
+    if (field === "email") err = validateEmail(resolvedEmail, t);
+    if (field === "subject") err = validateSubject(form.subject, t);
+    if (field === "description") err = validateDescription(form.description, t);
     setFieldErrors((prev) => ({ ...prev, [field]: err }));
   };
 
@@ -80,18 +84,18 @@ export default function SupportTicketComposer({
     setForm((prev) => ({ ...prev, [field]: value }));
     if (touched[field]) {
       let err: string | undefined;
-      if (field === "email") err = validateEmail(value || defaultEmail);
-      if (field === "subject") err = validateSubject(value);
-      if (field === "description") err = validateDescription(value);
+      if (field === "email") err = validateEmail(value || defaultEmail, t);
+      if (field === "subject") err = validateSubject(value, t);
+      if (field === "description") err = validateDescription(value, t);
       setFieldErrors((prev) => ({ ...prev, [field]: err }));
     }
   };
 
   const runFullValidation = (): boolean => {
     const errors: FieldErrors = {
-      email: validateEmail(resolvedEmail),
-      subject: validateSubject(form.subject),
-      description: validateDescription(form.description),
+      email: validateEmail(resolvedEmail, t),
+      subject: validateSubject(form.subject, t),
+      description: validateDescription(form.description, t),
     };
     setFieldErrors(errors);
     setTouched({ email: true, subject: true, description: true });
@@ -111,7 +115,7 @@ export default function SupportTicketComposer({
         email: resolvedEmail.trim(),
       }).unwrap();
 
-      setSuccessMessage(ticket?.ticketNumber ? `Ticket ${ticket.ticketNumber} raised successfully.` : "Ticket raised successfully.");
+      setSuccessMessage(ticket?.ticketNumber ? t("Ticket {number} raised successfully.").replace("{number}", ticket.ticketNumber) : t("Ticket raised successfully."));
       setForm((prev) => ({
         ...prev,
         subject: "",
@@ -122,15 +126,15 @@ export default function SupportTicketComposer({
       setFieldErrors({});
       setTouched({});
     } catch (err: any) {
-      setSubmitError(err?.data?.message ?? "Failed to create ticket. Please try again.");
+      setSubmitError(err?.data?.message ?? t("Failed to create ticket. Please try again."));
     }
   };
 
   return (
     <div className={`overflow-hidden rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-sm ${className}`}>
       <div className={`border-b border-[var(--sidebar-border)] bg-[linear-gradient(135deg,rgba(0,218,175,0.10),transparent)] ${headerPadding}`}>
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--sidebar-active-text)]">Support</p>
-        <h3 className="mt-1 text-lg font-bold text-[var(--foreground)]">{title}</h3>
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--sidebar-active-text)]">{t("Support")}</p>
+        <h3 className="mt-1 text-lg font-bold text-[var(--foreground)]">{resolvedTitle}</h3>
       </div>
 
       <div className={contentPadding}>
@@ -156,25 +160,25 @@ export default function SupportTicketComposer({
         <form onSubmit={handleSubmit} noValidate className={`grid grid-cols-1 ${fieldGap}`}>
           <div className={`grid grid-cols-1 sm:grid-cols-2 ${fieldGap}`}>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Email</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Email")}</label>
               <input
                 type="email"
                 value={resolvedEmail}
                 onChange={(e) => handleChange("email", e.target.value)}
                 onBlur={() => handleBlur("email")}
-                placeholder="name@example.com"
+                placeholder={t("name@example.com")}
                 className={`h-11 rounded-xl border bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none transition ${fieldErrors.email ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
               />
               {fieldErrors.email ? <p className="text-[11px] text-red-400">{fieldErrors.email}</p> : null}
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Subject</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Subject")}</label>
               <input
                 type="text"
                 value={form.subject}
                 onChange={(e) => handleChange("subject", e.target.value)}
                 onBlur={() => handleBlur("subject")}
-                placeholder="Short issue summary"
+                placeholder={t("Short issue summary")}
                 maxLength={150}
                 className={`h-11 rounded-xl border bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none transition ${fieldErrors.subject ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
               />
@@ -184,7 +188,7 @@ export default function SupportTicketComposer({
 
           <div className={`grid grid-cols-1 sm:grid-cols-2 ${fieldGap}`}>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Category</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Category")}</label>
               <select
                 value={form.category}
                 onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value as TicketCategory }))}
@@ -196,7 +200,7 @@ export default function SupportTicketComposer({
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Priority</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Priority")}</label>
               <select
                 value={form.priority}
                 onChange={(e) => setForm((prev) => ({ ...prev, priority: e.target.value as TicketPriority }))}
@@ -211,7 +215,7 @@ export default function SupportTicketComposer({
 
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Description</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">{t("Description")}</label>
               <span className={`text-[10px] tabular-nums ${descLen > descLimit * 0.9 ? "text-amber-400" : "text-[var(--color-text-muted)]"}`}>
                 {descLen}/{descLimit}
               </span>
@@ -221,7 +225,7 @@ export default function SupportTicketComposer({
               value={form.description}
               onChange={(e) => handleChange("description", e.target.value)}
               onBlur={() => handleBlur("description")}
-              placeholder="Describe the issue in a few lines..."
+              placeholder={t("Describe the issue in a few lines...")}
               maxLength={descLimit}
               className={`rounded-xl border bg-[var(--background)] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition resize-none ${fieldErrors.description ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
             />
@@ -233,7 +237,7 @@ export default function SupportTicketComposer({
             disabled={isLoading}
             className="h-11 w-full rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 cursor-pointer disabled:opacity-50 transition-all hover:opacity-90"
           >
-            {isLoading ? "Raising Ticket..." : "Raise Ticket"}
+            {isLoading ? t("Raising Ticket...") : t("Raise Ticket")}
           </button>
         </form>
       </div>

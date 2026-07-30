@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { HomeIcon, LegalIcon, EarningPassiveIcon, LiquidityIcon } from '../../VectorImages';
+import { useI18n } from '@/providers/LocaleProvider';
 
 function FlameIcon() {
     return (
@@ -24,6 +25,7 @@ function FlameIcon() {
 }
 
 export default function InvestmentSection() {
+    const { t } = useI18n();
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
@@ -79,7 +81,7 @@ export default function InvestmentSection() {
                         viewport={{ once: true }}
                     >
                         <FlameIcon />
-                        <span className="text-[#1A1F1C] text-[11px] sm:text-xs font-bold tracking-wider uppercase">Investment Benefits</span>
+                        <span className="text-[#1A1F1C] text-[11px] sm:text-xs font-bold tracking-wider uppercase">{t('Investment Benefits')}</span>
                     </motion.div>
 
                     {/* Title */}
@@ -90,7 +92,7 @@ export default function InvestmentSection() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        Access Institutional-Grade Real Estate Investing
+                        {t('Access Institutional-Grade Real Estate Investing')}
                     </motion.h2>
 
                     {/* Grid */}
@@ -111,11 +113,11 @@ export default function InvestmentSection() {
                                         <HomeIcon className="w-full h-full" />
                                     </div>
                                     <h3 className="text-white font-semibold text-lg sm:text-xl leading-snug">
-                                        Curated Premium Assets
+                                        {t('Curated Premium Assets')}
                                     </h3>
                                 </div>
                                 <p className="text-[#FFFFFF] text-sm sm:text-base leading-relaxed">
-                                    Access handpicked high-growth real estate opportunities across prime global locations.
+                                    {t('Access handpicked high-growth real estate opportunities across prime global locations.')}
                                 </p>
                             </motion.div>
 
@@ -126,11 +128,11 @@ export default function InvestmentSection() {
                                         <LegalIcon className="w-full h-full" />
                                     </div>
                                     <h3 className="text-white font-semibold text-lg sm:text-xl leading-snug">
-                                        Fractional Ownership
+                                        {t('Fractional Ownership')}
                                     </h3>
                                 </div>
                                 <p className="text-[#FFFFFF] text-sm sm:text-base leading-relaxed">
-                                    Own premium real estate starting from lower investment amounts without buying the entire asset.
+                                    {t('Own premium real estate starting from lower investment amounts without buying the entire asset.')}
                                 </p>
                             </motion.div>
                         </div>
@@ -144,11 +146,11 @@ export default function InvestmentSection() {
                                         <EarningPassiveIcon className="w-full h-full" />
                                     </div>
                                     <h3 className="text-white font-semibold text-lg sm:text-xl leading-snug">
-                                        Passive Rental Income
+                                        {t('Passive Rental Income')}
                                     </h3>
                                 </div>
                                 <p className="text-[#FFFFFF] text-sm sm:text-base leading-relaxed">
-                                    Receive proportional rental income directly based on your ownership share.
+                                    {t('Receive proportional rental income directly based on your ownership share.')}
                                 </p>
                             </motion.div>
 
@@ -159,11 +161,11 @@ export default function InvestmentSection() {
                                         <LiquidityIcon className="w-full h-full" />
                                     </div>
                                     <h3 className="text-white font-semibold text-lg sm:text-xl leading-snug">
-                                        Secure & Transparent
+                                        {t('Secure & Transparent')}
                                     </h3>
                                 </div>
                                 <p className="text-[#FFFFFF] text-sm sm:text-base leading-relaxed">
-                                    KYC-verified investing with structured ownership, secure transactions, and transparent reporting.
+                                    {t('KYC-verified investing with structured ownership, secure transactions, and transparent reporting.')}
                                 </p>
                             </motion.div>
                         </div>

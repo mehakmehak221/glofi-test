@@ -9,7 +9,7 @@ import { useGetInvestmentsQuery, useGetPortfolioQuery } from "@/store/api/invest
 import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { useGetMyCertificatesQuery } from "@/store/api/certificatesApi";
 import { useGetMySecondaryListingsQuery, useDeleteSecondaryListingMutation } from "@/store/api/secondaryMarketApi";
-
+import { useI18n } from "@/providers/LocaleProvider";
 import { API_URL } from "@/constants";
 
 
@@ -42,6 +42,7 @@ export default function PortfolioPage() {
     const { data: listingsResponse, isLoading: listingsLoading } = useGetMySecondaryListingsQuery();
     const [deleteListing] = useDeleteSecondaryListingMutation();
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+    const { t } = useI18n();
 
     const isLoading = invLoading || portLoading || kycLoading || certsLoading || listingsLoading;
 
@@ -77,10 +78,10 @@ export default function PortfolioPage() {
 
 
     const stats = [
-        { label: "Invested", value: formatNumber(portfolioData?.totalInvested), change: "+₹0 this month", icon: DollarIcon },
-        { label: "Current Value", value: formatNumber(portfolioData?.currentValue), change: "+0% overall", icon: TrendingUpIcon },
-        { label: "ROI", value: `${portfolioData?.roi || 0}%`, change: "+0% this quarter", icon: TopArrow },
-        { label: "Assets Owned", value: portfolioData?.assetsOwned || assetsList.length || 0, change: "Verified assets", icon: Asset },
+        { label: t("Invested"), value: formatNumber(portfolioData?.totalInvested), change: "+₹0 this month", icon: DollarIcon },
+        { label: t("Current Value"), value: formatNumber(portfolioData?.currentValue), change: "+0% overall", icon: TrendingUpIcon },
+        { label: t("ROI"), value: `${portfolioData?.roi || 0}%`, change: "+0% this quarter", icon: TopArrow },
+        { label: t("Assets Owned"), value: portfolioData?.assetsOwned || assetsList.length || 0, change: t("Verified assets"), icon: Asset },
     ];
 
     const assets = assetsList.map(inv => {
@@ -148,7 +149,7 @@ export default function PortfolioPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-2xl sm:text-[32px] font-bold text-[var(--header-text)] mb-8 transition-colors"
             >
-                Portfolio
+                {t("Portfolio")}
             </motion.h1>
 
             <motion.div
@@ -184,7 +185,7 @@ export default function PortfolioPage() {
             <div className="flex flex-col gap-12">
                 <div>
                     <div className="flex items-center gap-3 mb-6">
-                        <h2 className="text-xl font-bold text-[var(--header-text)]">Your Active Resale Listings</h2>
+                        <h2 className="text-xl font-bold text-[var(--header-text)]">{t("Your Active Resale Listings")}</h2>
                         {secondaryListings.length > 0 && (
                             <span className="px-2 py-0.5 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[10px] font-bold uppercase tracking-wider">
                                 {secondaryListings.length} {secondaryListings.length === 1 ? 'Active' : 'Active'}
@@ -211,15 +212,15 @@ export default function PortfolioPage() {
                                 className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <ResaleIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
-                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No active listings</h3>
-                                <p className="text-sm text-[var(--color-text-muted)]">You don&apos;t have any properties currently listed for resale</p>
+                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">{t("No active listings")}</h3>
+                                <p className="text-sm text-[var(--color-text-muted)]">{t("You don't have any properties currently listed for resale")}</p>
                             </motion.div>
                         )}
                     </motion.div>
                 </div>
 
                 <div>
-                    <h2 className="text-xl font-bold text-[var(--header-text)] mb-6">Your Other Properties</h2>
+                    <h2 className="text-xl font-bold text-[var(--header-text)] mb-6">{t("Your Other Properties")}</h2>
                     <motion.div
                         variants={containerVariants}
                         initial="hidden"
@@ -240,15 +241,15 @@ export default function PortfolioPage() {
                                 className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <Asset className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
-                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No properties listed</h3>
-                                <p className="text-sm text-[var(--color-text-muted)]">Find your dream investment property in the marketplace</p>
+                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">{t("No properties listed")}</h3>
+                                <p className="text-sm text-[var(--color-text-muted)]">{t("Find your dream investment property in the marketplace")}</p>
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => window.location.href = '/dashboard/investor/marketplace'}
                                     className="mt-6 px-5 py-2.5 rounded-md bg-[var(--color-primary-300)] text-black text-xs font-bold hover:scale-105 transition-all shadow-glow-primary border-0 cursor-pointer"
                                 >
-                                    Browse Marketplace
+                                    {t("Browse Marketplace")}
                                 </motion.button>
                             </motion.div>
                         )}
@@ -266,6 +267,7 @@ export default function PortfolioPage() {
 }
 
 function SecondaryListingCard({ item, onDelete }) {
+    const { t } = useI18n();
     const title = item.assetTitle || item.asset?.title || item.asset?.name || "Property Listing";
     const location = item.assetLocation || item.asset?.location || "N/A";
     const propertyImage = item.assetImages?.[0] || item.asset?.images?.[0];
@@ -296,28 +298,28 @@ function SecondaryListingCard({ item, onDelete }) {
                                     item.status === "APPROVED" || item.status === "LISTED" ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border border-[var(--color-status-success-border)]" :
                                         "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border border-[var(--color-status-error-border)]"
                                     }`}>
-                                    {item.status?.replace('_', ' ')}
+                                    {t(item.status)}
                                 </div>
                             )}
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 items-center gap-4 sm:gap-6 lg:gap-8 w-full">
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Fractions</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Fractions")}</p>
                                 <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{item.fractionsListed || item.fractions}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Invested</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Invested")}</p>
                                 <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{formatNumber(item.askPrice || item.pricePerFraction || 0)}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Value</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Value")}</p>
                                 <p className="text-sm font-bold text-[var(--color-primary-500)]">
                                     {formatNumber((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0))}
                                 </p>
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">ROI</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("ROI")}</p>
                                 <p className="text-sm font-bold text-[var(--color-primary-500)]">
                                     +15%
                                 </p>
@@ -333,7 +335,7 @@ function SecondaryListingCard({ item, onDelete }) {
                             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
                         >
                             <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
-                            Certificate
+                            {t("Certificate")}
                         </motion.button>
                         <motion.button
                             onClick={() => { }}
@@ -342,7 +344,7 @@ function SecondaryListingCard({ item, onDelete }) {
                             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
                         >
                             <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
-                            Download
+                            {t("Download")}
                         </motion.button>
                         <motion.button
                             onClick={() => onDelete(item.id)}
@@ -350,7 +352,7 @@ function SecondaryListingCard({ item, onDelete }) {
                             whileTap={{ scale: 0.98 }}
                             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-red-500/10 text-red-500 text-[11px] font-bold hover:bg-red-500/20 transition-all border border-red-500/20 cursor-pointer"
                         >
-                            Delete Listing
+                            {t("Delete Listing")}
                         </motion.button>
                     </div>
                 </div>

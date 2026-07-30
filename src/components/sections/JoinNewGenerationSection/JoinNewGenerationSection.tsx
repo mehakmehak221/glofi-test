@@ -11,9 +11,11 @@ import {
     staggerContainer,
     useLandingMotion,
 } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 export default function JoinNewGenerationSection() {
     const { reduceMotion, viewProps } = useLandingMotion();
+    const { t } = useI18n();
 
     return (
         <section id="learn" className="join-new-gen-section">
@@ -50,28 +52,27 @@ export default function JoinNewGenerationSection() {
 
                     <div className="join-new-gen__content">
                         <motion.h2 className="join-new-gen__title" variants={fadeUp}>
-                            Start Building Real Estate
+                            {t('Start Building Real Estate')}
                         </motion.h2>
                         <motion.h2 className="join-new-gen__title" variants={fadeUp}>
-                            Portfolio
+                            {t('Portfolio')}
                         </motion.h2>
 
                         <motion.p className="join-new-gen__description" variants={fadeUpSubtle}>
-                            Access curated investment opportunities and grow your wealth through modern
-                            fractional real estate investing.
+                            {t('Access curated investment opportunities and grow your wealth through modern fractional real estate investing.')}
                         </motion.p>
 
                         <motion.div className="join-new-gen__cta-row" variants={fadeUpSubtle}>
                             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                                 <Link href="/sign-in" className="join-new-gen__btn-start">
-                                    Start Investing
+                                    {t('Start Investing')}
                                 </Link>
                             </motion.div>
                             <motion.div whileHover={{ scale: 1.08, rotate: 4 }} whileTap={{ scale: 0.95 }}>
                                 <Link
-                                    href="/explore"
-                                    className="join-new-gen__btn-arrow"
-                                    aria-label="Explore properties"
+                                href="/explore"
+                                className="join-new-gen__btn-arrow"
+                                    aria-label={t('Explore properties')}
                                 >
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
                                         <path

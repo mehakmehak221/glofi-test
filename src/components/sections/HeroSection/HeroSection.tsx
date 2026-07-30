@@ -4,9 +4,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { heroItem, heroStagger, LANDING_EASE, useLandingMotion } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 export default function HeroSection() {
     const { reduceMotion, loadProps } = useLandingMotion();
+    const { t } = useI18n();
 
     return (
         <section className="hero-section">
@@ -20,24 +22,23 @@ export default function HeroSection() {
                     variants={heroStagger}
                 >
                     <motion.span className="hero-badge" variants={heroItem}>
-                        100% TRUSTED PLATFORM
+                        {t('100% TRUSTED PLATFORM')}
                     </motion.span>
 
                     <motion.h1 className="hero-headline" variants={heroItem}>
-                        <span className="hero-headline__white">{'Own\u00A0Any\u00A0Real\u00A0Estate'}</span>
-                        <span className="hero-headline__teal">Fraction By Fraction</span>
+                        <span className="hero-headline__white">{t('Own Any Real Estate')}</span>
+                        <span className="hero-headline__teal">{t('Fraction By Fraction')}</span>
                     </motion.h1>
 
                     <motion.p className="hero-description" variants={heroItem}>
-                        No-Fee Checking Account With Cash Back Rewards. Enjoy Fee-Free Banking And Earn
-                        Cash Back On Your Everyday Purchases.
+                        {t('No-Fee Checking Account With Cash Back Rewards. Enjoy Fee-Free Banking And Earn Cash Back On Your Everyday Purchases.')}
                     </motion.p>
 
                     <motion.div className="hero-cta-row" variants={heroItem}>
                         <Link href="/sign-in" className="hero-btn-start">
-                            Start Investing
+                            {t('Start Investing')}
                         </Link>
-                        <Link href="/explore" className="hero-btn-arrow" aria-label="Explore properties">
+                        <Link href="/explore" className="hero-btn-arrow" aria-label={t('Explore properties')}>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
                                 <path
                                     d="M5 15L15 5M15 5H8M15 5V12"
@@ -68,8 +69,8 @@ export default function HeroSection() {
                                 />
                             </svg>
                             <span className="hero-app-btn__text">
-                                <span className="hero-app-btn__label">Download on the</span>
-                                <span className="hero-app-btn__store">App Store</span>
+                                <span className="hero-app-btn__label">{t('Download on the')}</span>
+                                <span className="hero-app-btn__store">{t('App Store')}</span>
                             </span>
                         </Link>
 
@@ -86,8 +87,8 @@ export default function HeroSection() {
                                 <path d="M11.8522 14.4001L17.8855 8.23148L4.77861 0.460464C4.30229 0.168211 3.74604 0.000250816 3.15147 0.000250816C1.69514 0.000250816 0.466575 1.01362 0.108516 2.38866C0.108516 2.38978 0.107422 2.3909 0.107422 2.39202L11.8522 14.4001Z" fill="#34A853" />
                             </svg>
                             <span className="hero-app-btn__text">
-                                <span className="hero-app-btn__label">Get it on</span>
-                                <span className="hero-app-btn__store">Google Play</span>
+                                <span className="hero-app-btn__label">{t('Get it on')}</span>
+                                <span className="hero-app-btn__store">{t('Google Play')}</span>
                             </span>
                         </Link>
                     </motion.div>

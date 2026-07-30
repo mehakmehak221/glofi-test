@@ -10,6 +10,7 @@ import { EditLeadModal } from '@/components/dashboard/agent/crm/EditLeadModal';
 import { DeleteLeadModal } from '@/components/dashboard/agent/crm/DeleteLeadModal';
 import { LeadDetailsDrawer } from '@/components/dashboard/agent/crm/LeadDetailsDrawer';
 import { Users, UserPlus, CheckCircle2, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useI18n } from '@/providers/LocaleProvider';
 
 interface LeadStats {
   totalAssigned: number;
@@ -19,6 +20,7 @@ interface LeadStats {
 }
 
 export default function AgentLeadsPage() {
+  const { t } = useI18n();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -104,19 +106,18 @@ export default function AgentLeadsPage() {
       <div>
         <div className="flex items-center gap-2 mb-2">
           <span className="px-2.5 py-1 rounded-md bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)] text-[10px] font-bold uppercase tracking-widest">
-            Agent Workspace
+            {t("Agent Workspace")}
           </span>
-          <span className="text-xs text-[var(--sidebar-text)] opacity-60">• Lead Pipeline</span>
+          <span className="text-xs text-[var(--sidebar-text)] opacity-60">• {t("Lead Pipeline")}</span>
         </div>
         <h1 className="text-3xl font-bold text-[var(--foreground)] tracking-tight">
-          Assigned Leads & CRM
+          {t("Assigned Leads & CRM")}
         </h1>
         <p className="text-sm text-[var(--sidebar-text)] opacity-60 mt-1">
-          Manage your investor prospects, track status transitions, add notes, and schedule follow-ups.
+          {t("Manage your investor prospects, track status transitions, add notes, and schedule follow-ups.")}
         </p>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {[
           { label: 'Total Assigned', value: stats.totalAssigned, icon: Users, color: 'text-[var(--color-primary-300)]' },
@@ -126,7 +127,7 @@ export default function AgentLeadsPage() {
         ].map(({ label, value, icon: Icon, color }) => (
           <div key={label} className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-6 flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-widest mb-1">{label}</p>
+              <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-widest mb-1">{t(label)}</p>
               <p className={`text-3xl font-bold ${color}`}>{value}</p>
             </div>
             <div className={`w-10 h-10 rounded-md bg-[var(--color-primary-300)]/10 flex items-center justify-center ${color}`}>
@@ -158,7 +159,7 @@ export default function AgentLeadsPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-5 py-3 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md text-xs">
           <span className="text-[var(--sidebar-text)] opacity-60 font-medium">
-            Page {filters.page || 1} of {totalPages} ({total} total leads)
+            {t("Page {page} of {totalPages} ({total} total leads)", { page: filters.page || 1, totalPages, total })}
           </span>
           <div className="flex items-center gap-2">
             <button

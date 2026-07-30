@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useI18n } from "@/providers/LocaleProvider";
 import {
     MapPinIcon,
     PropertyIcon,
@@ -40,6 +41,7 @@ const formatValuation = (val) => {
 const EDITABLE_STATUSES = new Set(["DRAFT", "LIVE", "SUSPENDED", "REJECTED", "UNDER_REVIEW", "PENDING_REVIEW"]);
 
 function StatusBadge({ status }: { status: string }) {
+    const { t } = useI18n();
     const s = (status || "").toUpperCase();
     const isLive = s === "LIVE";
     const isSuspended = s === "SUSPENDED";
@@ -69,12 +71,13 @@ function StatusBadge({ status }: { status: string }) {
     return (
         <span className={`inline-flex items-center gap-1.5 text-[9px] font-bold tracking-[0.12em] font-montserrat uppercase rounded-full px-2.5 py-1 border whitespace-nowrap ${cls}`}>
             <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${dot}`} />
-            {status}
+            {t(status)}
         </span>
     );
 }
 
 function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, onShare }) {
+    const { t } = useI18n();
     const propertyImage = property.images && property.images.length > 0 ? property.images[0] : null;
     const status = (property.status || "").toUpperCase();
     const isDraft = status === "DRAFT";
@@ -120,14 +123,14 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
 
                     <div className="absolute left-4 top-4">
                         <span className="inline-flex items-center rounded-full bg-black/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white backdrop-blur-sm">
-                            {property.status || "LIVE"}
+                            {t(property.status || "LIVE")}
                         </span>
                     </div>
 
                     {property.category && (
                         <div className="absolute bottom-4 left-4">
                             <span className="rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-black shadow-sm">
-                                {property.category.replace(/_/g, " ")}
+                                {t(property.category.replace(/_/g, " "))}
                             </span>
                         </div>
                     )}
@@ -156,17 +159,17 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
 
                     <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
                         <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-4">
-                            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Valuation</span>
+                            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">{t("Valuation")}</span>
                             <span className="mt-2 block break-words text-sm font-bold leading-tight text-[var(--foreground)] sm:text-base">
                                 {formatValuation(property.valuation)}
                             </span>
                         </div>
                         <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-4">
-                            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Return</span>
+                            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">{t("Return")}</span>
                             <span className="mt-2 block text-sm font-bold text-emerald-500 sm:text-base">{annualReturn}%</span>
                         </div>
                         <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-4">
-                            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Fractions</span>
+                            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">{t("Fractions")}</span>
                             <span className="mt-2 block text-sm font-bold leading-tight text-[var(--foreground)] sm:text-base">
                                 {soldFractions}
                                 {totalFractions > 0 && (
@@ -175,7 +178,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                             </span>
                         </div>
                         <div className="min-w-0 rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)] p-3 sm:p-4">
-                            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Investors</span>
+                            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">{t("Investors")}</span>
                             <span className="mt-2 block text-sm font-bold text-[var(--foreground)] sm:text-base">{property.investorCount || 0}</span>
                         </div>
                     </div>
@@ -183,7 +186,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                     {isLive && totalFractions > 0 && (
                         <div className="mt-5">
                             <div className="mb-2 flex items-center justify-between">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">Sold Progress</span>
+                                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-55">{t("Sold Progress")}</span>
                                 <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-active-text)]">{soldPct.toFixed(1)}%</span>
                             </div>
                             <div className="h-2 overflow-hidden rounded-full bg-[var(--sidebar-border)]">
@@ -206,8 +209,8 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                             <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-black/8">
                                 <ShareIcon className="h-4 w-4 flex-shrink-0" />
                             </span>
-                            <span className="leading-none sm:hidden">{isDraft ? "Generate" : "Share"}</span>
-                            <span className="hidden leading-none sm:inline">{isDraft ? "Generate Share" : "Share Asset"}</span>
+                            <span className="leading-none sm:hidden">{isDraft ? t("Generate") : t("Share")}</span>
+                            <span className="hidden leading-none sm:inline">{isDraft ? t("Generate Share") : t("Share Asset")}</span>
                         </button>
                         {(canEdit || isDraft) ? (
                             <div className="flex flex-wrap gap-2 sm:justify-end">
@@ -222,8 +225,8 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                         </span>
-                                        <span className="hidden sm:inline">Edit Listing</span>
-                                        <span className="sm:hidden">Edit</span>
+                                        <span className="hidden sm:inline">{t("Edit Listing")}</span>
+                                        <span className="sm:hidden">{t("Edit")}</span>
                                     </button>
                                 )}
                                 {isDraft && (
@@ -235,7 +238,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                                         <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                         </svg>
-                                        Submit
+                                        {t("Submit")}
                                     </button>
                                 )}
                                 {isDraft && (
@@ -247,7 +250,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                                         <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
-                                        Delete
+                                        {t("Delete")}
                                     </button>
                                 )}
                             </div>
@@ -260,6 +263,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
 }
 
 export default function PartnerPropertiesPage() {
+    const { t } = useI18n();
     const [isAddingNew, setIsAddingNew] = useState(false);
     const [editId, setEditId] = useState(null);
     const [showKycModal, setShowKycModal] = useState(false);
@@ -409,7 +413,7 @@ export default function PartnerPropertiesPage() {
                                 transition={{ duration: 0.4 }}
                             >
                                 <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat">
-                                    Properties
+                                    {t("Properties")}
                                 </h1>
                             </motion.div>
 
@@ -423,7 +427,7 @@ export default function PartnerPropertiesPage() {
                                 className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98] text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all cursor-pointer"
                             >
                                 <span className="text-lg leading-none">+</span>
-                                New Listing
+                                {t("New Listing")}
                             </motion.button>
                         </div>
 

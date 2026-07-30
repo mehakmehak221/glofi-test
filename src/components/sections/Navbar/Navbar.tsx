@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LANDING_EASE } from '@/lib/landingAnimations';
+import LanguageSwitcher from '@/components/i18n/LanguageSwitcher';
+import { useI18n } from '@/providers/LocaleProvider';
 
 const NAV_LINKS = [
     { label: 'Company', href: '/#company' },
@@ -13,31 +15,11 @@ const NAV_LINKS = [
     { label: 'Blog', href: '/blog' },
     { label: 'Learn', href: '/#learn' },
 ];
-
-function NavbarGlobeIcon() {
-    return (
-        <svg
-            className="navbar__lang-icon"
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            aria-hidden
-        >
-            <circle cx="9" cy="9" r="7.25" stroke="currentColor" strokeWidth="1.25" />
-            <path
-                d="M1.75 9H16.25M9 1.75C7.2 4.25 7.2 13.75 9 16.25M9 1.75C10.8 4.25 10.8 13.75 9 16.25"
-                stroke="currentColor"
-                strokeWidth="1.25"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
+    const { t } = useI18n();
 
     const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         if (href.startsWith('/#')) {
@@ -113,22 +95,23 @@ export default function Navbar() {
                                     className="navbar__nav-link"
                                     onClick={(e) => handleScroll(e, link.href)}
                                 >
-                                    {link.label}
+                                    {t(link.label)}
                                 </Link>
                             </li>
                         ))}
                     </ul>
                 </nav>
                 <div className="navbar__actions">
+                    <LanguageSwitcher />
                     <Link href="/sign-in" className="btn-get-Glofi">
-                        Login
+                        {t('Login')}
                     </Link>
 
 
                     <button
                         type="button"
                         className="navbar__hamburger"
-                        aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+                        aria-label={mobileOpen ? t('Close menu') : t('Open menu')}
                         aria-expanded={mobileOpen}
                         onClick={() => setMobileOpen((prev) => !prev)}
                     >
@@ -164,10 +147,16 @@ export default function Navbar() {
                                         handleScroll(e, link.href);
                                     }}
                                 >
-                                    {link.label}
+                                    {t(link.label)}
                                 </Link>
                             </motion.div>
                         ))}
+                        <div className="navbar__mobile-actions">
+                            <LanguageSwitcher variant="mobile" className="w-full" />
+                            <Link href="/sign-in" className="btn-get-Glofi w-full justify-center">
+                                {t('Login')}
+                            </Link>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

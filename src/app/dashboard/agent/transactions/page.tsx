@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useGetAgentTransactionsQuery } from "@/store/api/agentApi";
 import { CheckIcon, PendingIcon, LoadingSpinner, AnalyticsIcon, ChartLineIcon, DocumentIcon } from "@/components/VectorImages";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const formatCurrency = (val: number) => {
     if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
@@ -11,6 +12,7 @@ const formatCurrency = (val: number) => {
 };
 
 export default function AgentTransactionsPage() {
+    const { t } = useI18n();
     const { data: txData, isLoading } = useGetAgentTransactionsQuery();
 
     if (isLoading) {
@@ -18,7 +20,7 @@ export default function AgentTransactionsPage() {
             <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto min-h-screen flex items-center justify-center">
                 <div className="text-[var(--foreground)] opacity-50 font-montserrat animate-pulse flex items-center gap-3">
                     <LoadingSpinner />
-                    Loading transactions...
+                    {t("Loading transactions...")}
                 </div>
             </div>
         );
@@ -32,9 +34,9 @@ export default function AgentTransactionsPage() {
     const totalCount = transactions.length;
 
     const stats = [
-        { label: "Total Volume", value: formatCurrency(totalVolume), icon: DocumentIcon, color: "text-[var(--color-primary-300)]", bg: "bg-[var(--color-primary-300)]/10" },
-        { label: "Commission Earned", value: formatCurrency(totalCommission), icon: ChartLineIcon, color: "text-blue-500", bg: "bg-blue-500/10" },
-        { label: "Completed Referrals", value: `${completedCount} / ${totalCount}`, icon: CheckIcon, color: "text-green-500", bg: "bg-green-500/10" },
+        { label: t("Total Volume"), value: formatCurrency(totalVolume), icon: DocumentIcon, color: "text-[var(--color-primary-300)]", bg: "bg-[var(--color-primary-300)]/10" },
+        { label: t("Commission Earned"), value: formatCurrency(totalCommission), icon: ChartLineIcon, color: "text-blue-500", bg: "bg-blue-500/10" },
+        { label: t("Completed Referrals"), value: `${completedCount} / ${totalCount}`, icon: CheckIcon, color: "text-green-500", bg: "bg-green-500/10" },
     ];
 
     return (
@@ -46,7 +48,7 @@ export default function AgentTransactionsPage() {
                 className="mb-8"
             >
                 <h1 className="text-3xl font-bold text-[var(--foreground)] font-montserrat tracking-tight">
-                    Transactions
+                    {t("Transactions")}
                 </h1>
             </motion.div>
 
@@ -79,18 +81,18 @@ export default function AgentTransactionsPage() {
                 className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md overflow-hidden"
             >
                 <div className="p-8 border-b border-[var(--sidebar-border)]">
-                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">All Referral Transactions</h2>
+                    <h2 className="text-base font-bold text-[var(--foreground)] font-montserrat">{t("All Referral Transactions")}</h2>
                 </div>
                 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left font-montserrat border-collapse min-w-[800px]">
                         <thead>
                             <tr className="text-[11px] uppercase tracking-[0.15em] text-[var(--sidebar-text)] opacity-60 border-b border-[var(--sidebar-border)]">
-                                <th className="px-8 py-6 font-bold">Date</th>
-                                <th className="px-8 py-6 font-bold">User</th>
-                                <th className="px-8 py-6 font-bold">Asset</th>
-                                <th className="px-8 py-6 font-bold text-right">Amount</th>
-                                <th className="px-8 py-6 font-bold text-center">Status</th>
+                                <th className="px-8 py-6 font-bold">{t("Date")}</th>
+                                <th className="px-8 py-6 font-bold">{t("User")}</th>
+                                <th className="px-8 py-6 font-bold">{t("Asset")}</th>
+                                <th className="px-8 py-6 font-bold text-right">{t("Amount")}</th>
+                                <th className="px-8 py-6 font-bold text-center">{t("Status")}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[var(--sidebar-border)]/20">
@@ -112,7 +114,7 @@ export default function AgentTransactionsPage() {
                                                 ) : (
                                                     <PendingIcon className="w-3 h-3" />
                                                 )}
-                                                {tx.status}
+                                                {t(tx.status)}
                                             </div>
                                         </td>
                                     </tr>
@@ -120,7 +122,7 @@ export default function AgentTransactionsPage() {
                             ) : (
                                 <tr>
                                     <td colSpan={5} className="px-8 py-20 text-center">
-                                        <p className="text-sm text-[var(--sidebar-text)] opacity-60 font-montserrat italic">No transactions available yet.</p>
+                                        <p className="text-sm text-[var(--sidebar-text)] opacity-60 font-montserrat italic">{t("No transactions available yet.")}</p>
                                     </td>
                                 </tr>
                             )}

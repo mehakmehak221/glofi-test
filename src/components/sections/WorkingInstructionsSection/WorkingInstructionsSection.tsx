@@ -11,20 +11,20 @@ import {
     staggerContainer,
     useLandingMotion,
 } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 const FEATURES = [
     {
-        title: 'Curated Properties',
-        description:
-            'Explore Professionally vetted real estate opportunities across premium global markets.',
+        titleKey: 'Curated Properties',
+        descriptionKey: 'Explore Professionally vetted real estate opportunities across premium global markets.',
     },
     {
-        title: 'Fractional Ownership',
-        description: 'Own shares in high-value properties without purchasing the entire asset.',
+        titleKey: 'Fractional Ownership',
+        descriptionKey: 'Own shares in high-value properties without purchasing the entire asset.',
     },
     {
-        title: 'Portfolio Tracking',
-        description: 'Monitor returns, growth and asset allocation in real-time.',
+        titleKey: 'Portfolio Tracking',
+        descriptionKey: 'Monitor returns, growth and asset allocation in real-time.',
     },
 ];
 
@@ -62,6 +62,7 @@ function FlameIcon() {
 export default function WorkingInstructionsSection() {
     const [activeIndex, setActiveIndex] = useState(0);
     const { viewProps } = useLandingMotion();
+    const { t } = useI18n();
 
     return (
         <section id="company" className="about-platform-section w-full bg-white">
@@ -88,11 +89,11 @@ export default function WorkingInstructionsSection() {
                 >
                     <motion.span className="about-platform-badge" variants={fadeUpSubtle}>
                         <FlameIcon />
-                        ABOUT US
+                        {t('About Us')}
                     </motion.span>
 
                     <motion.h2 className="about-platform-heading" variants={fadeUp}>
-                        All Your Real Estate Investments In One Platform
+                        {t('All Your Real Estate Investments In One Platform')}
                     </motion.h2>
 
                     <motion.div
@@ -120,7 +121,7 @@ export default function WorkingInstructionsSection() {
                                 const isActive = index === activeIndex;
 
                                 return (
-                                    <motion.li key={feature.title} variants={fadeUpSubtle}>
+                                    <motion.li key={feature.titleKey} variants={fadeUpSubtle}>
                                         <motion.button
                                             type="button"
                                             onClick={() => setActiveIndex(index)}
@@ -133,10 +134,10 @@ export default function WorkingInstructionsSection() {
                                             transition={{ type: 'spring', stiffness: 400, damping: 28 }}
                                         >
                                             <h3 className="about-platform-feature__title">
-                                                {feature.title}
+                                                {t(feature.titleKey)}
                                             </h3>
                                             <p className="about-platform-feature__description">
-                                                {feature.description}
+                                                {t(feature.descriptionKey)}
                                             </p>
                                         </motion.button>
                                     </motion.li>

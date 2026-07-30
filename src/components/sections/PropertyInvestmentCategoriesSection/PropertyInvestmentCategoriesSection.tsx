@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
+import { useI18n } from '@/providers/LocaleProvider';
 import {
     HotelImage,
     FlatBuildingImage,
@@ -20,6 +21,7 @@ export default function PropertyInvestmentCategoriesSection() {
             },
         },
     };
+    const { t } = useI18n();
 
     const itemVariants: Variants = {
         hidden: { opacity: 0, y: 30 },
@@ -45,10 +47,10 @@ export default function PropertyInvestmentCategoriesSection() {
                     variants={itemVariants}
                 >
                     <h2 className="text-property-title mb-4">
-                        Property Investment Categories
+                        {t('Property Investment Categories')}
                     </h2>
                     <p className="text-property-subtitle">
-                        Strategic sourcing. Verified supply. Structured transactions.
+                        {t('Strategic sourcing. Verified supply. Structured transactions.')}
                     </p>
                 </motion.div>
 
@@ -68,7 +70,7 @@ export default function PropertyInvestmentCategoriesSection() {
                                 <HotelImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-commercial">
-                                <span className="text-property-category text-xs sm:text-sm lg:text-base">Commercial Offices</span>
+                                <span className="text-property-category text-xs sm:text-sm lg:text-base">{t('Commercial Offices')}</span>
                             </div>
                         </motion.div>
 
@@ -78,7 +80,7 @@ export default function PropertyInvestmentCategoriesSection() {
                                 <FlatBuildingImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-premium">
-                                <span className="text-property-category text-xs sm:text-sm lg:text-base">Premium Residential</span>
+                                <span className="text-property-category text-xs sm:text-sm lg:text-base">{t('Premium Residential')}</span>
                             </div>
                         </motion.div>
                     </div>
@@ -91,7 +93,7 @@ export default function PropertyInvestmentCategoriesSection() {
                                 <RetailImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-retail">
-                                <span className="text-property-category text-xs sm:text-sm lg:text-base">Retail &amp; Mixed-Use</span>
+                                <span className="text-property-category text-xs sm:text-sm lg:text-base">{t('Retail & Mixed-Use')}</span>
                             </div>
                         </motion.div>
 
@@ -101,7 +103,7 @@ export default function PropertyInvestmentCategoriesSection() {
                                 <IndustryImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             </div>
                             <div className="property-outer-box-industrial">
-                                <span className="text-property-category text-xs sm:text-sm lg:text-base">Industrial &amp; Logistics</span>
+                                <span className="text-property-category text-xs sm:text-sm lg:text-base">{t('Industrial & Logistics')}</span>
                             </div>
                         </motion.div>
 
@@ -116,7 +118,7 @@ export default function PropertyInvestmentCategoriesSection() {
                                 />
                             </div>
                             <div className="property-outer-box-luxury">
-                                <span className="text-property-category text-xs sm:text-sm lg:text-base">Land Parcels</span>
+                                <span className="text-property-category text-xs sm:text-sm lg:text-base">{t('Land Parcels')}</span>
                             </div>
                         </motion.div>
                     </div>

@@ -9,12 +9,14 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import MobileTopbar from "@/components/dashboard/MobileTopbar";
 import KYCModal from "@/components/dashboard/KYCModal";
 import KYBModal from "@/components/dashboard/KYBModal";
+import { useI18n } from "@/providers/LocaleProvider";
 
 export default function DashboardLayout({ children }) {
     const { data: kycData, refetch: refetchKyc } = useGetKycStatusQuery();
     const { data: kybData, refetch: refetchKyb } = useGetKybStatusQuery();
     const [showKycModal, setShowKycModal] = useState(false);
     const [showKybModal, setShowKybModal] = useState(false);
+    const { t } = useI18n();
 
     return (
         <div className="flex h-screen bg-[var(--background)] theme-purple overflow-hidden">
@@ -49,11 +51,11 @@ export default function DashboardLayout({ children }) {
                                         )}
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">Identity Verification: {kycData.status.replace("_", " ")}</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">{t("Identity Verification: {status}", { status: kycData.status.replace("_", " ") })}</p>
                                         <p className="text-[11px] opacity-80 leading-relaxed max-w-2xl">
                                             {kycData.status === "UNDER_REVIEW"
-                                                ? "Your identity verification is currently being processed. This typically takes 24-48 hours."
-                                                : "You need to complete your identity verification before you can manage or list properties."}
+                                                ? t("Your identity verification is currently being processed. This typically takes 24-48 hours.")
+                                                : t("You need to complete your identity verification before you can manage or list properties.")}
                                         </p>
                                     </div>
                                 </div>
@@ -62,7 +64,7 @@ export default function DashboardLayout({ children }) {
                                         onClick={() => setShowKycModal(true)}
                                         className="px-4 py-2 rounded-lg bg-white text-black text-[10px] font-bold uppercase transition-all hover:bg-white/90 whitespace-nowrap border-0 cursor-pointer shadow-sm"
                                     >
-                                        Verify Identity
+                                        {t("Verify Identity")}
                                     </button>
                                 )}
                             </motion.div>
@@ -87,11 +89,11 @@ export default function DashboardLayout({ children }) {
                                         )}
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">Business Verification: {kybData.status.replace("_", " ")}</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">{t("Business Verification: {status}", { status: kybData.status.replace("_", " ") })}</p>
                                         <p className="text-[11px] opacity-80 leading-relaxed max-w-2xl">
                                             {kybData.status === "UNDER_REVIEW"
-                                                ? "Your business verification (KYB) is currently being processed. This typically takes 2-5 business days."
-                                                : "You need to complete your business verification (KYB) before you can manage or list properties."}
+                                                ? t("Your business verification (KYB) is currently being processed. This typically takes 2-5 business days.")
+                                                : t("You need to complete your business verification (KYB) before you can manage or list properties.")}
                                         </p>
                                     </div>
                                 </div>
@@ -100,7 +102,7 @@ export default function DashboardLayout({ children }) {
                                         onClick={() => setShowKybModal(true)}
                                         className="px-4 py-2 rounded-lg bg-white text-black text-[10px] font-bold uppercase transition-all hover:bg-white/90 whitespace-nowrap border-0 cursor-pointer shadow-sm"
                                     >
-                                        Verify Business
+                                        {t("Verify Business")}
                                     </button>
                                 )}
                             </motion.div>

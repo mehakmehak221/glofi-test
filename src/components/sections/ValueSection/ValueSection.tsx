@@ -8,15 +8,17 @@ import {
     staggerContainer,
     useLandingMotion,
 } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 const STATS = [
-    { value: '20', label: 'Premium Assets' },
-    { value: '₹5,000 Cr+', label: 'Assets of Worth' },
-    { value: '100k+', label: 'Registered Investors' },
+    { value: '20', labelKey: 'Premium Assets' },
+    { value: '₹5,000 Cr+', labelKey: 'Assets of Worth' },
+    { value: '100k+', labelKey: 'Registered Investors' },
 ] as const;
 
 export default function ValueSection() {
     const { viewProps } = useLandingMotion();
+    const { t } = useI18n();
 
     return (
         <section
@@ -38,7 +40,7 @@ export default function ValueSection() {
                                 {STATS[0].value}
                             </span>
                             <span className="text-sm sm:text-base text-white font-Montserrat mt-2 font-medium block">
-                                {STATS[0].label}
+                                {t(STATS[0].labelKey)}
                             </span>
                         </motion.div>
                     </motion.div>
@@ -58,7 +60,7 @@ export default function ValueSection() {
                                 {STATS[1].value}
                             </span>
                             <span className="text-sm sm:text-base text-white font-Montserrat mt-2 font-medium block">
-                                {STATS[1].label}
+                                {t(STATS[1].labelKey)}
                             </span>
                         </motion.div>
                     </motion.div>
@@ -78,7 +80,7 @@ export default function ValueSection() {
                                 {STATS[2].value}
                             </span>
                             <span className="text-sm sm:text-base text-white font-Montserrat mt-2 font-medium block">
-                                {STATS[2].label}
+                                {t(STATS[2].labelKey)}
                             </span>
                         </motion.div>
                     </motion.div>

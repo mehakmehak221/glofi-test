@@ -7,6 +7,7 @@ import { TrendingUpIcon, SearchIcon, AboutIcon } from "@/components/VectorImages
 import PaymentModal from "@/components/dashboard/PaymentModal";
 import { useGetSecondaryListingsQuery, useGetSecondaryListingByIdQuery } from "@/store/api/secondaryMarketApi";
 import { API_URL } from "@/constants";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -19,6 +20,7 @@ const itemVariants = {
 } as const;
 
 export default function SecondaryMarketplacePage() {
+    const { t } = useI18n();
     const [activeFilter, setActiveFilter] = useState("All");
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState(null);
@@ -125,8 +127,8 @@ export default function SecondaryMarketplacePage() {
             <div className="max-w-[1100px] mx-auto">
 
                 <header className="mb-6">
-                    <h1 className="text-2xl sm:text-3xl font-bold mb-3 text-[var(--header-text)] tracking-tight">Secondary Marketplace</h1>
-                    <p className="text-sm sm:text-base text-[var(--color-text-muted)] mb-8 max-w-2xl leading-relaxed font-medium">Browse property fractions relisted by investors. All assets are available for immediate purchase and transfer.</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-3 text-[var(--header-text)] tracking-tight">{t("Secondary Marketplace")}</h1>
+                    <p className="text-sm sm:text-base text-[var(--color-text-muted)] mb-8 max-w-2xl leading-relaxed font-medium">{t("Browse property fractions relisted by investors. All assets are available for immediate purchase and transfer.")}</p>
                 </header>
 
 
@@ -134,7 +136,7 @@ export default function SecondaryMarketplacePage() {
                     {stats.map((stat) => (
                         <div key={stat.label} className="bg-[var(--marketplace-card-bg)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-5 relative overflow-hidden">
                             <div className="flex justify-between items-start mb-4">
-                                <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-bold">{stat.label}</span>
+                                <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[0.2em] font-bold">{t(stat.label)}</span>
                                 <div className="w-8 h-8 rounded-full bg-[var(--badge-bg)] flex items-center justify-center text-[var(--sidebar-active-text)]">
                                     <stat.icon className="w-4 h-4" />
                                 </div>
@@ -143,7 +145,7 @@ export default function SecondaryMarketplacePage() {
                                 <span className="text-2xl font-bold text-[var(--header-text)]">{stat.value}</span>
                             </div>
                             <div className="inline-flex items-center gap-1.5 mt-2 px-2 py-1 rounded-full bg-[var(--search-bg)] border border-[var(--sidebar-border)]">
-                                <span className="text-xs text-[var(--sidebar-text)] font-semibold">{stat.change}</span>
+                                <span className="text-xs text-[var(--sidebar-text)] font-semibold">{t(stat.change)}</span>
                             </div>
                         </div>
                     ))}
@@ -161,7 +163,7 @@ export default function SecondaryMarketplacePage() {
                                     : "bg-[var(--marketplace-card-bg)] text-[var(--marketplace-text-secondary)] hover:text-[var(--header-text)]"
                                     }`}
                             >
-                                {filter}
+                                {t(filter)}
                             </button>
                         ))}
                     </div>
@@ -184,8 +186,8 @@ export default function SecondaryMarketplacePage() {
                             <div className="w-20 h-20 rounded-full bg-[var(--badge-bg)] flex items-center justify-center mb-6">
                                 <SearchIcon className="w-10 h-10 text-[var(--color-text-muted)]" />
                             </div>
-                            <h3 className="text-xl font-bold text-[var(--header-text)] mb-2">No active listings</h3>
-                            <p className="text-sm text-[var(--color-text-muted)] max-w-xs">There are no secondary market listings available at the moment. Check back later!</p>
+                            <h3 className="text-xl font-bold text-[var(--header-text)] mb-2">{t("No active listings")}</h3>
+                            <p className="text-sm text-[var(--color-text-muted)] max-w-xs">{t("There are no secondary market listings available at the moment. Check back later!")}</p>
                         </div>
                     ) : (
                         displayAssets.map((asset) => (
@@ -235,12 +237,12 @@ export default function SecondaryMarketplacePage() {
                     </div>
                     <div className="text-left">
                         <div className="flex items-center gap-3 mb-1">
-                            <h2 className="text-2xl font-bold text-[var(--header-text)] leading-tight">About Secondary Marketplace</h2>
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[var(--badge-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30">Live</span>
+                            <h2 className="text-2xl font-bold text-[var(--header-text)] leading-tight">{t("About Secondary Marketplace")}</h2>
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[var(--badge-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30">{t("Live")}</span>
                         </div>
-                        <p className="text-sm font-semibold text-[var(--sidebar-active-text)] mb-2">Peer-to-Peer Property Fraction Trading</p>
+                        <p className="text-sm font-semibold text-[var(--sidebar-active-text)] mb-2">{t("Peer-to-Peer Property Fraction Trading")}</p>
                         <p className="text-sm font-medium text-[var(--color-text-muted)] leading-relaxed max-w-5xl">
-                            The Secondary Marketplace allows investors to buy property fractions that have been relisted by other investors. All properties shown here were previously purchased from the primary marketplace and are now available for immediate transfer. Prices may vary based on current market value and seller preferences.
+                            {t("The Secondary Marketplace allows investors to buy property fractions that have been relisted by other investors. All properties shown here were previously purchased from the primary marketplace and are now available for immediate transfer. Prices may vary based on current market value and seller preferences.")}
                         </p>
                     </div>
                 </section>
@@ -250,6 +252,7 @@ export default function SecondaryMarketplacePage() {
 }
 
 function MarketplaceCard({ asset, onView }) {
+    const { t } = useI18n();
     return (
         <motion.div
             variants={itemVariants}
@@ -280,11 +283,11 @@ function MarketplaceCard({ asset, onView }) {
 
                 <div className="grid grid-cols-2 gap-0 border border-[var(--marketplace-card-border)] rounded-md overflow-hidden">
                     <div className="bg-[var(--card-surface)] px-3 py-2.5 border-r border-[var(--marketplace-card-border)]">
-                        <p className="text-[9px] text-[var(--marketplace-text-muted)] uppercase tracking-[0.15em] font-bold mb-1">Fractions</p>
+                        <p className="text-[9px] text-[var(--marketplace-text-muted)] uppercase tracking-[0.15em] font-bold mb-1">{t("Fractions")}</p>
                         <p className="text-2xl font-bold text-[var(--marketplace-text-primary)]">{asset.fractions} / {asset.fractions}</p>
                     </div>
                     <div className="bg-[var(--card-surface)] px-3 py-2.5">
-                        <p className="text-[9px] text-[var(--marketplace-text-muted)] uppercase tracking-[0.15em] font-bold mb-1">Ask Price</p>
+                        <p className="text-[9px] text-[var(--marketplace-text-muted)] uppercase tracking-[0.15em] font-bold mb-1">{t("Ask Price")}</p>
                         <p className="text-2xl font-bold text-[var(--marketplace-text-primary)]">{asset.pricePerFraction ? `₹${asset.pricePerFraction.toFixed(2)}` : asset.price}</p>
                     </div>
                 </div>
@@ -294,7 +297,7 @@ function MarketplaceCard({ asset, onView }) {
                         onClick={onView}
                         className="w-full py-3 rounded-full text-sm font-bold uppercase tracking-wide border border-[var(--sidebar-active-text)] text-[var(--header-text)] bg-transparent hover:bg-[var(--sidebar-active-bg)] transition-colors cursor-pointer"
                     >
-                        View Details
+                        {t("View Details")}
                     </button>
                 </div>
             </div>
@@ -303,6 +306,7 @@ function MarketplaceCard({ asset, onView }) {
 }
 
 function DetailModal({ id, onClose, onBuy }) {
+    const { t } = useI18n();
     const { data: listingResponse, isLoading } = useGetSecondaryListingByIdQuery(id, { skip: !id });
     const listing = listingResponse?.data || listingResponse;
 
@@ -344,18 +348,18 @@ function DetailModal({ id, onClose, onBuy }) {
 
                                 <div className="grid grid-cols-2 gap-4 mb-8">
                                     <div className="bg-[var(--card-surface)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
-                                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Price</p>
+                                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">{t("Price")}</p>
                                         <p className="text-lg font-bold text-[var(--header-text)]">₹{(parseFloat(listing.askPrice || 0)).toLocaleString()}</p>
                                     </div>
                                     <div className="bg-[var(--card-surface)] p-4 rounded-2xl border border-[var(--sidebar-border)]">
-                                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Fractions</p>
+                                        <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">{t("Fractions")}</p>
                                         <p className="text-lg font-bold text-[var(--header-text)]">{listing.fractions}</p>
                                     </div>
                                 </div>
 
                                 <div className="mb-8 p-4 bg-[var(--badge-bg)] rounded-2xl border border-[var(--sidebar-active-text)]/10">
-                                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">Seller Note</p>
-                                    <p className="text-sm font-medium text-[var(--header-text)] italic leading-relaxed">&ldquo;{listing.notes || "No additional notes provided by the seller."}&rdquo;</p>
+                                    <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold tracking-widest mb-1">{t("Seller Note")}</p>
+                                    <p className="text-sm font-medium text-[var(--header-text)] italic leading-relaxed">&ldquo;{listing.notes || t("No additional notes provided by the seller.")}&rdquo;</p>
                                 </div>
 
                                 <div className="mt-auto space-y-4">
@@ -363,16 +367,16 @@ function DetailModal({ id, onClose, onBuy }) {
                                         disabled
                                         className="w-full py-4 rounded-full bg-[var(--sidebar-border)] text-[var(--color-text-muted)] text-xs font-bold uppercase tracking-[0.2em] shadow-lg opacity-80 cursor-not-allowed border-0"
                                     >
-                                        Coming Soon
+                                        {t("Coming Soon")}
                                     </button>
-                                    <p className="text-[10px] text-center text-[var(--color-text-muted)] uppercase font-bold tracking-[0.2em]">Transaction secured by Glofy Escrow</p>
+                                    <p className="text-[10px] text-center text-[var(--color-text-muted)] uppercase font-bold tracking-[0.2em]">{t("Transaction secured by Glofy Escrow")}</p>
                                 </div>
                             </div>
                         </div>
                     ) : (
                         <div className="p-20 text-center">
-                            <p className="text-red-500 font-bold mb-4">Listing not found</p>
-                            <button onClick={onClose} className="px-6 py-2 rounded-full bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-xs font-bold text-[var(--header-text)] cursor-pointer">Close</button>
+                            <p className="text-red-500 font-bold mb-4">{t("Listing not found")}</p>
+                            <button onClick={onClose} className="px-6 py-2 rounded-full bg-[var(--card-surface)] border border-[var(--sidebar-border)] text-xs font-bold text-[var(--header-text)] cursor-pointer">{t("Close")}</button>
                         </div>
                     )}
                 </motion.div>

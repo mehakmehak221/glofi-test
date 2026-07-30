@@ -3,6 +3,7 @@
 import React from 'react';
 import { LeadStatus, QueryLeadsDto } from '@/types/crm';
 import { Search, RefreshCw, Plus } from 'lucide-react';
+import { useI18n } from '@/providers/LocaleProvider';
 
 interface LeadFiltersProps {
   filters: QueryLeadsDto;
@@ -21,6 +22,8 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
   onOpenCreateModal,
   isLoading,
 }) => {
+  const { t } = useI18n();
+
   return (
     <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] p-4 rounded-md space-y-4 mb-6">
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
@@ -29,7 +32,7 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--sidebar-text)] opacity-60" />
           <input
             type="text"
-            placeholder="Search by lead name, phone, or email..."
+            placeholder={t("Search by lead name, phone, or email...")}
             value={filters.search || ''}
             onChange={(e) => onFilterChange({ search: e.target.value, page: 1 })}
             className="w-full pl-10 pr-4 py-2.5 rounded-md bg-[var(--background)] border border-[var(--sidebar-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-300)]/20 focus:border-[var(--color-primary-300)] transition-all text-[var(--foreground)] placeholder:text-[var(--sidebar-text)] placeholder:opacity-60 font-montserrat"
@@ -45,7 +48,7 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
             className="px-4 py-2.5 rounded-md bg-[var(--color-primary-300)] hover:bg-[var(--color-primary-300)]/90 text-[#050505] text-xs font-bold shadow-[var(--shadow-btn)] flex items-center gap-2 transition-all active:scale-[0.98] font-montserrat cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
-            New Lead
+            {t("New Lead")}
           </button>
         </div>
       </div>
@@ -55,7 +58,7 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
         {/* Status Select */}
         <div>
           <label className="block text-[10px] font-bold tracking-widest text-[var(--sidebar-text)] opacity-60 uppercase mb-1.5 font-montserrat">
-            Status
+            {t("Status")}
           </label>
           <select
             value={filters.status || ''}
@@ -64,10 +67,10 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
             }
             className="w-full px-3 py-2 rounded-md bg-[var(--background)] border border-[var(--sidebar-border)] text-xs font-medium text-[var(--foreground)] focus:outline-none focus:border-[var(--color-primary-300)] font-montserrat"
           >
-            <option value="">All Statuses</option>
+            <option value="">{t("All Statuses")}</option>
             {Object.values(LeadStatus).map((st) => (
               <option key={st} value={st}>
-                {st.replace('_', ' ')}
+                {t(st.replace('_', ' '))}
               </option>
             ))}
           </select>
@@ -76,7 +79,7 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
 
         <div>
           <label className="block text-[10px] font-bold tracking-widest text-[var(--sidebar-text)] opacity-60 uppercase mb-1.5 font-montserrat">
-            Priority
+            {t("Priority")}
           </label>
           <select
             value={filters.priority || ''}
@@ -88,27 +91,27 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
             }
             className="w-full px-3 py-2 rounded-md bg-[var(--background)] border border-[var(--sidebar-border)] text-xs font-medium text-[var(--foreground)] focus:outline-none focus:border-[var(--color-primary-300)] font-montserrat"
           >
-            <option value="">All Priorities</option>
-            <option value="HIGH">High</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="LOW">Low</option>
+            <option value="">{t("All Priorities")}</option>
+            <option value="HIGH">{t("High")}</option>
+            <option value="MEDIUM">{t("Medium")}</option>
+            <option value="LOW">{t("Low")}</option>
           </select>
         </div>
 
 
         <div>
           <label className="block text-[10px] font-bold tracking-widest text-[var(--sidebar-text)] opacity-60 uppercase mb-1.5 font-montserrat">
-            Source
+            {t("Source")}
           </label>
           <select
             value={filters.source || ''}
             onChange={(e) => onFilterChange({ source: e.target.value || undefined, page: 1 })}
             className="w-full px-3 py-2 rounded-md bg-[var(--background)] border border-[var(--sidebar-border)] text-xs font-medium text-[var(--foreground)] focus:outline-none focus:border-[var(--color-primary-300)] font-montserrat"
           >
-            <option value="">All Sources</option>
+            <option value="">{t("All Sources")}</option>
             {SOURCES.map((src) => (
               <option key={src} value={src}>
-                {src}
+                {t(src)}
               </option>
             ))}
           </select>
@@ -117,7 +120,7 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
 
         <div>
           <label className="block text-[10px] font-bold tracking-widest text-[var(--sidebar-text)] opacity-60 uppercase mb-1.5 font-montserrat">
-            Created From
+            {t("Created From")}
           </label>
           <input
             type="date"

@@ -16,6 +16,7 @@ import { useGetKycStatusQuery } from "@/store/api/kycApi";
 import { useGetMyListingsQuery } from "@/store/api/assetApi";
 import { useGetPartnerPortfolioQuery, useGetListingPerformanceQuery } from "@/store/api/partnerApi";
 import { API_URL } from "@/constants";
+import { useI18n } from "@/providers/LocaleProvider";
 
 
 const STAT_CARDS = [
@@ -196,6 +197,7 @@ const formatCurrency = (val) => {
 };
 
 export default function PartnerOverviewPage() {
+    const { t } = useI18n();
     const { data: portfolioData, isLoading: isLoadingPortfolio } = useGetPartnerPortfolioQuery();
     const { data: performanceData, isLoading: isLoadingPerformance, isError, error } = useGetListingPerformanceQuery();
     const { data: kycData } = useGetKycStatusQuery();
@@ -205,18 +207,18 @@ export default function PartnerOverviewPage() {
     const kybStatus = kybData?.status;
 
     const isKycRequired = err?.status === 403 && (
-        err?.data?.message?.includes('KYC') || 
-        kycStatus === 'REJECTED' || 
-        kycStatus === 'PENDING' || 
-        !kycStatus || 
+        err?.data?.message?.includes('KYC') ||
+        kycStatus === 'REJECTED' ||
+        kycStatus === 'PENDING' ||
+        !kycStatus ||
         (kycStatus !== 'APPROVED' && kycStatus !== 'VERIFIED')
     );
 
     const isKybRequired = err?.status === 403 && !isKycRequired && (
-        err?.data?.message?.includes('KYB') || 
-        kybStatus === 'REJECTED' || 
-        kybStatus === 'PENDING' || 
-        !kybStatus || 
+        err?.data?.message?.includes('KYB') ||
+        kybStatus === 'REJECTED' ||
+        kybStatus === 'PENDING' ||
+        !kybStatus ||
         (kybStatus !== 'APPROVED' && kybStatus !== 'VERIFIED')
     );
 
@@ -224,25 +226,25 @@ export default function PartnerOverviewPage() {
 
     const stats = [
         {
-            label: "LISTINGS",
+            label: t("LISTINGS"),
             value: portfolioData?.listings?.total || 0,
-            delta: `+${portfolioData?.listings?.thisMonth || 0} this month`,
+            delta: `+${portfolioData?.listings?.thisMonth || 0} ${t("this month")}`,
             icon: PropertyIcon,
         },
         {
-            label: "ACTIVE LEADS",
+            label: t("ACTIVE LEADS"),
             value: "0",
-            delta: "0 this week",
+            delta: `0 ${t("this week")}`,
             icon: LeadIcon,
         },
         {
-            label: "FUNDS RAISED",
+            label: t("FUNDS RAISED"),
             value: formatCurrency(portfolioData?.fundsRaised?.total || 0),
             delta: `+${formatCurrency(portfolioData?.fundsRaised?.thisMonth || 0)}`,
             icon: FinancialIcon,
         },
         {
-            label: "COMMISSIONS",
+            label: t("COMMISSIONS"),
             value: formatCurrency(portfolioData?.commissions?.total || 0),
             delta: `+${formatCurrency(portfolioData?.commissions?.thisMonth || 0)}`,
             icon: TrendingUpIcon,
@@ -258,9 +260,9 @@ export default function PartnerOverviewPage() {
                 className="mb-8"
             >
                 <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight opacity-90 uppercase tracking-widest">
-                    Overview
+                    {t("Overview")}
                 </h1>
-                <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] font-montserrat mt-2 text-[var(--sidebar-text)] opacity-40 uppercase">Developer command center</p>
+                <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] font-montserrat mt-2 text-[var(--sidebar-text)] opacity-40 uppercase">{t("Developer command center")}</p>
             </motion.div>
 
 
@@ -326,23 +328,23 @@ export default function PartnerOverviewPage() {
                 className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-5"
             >
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat uppercase tracking-wider">Listing Performance</h2>
+                    <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] font-montserrat uppercase tracking-wider">{t("Listing Performance")}</h2>
                     {isLoadingPerformance && <div className="w-4 h-4 border border-[var(--color-primary-300)]/20 border-t-[var(--color-primary-300)] rounded-full animate-spin" />}
                 </div>
 
                 {isError ? (
                     <div className="py-12 flex flex-col items-center justify-center text-center px-4">
                         <p className="text-sm font-bold text-[var(--foreground)] opacity-90 mb-2 uppercase tracking-wide">
-                            {isKycRequired ? "Verification Required" : isKybRequired ? "Business Verification Required" : "Error Loading Data"}
+                            {isKycRequired ? t("Verification Required") : isKybRequired ? t("Business Verification Required") : t("Error Loading Data")}
                         </p>
                         <p className="text-[11px] text-[var(--sidebar-text)] opacity-60 max-w-xs mb-4">
-                            {isKycRequired ? "You need to complete identity verification to view and manage your listings performance." : isKybRequired ? "You need to complete business verification to view and manage your listings performance." : "Your account verification is pending. Real-time listing performance will appear once approved."}
+                            {isKycRequired ? t("You need to complete identity verification to view and manage your listings performance.") : isKybRequired ? t("You need to complete business verification to view and manage your listings performance.") : t("Your account verification is pending. Real-time listing performance will appear once approved.")}
                         </p>
                     </div>
                 ) : displayListings.length === 0 ? (
                     <div className="py-12 flex flex-col items-center justify-center text-center px-4 border border-dashed border-[var(--sidebar-border)] rounded-md">
-                        <p className="text-sm font-bold text-[var(--foreground)] opacity-70 mb-1 uppercase tracking-wider">No active listings</p>
-                        <p className="text-[11px] text-[var(--sidebar-text)] opacity-40">Your property performance metrics will appear here once you list an asset.</p>
+                        <p className="text-sm font-bold text-[var(--foreground)] opacity-70 mb-1 uppercase tracking-wider">{t("No active listings")}</p>
+                        <p className="text-[11px] text-[var(--sidebar-text)] opacity-40">{t("Your property performance metrics will appear here once you list an asset.")}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
