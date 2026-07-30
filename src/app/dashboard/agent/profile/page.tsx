@@ -32,9 +32,19 @@ const getDocumentUrl = (url: string | null | undefined, defaultFolder: string = 
 
     if (url.startsWith("http://") || url.startsWith("https://")) {
         if (url.includes("aws-glofi-uploads.s3")) {
-            return url;
+
+            try {
+                const parsed = new URL(url);
+                const pathMatch = parsed.pathname.match(/^\/(kyc|rera|kyb|uploads)\//);
+                if (pathMatch) {
+                    return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com${parsed.pathname}`;
+                }
+                return `${parsed.origin}${parsed.pathname}`;
+            } catch {
+                return url;
+            }
         }
-        const match = url.match(/\/(kyc|rera|kyb)\/(.+)$/);
+        const match = url.match(/\/(kyc|rera|kyb)\/([^?#]+)$/);
         if (match) {
             return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com/${match[1]}/${match[2]}`;
         }
