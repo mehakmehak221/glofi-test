@@ -492,13 +492,33 @@ function SignUpPageContent() {
             {/* Invisible reCAPTCHA mount point */}
             <div id="recaptcha-mount" />
 
-            <Link
-                href="/"
-                className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
-            >
-                <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
-                Back to home
-            </Link>
+            {step === "DETAILS" ? (
+                <Link
+                    href="/"
+                    className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group font-montserrat"
+                >
+                    <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform" />
+                    Back to home
+                </Link>
+            ) : (
+                <button
+                    type="button"
+                    onClick={() => {
+                        if (step === "OTP" && confirmationResult) {
+                            setStep("PHONE_OTP");
+                            setOtp(""); setOtpError(""); setSuccessMsg(""); setErrorMsg("");
+                        } else {
+                            setStep("DETAILS");
+                            setOtp(""); setOtpError(""); setPhoneCode(""); setPhoneCodeError(""); setSuccessMsg(""); setErrorMsg("");
+                            clearRecaptcha();
+                        }
+                    }}
+                    className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group border-0 bg-transparent cursor-pointer font-montserrat p-0 align-baseline"
+                >
+                    <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform" />
+                    Back to previous screen
+                </button>
+            )}
 
             <div className="mb-8">
                 <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
@@ -532,10 +552,12 @@ function SignUpPageContent() {
                 )}
             </div>
 
-            <motion.div className="mb-4 space-y-4">
-                <UserTypeToggle value={userType} onChange={handleUserTypeChange} />
-                <RoleInsightCallout role={userType} />
-            </motion.div>
+            {step === "DETAILS" && (
+                <motion.div className="mb-4 space-y-4">
+                    <UserTypeToggle value={userType} onChange={handleUserTypeChange} />
+                    <RoleInsightCallout role={userType} />
+                </motion.div>
+            )}
 
             {/* ---------------------------------------------------------------- */}
             {/* Step: PHONE_OTP — Firebase SMS verification                      */}
@@ -544,7 +566,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handlePhoneOtpSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <div className="flex flex-col gap-1">
                         <p className="text-sm font-semibold text-neutral-900">Phone Verification</p>
@@ -611,7 +633,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handleOtpSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <p className="text-sm text-neutral-500 leading-relaxed">
                         Enter the verification code sent to{" "}
@@ -675,7 +697,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handleDetailsSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-name" className="text-sm font-medium text-neutral-900 font-montserrat">

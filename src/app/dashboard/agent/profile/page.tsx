@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useGetAgentMeQuery, useGetAgentReferralLinkQuery, useGetAgentDashboardQuery } from "@/store/api/agentApi";
+import { useUpdateProfileMutation } from "@/store/api/authApi";
+import { useUploadFileMutation } from "@/store/api/fileApi";
+import { Camera } from "lucide-react";
 import {
     ProfileIcon,
     VerifiedIcon,
@@ -33,9 +36,19 @@ const getDocumentUrl = (url: string | null | undefined, defaultFolder: string = 
 
     if (url.startsWith("http://") || url.startsWith("https://")) {
         if (url.includes("aws-glofi-uploads.s3")) {
-            return url;
+
+            try {
+                const parsed = new URL(url);
+                const pathMatch = parsed.pathname.match(/^\/(kyc|rera|kyb|uploads)\//);
+                if (pathMatch) {
+                    return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com${parsed.pathname}`;
+                }
+                return `${parsed.origin}${parsed.pathname}`;
+            } catch {
+                return url;
+            }
         }
-        const match = url.match(/\/(kyc|rera|kyb)\/(.+)$/);
+        const match = url.match(/\/(kyc|rera|kyb)\/([^?#]+)$/);
         if (match) {
             return `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com/${match[1]}/${match[2]}`;
         }
@@ -63,6 +76,9 @@ export default function AgentProfilePage() {
     const [copiedCode, setCopiedCode] = useState(false);
     const [copiedLink, setCopiedLink] = useState(false);
     const [showKycModal, setShowKycModal] = useState(false);
+
+    const [updateProfile] = useUpdateProfileMutation();
+    const [uploadFile, { isLoading: isUploading }] = useUploadFileMutation();
 
     const triggerFeedback = (type: 'code' | 'link') => {
         if (type === 'code') {
@@ -164,7 +180,7 @@ export default function AgentProfilePage() {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[#00FFCC]/5 blur-3xl -mr-16 -mt-16 group-hover:bg-[#00FFCC]/10 transition-all duration-700" />
 
                         <div className="relative inline-block mb-6">
-                            <div className="w-24 h-24 rounded-2xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] flex items-center justify-center mx-auto overflow-hidden">
+                            <div className="w-24 h-24 rounded-2xl bg-[var(--field-surface)] border border-[var(--dashboard-border)] flex items-center justify-center mx-auto overflow-hidden relative">
                                 {profile?.avatarUrl ? (
                                     <div className="relative w-full h-full">
                                         <Image src={profile.avatarUrl} alt={profile.fullName || t("Agent")} fill className="object-cover" />
@@ -172,10 +188,40 @@ export default function AgentProfilePage() {
                                 ) : (
                                     <ProfileIcon className="w-10 h-10 text-[var(--color-text-muted)]" />
                                 )}
+                                {isUploading && (
+                                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#00FFCC]"></div>
+                                    </div>
+                                )}
                             </div>
+                            <label className="absolute -bottom-1.5 -right-1.5 w-8 h-8 rounded-full bg-[#00FFCC] text-black flex items-center justify-center cursor-pointer shadow-lg hover:scale-105 transition-all z-10">
+                                <Camera className="w-4 h-4" />
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            try {
+                                                const response = await uploadFile({ file, folder: "avatars" }).unwrap();
+                                                const key = response.key || response.url || response.signedUrl?.split('?')[0];
+                                                if (key) {
+                                                    await updateProfile({ avatarUrl: key }).unwrap();
+                                                    refetchAgentMe();
+                                                }
+                                            } catch (err: any) {
+                                                console.error("Photo upload failed:", err);
+                                                const msg = err?.data?.message || err?.message || "Upload failed. Please ensure the file is under 2MB and in JPG/PNG format.";
+                                                alert(msg);
+                                            }
+                                        }
+                                    }}
+                                />
+                            </label>
                             {status?.isVerified && (
-                                <div className="absolute -bottom-2 -right-2 bg-[#00FFCC] text-black p-1.5 rounded-lg shadow-lg">
-                                    <VerifiedIcon className="w-4 h-4" />
+                                <div className="absolute -top-2 -left-2 bg-[#00FFCC] text-black p-1 rounded-lg shadow-lg z-10">
+                                    <VerifiedIcon className="w-3.5 h-3.5" />
                                 </div>
                             )}
                         </div>

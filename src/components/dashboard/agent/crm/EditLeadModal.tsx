@@ -40,7 +40,11 @@ export const EditLeadModal: React.FC<EditLeadModalProps> = ({ isOpen, lead, onCl
     try {
       setIsSubmitting(true);
       setError(null);
-      await onSubmit(formData);
+      const submissionData = {
+        ...formData,
+        email: formData.email?.trim() || undefined,
+      };
+      await onSubmit(submissionData);
       onClose();
     } catch (err: any) {
       setError(err.message || 'Failed to update lead.');

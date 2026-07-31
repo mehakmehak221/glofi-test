@@ -38,9 +38,9 @@ export default function InvestorCommunityPage() {
         <div className="flex items-center gap-6 mb-10">
           <button
             onClick={() => router.back()}
-            className="w-12 h-12 flex items-center justify-center rounded-full border border-[var(--color-border-subtle)] bg-white/5 hover:bg-white/10 transition-all cursor-pointer group"
+            className="w-10 h-10 flex items-center justify-center rounded-full border border-[var(--dashboard-border)] bg-[var(--card-surface)] hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all cursor-pointer group shadow-sm flex-shrink-0"
           >
-            <BackArrowIcon className="w-5 h-5 text-[var(--foreground)] group-hover:-translate-x-1 transition-transform" />
+            <BackArrowIcon className="w-4 h-4 text-[var(--foreground)] group-hover:text-[var(--background)] group-hover:-translate-x-0.5 transition-transform" />
           </button>
           <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] tracking-tight">
             Our Investor Community
@@ -52,7 +52,7 @@ export default function InvestorCommunityPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex flex-col"
+          className="flex flex-col bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-lg divide-y divide-[var(--dashboard-border)] overflow-hidden shadow-sm"
         >
           {mockInvestorActivities.map((activity, index) => {
             const avatarColor = AVATAR_COLORS[index % AVATAR_COLORS.length];
@@ -60,7 +60,7 @@ export default function InvestorCommunityPage() {
               <motion.div
                 key={activity.id}
                 variants={itemVariants}
-                className="flex items-center justify-between p-5 rounded-2xl transition-all hover:bg-white/5 group border-b border-transparent hover:border-[var(--color-border-subtle)]"
+                className="flex items-center justify-between p-5 transition-all hover:bg-[var(--color-bg-light)]/40 group"
               >
                 <div className="flex items-center gap-5 flex-1">
                   <div

@@ -72,7 +72,7 @@ function FilterDropdown({
         <div className="relative" ref={ref}>
             <button
                 onClick={() => setOpen((p) => !p)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border transition-all cursor-pointer ${value
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold border transition-all cursor-pointer ${value
                         ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
                         : "bg-[var(--field-surface)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
                     }`}
@@ -93,7 +93,7 @@ function FilterDropdown({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -6, scale: 0.97 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute z-50 top-[calc(100%+6px)] left-0 min-w-[180px] bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl shadow-2xl overflow-hidden"
+                        className="absolute z-50 top-[calc(100%+6px)] left-0 min-w-[180px] bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md shadow-2xl overflow-hidden"
                     >
                         {options.map((opt) => (
                             <button
@@ -189,14 +189,14 @@ export default function MarketplacePage() {
 
             {/* Sale-type pill toggle */}
             <div className="max-w-6xl mx-auto mb-6">
-                <div className="inline-flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-full p-1 gap-1 shadow-sm relative">
+                <div className="inline-flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-1 gap-1 shadow-sm relative">
                     {(["FRACTIONAL", "WHOLE"] as const).map((type) => {
                         const isSelected = saleTypeFilter === type;
                         return (
                             <button
                                 key={type}
                                 onClick={() => setSaleTypeFilter(type)}
-                                className={`relative px-6 py-2.5 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${isSelected
+                                className={`relative px-6 py-2.5 rounded-md text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${isSelected
                                         ? "text-[var(--sidebar-active-text)]"
                                         : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
                                     }`}
@@ -204,7 +204,7 @@ export default function MarketplacePage() {
                                 {isSelected && (
                                     <motion.div
                                         layoutId="activeSaleType"
-                                        className="absolute inset-0 bg-[var(--sidebar-active-bg)] border border-[var(--sidebar-active-text)]/15 rounded-full z-[-1] shadow-sm"
+                                        className="absolute inset-0 bg-[var(--sidebar-active-bg)] border border-[var(--sidebar-active-text)]/15 rounded-md z-[-1] shadow-sm"
                                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                     />
                                 )}
@@ -220,7 +220,7 @@ export default function MarketplacePage() {
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="max-w-6xl mx-auto mb-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 shadow-sm backdrop-blur-md"
+                className="max-w-6xl mx-auto mb-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-5 sm:p-6 shadow-sm backdrop-blur-md"
             >
                 {/* Category tabs */}
                 <div className="flex flex-wrap gap-2 mb-4 relative z-10">
@@ -230,7 +230,7 @@ export default function MarketplacePage() {
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
-                                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold transition-colors duration-200 cursor-pointer border-0 bg-transparent ${isSelected
+                                className={`relative px-4 py-1.5 rounded-md text-xs font-semibold transition-colors duration-200 cursor-pointer border-0 bg-transparent ${isSelected
                                         ? "text-[var(--sidebar-active-text)]"
                                         : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
                                     }`}
@@ -238,7 +238,7 @@ export default function MarketplacePage() {
                                 {isSelected && (
                                     <motion.div
                                         layoutId="activeCategoryBg"
-                                        className="absolute inset-0 bg-[var(--sidebar-active-bg)] border border-[var(--sidebar-active-text)]/10 rounded-full z-[-1] shadow-sm"
+                                        className="absolute inset-0 bg-[var(--sidebar-active-bg)] border border-[var(--sidebar-active-text)]/10 rounded-md z-[-1] shadow-sm"
                                         transition={{ type: "spring", stiffness: 350, damping: 28 }}
                                     />
                                 )}
@@ -264,7 +264,7 @@ export default function MarketplacePage() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder={t("Search properties...")}
-                            className="w-full pl-10 pr-9 py-2 rounded-full text-xs bg-[var(--field-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50 focus:ring-1 focus:ring-[var(--sidebar-active-text)]/15 transition-all font-medium"
+                            className="w-full pl-10 pr-9 py-2 rounded-md text-xs bg-[var(--field-surface)] border border-[var(--sidebar-border)] text-[var(--header-text)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--sidebar-active-text)]/50 focus:ring-1 focus:ring-[var(--sidebar-active-text)]/15 transition-all font-medium"
                         />
                         {searchQuery && (
                             <button
@@ -295,7 +295,7 @@ export default function MarketplacePage() {
                     {hasActiveFilters && (
                         <button
                             onClick={clearAllFilters}
-                            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-text)]/10 cursor-pointer transition-all"
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-bold text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-text)]/10 cursor-pointer transition-all"
                         >
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -383,7 +383,7 @@ export default function MarketplacePage() {
                                         variants={cardVariants}
                                         layout
                                         onClick={() => router.push(`/dashboard/investor/marketplace/${property.id}`)}
-                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-[24px] overflow-hidden hover:border-[var(--sidebar-active-text)]/25 transition-all duration-300 group cursor-pointer shadow-sm hover:shadow-md"
+                                        className="bg-[var(--marketplace-card-bg)] border border-[var(--marketplace-card-border)] rounded-md overflow-hidden hover:border-[var(--sidebar-active-text)]/25 transition-all duration-300 group cursor-pointer shadow-sm hover:shadow-md"
                                     >
                                         <div className="relative h-64 sm:h-72 overflow-hidden">
                                             <Image
@@ -428,7 +428,7 @@ export default function MarketplacePage() {
                                                     : property.location}
                                             </div>
 
-                                            <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[16px] p-4 mb-5 shadow-sm">
+                                            <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-md p-4 mb-5 shadow-sm">
                                                 <div className="grid grid-cols-3 divide-x divide-[var(--sidebar-border)]/65 text-center">
                                                     <div className="min-w-0 px-1">
                                                         <p className="text-[10px] font-bold text-[var(--color-text-muted)] mb-1 truncate">{t("Valuation")}</p>
@@ -473,7 +473,7 @@ export default function MarketplacePage() {
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
                                                 onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/investor/marketplace/${property.id}`); }}
-                                                className="w-full py-3.5 rounded-full border-[1.5px] border-[var(--sidebar-active-text)] bg-transparent text-sm font-extrabold uppercase tracking-wide cursor-pointer transition-colors duration-300 text-[var(--header-text)] hover:bg-[var(--sidebar-active-text)]/10"
+                                                className="w-full py-3.5 rounded-md border-[1.5px] border-[var(--sidebar-active-text)] bg-transparent text-sm font-extrabold uppercase tracking-wide cursor-pointer transition-colors duration-300 text-[var(--header-text)] hover:bg-[var(--sidebar-active-text)]/10"
                                             >
                                                 {t("View Details")}
                                             </motion.button>
