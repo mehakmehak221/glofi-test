@@ -34,7 +34,11 @@ export function LocaleProvider({
   const setLocale = (nextLocale: Locale) => {
     setLocaleState(nextLocale);
     setCookie(LOCALE_COOKIE, nextLocale, 365);
-    router.refresh();
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    } else {
+      router.refresh();
+    }
   };
 
   return (
