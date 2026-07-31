@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGetProfileQuery } from "@/store/api/authApi";
+import { useGetProfileQuery, useUpdateProfileMutation } from "@/store/api/authApi";
+import { useUploadFileMutation } from "@/store/api/fileApi";
 import SupportTicketComposer from "@/components/dashboard/SupportTicketComposer";
+import { Country } from "country-state-city";
+import { Camera, AlertCircle, CheckCircle2 } from "lucide-react";
 
-const TABS = ["Profile", "KYB", "Settings", "Support"];
+const TABS = ["Profile", "Support"];
 
 const tabContentVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -15,25 +18,52 @@ const tabContentVariants = {
 
 export default function PartnerAccountPage() {
     const [activeTab, setActiveTab] = useState("Profile");
-    const { data: profileData, isLoading } = useGetProfileQuery();
+    const { data: profileData, isLoading: profileLoading } = useGetProfileQuery();
 
-    const PROFILE_FIELDS = useMemo(() => {
-        if (!profileData) return [
-            { label: "Full Name", value: "Loading...", type: "text" },
-            { label: "Email", value: "Loading...", type: "email" },
-            { label: "Phone", value: "Loading...", type: "tel" },
-            { label: "Country", value: "Loading...", type: "text" },
-        ];
+    const [updateProfile] = useUpdateProfileMutation();
+    const [uploadFile, { isLoading: isUploading }] = useUploadFileMutation();
 
-        const profile = profileData.partnerProfile || profileData.investorProfile || {};
+    const [fullName, setFullName] = useState("");
+    const [country, setCountry] = useState("");
+    const [avatarUrl, setAvatarUrl] = useState("");
+    const avatarKeyRef = useRef("");
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [statusMsg, setStatusMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-        return [
-            { label: "Full Name", value: profile.fullName || profileData.fullName || profileData.name || "", type: "text" },
-            { label: "Email", value: profileData.email || "", type: "email" },
-            { label: "Phone", value: profileData.phoneNumber || profileData.phone || profile.phone || "", type: "tel" },
-            { label: "Country", value: profile.country || profile.nationality || profileData.country || profileData.nationality || "", type: "text" },
-        ];
+    useEffect(() => {
+        if (profileData) {
+            const profile = profileData.partnerProfile || profileData.investorProfile || {};
+            setFullName(profileData.fullName || profile.fullName || profileData.name || "");
+            setCountry(profileData.country || profile.country || profile.nationality || profileData.nationality || "");
+            const dbAvatar = profileData.avatarUrl || profile.avatarUrl || "";
+            setAvatarUrl(dbAvatar);
+            avatarKeyRef.current = dbAvatar;
+        }
     }, [profileData]);
+
+    const handleSaveChanges = async () => {
+        setIsUpdating(true);
+        setStatusMsg(null);
+        try {
+            await updateProfile({
+                fullName,
+                country,
+                avatarUrl: avatarKeyRef.current,
+            }).unwrap();
+            setStatusMsg({ type: "success", text: "Profile updated successfully!" });
+            setTimeout(() => setStatusMsg(null), 5000);
+        } catch (err: any) {
+            console.error("Failed to update profile:", err);
+            setStatusMsg({
+                type: "error",
+                text: err?.data?.message || err?.message || "Failed to update profile. Please try again."
+            });
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const isLoading = profileLoading;
 
     return (
         <div className="p-3 sm:p-6 lg:p-8 bg-[var(--background)] min-h-screen text-[var(--sidebar-text)]">
@@ -42,7 +72,7 @@ export default function PartnerAccountPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--header-text)] mb-4 sm:mb-6"
             >
-                Account Settings
+                Account
             </motion.h1>
 
             <motion.div
@@ -81,74 +111,138 @@ export default function PartnerAccountPage() {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6 mb-6 sm:mb-8">
-                                        {PROFILE_FIELDS.map((field) => (
-                                            <div key={field.label} className="flex flex-col gap-1.5">
-                                                <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
-                                                    {field.label}
-                                                </label>
-                                                <input
-                                                    type={field.type}
-                                                    defaultValue={field.value}
-                                                    key={field.value}
-                                                    className="w-full rounded-md px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium text-[var(--header-text)] bg-[var(--field-surface)] border border-[var(--sidebar-border)] transition-all hover:border-[var(--sidebar-active-text)]/30 focus:outline-none focus:border-[var(--sidebar-active-text)]/50"
-                                                />
+                                    {/* Profile Picture Section */}
+                                    <div className="flex flex-col items-center mb-8">
+                                        <div className="relative w-28 h-28 mb-3">
+                                            <div className="w-full h-full rounded-full bg-[var(--field-surface)] border border-[var(--sidebar-border)] flex items-center justify-center overflow-hidden">
+                                                {avatarUrl ? (
+                                                    <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <div
+                                                        className="w-full h-full flex items-center justify-center font-bold text-2xl text-black"
+                                                        style={{ background: "var(--color-gradient-Glofi)" }}
+                                                    >
+                                                        {fullName.split(" ").slice(0, 2).map((n) => n[0]).join("").toUpperCase() || "?"}
+                                                    </div>
+                                                )}
                                             </div>
-                                        ))}
+                                            {isUploading && (
+                                                <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
+                                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--color-primary-300)]"></div>
+                                                </div>
+                                            )}
+                                            <label className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#00DAAF] text-black flex items-center justify-center cursor-pointer shadow-lg hover:scale-105 transition-all">
+                                                <Camera className="w-4 h-4" />
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) {
+                                                            try {
+                                                                const response = await uploadFile({ file, folder: "avatars" }).unwrap();
+                                                                if (response?.signedUrl) {
+                                                                    setAvatarUrl(response.signedUrl);
+                                                                    avatarKeyRef.current = response.key;
+                                                                } else {
+                                                                    const url = response.url || (response.key ? `https://aws-glofi-uploads.s3.ap-south-1.amazonaws.com/${response.key}` : "");
+                                                                    if (url) {
+                                                                        setAvatarUrl(url);
+                                                                        avatarKeyRef.current = response.key || url;
+                                                                    }
+                                                                }
+                                                            } catch (err: any) {
+                                                                console.error("Photo upload failed:", err);
+                                                                const msg = err?.data?.message || err?.message || "Upload failed. Please ensure the file is under 2MB and in JPG/PNG format.";
+                                                                setStatusMsg({ type: "error", text: msg });
+                                                            }
+                                                        }
+                                                    }}
+                                                />
+                                            </label>
+                                        </div>
+                                        <div className="flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] opacity-60">
+                                            <AlertCircle className="w-3.5 h-3.5 text-[#00DAAF]" />
+                                            <span>JPG, PNG — max 2 MB</span>
+                                        </div>
                                     </div>
+
+                                    {statusMsg && (
+                                        <div className={`mb-6 p-4 rounded-md flex items-center gap-2 text-xs border ${statusMsg.type === "success"
+                                            ? "bg-[var(--color-primary-300)]/10 border-[var(--color-primary-300)]/20 text-[var(--color-primary-300)]"
+                                            : "bg-rose-500/10 border-rose-500/20 text-rose-400"
+                                            }`}>
+                                            {statusMsg.type === "success" ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                                            <span>{statusMsg.text}</span>
+                                        </div>
+                                    )}
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6 mb-6 sm:mb-8">
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
+                                                Full Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={fullName}
+                                                onChange={(e) => setFullName(e.target.value)}
+                                                className="w-full rounded-md px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium text-[var(--header-text)] bg-[var(--field-surface)] border border-[var(--sidebar-border)] transition-all hover:border-[var(--sidebar-active-text)]/30 focus:outline-none focus:border-[var(--sidebar-active-text)]/50"
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
+                                                Email Address
+                                            </label>
+                                            <input
+                                                type="email"
+                                                value={profileData?.email || ""}
+                                                disabled
+                                                className="w-full rounded-md px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium text-[var(--color-text-muted)]/60 bg-[var(--field-surface)] border border-[var(--sidebar-border)]/50 cursor-not-allowed opacity-70"
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
+                                                Country
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    value={country}
+                                                    onChange={(e) => setCountry(e.target.value)}
+                                                    className="w-full rounded-md px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium text-[var(--header-text)] bg-[var(--field-surface)] border border-[var(--sidebar-border)] transition-all hover:border-[var(--sidebar-active-text)]/30 focus:outline-none focus:border-[var(--sidebar-active-text)]/50 appearance-none cursor-pointer"
+                                                >
+                                                    <option value="">Select Country</option>
+                                                    {Country.getAllCountries().map((c) => (
+                                                        <option key={c.isoCode} value={c.name}>
+                                                            {c.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[var(--color-text-muted)]">
+                                                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <motion.button
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
-                                        className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-md bg-[var(--color-primary-300)] text-black font-semibold text-[11px] sm:text-[13px] tracking-wide cursor-pointer border-0 shadow-glow-primary"
+                                        onClick={handleSaveChanges}
+                                        disabled={isUpdating}
+                                        className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-md bg-[#00DAAF] text-black font-bold text-[11px] sm:text-[13px] tracking-wide cursor-pointer border-0 shadow-glow-primary transition-all disabled:opacity-50"
                                     >
-                                        Save Changes
+                                        {isUpdating ? "Saving..." : "Save Changes"}
                                     </motion.button>
                                 </>
                             )}
                         </div>
                     )}
 
-                    {activeTab === "KYB" && (
-                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-6 lg:p-8 max-w-[800px] shadow-sm">
-                            <div className="flex items-center gap-3 sm:gap-5 mb-5 sm:mb-8">
-                                <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center flex-shrink-0 ${profileData?.kybStatus === "APPROVED" || profileData?.kybStatus === "VERIFIED" ? "bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)]" : "bg-yellow-500/10 text-yellow-500"}`}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-7 sm:h-7">
-                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h2 className="text-base sm:text-xl font-bold text-[var(--header-text)] mb-0.5 sm:mb-1.5">
-                                        {profileData?.kybStatus || "KYB Not Submitted"}
-                                    </h2>
-                                    <p className="text-[11px] sm:text-[13px] text-[var(--color-text-muted)] font-medium">Business verification status</p>
-                                </div>
-                            </div>
-                            <p className="text-xs text-[var(--color-text-muted)]">Please contact support if you need to update your business details or documents.</p>
-                        </div>
-                    )}
-
-                    {activeTab === "Wallet" && (
-                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-8 text-center text-[var(--color-text-muted)] text-sm shadow-sm">
-                            Wallet functionality for partners is coming soon.
-                        </div>
-                    )}
-
-                    {activeTab === "Settings" && (
-                        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-6 lg:p-8 max-w-[800px] shadow-sm">
-                            <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Notification Settings</h3>
-                            <div className="space-y-4">
-                                <label className="flex items-center gap-3 cursor-pointer">
-                                    <input type="checkbox" defaultChecked className="w-4 h-4 rounded border-[var(--sidebar-border)] text-[var(--color-primary-300)]" />
-                                    <span className="text-xs text-[var(--header-text)]">Email notifications for new leads</span>
-                                </label>
-                                <label className="flex items-center gap-3 cursor-pointer">
-                                    <input type="checkbox" defaultChecked className="w-4 h-4 rounded border-[var(--sidebar-border)] text-[var(--color-primary-300)]" />
-                                    <span className="text-xs text-[var(--header-text)]">Platform alerts for property updates</span>
-                                </label>
-                            </div>
-                        </div>
-                    )}
 
                     {activeTab === "Support" && (
                         <div className="max-w-[980px]">

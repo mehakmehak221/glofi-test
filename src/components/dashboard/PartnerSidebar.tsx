@@ -17,14 +17,14 @@ import {
     CollapseIcon,
     SignOutIcon,
     SupportIcon,
+    AccountIcon,
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
     { href: "/dashboard/partner/overview", icon: OverviewIcon, label: "Overview" },
     { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
-
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
-    { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
+    { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
 ];
 
 export default function PartnerSidebar() {

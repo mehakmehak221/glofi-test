@@ -166,7 +166,11 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
     try {
       setIsSubmitting(true);
       setSubmitError(null);
-      await onSubmit(formData);
+      const submissionData = {
+        ...formData,
+        email: formData.email?.trim() || undefined,
+      };
+      await onSubmit(submissionData);
       setFormData(INITIAL_FORM);
       setTouched(INITIAL_TOUCHED);
       setFieldErrors({});

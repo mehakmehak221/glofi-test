@@ -37,7 +37,8 @@ export default function DashboardHeader() {
     }, [isLight, mounted]);
 
     const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
-    const fullName = profile.fullName || profileData?.fullName || profileData?.name || "Guest";
+    const fullName = profileData?.fullName || profile.fullName || profileData?.name || "Guest";
+    const avatarUrl = profileData?.avatarUrl || profile.avatarUrl || "";
 
     let displayRole = "Investor";
     if (pathname.startsWith("/dashboard/partner")) {
@@ -73,7 +74,7 @@ export default function DashboardHeader() {
                 </button>
 
                 <div className="flex items-center gap-3 pl-3 border-l border-[var(--header-border)]">
-                    <Avatar name={fullName} size="sm" />
+                    <Avatar src={avatarUrl} name={fullName} size="sm" />
                     <div className="flex flex-col">
                         <span className="text-sm font-semibold text-[var(--header-text)] leading-tight">{fullName}</span>
                         <span className="text-[10px] text-[var(--header-text)] opacity-60 uppercase tracking-wider">{displayRole}</span>

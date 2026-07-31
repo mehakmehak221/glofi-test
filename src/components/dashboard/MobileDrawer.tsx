@@ -40,7 +40,7 @@ const PARTNER_NAV_ITEMS = [
     // { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
 
     { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
-    // { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
     { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
 ];
 
@@ -90,7 +90,8 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     const { data: profileData } = useGetProfileQuery();
 
     const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
-    const fullName = profile.fullName || profileData?.fullName || profileData?.name || "Guest";
+    const fullName = profileData?.fullName || profile.fullName || profileData?.name || "Guest";
+    const avatarUrl = profileData?.avatarUrl || profile.avatarUrl || "";
     const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Developer" : isAgent ? "Agent" : "Investor");
 
     const handleLogout = async () => {
@@ -134,7 +135,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                         {/* Header */}
                         <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--sidebar-border)] sm:px-6 sm:py-5">
                             <div className="flex items-center gap-3">
-                                <Avatar name={fullName} size="md" />
+                                <Avatar src={avatarUrl} name={fullName} size="md" />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-semibold text-[var(--header-text)]">{fullName}</span>
                                     <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider">{role}</span>

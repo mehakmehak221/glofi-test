@@ -148,13 +148,13 @@ export default function ReturnsCalculatorPage() {
           <div className="relative flex flex-col gap-2 p-5 bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00DAAF]/60 to-transparent" />
             <span className="text-[9px] font-black uppercase tracking-[2.5px] text-[var(--color-text-muted)]">Estimated Total Amount</span>
-            <div className="flex items-baseline gap-1.5">
+            <div className="flex items-center gap-2">
               <span className="text-xl font-black text-[#00DAAF]">₹</span>
               <input
                 type="number"
                 value={Math.round(potentialAmount)}
                 onChange={(e) => handleAmountChange(e.target.value)}
-                className="bg-transparent border-none outline-none text-2xl sm:text-3xl font-black text-[#00DAAF] w-full tracking-tighter min-w-0"
+                className="bg-[var(--background)] border border-[var(--dashboard-border)] rounded-lg outline-none text-2xl sm:text-3xl font-black text-[#00DAAF] w-full tracking-tighter min-w-0 py-1.5 px-3 focus:border-[#00DAAF] transition-colors"
               />
             </div>
           </div>
@@ -163,13 +163,13 @@ export default function ReturnsCalculatorPage() {
           <div className="relative flex flex-col gap-2 p-5 bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--foreground)]/20 to-transparent" />
             <span className="text-[9px] font-black uppercase tracking-[2.5px] text-[var(--color-text-muted)]">Net Performance</span>
-            <div className="flex items-baseline gap-1">
+            <div className="flex items-center gap-2">
               <input
                 type="number"
                 value={Math.round(totalReturnPercent)}
                 onChange={(e) => handlePercentChange(e.target.value)}
-                className="bg-transparent border-none outline-none text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tighter"
-                style={{ width: `${Math.max(1, String(Math.round(totalReturnPercent)).length) + 0.5}ch` }}
+                className="bg-[var(--background)] border border-[var(--dashboard-border)] rounded-lg outline-none text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tighter py-1.5 px-3 focus:border-[var(--color-primary-300)] transition-colors"
+                style={{ width: `${Math.max(2, String(Math.round(totalReturnPercent)).length) + 2.5}ch` }}
               />
               <span className="text-xl font-black text-[var(--color-text-muted)]">%</span>
             </div>

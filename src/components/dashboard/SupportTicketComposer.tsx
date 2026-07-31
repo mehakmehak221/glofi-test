@@ -78,9 +78,10 @@ export default function SupportTicketComposer({
 
   const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
-    if (touched[field]) {
+    setSubmitError(""); // Clear any API submit errors when user corrects inputs
+    if (touched[field] || fieldErrors[field]) {
       let err: string | undefined;
-      if (field === "email") err = validateEmail(value || defaultEmail);
+      if (field === "email") err = validateEmail(value);
       if (field === "subject") err = validateSubject(value);
       if (field === "description") err = validateDescription(value);
       setFieldErrors((prev) => ({ ...prev, [field]: err }));

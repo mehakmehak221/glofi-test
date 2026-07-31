@@ -64,6 +64,15 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: profileData,
       }),
+      invalidatesTags: ['User'],
+    }),
+    updateProfile: builder.mutation<any, { fullName?: string; country?: string; avatarUrl?: string }>({
+      query: (body) => ({
+        url: 'auth/profile',
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['User'],
     }),
     logout: builder.mutation<any, void>({
       query: () => ({
@@ -119,6 +128,7 @@ export const {
   useRegisterAgentMutation,
   useLoginMutation,
   useSetupProfileMutation,
+  useUpdateProfileMutation,
   useLogoutMutation,
   useGetProfileQuery,
   useForgotPasswordMutation,
