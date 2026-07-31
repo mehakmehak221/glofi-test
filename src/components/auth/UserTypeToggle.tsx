@@ -3,7 +3,7 @@
 
 export default function UserTypeToggle({ options = ["Investor", "Developer", "Agent"], value, onChange }) {
   return (
-    <div className="flex w-full bg-[var(--color-primary-300)]/5 border border-[var(--color-primary-300)]/10 rounded-lg p-1.5 gap-1.5 overflow-hidden">
+    <div className="flex w-full bg-[var(--color-primary-300)]/5 border border-[var(--color-primary-300)]/10 rounded-md p-1.5 gap-1.5 overflow-hidden">
       {options.map((opt) => {
         const active = value === opt;
         return (

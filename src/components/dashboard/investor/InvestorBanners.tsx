@@ -21,7 +21,7 @@ export function CommunityStatusBanner() {
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => router.push("/dashboard/investor/community")}
-      className="flex items-center justify-between gap-4 px-5 py-4 bg-[var(--marketplace-banner-bg)] border border-[var(--marketplace-banner-border)] rounded-2xl cursor-pointer shadow-sm mb-4 group"
+      className="flex items-center justify-between gap-4 px-5 py-4 bg-[var(--marketplace-banner-bg)] border border-[var(--marketplace-banner-border)] rounded-md cursor-pointer shadow-sm mb-4 group"
     >
       {/* Left: stat */}
       <p className="text-[17px] font-black text-[var(--marketplace-banner-text-primary)] tracking-tight">
@@ -58,17 +58,17 @@ export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick
       whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="relative flex items-center gap-4 px-5 py-4 bg-[var(--marketplace-feature-card-bg)] border border-[var(--marketplace-feature-card-border)] rounded-2xl cursor-pointer transition-all duration-300 shadow-sm group overflow-hidden"
+      className="relative flex items-center gap-4 px-5 py-4 bg-[var(--marketplace-feature-card-bg)] border border-[var(--marketplace-feature-card-border)] rounded-md cursor-pointer transition-all duration-300 shadow-sm group overflow-hidden"
     >
       {/* Colored left accent */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl"
+        className="absolute left-0 top-0 bottom-0 w-1 rounded-l-md"
         style={{ backgroundColor: color }}
       />
 
       {/* Subtle glow on hover */}
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"
         style={{ background: `linear-gradient(135deg, ${color}08 0%, transparent 60%)` }}
       />
 

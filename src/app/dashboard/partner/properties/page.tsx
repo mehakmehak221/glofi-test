@@ -49,22 +49,22 @@ function StatusBadge({ status }: { status: string }) {
     const cls = isLive
         ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20"
         : isSuspended
-        ? "text-red-400 bg-red-500/10 border-red-500/20"
-        : isRejected
-        ? "text-orange-400 bg-orange-500/10 border-orange-500/20"
-        : isPending
-        ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
-        : "text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20";
+            ? "text-red-400 bg-red-500/10 border-red-500/20"
+            : isRejected
+                ? "text-orange-400 bg-orange-500/10 border-orange-500/20"
+                : isPending
+                    ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
+                    : "text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)] border-[var(--sidebar-active-text)]/20";
 
     const dot = isLive
         ? "bg-emerald-500 animate-pulse"
         : isSuspended
-        ? "bg-red-400"
-        : isRejected
-        ? "bg-orange-400"
-        : isPending
-        ? "bg-amber-400 animate-pulse"
-        : "bg-[var(--sidebar-active-text)] animate-pulse";
+            ? "bg-red-400"
+            : isRejected
+                ? "bg-orange-400"
+                : isPending
+                    ? "bg-amber-400 animate-pulse"
+                    : "bg-[var(--sidebar-active-text)] animate-pulse";
 
     return (
         <span className={`inline-flex items-center gap-1.5 text-[9px] font-bold tracking-[0.12em] font-montserrat uppercase rounded-full px-2.5 py-1 border whitespace-nowrap ${cls}`}>
@@ -98,7 +98,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: index * 0.06 }}
-            className="overflow-hidden rounded-[28px] border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-[var(--sidebar-active-text)]/20 hover:shadow-[0_24px_80px_rgba(0,0,0,0.18)]"
+            className="overflow-hidden rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-[var(--sidebar-active-text)]/20 hover:shadow-[0_24px_80px_rgba(0,0,0,0.18)]"
         >
             <div className="flex flex-col xl:flex-row">
                 <div className="relative aspect-[16/10] w-full flex-shrink-0 bg-[var(--color-bg-card)] sm:aspect-[4/3] lg:aspect-auto lg:min-h-[240px] lg:w-[300px] xl:w-[320px]">
@@ -146,8 +146,8 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                                 <MapPinIcon className="h-4 w-4 flex-shrink-0" />
                                 <span className="min-w-0 break-words">
                                     {property.location}
-                                    {property.city ? `, ${property.city}` : ""}
-                                    {property.country ? `, ${property.country}` : ""}
+                                    {property.city && !property.location?.toLowerCase().includes(property.city.toLowerCase()) ? `, ${property.city}` : ""}
+                                    {property.country && !property.location?.toLowerCase().includes(property.country.toLowerCase()) ? `, ${property.country}` : ""}
                                 </span>
                             </p>
                         </div>
@@ -201,23 +201,23 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                         <button
                             type="button"
                             onClick={() => onShare(property)}
-                            className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2.5 rounded-xl bg-[var(--color-primary-300)] px-5 py-3 text-sm font-bold leading-none text-black transition hover:brightness-95 hover:scale-[1.01] active:scale-[0.99]"
+                            className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2.5 rounded-md bg-[var(--color-primary-300)] px-5 py-3 text-sm font-bold leading-none text-black transition hover:brightness-95 hover:scale-[1.01] active:scale-[0.99]"
                         >
-                            <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-black/8">
+                            <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-black/8">
                                 <ShareIcon className="h-4 w-4 flex-shrink-0" />
                             </span>
                             <span className="leading-none sm:hidden">{isDraft ? "Generate" : "Share"}</span>
                             <span className="hidden leading-none sm:inline">{isDraft ? "Generate Share" : "Share Asset"}</span>
                         </button>
                         {(canEdit || isDraft) ? (
-                            <div className="flex flex-wrap gap-2 sm:justify-end">
+                            <div className="flex flex-wrap gap-2 sm:justify-end items-center">
                                 {canEdit && (
                                     <button
                                         type="button"
                                         onClick={() => onEdit(property.id)}
-                                        className="inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] transition hover:border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--foreground)]"
+                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-5 text-sm font-bold leading-none text-[var(--sidebar-text)] transition hover:border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--foreground)] hover:scale-[1.01] active:scale-[0.99]"
                                     >
-                                        <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]">
+                                        <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]">
                                             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
@@ -230,11 +230,13 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                                     <button
                                         type="button"
                                         onClick={() => onSubmitForReview(property.id)}
-                                        className="inline-flex h-11 w-fit items-center gap-1.5 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] transition hover:border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--foreground)]"
+                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-5 text-sm font-bold leading-none text-[var(--sidebar-text)] transition hover:border-[var(--sidebar-active-text)]/30 hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--foreground)] hover:scale-[1.01] active:scale-[0.99]"
                                     >
-                                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                        </svg>
+                                        <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]">
+                                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </span>
                                         Submit
                                     </button>
                                 )}
@@ -242,11 +244,13 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                                     <button
                                         type="button"
                                         onClick={() => onDelete(property.id)}
-                                        className="inline-flex h-11 w-fit items-center gap-1.5 rounded-xl border border-red-500/10 bg-red-500/5 px-4 text-[10px] font-bold uppercase tracking-[0.18em] text-red-400 transition hover:border-red-500/25 hover:bg-red-500/10 hover:text-red-300"
+                                        className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-md border border-red-500/10 bg-red-500/5 px-5 text-sm font-bold leading-none text-red-400 transition hover:border-red-500/25 hover:bg-red-500/10 hover:text-red-300 hover:scale-[1.01] active:scale-[0.99]"
                                     >
-                                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
+                                        <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-red-500/10 text-red-400">
+                                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </span>
                                         Delete
                                     </button>
                                 )}
@@ -280,17 +284,17 @@ export default function PartnerPropertiesPage() {
     const kybStatus = kybData?.status;
     const sharedAssets = useMemo(() => sharedAssetsData || [], [sharedAssetsData]);
     const isKycRequired = err?.status === 403 && (
-        err?.data?.message?.includes('KYC') || 
-        kycStatus === 'REJECTED' || 
-        kycStatus === 'PENDING' || 
-        !kycStatus || 
+        err?.data?.message?.includes('KYC') ||
+        kycStatus === 'REJECTED' ||
+        kycStatus === 'PENDING' ||
+        !kycStatus ||
         (kycStatus !== 'APPROVED' && kycStatus !== 'VERIFIED')
     );
     const isKybRequired = err?.status === 403 && !isKycRequired && (
-        err?.data?.message?.includes('KYB') || 
-        kybStatus === 'REJECTED' || 
-        kybStatus === 'PENDING' || 
-        !kybStatus || 
+        err?.data?.message?.includes('KYB') ||
+        kybStatus === 'REJECTED' ||
+        kybStatus === 'PENDING' ||
+        !kybStatus ||
         (kybStatus !== 'APPROVED' && kybStatus !== 'VERIFIED')
     );
     const [deleteAsset] = useDeleteAssetMutation();
@@ -517,7 +521,7 @@ export default function PartnerPropertiesPage() {
                         </div>
 
                         <div className="mt-8 flex w-full flex-col gap-6">
-                            <section className="w-full rounded-3xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
+                            <section className="w-full rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
                                 <div className="mb-6 flex items-center justify-between gap-3">
                                     <div>
                                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">Share Activity</p>
@@ -543,11 +547,10 @@ export default function PartnerPropertiesPage() {
                                                 role="button"
                                                 tabIndex={0}
                                                 onClick={() => setSelectedReportAssetId(item.assetId)}
-                                                className={`w-full cursor-pointer rounded-2xl border p-3 text-left transition ${
-                                                    String(selectedShareReportAssetId) === String(item.assetId)
+                                                className={`w-full cursor-pointer rounded-2xl border p-3 text-left transition ${String(selectedShareReportAssetId) === String(item.assetId)
                                                         ? "border-[var(--color-primary-300)]/30 bg-[var(--color-primary-300)]/8"
                                                         : "border-[var(--sidebar-border)] bg-[var(--background)]/70 hover:border-[var(--color-primary-300)]/20"
-                                                }`}
+                                                    }`}
                                             >
                                                 <div className="flex items-start justify-between gap-3">
                                                     <div className="min-w-0">
@@ -590,7 +593,7 @@ export default function PartnerPropertiesPage() {
                                 )}
                             </section>
 
-                            <section className="w-full rounded-3xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
+                            <section className="w-full rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
                                 <div className="flex items-center justify-between gap-3 mb-5">
                                     <div>
                                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">Performance</p>
@@ -684,11 +687,11 @@ export default function PartnerPropertiesPage() {
                     </motion.div>
                 )}
             </AnimatePresence>
-      <ShareAssetModal
-        key={shareModalSession}
-        isOpen={shareModalOpen}
-        onClose={() => setShareModalOpen(false)}
-        assetTitle={selectedShareAsset?.title || "Selected asset"}
+            <ShareAssetModal
+                key={shareModalSession}
+                isOpen={shareModalOpen}
+                onClose={() => setShareModalOpen(false)}
+                assetTitle={selectedShareAsset?.title || "Selected asset"}
                 assetValuation={String(selectedShareAsset?.valuation || 0)}
                 shareUrl={selectedShareUrl}
                 isGenerating={isGeneratingShare}

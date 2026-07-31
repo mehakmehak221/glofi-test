@@ -78,7 +78,7 @@ export function EarlyStarterClaimWidget() {
       <motion.div
         whileHover={{ y: -2 }}
         onClick={() => setIsModalOpen(true)}
-        className="relative rounded-[24px] overflow-hidden h-full min-h-[100px] cursor-pointer shadow-lg group bg-gradient-to-br from-[#0A3D2F] via-[#0D4F3C] to-[#056346]"
+        className="relative rounded-md overflow-hidden h-full min-h-[100px] cursor-pointer shadow-lg group bg-gradient-to-br from-[#0A3D2F] via-[#0D4F3C] to-[#056346]"
       >
 
         {/* Content */}

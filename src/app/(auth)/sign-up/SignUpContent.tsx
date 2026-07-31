@@ -564,7 +564,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handlePhoneOtpSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <div className="flex flex-col gap-1">
                         <p className="text-sm font-semibold text-neutral-900">Phone Verification</p>
@@ -631,7 +631,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handleOtpSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <p className="text-sm text-neutral-500 leading-relaxed">
                         Enter the verification code sent to{" "}
@@ -695,7 +695,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handleDetailsSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-name" className="text-sm font-medium text-neutral-900 font-montserrat">

@@ -31,7 +31,7 @@ function formatStatus(status?: string) {
 
 function SectionCard({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-sm overflow-hidden">
+    <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-sm overflow-hidden">
       <div className="px-5 py-4 border-b border-[var(--sidebar-border)]">
         <h2 className="text-base font-bold text-[var(--foreground)]">{title}</h2>
         {subtitle ? <p className="text-xs text-[var(--color-text-muted)] mt-1">{subtitle}</p> : null}
@@ -43,7 +43,7 @@ function SectionCard({ title, subtitle, children }: { title: string; subtitle?: 
 
 function CampaignCard({ campaign }: { campaign: RewardCampaign }) {
   return (
-    <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
+    <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-semibold text-[var(--foreground)]">{campaign.name}</p>
@@ -69,7 +69,7 @@ function CampaignCard({ campaign }: { campaign: RewardCampaign }) {
 
 function RewardRow({ reward }: { reward: UserReward }) {
   return (
-    <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4 flex items-start justify-between gap-4">
+    <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] p-4 flex items-start justify-between gap-4">
       <div>
         <p className="text-sm font-semibold text-[var(--foreground)]">{reward.campaign?.name || "Reward"}</p>
         <p className="text-xs text-[var(--color-text-muted)] mt-1">Credited {formatDate(reward.creditedAt)}</p>
@@ -84,7 +84,7 @@ function RewardRow({ reward }: { reward: UserReward }) {
 
 function RedemptionRow({ redemption }: { redemption: CouponRedemption }) {
   return (
-    <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] p-4 flex items-start justify-between gap-4">
+    <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] p-4 flex items-start justify-between gap-4">
       <div>
         <p className="text-sm font-semibold text-[var(--foreground)]">{redemption.coupon?.code || "Coupon redemption"}</p>
         <p className="text-xs text-[var(--color-text-muted)] mt-1">Redeemed {formatDate(redemption.redeemedAt)}</p>
@@ -155,15 +155,15 @@ export default function RewardsCenter() {
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-5">
+        <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-5">
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Active campaigns</p>
           <p className="mt-3 text-3xl font-black text-[var(--foreground)]">{activeCampaigns.length}</p>
         </div>
-        <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-5">
+        <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-5">
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Credited rewards</p>
           <p className="mt-3 text-3xl font-black text-[var(--foreground)]">{creditedRewards}</p>
         </div>
-        <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-5">
+        <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-5">
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">Total reward value</p>
           <p className="mt-3 text-3xl font-black text-[var(--foreground)]">{formatMoney(totalRewards)}</p>
         </div>
@@ -173,13 +173,13 @@ export default function RewardsCenter() {
         <SectionCard title="Validate Coupon" subtitle="Check if a coupon applies to an investment before checkout.">
           <form onSubmit={handleValidate} className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input value={couponCode} onChange={(e) => setCouponCode(e.target.value)} placeholder="Coupon code" className="h-11 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)]" />
-              <input value={investmentAmount} onChange={(e) => setInvestmentAmount(e.target.value)} type="number" min="1" placeholder="Investment amount" className="h-11 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)]" />
+              <input value={couponCode} onChange={(e) => setCouponCode(e.target.value)} placeholder="Coupon code" className="h-11 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)]" />
+              <input value={investmentAmount} onChange={(e) => setInvestmentAmount(e.target.value)} type="number" min="1" placeholder="Investment amount" className="h-11 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)]" />
             </div>
-            <input value={assetId} onChange={(e) => setAssetId(e.target.value)} placeholder="Asset ID (optional)" className="h-11 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)] md:col-span-2" />
-            {validationError ? <div className="md:col-span-2 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">{validationError}</div> : null}
+            <input value={assetId} onChange={(e) => setAssetId(e.target.value)} placeholder="Asset ID (optional)" className="h-11 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)] md:col-span-2" />
+            {validationError ? <div className="md:col-span-2 rounded-md border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">{validationError}</div> : null}
             {validationState ? (
-              <div className="md:col-span-2 rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--foreground)]">
+              <div className="md:col-span-2 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--foreground)]">
                 <p className="font-semibold">{validationState.isValid ? "Coupon valid" : "Coupon invalid"}</p>
                 <p className="mt-1 text-[var(--color-text-muted)]">
                   {validationState.coupon?.code ? `${validationState.coupon.code} · ${validationState.coupon.type}` : validationState.message || "Validation completed."}
@@ -189,7 +189,7 @@ export default function RewardsCenter() {
                 ) : null}
               </div>
             ) : null}
-            <button type="submit" disabled={validating} className="md:col-span-2 h-11 rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 disabled:opacity-50">
+            <button type="submit" disabled={validating} className="md:col-span-2 h-11 rounded-md bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 disabled:opacity-50">
               {validating ? "Validating..." : "Validate Coupon"}
             </button>
           </form>
@@ -200,9 +200,9 @@ export default function RewardsCenter() {
             {rewardsLoading ? (
               <div className="py-10 text-center text-sm text-[var(--color-text-muted)]">Loading rewards...</div>
             ) : rewardsError ? (
-              <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">Failed to load your rewards.</div>
+              <div className="rounded-md border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">Failed to load your rewards.</div>
             ) : userRewards.length === 0 ? (
-              <div className="rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-6 text-sm text-[var(--color-text-muted)]">No rewards found yet.</div>
+              <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-6 text-sm text-[var(--color-text-muted)]">No rewards found yet.</div>
             ) : (
               userRewards.map((reward) => <RewardRow key={reward.id} reward={reward} />)
             )}
@@ -214,7 +214,7 @@ export default function RewardsCenter() {
         <SectionCard title="Active Campaigns" subtitle="Live promotional campaigns and thresholds.">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {activeCampaigns.length === 0 ? (
-              <div className="rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-6 text-sm text-[var(--color-text-muted)] md:col-span-2">No active campaigns right now.</div>
+              <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-6 text-sm text-[var(--color-text-muted)] md:col-span-2">No active campaigns right now.</div>
             ) : (
               activeCampaigns.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} />)
             )}
@@ -226,13 +226,13 @@ export default function RewardsCenter() {
             {historyLoading ? (
               <div className="py-10 text-center text-sm text-[var(--color-text-muted)]">Loading history...</div>
             ) : historyError ? (
-              <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">Failed to load reward history.</div>
+              <div className="rounded-md border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">Failed to load reward history.</div>
             ) : (
               <>
                 {historyRewards.map((reward) => <RewardRow key={reward.id} reward={reward} />)}
                 {couponRedemptions.map((redemption) => <RedemptionRow key={redemption.id} redemption={redemption} />)}
                 {historyRewards.length === 0 && couponRedemptions.length === 0 ? (
-                  <div className="rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-6 text-sm text-[var(--color-text-muted)]">Nothing to show yet.</div>
+                  <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-6 text-sm text-[var(--color-text-muted)]">Nothing to show yet.</div>
                 ) : null}
               </>
             )}

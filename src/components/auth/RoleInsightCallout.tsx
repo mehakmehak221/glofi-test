@@ -30,7 +30,7 @@ export default function RoleInsightCallout({ role }: { role: string }) {
     const text = USER_ROLE_INSIGHT[role] ?? USER_ROLE_INSIGHT.Investor;
 
     return (
-        <div className="flex gap-3 p-4 rounded-xl border border-neutral-200 bg-neutral-50">
+        <div className="flex gap-3 p-4 rounded-md border border-neutral-200 bg-neutral-50">
             <SparkleCluster className="shrink-0 mt-0.5" />
             <p className="text-sm text-neutral-900 leading-snug font-montserrat">{text}</p>
         </div>

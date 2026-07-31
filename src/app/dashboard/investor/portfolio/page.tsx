@@ -208,7 +208,7 @@ export default function PortfolioPage() {
                         ) : (
                             <motion.div
                                 variants={itemVariants}
-                                className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
+                                className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <ResaleIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
                                 <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No active listings</h3>
@@ -237,7 +237,7 @@ export default function PortfolioPage() {
                         ) : (
                             <motion.div
                                 variants={itemVariants}
-                                className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-12 flex flex-col items-center justify-center text-center"
+                                className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <Asset className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
                                 <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No properties listed</h3>
@@ -274,10 +274,10 @@ function SecondaryListingCard({ item, onDelete }) {
     return (
         <motion.div
             variants={itemVariants}
-            className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group"
+            className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group"
         >
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-5 lg:gap-8">
-                <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-xl overflow-hidden flex-shrink-0 relative">
+                <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-md overflow-hidden flex-shrink-0 relative">
                     <Image
                         src={imageUrl}
                         alt={title}
@@ -330,7 +330,7 @@ function SecondaryListingCard({ item, onDelete }) {
                             onClick={() => { }}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
                         >
                             <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
                             Certificate
@@ -339,7 +339,7 @@ function SecondaryListingCard({ item, onDelete }) {
                             onClick={() => { }}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
                         >
                             <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
                             Download
@@ -348,7 +348,7 @@ function SecondaryListingCard({ item, onDelete }) {
                             onClick={() => onDelete(item.id)}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-red-500/10 text-red-500 text-[11px] font-bold hover:bg-red-500/20 transition-all border border-red-500/20 cursor-pointer"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-red-500/10 text-red-500 text-[11px] font-bold hover:bg-red-500/20 transition-all border border-red-500/20 cursor-pointer"
                         >
                             Delete Listing
                         </motion.button>
@@ -373,11 +373,11 @@ function AssetCard({ asset, onResale }) {
     return (
         <motion.div
             variants={itemVariants}
-            className={`bg-[var(--card-surface)] border ${asset.isResale ? 'border-[var(--sidebar-active-text)]/10' : 'border-[var(--sidebar-border)]'} rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group`}
+            className={`bg-[var(--card-surface)] border ${asset.isResale ? 'border-[var(--sidebar-active-text)]/10' : 'border-[var(--sidebar-border)]'} rounded-md p-4 sm:p-5 lg:p-6 hover:border-[var(--sidebar-active-text)]/20 transition-all duration-300 relative group`}
         >
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-5 lg:gap-8">
 
-                <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-xl overflow-hidden flex-shrink-0 relative">
+                <div className="w-full sm:w-[280px] lg:w-[240px] h-48 sm:h-[160px] lg:h-[135px] rounded-md overflow-hidden flex-shrink-0 relative">
                     <Image
                         src={asset.image}
                         alt={asset.name}
@@ -433,7 +433,7 @@ function AssetCard({ asset, onResale }) {
                                     onClick={handleOpenCertificate}
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
+                                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
                                 >
                                     <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
                                     Certificate
@@ -442,14 +442,14 @@ function AssetCard({ asset, onResale }) {
                                     onClick={handleOpenCertificate}
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
+                                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
                                 >
                                     <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
                                     Download
                                 </motion.button>
                             </>
                         ) : (
-                            <span className="text-xs text-[var(--color-text-muted)] font-semibold italic bg-[var(--field-surface)] px-4 py-2 rounded-lg border border-[var(--sidebar-border)]">
+                            <span className="text-xs text-[var(--color-text-muted)] font-semibold italic bg-[var(--field-surface)] px-4 py-2 rounded-md border border-[var(--sidebar-border)]">
                                 Offline Agreement & Certificate
                             </span>
                         )}
@@ -458,7 +458,7 @@ function AssetCard({ asset, onResale }) {
                                 onClick={onResale}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-lg bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[11px] font-bold border-0 cursor-pointer hover:opacity-90 transition-all"
+                                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[11px] font-bold border-0 cursor-pointer hover:opacity-90 transition-all"
                             >
                                 <ResaleIcon className="w-4 h-4" />
                                 Resell

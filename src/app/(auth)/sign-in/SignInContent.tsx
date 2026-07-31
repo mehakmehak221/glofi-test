@@ -184,7 +184,7 @@ function SignInPageContent() {
             <form
                 noValidate
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
             >
                 <div className="flex flex-col gap-2">
                     <label htmlFor="sign-in-email" className="text-sm font-medium text-neutral-900 font-montserrat">

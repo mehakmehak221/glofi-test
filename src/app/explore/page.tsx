@@ -53,10 +53,10 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
             <label className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold px-1 font-Montserrat">{label}</label>
             <div
                 onClick={() => !disabled && setIsOpen(!isOpen)}
-                className={`flex justify-between items-center bg-neutral-50 border border-neutral-200/80 rounded-full px-4 py-1.5 text-xs font-Montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-neutral-300'} ${isOpen ? 'border-[#00DAAF] shadow-sm' : ''}`}
+                className={`flex justify-between items-center bg-neutral-50 border border-neutral-200/80 rounded-md px-4 py-1.5 text-xs font-Montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-neutral-300'} ${isOpen ? 'border-[#00DAAF] shadow-sm' : ''}`}
             >
                 <span className={value ? "text-neutral-900 font-medium" : "text-neutral-400"}>
-                    {value || placeholder}
+                     {value || placeholder}
                 </span>
                 <svg className={`w-3 h-3 text-neutral-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -69,7 +69,7 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -5 }}
-                        className="absolute z-[100] top-[calc(100%+6px)] left-0 min-w-[200px] bg-white border border-neutral-200 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl"
+                        className="absolute z-[100] top-[calc(100%+6px)] left-0 min-w-[200px] bg-white border border-neutral-200 rounded-md shadow-2xl overflow-hidden backdrop-blur-xl"
                     >
                         <div className="p-2 border-b border-neutral-100">
                             <input
@@ -78,7 +78,7 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
                                 placeholder="Search..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-full px-3 py-1.5 text-[10px] text-neutral-800 focus:outline-none focus:border-[#00DAAF]/50 font-Montserrat"
+                                className="w-full bg-neutral-50 border border-neutral-200 rounded-md px-3 py-1.5 text-[10px] text-neutral-800 focus:outline-none focus:border-[#00DAAF]/50 font-Montserrat"
                             />
                         </div>
                         <div className="max-h-[200px] overflow-y-auto dropdown-scroll">
@@ -168,7 +168,7 @@ export default function ExplorePage() {
             <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-12 pb-12 sm:pt-16 sm:pb-16">
 
 
-                <div className="flex flex-col gap-6 mb-8 bg-white p-6 sm:p-8 rounded-[24px] border border-neutral-200/60 shadow-sm relative z-20">
+                <div className="flex flex-col gap-6 mb-8 bg-white p-6 sm:p-8 rounded-md border border-neutral-200/60 shadow-sm relative z-20">
                     <div className="flex flex-col gap-4">
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter bg-gradient-to-r from-[#00B28F] to-[#00DAAF] bg-clip-text text-transparent">
                             Discover Assets
@@ -185,14 +185,14 @@ export default function ExplorePage() {
 
                     {/* Sale-type pill toggle */}
                     <div className="flex mb-1">
-                        <div className="inline-flex bg-neutral-100 border border-neutral-200/80 rounded-full p-1 gap-1 shadow-sm relative">
+                        <div className="inline-flex bg-neutral-100 border border-neutral-200/80 rounded-md p-1 gap-1 shadow-sm relative">
                             {(["FRACTIONAL", "WHOLE"] as const).map((type) => {
                                 const isSelected = saleTypeFilter === type;
                                 return (
                                     <button
                                         key={type}
                                         onClick={() => setSaleTypeFilter(type)}
-                                        className={`relative px-5 py-2 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${
+                                        className={`relative px-5 py-2 rounded-md text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${
                                             isSelected
                                                 ? "text-[#00B28F]"
                                                 : "text-neutral-500 hover:text-neutral-900"
@@ -201,7 +201,7 @@ export default function ExplorePage() {
                                         {isSelected && (
                                             <motion.div
                                                 layoutId="activeSaleType"
-                                                className="absolute inset-0 bg-white border border-[#00DAAF]/30 rounded-full z-[-1] shadow-sm"
+                                                className="absolute inset-0 bg-white border border-[#00DAAF]/30 rounded-md z-[-1] shadow-sm"
                                                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                             />
                                         )}
@@ -218,7 +218,7 @@ export default function ExplorePage() {
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 border ${activeCategory === cat
+                                    className={`px-5 py-2.5 rounded-md text-xs font-bold transition-all duration-300 border ${activeCategory === cat
                                         ? "bg-[#00DAAF]/10 text-[#00B28F] border-[#00DAAF]/30 shadow-[0_0_20px_rgba(0,218,175,0.05)]"
                                         : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300 hover:bg-neutral-100"
                                         }`}
@@ -273,7 +273,7 @@ export default function ExplorePage() {
                                         setStateIsoCode("");
                                         setCountryIsoCode("");
                                     }}
-                                    className="text-xs font-bold text-neutral-400 hover:text-neutral-600 transition-colors py-2 px-3 hover:bg-neutral-50 rounded-full"
+                                    className="text-xs font-bold text-neutral-400 hover:text-neutral-600 transition-colors py-2 px-3 hover:bg-neutral-50 rounded-md"
                                 >
                                     Clear Filters
                                 </button>
@@ -289,12 +289,12 @@ export default function ExplorePage() {
                             <p className="text-sm text-neutral-500 font-medium animate-pulse">Loading Institutional Assets...</p>
                         </div>
                     ) : isError ? (
-                        <div className="text-center p-24 bg-white rounded-[32px] border border-neutral-200 shadow-sm">
+                        <div className="text-center p-24 bg-white rounded-md border border-neutral-200 shadow-sm">
                             <p className="text-neutral-500 mb-4">Error loading assets. Please try again later.</p>
-                            <button onClick={() => window.location.reload()} className="px-6 py-2 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 rounded-full text-xs font-bold transition-all text-neutral-800">Retry</button>
+                            <button onClick={() => window.location.reload()} className="px-6 py-2 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 rounded-md text-xs font-bold transition-all text-neutral-800">Retry</button>
                         </div>
                     ) : assets.length === 0 ? (
-                        <div className="text-center p-24 bg-white rounded-[32px] border border-dashed border-neutral-200 shadow-sm">
+                        <div className="text-center p-24 bg-white rounded-md border border-dashed border-neutral-200 shadow-sm">
                             <p className="text-neutral-500 font-medium">No assets found in this category.</p>
                         </div>
                     ) : (
@@ -338,11 +338,11 @@ export default function ExplorePage() {
                                         key={property.id}
                                         variants={cardVariants}
                                         whileHover={{ y: -6 }}
-                                        className="bg-white border border-neutral-200/60 rounded-[24px] overflow-hidden hover:border-[#00DAAF]/30 transition-all duration-500 group shadow-sm hover:shadow-md relative"
+                                        className="bg-white border border-neutral-200/60 rounded-md overflow-hidden hover:border-[#00DAAF]/30 transition-all duration-500 group shadow-sm hover:shadow-md relative"
                                     >
                                         <Link
                                             href={detailHref}
-                                            className="absolute inset-0 z-[1] rounded-[24px] cursor-pointer outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#00DAAF]"
+                                            className="absolute inset-0 z-[1] rounded-md cursor-pointer outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#00DAAF]"
                                             aria-label={`View details for ${property.title}`}
                                             prefetch={false}
                                         />
@@ -403,7 +403,7 @@ export default function ExplorePage() {
                                                 </div>
 
 
-                                                <div className="bg-[#F9FAFB] border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-sm">
+                                                <div className="bg-[#F9FAFB] border border-neutral-200/80 rounded-md p-4 mb-6 shadow-sm">
                                                     <div className="grid grid-cols-3 divide-x divide-neutral-200/65 text-center items-center">
                                                         <div>
                                                             <p className="text-[10px] font-bold text-neutral-400 mb-1">Valuation</p>
@@ -449,7 +449,7 @@ export default function ExplorePage() {
                                                 <Link
                                                     href={detailHref}
                                                     prefetch={false}
-                                                    className="relative z-[3] block pointer-events-auto w-full py-3.5 rounded-full border-[1.5px] border-[#006D5B] bg-transparent text-neutral-900 hover:bg-[#006D5B] hover:text-white text-sm font-extrabold uppercase tracking-wide text-center transition-all duration-300 active:scale-[0.99]"
+                                                    className="relative z-[3] block pointer-events-auto w-full py-3.5 rounded-md border-[1.5px] border-[#006D5B] bg-transparent text-neutral-900 hover:bg-[#006D5B] hover:text-white text-sm font-extrabold uppercase tracking-wide text-center transition-all duration-300 active:scale-[0.99]"
                                                 >
                                                     View Details
                                                 </Link>

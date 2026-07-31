@@ -127,7 +127,7 @@ export default function SupportTicketComposer({
   };
 
   return (
-    <div className={`overflow-hidden rounded-2xl border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-sm ${className}`}>
+    <div className={`overflow-hidden rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] shadow-sm ${className}`}>
       <div className={`border-b border-[var(--sidebar-border)] bg-[linear-gradient(135deg,rgba(0,218,175,0.10),transparent)] ${headerPadding}`}>
         <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--sidebar-active-text)]">Support</p>
         <h3 className="mt-1 text-lg font-bold text-[var(--foreground)]">{title}</h3>
@@ -137,19 +137,29 @@ export default function SupportTicketComposer({
         <AnimatePresence>
           {successMessage ? (
             <motion.div
-              initial={{ opacity: 0, y: -8 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="mb-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400"
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-5 flex items-center gap-3 rounded-md border border-emerald-500/20 bg-emerald-500/5 p-4 text-sm font-medium text-emerald-400 backdrop-blur-sm"
             >
-              {successMessage}
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span className="leading-normal">{successMessage}</span>
             </motion.div>
           ) : null}
         </AnimatePresence>
 
         {submitError ? (
-          <div className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-            {submitError}
+          <div className="mb-5 flex items-center gap-3 rounded-md border border-red-500/20 bg-red-500/5 p-4 text-sm font-medium text-red-400 backdrop-blur-sm">
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500/10 text-red-400">
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <span className="leading-normal">{submitError}</span>
           </div>
         ) : null}
 
@@ -163,7 +173,7 @@ export default function SupportTicketComposer({
                 onChange={(e) => handleChange("email", e.target.value)}
                 onBlur={() => handleBlur("email")}
                 placeholder="name@example.com"
-                className={`h-11 rounded-xl border bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none transition ${fieldErrors.email ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
+                className={`h-11 rounded-md border bg-[var(--background)] px-4 text-sm md:text-base text-[var(--foreground)] outline-none transition ${fieldErrors.email ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
               />
               {fieldErrors.email ? <p className="text-[11px] text-red-400">{fieldErrors.email}</p> : null}
             </div>
@@ -176,7 +186,7 @@ export default function SupportTicketComposer({
                 onBlur={() => handleBlur("subject")}
                 placeholder="Short issue summary"
                 maxLength={150}
-                className={`h-11 rounded-xl border bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none transition ${fieldErrors.subject ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
+                className={`h-11 rounded-md border bg-[var(--background)] px-4 text-sm md:text-base text-[var(--foreground)] outline-none transition ${fieldErrors.subject ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
               />
               {fieldErrors.subject ? <p className="text-[11px] text-red-400">{fieldErrors.subject}</p> : null}
             </div>
@@ -188,7 +198,7 @@ export default function SupportTicketComposer({
               <select
                 value={form.category}
                 onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value as TicketCategory }))}
-                className="h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none cursor-pointer"
+                className="h-11 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm md:text-base text-[var(--foreground)] outline-none cursor-pointer"
               >
                 {Object.values(TicketCategory).map((category) => (
                   <option key={category} value={category}>{category}</option>
@@ -200,7 +210,7 @@ export default function SupportTicketComposer({
               <select
                 value={form.priority}
                 onChange={(e) => setForm((prev) => ({ ...prev, priority: e.target.value as TicketPriority }))}
-                className="h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none cursor-pointer"
+                className="h-11 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm md:text-base text-[var(--foreground)] outline-none cursor-pointer"
               >
                 {Object.values(TicketPriority).map((priority) => (
                   <option key={priority} value={priority}>{priority}</option>
@@ -223,7 +233,7 @@ export default function SupportTicketComposer({
               onBlur={() => handleBlur("description")}
               placeholder="Describe the issue in a few lines..."
               maxLength={descLimit}
-              className={`rounded-xl border bg-[var(--background)] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition resize-none ${fieldErrors.description ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
+              className={`rounded-md border bg-[var(--background)] px-4 py-3 text-sm md:text-base text-[var(--foreground)] outline-none transition resize-none ${fieldErrors.description ? "border-red-500/60 focus:border-red-500" : "border-[var(--sidebar-border)] focus:border-[var(--color-primary-300)]"}`}
             />
             {fieldErrors.description ? <p className="text-[11px] text-red-400">{fieldErrors.description}</p> : null}
           </div>
@@ -231,7 +241,7 @@ export default function SupportTicketComposer({
           <button
             type="submit"
             disabled={isLoading}
-            className="h-11 w-full rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 cursor-pointer disabled:opacity-50 transition-all hover:opacity-90"
+            className="inline-flex h-11 w-full items-center justify-center rounded-md bg-[var(--color-primary-300)] px-5 py-3 text-sm font-bold leading-none text-black transition hover:brightness-95 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:hover:scale-100 cursor-pointer border-0"
           >
             {isLoading ? "Raising Ticket..." : "Raise Ticket"}
           </button>
