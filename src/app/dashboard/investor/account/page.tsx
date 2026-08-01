@@ -56,6 +56,7 @@ export default function AccountPage() {
                 fullName,
                 country,
                 avatarUrl: avatarKeyRef.current,
+                role: "INVESTOR",
             }).unwrap();
             setStatusMsg({ type: "success", text: "Profile updated successfully!" });
             setTimeout(() => setStatusMsg(null), 5000);

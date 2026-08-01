@@ -90,7 +90,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     const { data: profileData } = useGetProfileQuery();
 
     const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
-    const fullName = profileData?.fullName || profile.fullName || profileData?.name || "Guest";
+    const fullName = profileData?.fullName || profile.fullName || profileData?.name || profile.name || "Guest";
     const avatarUrl = profileData?.avatarUrl || profile.avatarUrl || "";
     const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Developer" : isAgent ? "Agent" : "Investor");
 

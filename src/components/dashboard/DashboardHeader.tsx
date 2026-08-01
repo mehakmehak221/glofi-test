@@ -37,7 +37,7 @@ export default function DashboardHeader() {
     }, [isLight, mounted]);
 
     const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
-    const fullName = profileData?.fullName || profile.fullName || profileData?.name || "Guest";
+    const fullName = profileData?.fullName || profile.fullName || profileData?.name || profile.name || "Guest";
     const avatarUrl = profileData?.avatarUrl || profile.avatarUrl || "";
 
     let displayRole = "Investor";

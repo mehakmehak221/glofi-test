@@ -18,7 +18,13 @@ export const investmentApi = baseApi.injectEndpoints({
     }),
     createInvestment: builder.mutation<
       any,
-      { assetId: string; fractions: number; paymentMethod: string; currency: string }
+      {
+        assetId: string;
+        fractions: number;
+        paymentMethod: string;
+        currency: string;
+        couponCode?: string;
+      }
     >({
       query: (investmentData) => ({
         url: 'investments',

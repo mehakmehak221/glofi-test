@@ -57,6 +57,7 @@ export default function PropertyDetailPage() {
     const [investQuantity, setInvestQuantity] = useState(1);
     const [investStatus, setInvestStatus] = useState("");
     const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+    const [pendingInvestment, setPendingInvestment] = useState<{ quantity: number; total: number; discount: number } | null>(null);
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
     const [showComingSoon, setShowComingSoon] = useState(false);
     const [isDescExpanded, setIsDescExpanded] = useState(false);
@@ -179,6 +180,18 @@ export default function PropertyDetailPage() {
     const projectedVal = fractionPrice * (1 + annualReturnPercent / 100);
     const totalReturnAmount = fractionPrice * (annualReturnPercent / 100);
     const payoutPerQuarter = totalReturnAmount / 4;
+    const selectedInvestmentSubtotal = fractionPrice * selectedInvestQuantity;
+    const couponValidatedAmount = Number(couponInvestmentAmount);
+    const couponDiscountCandidate = Number(couponValidationState?.discountAmount || 0);
+    const couponMatchesSelection =
+        Boolean(couponValidationState?.isValid) &&
+        Number.isFinite(couponDiscountCandidate) &&
+        Number.isFinite(couponValidatedAmount) &&
+        Math.abs(couponValidatedAmount - selectedInvestmentSubtotal) < 0.01;
+    const appliedCouponDiscount = couponMatchesSelection ? Math.min(couponDiscountCandidate, selectedInvestmentSubtotal) : 0;
+    const discountedInvestmentSubtotal = Math.max(0, selectedInvestmentSubtotal - appliedCouponDiscount);
+    const discountedInvestmentFee = discountedInvestmentSubtotal * 0.02;
+    const discountedInvestmentTotal = discountedInvestmentSubtotal + discountedInvestmentFee;
     const imageUrl = propertyImage
         ? (propertyImage.startsWith('http') ? propertyImage : `${API_URL}/${propertyImage.replace(/^\/+/, '')}`)
         : "/assets/images/content/img_ext_0.jpeg";
@@ -199,10 +212,11 @@ export default function PropertyDetailPage() {
         setInvestOpen(true);
     };
 
-    const handleVerifyPay = async (qty) => {
+    const handleVerifyPay = async (qty: number, total: number, discount: number = 0) => {
         setInvestQuantity(qty);
         setInvestOpen(false);
-        showToast("Coming soon!");
+        setPendingInvestment({ quantity: qty, total, discount });
+        setPaymentModalOpen(true);
     };
 
     const handlePaymentSuccess = () => {
@@ -571,9 +585,9 @@ export default function PropertyDetailPage() {
                                                 return (
                                                     <div
                                                         key={doc.name}
-                                                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm"
+                                                        className="flex flex-col gap-4 rounded-2xl p-4 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-sm md:flex-row md:items-center md:justify-between"
                                                     >
-                                                        <div className="flex items-center gap-4">
+                                                        <div className="flex min-w-0 flex-1 items-center gap-4">
                                                             {/* Left Document Icon/Thumbnail */}
                                                             <div className="w-12 h-12 rounded-xl bg-[var(--sidebar-active-bg)] flex items-center justify-center shrink-0 border border-[var(--sidebar-active-text)]/15">
                                                                 {isPdf ? (
@@ -586,15 +600,14 @@ export default function PropertyDetailPage() {
                                                                     </svg>
                                                                 )}
                                                             </div>
-                                                            <div className="min-w-0">
-                                                                <h4 className="text-sm font-bold text-[var(--header-text)] truncate max-w-[200px] sm:max-w-[350px]">{doc.name}</h4>
+                                                            <div className="min-w-0 flex-1">
+                                                                <h4 className="text-sm font-bold text-[var(--header-text)] truncate max-w-full md:max-w-[260px] lg:max-w-[350px]">{doc.name}</h4>
                                                                 <p className="text-[11px] text-[var(--color-text-muted)] font-medium mt-0.5">{fileType.toLowerCase()} document</p>
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex items-center gap-3 self-end sm:self-auto">
-
-                                                            <span className="px-2.5 py-1 rounded-md text-[9px] font-black tracking-widest bg-[var(--badge-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm">
+                                                        <div className="flex flex-wrap items-center gap-2 md:flex-nowrap md:justify-end md:shrink-0">
+                                                            <span className="px-2.5 py-1 rounded-md text-[9px] font-black tracking-widest bg-[var(--badge-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm whitespace-nowrap">
                                                                 {fileType}
                                                             </span>
 
@@ -603,7 +616,7 @@ export default function PropertyDetailPage() {
                                                                 href={doc.url.startsWith('http') ? doc.url : `${API_URL}/${doc.url}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)] hover:bg-[var(--sidebar-active-bg)]/80 hover:underline transition-colors no-underline border border-[var(--sidebar-active-text)]/10"
+                                                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)] hover:bg-[var(--sidebar-active-bg)]/80 hover:underline transition-colors no-underline border border-[var(--sidebar-active-text)]/10 whitespace-nowrap"
                                                             >
                                                                 VIEW
                                                                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -1131,17 +1144,23 @@ export default function PropertyDetailPage() {
                 property={property}
                 purchaseMode={purchaseMode}
                 initialQuantity={selectedInvestQuantity}
+                discountAmount={appliedCouponDiscount}
+                couponCode={couponMatchesSelection ? couponCode.trim() || sharedCouponCode : ""}
                 onVerifyPay={handleVerifyPay}
             />
             <PaymentModal
                 isOpen={paymentModalOpen}
-                onClose={() => setPaymentModalOpen(false)}
+                onClose={() => {
+                    setPaymentModalOpen(false);
+                    setPendingInvestment(null);
+                }}
                 flow="primary"
                 asset={{
                     assetId: params.id as string,
                     name: property.title,
-                    currentValue: formatPrice(fractionPrice * selectedInvestQuantity),
-                    fractions: selectedInvestQuantity,
+                    currentValue: formatPrice(pendingInvestment?.total ?? discountedInvestmentTotal),
+                    fractions: pendingInvestment?.quantity ?? selectedInvestQuantity,
+                    couponCode: couponMatchesSelection ? couponCode.trim() || sharedCouponCode : undefined,
                 }}
                 onSuccess={handlePaymentSuccess}
             />
