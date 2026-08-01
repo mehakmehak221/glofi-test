@@ -1,23 +1,8 @@
 import { ReactNode, Suspense } from "react";
-import { Montserrat, Poppins } from "next/font/google";
 import { getServerLocale } from "@/lib/i18n/server";
 import "./satoshi.css";
 import "./globals.css";
 import { StoreProvider } from "@/store/StoreProvider";
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  display: "swap",
-});
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  display: "swap",
-});
 
 export const metadata = {
   metadataBase: new URL("https://www.glofiestates.com"),
@@ -52,7 +37,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const locale = await getServerLocale();
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} data-locale={locale} suppressHydrationWarning>
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-Z15Q0W903Y"
@@ -67,7 +52,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           `}
         </Script>
       </head>
-      <body className={`${montserrat.variable} antialiased bg-[var(--background)] theme-purple`}>
+      <body data-locale={locale} className="antialiased bg-[var(--background)] theme-purple">
         <LocaleProvider initialLocale={locale}>
           <CurrencyProvider>
             <StoreProvider>

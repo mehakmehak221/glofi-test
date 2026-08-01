@@ -14,7 +14,7 @@ export default function LanguageSwitcher({
   variant = "desktop",
   className = "",
 }: LanguageSwitcherProps) {
-  const { locale, labels, setLocale } = useI18n();
+  const { locale, labels, setLocale, t } = useI18n();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +48,8 @@ export default function LanguageSwitcher({
         className={`navbar__lang ${isMobile ? "navbar__lang--mobile" : ""} inline-flex items-center justify-between gap-2 rounded-full border border-[rgba(0,32,53,0.12)] bg-white/80 px-3 py-2 shadow-sm backdrop-blur-md transition-colors hover:border-[rgba(0,32,53,0.22)]`}
         aria-expanded={open}
         aria-haspopup="menu"
-        aria-label={labels[locale]}
+        aria-label={`${t("Select a language")}: ${labels[locale]}`}
+        title={`${t("Select a language")}: ${labels[locale]}`}
         onClick={() => setOpen((prev) => !prev)}
       >
         <Globe className="w-4 h-4 shrink-0 text-[#5B8FA8]" />

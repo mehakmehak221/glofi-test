@@ -28,17 +28,15 @@ export function LocaleProvider({
 
   useEffect(() => {
     document.documentElement.lang = locale;
+    document.documentElement.dataset.locale = locale;
+    document.body.dataset.locale = locale;
     document.documentElement.dir = "ltr";
   }, [locale]);
 
   const setLocale = (nextLocale: Locale) => {
     setLocaleState(nextLocale);
     setCookie(LOCALE_COOKIE, nextLocale, 365);
-    if (typeof window !== "undefined") {
-      window.location.reload();
-    } else {
-      router.refresh();
-    }
+    router.refresh();
   };
 
   return (
@@ -63,4 +61,3 @@ export function useI18n() {
   }
   return context;
 }
-
