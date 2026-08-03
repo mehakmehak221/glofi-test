@@ -11,7 +11,7 @@ import { API_URL } from "@/constants";
 import { Country } from "country-state-city";
 import { Camera, AlertCircle, CheckCircle2 } from "lucide-react";
 
-const TABS = ["Profile", "KYC", "Certificates", "Referrals", "Support"];
+const TABS = ["Profile", "Wallet", "KYC", "Certificates", "Referrals", "Support"];
 
 const tabContentVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -352,20 +352,17 @@ export default function AccountPage() {
 
                     {activeTab === "Wallet" && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-5 xl:max-w-[70rem]">
-                            <div
-                                className="rounded-md p-4 sm:p-7 relative overflow-hidden shadow-glow-primary"
-                                style={{ background: 'var(--color-gradient-Glofi)' }}
-                            >
-                                <div className="absolute right-0 top-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-black/40 mb-1.5 sm:mb-2.5">INR BALANCE</p>
-                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-black text-black mb-5 sm:mb-8">₹{profileData?.usdBalance || "0.00"}</p>
-                                <div className="flex gap-2 text-black">
-                                    <button className="px-3 py-1 bg-black/10 text-black text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-black/5 hover:bg-black/20">Deposit</button>
-                                    <button className="px-3 py-1 bg-black/10 text-black text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-black/5 transition-colors cursor-pointer hover:bg-black/20">Withdraw</button>
+                            <div className="rounded-md p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-500)] shadow-glow-primary">
+                                <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">INR BALANCE</p>
+                                <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">₹{profileData?.usdBalance || "0.00"}</p>
+                                <div className="flex gap-2">
+                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--sidebar-border)]">Deposit</button>
+                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--sidebar-border)] transition-colors cursor-pointer">Withdraw</button>
                                 </div>
                             </div>
 
-                            <div className="rounded-[16px] sm:rounded-[24px] p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-700)] shadow-glow-primary">
+                            <div className="rounded-md p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-700)] shadow-glow-primary">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                                 <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">AED BALANCE</p>
                                 <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">AED {profileData?.aedBalance || "0.00"}</p>
@@ -375,7 +372,7 @@ export default function AccountPage() {
                                 </div>
                             </div>
 
-                            <div className="rounded-[16px] sm:rounded-[24px] p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-300)] shadow-glow-primary">
+                            <div className="rounded-md p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-300)] shadow-glow-primary">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                                 <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">CRYPTO</p>
                                 <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">{profileData?.cryptoBalance || "0.00"} ETH</p>
