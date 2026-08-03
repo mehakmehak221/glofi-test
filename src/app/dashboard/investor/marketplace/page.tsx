@@ -154,7 +154,66 @@ export default function MarketplacePage() {
         page: 1,
     });
 
-    const assets = assetsData?.data || [];
+    const rawAssets = assetsData?.data || [];
+    
+    // Client-side search filtering
+    let assets = [...rawAssets];
+    if (debouncedSearch) {
+        const query = debouncedSearch.toLowerCase().trim();
+        assets = assets.filter((property) => {
+            return (
+                property.title?.toLowerCase().includes(query) ||
+                property.city?.toLowerCase().includes(query) ||
+                property.state?.toLowerCase().includes(query) ||
+                property.location?.toLowerCase().includes(query) ||
+                property.category?.toLowerCase().includes(query) ||
+                property.description?.toLowerCase().includes(query)
+            );
+        });
+    }
+
+    // Client-side sorting
+    assets.sort((a, b) => {
+        const { value: sortField, order: sortOrder } = sortOpt;
+        
+        let valA: any = a[sortField];
+        let valB: any = b[sortField];
+        
+        if (sortField === "expectedYield") {
+            const yieldA = parseFloat(a.expectedYield || 0) +
+                parseFloat(a.expectedAnnualRent || 0) +
+                parseFloat(a.rentalGrowthRate || 0) +
+                parseFloat(a.expectedAppreciationRate || 0) -
+                parseFloat(a.operatingCostRate || 0);
+            const yieldB = parseFloat(b.expectedYield || 0) +
+                parseFloat(b.expectedAnnualRent || 0) +
+                parseFloat(b.rentalGrowthRate || 0) +
+                parseFloat(b.expectedAppreciationRate || 0) -
+                parseFloat(b.operatingCostRate || 0);
+            valA = yieldA;
+            valB = yieldB;
+        } else if (sortField === "fractionPrice") {
+            const priceA = Number(a.fractionPrice) && Number(a.fractionPrice) !== Number(a.valuation)
+                ? Number(a.fractionPrice)
+                : (Number(a.valuation) / (Number(a.totalFractions) || 1));
+            const priceB = Number(b.fractionPrice) && Number(b.fractionPrice) !== Number(b.valuation)
+                ? Number(b.fractionPrice)
+                : (Number(b.valuation) / (Number(b.totalFractions) || 1));
+            valA = priceA;
+            valB = priceB;
+        } else if (sortField === "createdAt") {
+            valA = new Date(a.createdAt || 0).getTime();
+            valB = new Date(b.createdAt || 0).getTime();
+        } else {
+            valA = Number(valA) || 0;
+            valB = Number(valB) || 0;
+        }
+
+        if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+        if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+        return 0;
+    });
+
     const hasActiveFilters = !!(riskFilter || debouncedSearch);
 
     const clearAllFilters = () => {

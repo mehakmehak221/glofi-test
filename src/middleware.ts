@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const accessToken = request.cookies.get("access_token")?.value;
@@ -18,6 +18,11 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  const isDashboardPage = pathname.startsWith("/dashboard");
+  if (isDashboardPage && !isAuthenticated) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+
   return NextResponse.next();
 }
 
@@ -26,5 +31,7 @@ export const config = {
     "/sign-in",
     "/sign-up",
     "/forgot-password",
+    "/dashboard",
+    "/dashboard/:path*",
   ],
 };

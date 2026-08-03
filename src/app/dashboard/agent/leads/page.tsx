@@ -7,7 +7,6 @@ import { LeadFilters } from '@/components/dashboard/agent/crm/LeadFilters';
 import { LeadTable } from '@/components/dashboard/agent/crm/LeadTable';
 import { CreateLeadModal } from '@/components/dashboard/agent/crm/CreateLeadModal';
 import { EditLeadModal } from '@/components/dashboard/agent/crm/EditLeadModal';
-import { DeleteLeadModal } from '@/components/dashboard/agent/crm/DeleteLeadModal';
 import { LeadDetailsDrawer } from '@/components/dashboard/agent/crm/LeadDetailsDrawer';
 import { Users, UserPlus, CheckCircle2, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -35,7 +34,6 @@ export default function AgentLeadsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
   const [leadForEdit, setLeadForEdit] = useState<Lead | null>(null);
-  const [leadForDelete, setLeadForDelete] = useState<Lead | null>(null);
 
 
   const fetchStats = useCallback(async () => {
@@ -71,14 +69,21 @@ export default function AgentLeadsPage() {
     }
   }, [filters]);
 
-  useEffect(() => { fetchLeads(); }, [fetchLeads]);
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
 
-  useEffect(() => { fetchStats(); }, [fetchStats]);
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
-  const handleFilterChange = (newFilters: Partial<QueryLeadsDto>) =>
-    setFilters((prev) => ({ ...prev, ...newFilters }));
-
-  const handleResetFilters = () => setFilters({ page: 1, limit: 10 });
+  const handleFilterChange = (newFilters: Partial<QueryLeadsDto>) => {
+    setFilters((prev) => ({
+      ...prev,
+      ...newFilters,
+      page: newFilters.page !== undefined ? newFilters.page : 1, // Reset page on filter change unless page itself changed
+    }));
+  };
 
   const handleCreateLead = async (data: CreateLeadDto) => {
     await agentCrmApi.createLead(data);
@@ -86,15 +91,13 @@ export default function AgentLeadsPage() {
     await Promise.all([fetchLeads(), fetchStats()]);
   };
 
+  const handleResetFilters = () => {
+    setFilters({ page: 1, limit: 10 });
+  };
+
   const handleEditLead = async (data: UpdateLeadDto) => {
     if (!leadForEdit) return;
     await agentCrmApi.updateLead(leadForEdit.id, data);
-    await Promise.all([fetchLeads(), fetchStats()]);
-  };
-
-  const handleDeleteLead = async () => {
-    if (!leadForDelete) return;
-    await agentCrmApi.deleteLead(leadForDelete.id);
     await Promise.all([fetchLeads(), fetchStats()]);
   };
 
@@ -116,27 +119,54 @@ export default function AgentLeadsPage() {
         </p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-        {[
-          { label: 'Total Assigned', value: stats.totalAssigned, icon: Users, color: 'text-[var(--color-primary-300)]' },
-          { label: 'New Leads', value: stats.newLeads, icon: UserPlus, color: 'text-[var(--color-primary-300)]' },
-          { label: 'In Contact', value: stats.inContact, icon: Clock, color: 'text-amber-400' },
-          { label: 'Converted', value: stats.converted, icon: CheckCircle2, color: 'text-[var(--color-primary-300)]' },
-        ].map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-6 flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-bold text-[var(--sidebar-text)] opacity-60 uppercase tracking-widest mb-1">{label}</p>
-              <p className={`text-3xl font-bold ${color}`}>{value}</p>
-            </div>
-            <div className={`w-10 h-10 rounded-md bg-[var(--color-primary-300)]/10 flex items-center justify-center ${color}`}>
-              <Icon className="w-5 h-5" />
-            </div>
+      {/* KPI Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Assigned */}
+        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-md bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] flex items-center justify-center">
+            <Users className="w-5 h-5" />
           </div>
-        ))}
+          <div>
+            <p className="text-2xl font-bold text-[var(--foreground)]">{stats.totalAssigned}</p>
+            <p className="text-xs font-semibold text-[var(--sidebar-text)] opacity-60 uppercase tracking-wider">Total Leads</p>
+          </div>
+        </div>
+
+        {/* New Leads */}
+        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-md bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--badge-border)] flex items-center justify-center">
+            <UserPlus className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-[var(--foreground)]">{stats.newLeads}</p>
+            <p className="text-xs font-semibold text-[var(--sidebar-text)] opacity-60 uppercase tracking-wider">New Leads</p>
+          </div>
+        </div>
+
+        {/* In Contact */}
+        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-md bg-amber-500/10 text-amber-500 border border-amber-500/20 flex items-center justify-center">
+            <Clock className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-[var(--foreground)]">{stats.inContact}</p>
+            <p className="text-xs font-semibold text-[var(--sidebar-text)] opacity-60 uppercase tracking-wider">In Contact</p>
+          </div>
+        </div>
+
+        {/* Converted */}
+        <div className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-4 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-md bg-[var(--color-primary-300)]/10 text-[var(--color-primary-300)] border border-[var(--color-primary-300)]/25 flex items-center justify-center">
+            <CheckCircle2 className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-[var(--foreground)]">{stats.converted}</p>
+            <p className="text-xs font-semibold text-[var(--sidebar-text)] opacity-60 uppercase tracking-wider">Converted</p>
+          </div>
+        </div>
       </div>
 
-      {/* Filter Component */}
+      {/* Filters Section */}
       <LeadFilters
         filters={filters}
         onFilterChange={handleFilterChange}
@@ -151,7 +181,6 @@ export default function AgentLeadsPage() {
         isLoading={isLoading}
         onSelectLead={(lead) => setSelectedLeadId(lead.id)}
         onEditLead={(lead) => setLeadForEdit(lead)}
-        onDeleteLead={(lead) => setLeadForDelete(lead)}
       />
 
       {/* Pagination Controls */}
@@ -190,13 +219,6 @@ export default function AgentLeadsPage() {
         lead={leadForEdit}
         onClose={() => setLeadForEdit(null)}
         onSubmit={handleEditLead}
-      />
-
-      <DeleteLeadModal
-        isOpen={leadForDelete !== null}
-        lead={leadForDelete}
-        onClose={() => setLeadForDelete(null)}
-        onConfirm={handleDeleteLead}
       />
 
       <LeadDetailsDrawer
