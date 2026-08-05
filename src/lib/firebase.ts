@@ -44,8 +44,11 @@ export async function ensureFirebasePhoneAuthReady(): Promise<void> {
   }
 
   const testMode = process.env.NEXT_PUBLIC_FIREBASE_PHONE_AUTH_TEST_MODE === "true";
+
   if (testMode) {
     firebaseAuth.settings.appVerificationDisabledForTesting = true;
+  } else {
+    firebaseAuth.settings.appVerificationDisabledForTesting = false;
   }
 }
 

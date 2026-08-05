@@ -139,11 +139,21 @@ function SignUpPageContent() {
             }
             recaptchaVerifierRef.current = null;
         }
+        if (typeof document !== "undefined") {
+            const mount = document.getElementById("recaptcha-container");
+            if (mount) {
+                mount.innerHTML = "";
+            }
+        }
     };
 
     const createRecaptchaVerifier = async () => {
         if (!firebaseAuth) {
             throw new Error("Firebase Auth is not configured.");
+        }
+
+        if (recaptchaVerifierRef.current) {
+            return recaptchaVerifierRef.current;
         }
 
         clearRecaptcha();
@@ -153,6 +163,8 @@ function SignUpPageContent() {
         if (!mount) {
             throw new Error("reCAPTCHA mount point is missing.");
         }
+
+        mount.innerHTML = "";
 
         const verifier = new RecaptchaVerifier(firebaseAuth, containerId, {
             size: "invisible",
@@ -231,6 +243,7 @@ function SignUpPageContent() {
 
     const isRecoverableFirebasePhoneError = (err: unknown) => {
         const code = (err as { code?: string })?.code;
+        const msg = err instanceof Error ? err.message : String(err ?? "");
 
         return (
             code === "auth/internal-error" ||
@@ -240,7 +253,9 @@ function SignUpPageContent() {
             code === "auth/captcha-check-failed" ||
             code === "auth/app-not-authorized" ||
             code === "auth/unauthorized-domain" ||
-            code === "auth/too-many-requests"
+            code === "auth/too-many-requests" ||
+            msg.includes("reCAPTCHA") ||
+            msg.includes("rendered")
         );
     };
 
@@ -271,7 +286,9 @@ function SignUpPageContent() {
     };
 
     const initiatePhoneVerification = async () => {
-        if (!firebaseAuth) return;
+        if (!firebaseAuth) {
+            throw new Error("Firebase Authentication is not initialized. Please check your configuration.");
+        }
 
         // Clear any stale errors before starting phone verification
         setErrorMsg(""); setSuccessMsg(""); setPhoneCodeError("");
@@ -383,31 +400,22 @@ function SignUpPageContent() {
             console.error("handleDetailsSubmit caught error:", err);
             const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
             const firebaseCode = (err as { code?: string })?.code;
+
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
+            } else if (firebaseCode === "auth/invalid-app-credential" || firebaseCode === "auth/captcha-check-failed") {
+                setErrorMsg("reCAPTCHA verification failed. If using test numbers, set NEXT_PUBLIC_FIREBASE_PHONE_AUTH_TEST_MODE=true in .env.local, or check Firebase Console Phone Auth settings.");
             } else if (firebaseCode === "auth/unauthorized-domain") {
-                setErrorMsg("Phone verification is not configured for this domain. Please contact support.");
-            } else if (
-                firebaseCode === "auth/internal-error" ||
-                firebaseCode === "auth/quota-exceeded" ||
-                firebaseCode === "auth/operation-not-allowed" ||
-                firebaseCode === "auth/invalid-app-credential" ||
-                firebaseCode === "auth/captcha-check-failed" ||
-                firebaseCode === "auth/app-not-authorized" ||
-                firebaseCode === "auth/unauthorized-domain"
-            ) {
-                setErrorMsg("SMS verification is temporarily unavailable. Please try again later.");
-            } else if (firebaseCode === "auth/too-many-requests") {
-                setErrorMsg("Too many attempts. This phone number has been temporarily blocked by Firebase due to too many request attempts. Please try again in a few minutes.");
+                setErrorMsg("This domain is not authorized for phone verification in Firebase Console.");
+            } else if (firebaseCode === "auth/operation-not-allowed") {
+                setErrorMsg("Phone Sign-In is not enabled in Firebase Console. Please enable Phone provider under Authentication.");
+            } else if (firebaseCode === "auth/quota-exceeded" || firebaseCode === "auth/too-many-requests") {
+                setErrorMsg("Too many SMS attempts. Please wait a few minutes before trying again.");
             } else {
-                const friendlyMsg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
                 applySignUpApiErrors(apiErr, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
-                if (!nameError && !emailError && !phoneError && !passwordError && !confirmPasswordError && !reraError && !expiryError && !referralError) {
-                    setErrorMsg(friendlyMsg || "Failed to initiate phone verification. Please try again.");
-                }
             }
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
