@@ -15,12 +15,6 @@ const firebaseConfig = {
 let firebaseAuth: Auth | undefined;
 let firebaseAnalytics: ReturnType<typeof getAnalytics> | undefined;
 
-function isLocalhost(): boolean {
-  if (typeof window === "undefined") return false;
-  const host = window.location.hostname;
-  return host === "localhost" || host === "127.0.0.1" || host === "::1";
-}
-
 if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
   try {
     const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -50,7 +44,7 @@ export async function ensureFirebasePhoneAuthReady(): Promise<void> {
   }
 
   const testMode = process.env.NEXT_PUBLIC_FIREBASE_PHONE_AUTH_TEST_MODE === "true";
-  if (testMode || isLocalhost()) {
+  if (testMode) {
     firebaseAuth.settings.appVerificationDisabledForTesting = true;
   }
 }

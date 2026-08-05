@@ -301,11 +301,7 @@ function SignUpPageContent() {
             setStep("PHONE_OTP");
         } catch (firebaseErr) {
             clearRecaptcha();
-            if (isRecoverableFirebasePhoneError(firebaseErr)) {
-                console.warn("Firebase phone auth fell back to email OTP:", firebaseErr);
-            } else {
-                console.error("Firebase signInWithPhoneNumber failed:", firebaseErr);
-            }
+            console.error("Firebase signInWithPhoneNumber failed:", firebaseErr);
             throw firebaseErr;
         }
     };
@@ -387,8 +383,7 @@ function SignUpPageContent() {
             if (canUseFirebasePhone) {
                 await initiatePhoneVerification();
             } else {
-                setErrorMsg("Phone verification is temporarily unavailable. Please try again later.");
-                return;
+                await sendEmailOtp(true);
             }
         } catch (err: unknown) {
             console.error("handleDetailsSubmit caught error:", err);
