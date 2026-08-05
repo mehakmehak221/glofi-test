@@ -56,7 +56,6 @@ function SignUpPageContent() {
     const [phoneCodeError, setPhoneCodeError] = useState("");
     const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
     const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
-    const recaptchaAttemptRef = useRef(0);
 
     const [successMsg, setSuccessMsg] = useState("");
 
@@ -140,29 +139,20 @@ function SignUpPageContent() {
             }
             recaptchaVerifierRef.current = null;
         }
-        const mount = document.getElementById("recaptcha-mount");
-        if (mount) {
-            mount.innerHTML = "";
-        }
     };
 
-    const createRecaptchaVerifier = () => {
+    const createRecaptchaVerifier = async () => {
         if (!firebaseAuth) {
             throw new Error("Firebase Auth is not configured.");
         }
 
         clearRecaptcha();
 
-        recaptchaAttemptRef.current += 1;
-        const containerId = `recaptcha-container-${recaptchaAttemptRef.current}`;
-        const mount = document.getElementById("recaptcha-mount");
+        const containerId = "recaptcha-container";
+        const mount = document.getElementById(containerId);
         if (!mount) {
             throw new Error("reCAPTCHA mount point is missing.");
         }
-
-        const container = document.createElement("div");
-        container.id = containerId;
-        mount.appendChild(container);
 
         const verifier = new RecaptchaVerifier(firebaseAuth, containerId, {
             size: "invisible",
@@ -172,6 +162,7 @@ function SignUpPageContent() {
             },
         });
 
+        await verifier.render();
         recaptchaVerifierRef.current = verifier;
         return verifier;
     };
@@ -232,7 +223,6 @@ function SignUpPageContent() {
         }
     };
 
-
     const proceedToEmailOtpStep = (message?: string) => {
         setSuccessMsg(message ?? `We sent a 6-digit code to ${form.email.trim()}.`);
         setStep("OTP");
@@ -242,7 +232,16 @@ function SignUpPageContent() {
     const isRecoverableFirebasePhoneError = (err: unknown) => {
         const code = (err as { code?: string })?.code;
 
-        return code === "auth/quota-exceeded";
+        return (
+            code === "auth/internal-error" ||
+            code === "auth/quota-exceeded" ||
+            code === "auth/operation-not-allowed" ||
+            code === "auth/invalid-app-credential" ||
+            code === "auth/captcha-check-failed" ||
+            code === "auth/app-not-authorized" ||
+            code === "auth/unauthorized-domain" ||
+            code === "auth/too-many-requests"
+        );
     };
 
     const sendEmailOtp = async (transitionToOtpStep = true) => {
@@ -282,24 +281,31 @@ function SignUpPageContent() {
         const trimmedEmail = form.email.trim();
         console.log("Initiating phone verification for email:", trimmedEmail, "and phone:", form.phone.trim());
 
-
         const phoneData = await sendPhoneOtp({ email: trimmedEmail, phone: form.phone.trim() }).unwrap();
-        console.log("Received phone number from backend:", phoneData);
-        if (!phoneData.success) throw new Error("Could not retrieve phone number");
+        console.log("Received phone verification preflight response:", phoneData);
+        const phoneToVerify = phoneData?.phone?.trim() || form.phone.trim();
+        if (!phoneToVerify) throw new Error("Could not retrieve phone number");
+        if (phoneData?.success === false) {
+            console.warn("sendPhoneOtp returned success=false; continuing with entered phone number for Firebase verification.");
+        }
 
-        console.log("Triggering Firebase SMS via signInWithPhoneNumber for:", phoneData.phone);
+        console.log("Triggering Firebase SMS via signInWithPhoneNumber for:", phoneToVerify);
         try {
-            const verifier = createRecaptchaVerifier();
-            const result = await signInWithPhoneNumber(firebaseAuth, phoneData.phone, verifier);
+            const verifier = await createRecaptchaVerifier();
+            const result = await signInWithPhoneNumber(firebaseAuth, phoneToVerify, verifier);
             console.log("Firebase signInWithPhoneNumber success result:", result);
             setConfirmationResult(result);
             setPhoneCode("");
             setPhoneCodeError("");
-            setSuccessMsg(`We sent a verification SMS to ${phoneData.phone}.`);
+            setSuccessMsg(`We sent a verification SMS to ${phoneToVerify}.`);
             setStep("PHONE_OTP");
         } catch (firebaseErr) {
             clearRecaptcha();
-            console.error("Firebase signInWithPhoneNumber failed:", firebaseErr);
+            if (isRecoverableFirebasePhoneError(firebaseErr)) {
+                console.warn("Firebase phone auth fell back to email OTP:", firebaseErr);
+            } else {
+                console.error("Firebase signInWithPhoneNumber failed:", firebaseErr);
+            }
             throw firebaseErr;
         }
     };
@@ -379,10 +385,10 @@ function SignUpPageContent() {
             }
 
             if (canUseFirebasePhone) {
-                await sendEmailOtp(false);
                 await initiatePhoneVerification();
             } else {
-                await sendEmailOtp(true);
+                setErrorMsg("Phone verification is temporarily unavailable. Please try again later.");
+                return;
             }
         } catch (err: unknown) {
             console.error("handleDetailsSubmit caught error:", err);
@@ -392,7 +398,15 @@ function SignUpPageContent() {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else if (firebaseCode === "auth/unauthorized-domain") {
                 setErrorMsg("Phone verification is not configured for this domain. Please contact support.");
-            } else if (firebaseCode === "auth/quota-exceeded" || firebaseCode === "auth/operation-not-allowed") {
+            } else if (
+                firebaseCode === "auth/internal-error" ||
+                firebaseCode === "auth/quota-exceeded" ||
+                firebaseCode === "auth/operation-not-allowed" ||
+                firebaseCode === "auth/invalid-app-credential" ||
+                firebaseCode === "auth/captcha-check-failed" ||
+                firebaseCode === "auth/app-not-authorized" ||
+                firebaseCode === "auth/unauthorized-domain"
+            ) {
                 setErrorMsg("SMS verification is temporarily unavailable. Please try again later.");
             } else if (firebaseCode === "auth/too-many-requests") {
                 setErrorMsg("Too many attempts. This phone number has been temporarily blocked by Firebase due to too many request attempts. Please try again in a few minutes.");
@@ -488,7 +502,9 @@ function SignUpPageContent() {
             className="flex flex-col"
         >
             {/* Invisible reCAPTCHA mount point */}
-            <div id="recaptcha-mount" />
+            <div id="recaptcha-mount">
+                <div id="recaptcha-container" />
+            </div>
 
             {step === "DETAILS" ? (
                 <Link

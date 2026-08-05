@@ -3,7 +3,8 @@ import {
   SendRegistrationOtpBody,
   RegistrationOtpBody,
   SendPhoneOtpBody,
-  VerifyPhoneOtpBody
+  VerifyPhoneOtpBody,
+  SendPhoneOtpResponse
 } from '@/types/auth';
 
 export const authApi = baseApi.injectEndpoints({
@@ -15,7 +16,7 @@ export const authApi = baseApi.injectEndpoints({
         body,
       }),
     }),
-    sendPhoneOtp: builder.mutation<{ success: boolean; phone: string }, SendPhoneOtpBody>({
+    sendPhoneOtp: builder.mutation<SendPhoneOtpResponse, SendPhoneOtpBody>({
       query: (body) => ({
         url: 'auth/register/send-phone-otp',
         method: 'POST',

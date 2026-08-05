@@ -3,6 +3,13 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const hostname = request.nextUrl.hostname;
+
+  if (process.env.NODE_ENV === "production" && hostname === "glofiestates.com") {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.hostname = "www.glofiestates.com";
+    return NextResponse.redirect(redirectUrl);
+  }
 
   const accessToken = request.cookies.get("access_token")?.value;
   const isLoggedIn = request.cookies.get("isLoggedIn")?.value;
