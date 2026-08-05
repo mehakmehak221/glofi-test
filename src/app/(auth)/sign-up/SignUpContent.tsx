@@ -366,8 +366,6 @@ function SignUpPageContent() {
         if (n || em || ph || p || cp || r || ex || ref) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
 
         try {
-            const canUseFirebasePhone = Boolean(isFirebasePhoneAuthEnabled && firebaseAuth);
-
             if (userType === "Agent") {
                 const trimmedName = form.name.trim();
                 const trimmedEmail = form.email.trim();
@@ -380,11 +378,7 @@ function SignUpPageContent() {
                 return;
             }
 
-            if (canUseFirebasePhone) {
-                await initiatePhoneVerification();
-            } else {
-                await sendEmailOtp(true);
-            }
+            await initiatePhoneVerification();
         } catch (err: unknown) {
             console.error("handleDetailsSubmit caught error:", err);
             const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
