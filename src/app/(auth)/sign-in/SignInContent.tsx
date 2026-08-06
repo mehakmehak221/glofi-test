@@ -9,8 +9,8 @@ import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
 import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner } from "@/components/VectorImages";
 import { useLoginMutation } from "@/store/api/authApi";
+import { setCookie } from "@/utils/cookieUtils";
 import { applySignInApiErrors, FIELD_ERROR_CLASSES, validateSignInFields } from "@/utils/authFormErrors";
-import { extractAccessToken, persistAuthSession } from "@/utils/authSession";
 
 const SIGNIN_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SigninRole = (typeof SIGNIN_ROLES)[number];
@@ -90,15 +90,24 @@ function SignInPageContent() {
             console.log('Login Result:', result);
 
             // Cover all possible response shapes from the API
-            const userRole = result?.role || result?.user?.role || result?.data?.role || userType.toUpperCase();
-            const token = extractAccessToken(result);
+            const token =
+                result?.accessToken ||
+                result?.token ||
+                result?.access_token ||
+                result?.data?.accessToken ||
+                result?.data?.token ||
+                result?.data?.access_token;
 
-            if (!token) {
-                setErrorMsg("Login succeeded but no access token was returned by the API. Please check the backend auth response.");
-                return;
+            // Always store credentials before navigating
+            if (token) {
+                setCookie("access_token", token);
+                localStorage.setItem("access_token", token);
             }
 
-            persistAuthSession(token, userRole);
+            const userRole = result?.role || result?.user?.role || result?.data?.role || userType.toUpperCase();
+            localStorage.setItem("userType", userRole);
+            localStorage.setItem("isLoggedIn", "true");
+            setCookie("isLoggedIn", "true");
 
             localStorage.setItem("toastMessage", "Login successful!");
 
@@ -184,7 +193,7 @@ function SignInPageContent() {
             <form
                 noValidate
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
             >
                 <div className="flex flex-col gap-2">
                     <label htmlFor="sign-in-email" className="text-sm font-medium text-neutral-900 font-montserrat">
