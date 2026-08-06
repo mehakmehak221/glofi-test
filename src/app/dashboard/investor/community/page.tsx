@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { BackArrowIcon } from "@/components/VectorImages";
 import { mockInvestorActivities } from "@/data/investorActivity";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const AVATAR_COLORS = [
   "#1E88E5",
@@ -15,6 +16,7 @@ const AVATAR_COLORS = [
 
 export default function InvestorCommunityPage() {
   const router = useRouter();
+  const { t } = useI18n();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -43,7 +45,7 @@ export default function InvestorCommunityPage() {
             <BackArrowIcon className="w-4 h-4 text-[var(--foreground)] group-hover:text-[var(--background)] group-hover:-translate-x-0.5 transition-transform" />
           </button>
           <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] tracking-tight">
-            Our Investor Community
+            {t("Our Investor Community")}
           </h1>
         </div>
 
@@ -75,11 +77,11 @@ export default function InvestorCommunityPage() {
                         {activity.investorName}
                       </span>
                       <span className="text-xs text-[var(--color-text-muted)] font-medium opacity-60">
-                        invested {activity.timeAgo}
+                        {t("invested")} {t(activity.timeAgo)}
                       </span>
                     </div>
                     <span className="text-xs text-[var(--color-text-muted)] mt-1 font-montserrat font-medium">
-                      {activity.assetName}
+                      {t(activity.assetName)}
                     </span>
                   </div>
                 </div>
@@ -89,7 +91,7 @@ export default function InvestorCommunityPage() {
                     ₹{activity.amount.toLocaleString("en-IN")}
                   </span>
                   <span className="text-[11px] text-[var(--color-text-muted)] mt-1 font-montserrat font-semibold uppercase tracking-wider opacity-60">
-                    {activity.units} Units
+                    {activity.units} {t("Units")}
                   </span>
                 </div>
               </motion.div>

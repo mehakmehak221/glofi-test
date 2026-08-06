@@ -46,7 +46,7 @@ export default function SupportTicketComposer({
 }: SupportTicketComposerProps) {
   const { t } = useI18n();
   const [createTicket, { isLoading }] = useCreatePublicTicketMutation();
-  const resolvedTitle = title ?? t("Raise a Ticket");
+  const resolvedTitle = title ? t(title) : t("Raise a Ticket");
   const [form, setForm] = useState({
     email: defaultEmail,
     subject: "",
@@ -206,7 +206,7 @@ export default function SupportTicketComposer({
                 className="h-11 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm md:text-base text-[var(--foreground)] outline-none cursor-pointer"
               >
                 {Object.values(TicketCategory).map((category) => (
-                  <option key={category} value={category}>{category}</option>
+                  <option key={category} value={category}>{t(category)}</option>
                 ))}
               </select>
             </div>
@@ -218,7 +218,7 @@ export default function SupportTicketComposer({
                 className="h-11 rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm md:text-base text-[var(--foreground)] outline-none cursor-pointer"
               >
                 {Object.values(TicketPriority).map((priority) => (
-                  <option key={priority} value={priority}>{priority}</option>
+                  <option key={priority} value={priority}>{t(priority)}</option>
                 ))}
               </select>
             </div>

@@ -4,10 +4,12 @@ import { motion, Variants } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { TrendingUpIcon, SecondaryMarketplaceIcon, VerifiedIcon } from "@/components/VectorImages";
 import { EarlyStarterClaimWidget } from "./EarlyStarterClaimWidget";
+import { useI18n } from "@/providers/LocaleProvider";
 
 
 export function CommunityStatusBanner() {
   const router = useRouter();
+  const { t } = useI18n();
 
   const avatars = [
     { initials: "R", color: "#00DAAF" },
@@ -25,7 +27,7 @@ export function CommunityStatusBanner() {
     >
       {/* Left: stat */}
       <p className="text-[17px] font-black text-[var(--marketplace-banner-text-primary)] tracking-tight">
-        ₹62.1 Lacs <span className="font-medium text-[var(--marketplace-banner-text-secondary)]">invested</span>
+        {t("₹62.1 Lacs")} <span className="font-medium text-[var(--marketplace-banner-text-secondary)]">{t("invested")}</span>
       </p>
 
       {/* Right: avatars + arrow */}
@@ -52,7 +54,8 @@ export function CommunityStatusBanner() {
   );
 }
 
-export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick }) {
+export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick }: { icon: any; title: string; subtitle: string; color: string; onClick: () => void }) {
+  const { t } = useI18n();
   return (
     <motion.div
       whileHover={{ y: -4, scale: 1.01 }}
@@ -82,8 +85,8 @@ export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick
 
       {/* Text */}
       <div className="relative z-10 flex-1 min-w-0">
-        <h3 className="text-sm font-extrabold text-[var(--marketplace-feature-card-title)] leading-tight tracking-tight truncate">{title}</h3>
-        <p className="text-[11px] text-[var(--marketplace-feature-card-subtitle)] font-semibold uppercase tracking-wider mt-0.5 font-montserrat">{subtitle}</p>
+        <h3 className="text-sm font-extrabold text-[var(--marketplace-feature-card-title)] leading-tight tracking-tight truncate">{t(title)}</h3>
+        <p className="text-[11px] text-[var(--marketplace-feature-card-subtitle)] font-semibold uppercase tracking-wider mt-0.5 font-montserrat">{t(subtitle)}</p>
       </div>
 
       {/* Arrow */}
@@ -101,6 +104,7 @@ export function FeatureBannerSmall({ icon: Icon, title, subtitle, color, onClick
 
 export function InvestorBanners() {
   const router = useRouter();
+  const { t } = useI18n();
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -141,7 +145,7 @@ export function InvestorBanners() {
           <FeatureBannerSmall
             icon={TrendingUpIcon}
             title="Get over 92% return"
-            subtitle="within 5 years"
+            subtitle="WITHIN 5 YEARS"
             color="#00DAAF"
             onClick={() => router.push("/dashboard/investor/returns-calculator")}
           />
@@ -151,7 +155,7 @@ export function InvestorBanners() {
           <FeatureBannerSmall
             icon={SecondaryMarketplaceIcon}
             title="Buy and Sell Anytime"
-            subtitle="Zero lock-in period"
+            subtitle="ZERO LOCK-IN PERIOD"
             color="#2E86DE"
             onClick={() => { }}
           />
@@ -163,7 +167,7 @@ export function InvestorBanners() {
           <FeatureBannerSmall
             icon={VerifiedIcon}
             title="Only Top Properties"
-            subtitle="Institutional grade"
+            subtitle="INSTITUTIONAL GRADE"
             color="#12B76A"
             onClick={() => { }}
           />

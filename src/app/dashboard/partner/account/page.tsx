@@ -7,6 +7,7 @@ import { useUploadFileMutation } from "@/store/api/fileApi";
 import SupportTicketComposer from "@/components/dashboard/SupportTicketComposer";
 import { Country } from "country-state-city";
 import { Camera, AlertCircle, CheckCircle2 } from "lucide-react";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const TABS = ["Profile", "Support"];
 
@@ -17,6 +18,7 @@ const tabContentVariants = {
 };
 
 export default function PartnerAccountPage() {
+    const { t } = useI18n();
     const [activeTab, setActiveTab] = useState("Profile");
     const { data: profileData, isLoading: profileLoading } = useGetProfileQuery();
 
@@ -50,13 +52,13 @@ export default function PartnerAccountPage() {
                 country,
                 avatarUrl: avatarKeyRef.current,
             }).unwrap();
-            setStatusMsg({ type: "success", text: "Profile updated successfully!" });
+            setStatusMsg({ type: "success", text: t("Profile updated successfully!") });
             setTimeout(() => setStatusMsg(null), 5000);
         } catch (err: any) {
             console.error("Failed to update profile:", err);
             setStatusMsg({
                 type: "error",
-                text: err?.data?.message || err?.message || "Failed to update profile. Please try again."
+                text: err?.data?.message || err?.message || t("Failed to update profile. Please try again.")
             });
         } finally {
             setIsUpdating(false);
@@ -72,7 +74,7 @@ export default function PartnerAccountPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--header-text)] mb-4 sm:mb-6"
             >
-                Account
+                {t("Account")}
             </motion.h1>
 
             <motion.div
@@ -90,7 +92,7 @@ export default function PartnerAccountPage() {
                             : "bg-[var(--card-surface)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
                             }`}
                     >
-                        {tab}
+                        {t(tab)}
                     </button>
                 ))}
             </motion.div>
@@ -178,10 +180,10 @@ export default function PartnerAccountPage() {
                                         </div>
                                     )}
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6 mb-6 sm:mb-8">
+                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6 mb-6 sm:mb-8">
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
-                                                Full Name
+                                                {t("Full Name")}
                                             </label>
                                             <input
                                                 type="text"
@@ -193,7 +195,7 @@ export default function PartnerAccountPage() {
 
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
-                                                Email Address
+                                                {t("Email Address")}
                                             </label>
                                             <input
                                                 type="email"
@@ -205,7 +207,7 @@ export default function PartnerAccountPage() {
 
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] text-[var(--color-text-muted)] font-semibold">
-                                                Country
+                                                {t("Country")}
                                             </label>
                                             <div className="relative">
                                                 <select
@@ -213,7 +215,7 @@ export default function PartnerAccountPage() {
                                                     onChange={(e) => setCountry(e.target.value)}
                                                     className="w-full rounded-md px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium text-[var(--header-text)] bg-[var(--field-surface)] border border-[var(--sidebar-border)] transition-all hover:border-[var(--sidebar-active-text)]/30 focus:outline-none focus:border-[var(--sidebar-active-text)]/50 appearance-none cursor-pointer"
                                                 >
-                                                    <option value="">Select Country</option>
+                                                    <option value="">{t("Select Country")}</option>
                                                     {Country.getAllCountries().map((c) => (
                                                         <option key={c.isoCode} value={c.name}>
                                                             {c.name}
@@ -236,7 +238,7 @@ export default function PartnerAccountPage() {
                                         disabled={isUpdating}
                                         className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-md bg-[#00DAAF] text-black font-bold text-[11px] sm:text-[13px] tracking-wide cursor-pointer border-0 shadow-glow-primary transition-all disabled:opacity-50"
                                     >
-                                        {isUpdating ? "Saving..." : "Save Changes"}
+                                        {isUpdating ? t("Saving...") : t("Save Changes")}
                                     </motion.button>
                                 </>
                             )}

@@ -53,7 +53,7 @@ function MetricCard({
         </span>
       </div>
       <p className="mt-5 text-3xl font-bold text-[var(--foreground)] font-montserrat">{value}</p>
-      <p className="mt-2 text-xs font-medium text-[var(--sidebar-text)] opacity-60">{t(hint)}</p>
+      <p className="mt-2 text-xs font-medium text-[var(--sidebar-text)] opacity-60">{hint}</p>
     </div>
   );
 }
@@ -143,29 +143,29 @@ export default function AgentReferralsPage() {
       {
         label: "Total Links",
         value: sharedList.length + customLinksList.length,
-        hint: `${sharedList.length} asset links, ${customLinksList.length} campaign links`,
+        hint: t("{assetCount} asset links, {campaignCount} campaign links", { assetCount: sharedList.length, campaignCount: customLinksList.length }),
         icon: PropertyIcon,
       },
       {
         label: "Total Clicks",
         value: assetTotals.clicks + customTotals.clicks,
-        hint: "Total visitors across all referral links",
+        hint: t("Total visitors across all referral links"),
         icon: LinkIcon,
       },
       {
         label: "Registrations",
         value: assetTotals.registrations + customTotals.registrations,
-        hint: "Signed up investors via your links",
+        hint: t("Signed up investors via your links"),
         icon: UserGroupIcon,
       },
       {
         label: "Total Investments",
         value: formatCurrency(assetTotals.volume + customTotals.volume),
-        hint: "Total funds invested through referrals",
+        hint: t("Total funds invested through referrals"),
         icon: DollarIcon,
       },
     ];
-  }, [sharedList, customLinksList]);
+  }, [sharedList, customLinksList, t]);
 
   const openShareModal = (asset: any) => {
     const existing = sharedList.find((item) => String(item.assetId) === String(asset.id));

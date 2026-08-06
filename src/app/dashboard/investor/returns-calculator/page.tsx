@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { BackArrowIcon } from "@/components/VectorImages";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const ROIS = {
   Conservative: 0.10,
@@ -85,6 +86,7 @@ const ASSET_ICONS = {
 
 export default function ReturnsCalculatorPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [investmentAmount, setInvestmentAmount] = useState(360000);
   const [selectedDuration, setSelectedDuration] = useState(5);
   const [selectedRisk, setSelectedRisk] = useState("Moderate");
@@ -135,7 +137,7 @@ export default function ReturnsCalculatorPage() {
           >
             <BackArrowIcon className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
           </button>
-          <h1 className="text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tight">Calculate Returns</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tight">{t("Calculate Returns")}</h1>
         </div>
 
         {/* Stat Cards */}
@@ -147,7 +149,7 @@ export default function ReturnsCalculatorPage() {
           {/* Estimated Total */}
           <div className="relative flex flex-col gap-2 p-5 bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00DAAF]/60 to-transparent" />
-            <span className="text-[9px] font-black uppercase tracking-[2.5px] text-[var(--color-text-muted)]">Estimated Total Amount</span>
+            <span className="text-[9px] font-black uppercase tracking-[2.5px] text-[var(--color-text-muted)]">{t("ESTIMATED TOTAL AMOUNT")}</span>
             <div className="flex items-center gap-2">
               <span className="text-xl font-black text-[#00DAAF]">₹</span>
               <input
@@ -162,7 +164,7 @@ export default function ReturnsCalculatorPage() {
           {/* Net Performance */}
           <div className="relative flex flex-col gap-2 p-5 bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--foreground)]/20 to-transparent" />
-            <span className="text-[9px] font-black uppercase tracking-[2.5px] text-[var(--color-text-muted)]">Net Performance</span>
+            <span className="text-[9px] font-black uppercase tracking-[2.5px] text-[var(--color-text-muted)]">{t("NET PERFORMANCE")}</span>
             <div className="flex items-center gap-2">
               <input
                 type="number"
@@ -183,8 +185,8 @@ export default function ReturnsCalculatorPage() {
           <div>
             <div className="flex justify-between items-start mb-5">
               <div>
-                <label className="text-base font-bold text-[var(--foreground)] tracking-tight">Investment Amount</label>
-                <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[2px] font-bold mt-0.5 opacity-50">Choose your capital</p>
+                <label className="text-base font-bold text-[var(--foreground)] tracking-tight">{t("Investment Amount")}</label>
+                <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[2px] font-bold mt-0.5 opacity-50">{t("Choose your capital")}</p>
               </div>
               <div className="px-4 py-2 bg-[var(--foreground)] text-[var(--background)] rounded-xl shadow-sm">
                 <span className="text-lg font-black">₹{investmentAmount.toLocaleString("en-IN")}</span>
@@ -224,8 +226,8 @@ export default function ReturnsCalculatorPage() {
           {/* Investment Horizon */}
           <div>
             <div className="mb-4">
-              <label className="text-base font-bold text-[var(--foreground)] tracking-tight">Investment Horizon</label>
-              <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[2px] font-bold mt-0.5 opacity-50">Time to maturity</p>
+              <label className="text-base font-bold text-[var(--foreground)] tracking-tight">{t("Investment Horizon")}</label>
+              <p className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-[2px] font-bold mt-0.5 opacity-50">{t("Time to maturity")}</p>
             </div>
             <div className="flex bg-[var(--foreground)]/5 p-1.5 rounded-[24px] border border-[var(--dashboard-border)] w-full max-w-2xl relative overflow-hidden">
               {[2, 3, 4, 5].map((years) => (
@@ -238,7 +240,7 @@ export default function ReturnsCalculatorPage() {
                       : "text-[var(--color-text-muted)] hover:text-[var(--foreground)]"
                   }`}
                 >
-                  {years} Years
+                  {years} {t("Years")}
                   {selectedDuration === years && (
                     <motion.div
                       layoutId="activeTab"
@@ -258,7 +260,7 @@ export default function ReturnsCalculatorPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="p-6 sm:p-8 bg-[var(--card-surface)] border border-[var(--dashboard-border)] rounded-2xl shadow-sm relative overflow-hidden"
         >
-          <h2 className="text-base font-black text-[var(--foreground)] tracking-tight uppercase mb-6">Optimized Asset Allocation</h2>
+          <h2 className="text-base font-black text-[var(--foreground)] tracking-tight uppercase mb-6">{t("OPTIMIZED ASSET ALLOCATION")}</h2>
 
           {/* Risk tabs */}
           <div className="flex flex-wrap gap-2 mb-8">
@@ -274,7 +276,7 @@ export default function ReturnsCalculatorPage() {
                     : "text-[var(--color-text-muted)] border-[var(--dashboard-border)] hover:text-[var(--foreground)] hover:border-[var(--foreground)]/40"
                   }`}
               >
-                {risk}
+                {t(risk)}
               </button>
             ))}
           </div>
@@ -319,7 +321,7 @@ export default function ReturnsCalculatorPage() {
                       )}
                       {value > 0.1 && (
                         <text x={nx} y={ny} fill="var(--color-text-muted)" fontSize="10" fontWeight="900" textAnchor="middle" dominantBaseline="middle" transform={`rotate(90, ${nx}, ${ny})`} className="pointer-events-none uppercase tracking-widest">
-                          {key}
+                          {t(key)}
                         </text>
                       )}
                     </g>
@@ -330,7 +332,7 @@ export default function ReturnsCalculatorPage() {
 
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="w-20 h-20 bg-[var(--background)] rounded-full flex flex-col items-center justify-center border border-[var(--dashboard-border)] shadow-inner">
-                <span className="text-[9px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest mb-0.5">ROI</span>
+                <span className="text-[9px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest mb-0.5">{t("ROI")}</span>
                 <span className="text-xl font-black text-[var(--foreground)]">{(currentRoI * 100).toFixed(1)}%</span>
               </div>
             </div>
@@ -345,7 +347,7 @@ export default function ReturnsCalculatorPage() {
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--background)] border border-[var(--dashboard-border)]" style={{ color: ASSET_COLORS[asset] }}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-[9px] font-black text-[var(--foreground)] uppercase tracking-wider text-center leading-tight opacity-70">{asset}</span>
+                  <span className="text-[9px] font-black text-[var(--foreground)] uppercase tracking-wider text-center leading-tight opacity-70">{t(asset)}</span>
                 </div>
               );
             })}
