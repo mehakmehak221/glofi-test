@@ -24,14 +24,13 @@ if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
       try {
         firebaseAnalytics = getAnalytics(app);
       } catch {
-        // Analytics is non-critical; ignore (e.g. blocked by ad-blockers).
       }
     }
   } catch (error) {
     console.error("Failed to initialize Firebase:", error);
   }
 } else {
-  console.warn("Firebase API key is missing. Authentication features will fail if triggered.");
+  console.warn("Firebase API key is missing. Authentication features will fail if triggered. env keys:", Object.keys(process.env).filter(k => k.startsWith("NEXT_PUBLIC_")));
 }
 
 export const isFirebasePhoneAuthEnabled =
