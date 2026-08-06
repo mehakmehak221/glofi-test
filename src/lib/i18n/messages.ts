@@ -351,6 +351,7 @@ const hi: MessageTable = {
   "Personal Information": "व्यक्तिगत जानकारी",
   Phone: "फ़ोन",
   Portfolio: "पोर्टफोलियो",
+  "Portfolio Tracking": "पोर्टफोलियो ट्रैकिंग",
   "Potential Annual Return": "संभावित वार्षिक रिटर्न",
   "Powered By Maxtron": "Maxtron द्वारा संचालित",
   Premium: "प्रीमियम",

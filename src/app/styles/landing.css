@@ -523,6 +523,16 @@
     }
   }
 
+  [data-locale="hi"] .hero-headline__white,
+  [data-locale="mar"] .hero-headline__white,
+  [data-locale="gu"] .hero-headline__white,
+  [data-locale="bn"] .hero-headline__white,
+  :lang(hi) .hero-headline__white {
+    white-space: normal;
+    word-break: break-word;
+    font-size: 0.85em;
+  }
+
   .hero-headline__teal {
     display: block;
     font-weight: 400;
