@@ -59,9 +59,9 @@ const baseQueryWithAuth: BaseQueryFn<
 
     if (httpStatus === 401 || httpStatus === '401' || httpStatus === 403 || httpStatus === '403') {
       const url = typeof args === 'string' ? args : (args.url || '');
-      const isLoginRequest = url.includes('auth/login');
+      const isAuthExemptRequest = url.includes('auth/login') || url.includes('auth/register');
 
-      if (!isLoginRequest) {
+      if (!isAuthExemptRequest) {
         const errorMessage = typeof result.error.data === 'object' && result.error.data !== null
           ? (result.error.data as any)?.message || ''
           : '';

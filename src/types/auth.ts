@@ -17,6 +17,13 @@ export interface SendPhoneOtpBody {
   phone: string;
 }
 
+export interface SendPhoneOtpResponse {
+  success?: boolean;
+  hasPendingRegistration?: boolean;
+  phone?: string;
+  message?: string;
+}
+
 export interface VerifyPhoneOtpBody {
   email: string;
   firebaseIdToken: string;

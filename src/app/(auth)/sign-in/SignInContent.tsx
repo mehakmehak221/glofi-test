@@ -9,9 +9,8 @@ import UserTypeToggle from "@/components/auth/UserTypeToggle";
 import RoleInsightCallout from "@/components/auth/RoleInsightCallout";
 import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner } from "@/components/VectorImages";
 import { useLoginMutation } from "@/store/api/authApi";
+import { setCookie } from "@/utils/cookieUtils";
 import { applySignInApiErrors, FIELD_ERROR_CLASSES, validateSignInFields } from "@/utils/authFormErrors";
-import { extractAccessToken, persistAuthSession } from "@/utils/authSession";
-import { useI18n } from "@/providers/LocaleProvider";
 
 const SIGNIN_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SigninRole = (typeof SIGNIN_ROLES)[number];
@@ -25,7 +24,6 @@ function parseRoleQuery(raw: string | null): SigninRole | null {
 function SignInPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { t } = useI18n();
     const roleParam = searchParams.get("role");
     const [userType, setUserType] = useState<string>(() => parseRoleQuery(roleParam) ?? "Investor");
     const [email, setEmail] = useState("");
@@ -70,7 +68,6 @@ function SignInPageContent() {
         e.preventDefault();
         setErrorMsg("");
         const { emailError: nextEmailErr, passwordError: nextPassErr } = validateSignInFields(email, password);
-        const translated = validateSignInFields(email, password, undefined, t);
         setEmailError(nextEmailErr);
         setPasswordError(nextPassErr);
         if (nextEmailErr || nextPassErr) {
@@ -93,17 +90,26 @@ function SignInPageContent() {
             console.log('Login Result:', result);
 
             // Cover all possible response shapes from the API
-            const userRole = result?.role || result?.user?.role || result?.data?.role || userType.toUpperCase();
-            const token = extractAccessToken(result);
+            const token =
+                result?.accessToken ||
+                result?.token ||
+                result?.access_token ||
+                result?.data?.accessToken ||
+                result?.data?.token ||
+                result?.data?.access_token;
 
-            if (!token) {
-                setErrorMsg(t("Login succeeded but no access token was returned by the API. Please check the backend auth response."));
-                return;
+            // Always store credentials before navigating
+            if (token) {
+                setCookie("access_token", token);
+                localStorage.setItem("access_token", token);
             }
 
-            persistAuthSession(token, userRole);
+            const userRole = result?.role || result?.user?.role || result?.data?.role || userType.toUpperCase();
+            localStorage.setItem("userType", userRole);
+            localStorage.setItem("isLoggedIn", "true");
+            setCookie("isLoggedIn", "true");
 
-            localStorage.setItem("toastMessage", t("Login successful!"));
+            localStorage.setItem("toastMessage", "Login successful!");
 
             // Use window.location.href to do a full page navigation so the proxy
             // picks up the freshly set cookie on the new request
@@ -123,10 +129,10 @@ function SignInPageContent() {
                     2
                 )
             );
-        applySignInApiErrors(err, t, {
-            setEmailError,
-            setPasswordError,
-            setErrorMsg,
+            applySignInApiErrors(err, {
+                setEmailError,
+                setPasswordError,
+                setErrorMsg,
             });
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
@@ -145,19 +151,19 @@ function SignInPageContent() {
                 className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
             >
                 <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
-                {t("Back to home")}
+                Back to home
             </Link>
 
 
             <div className="mb-8">
-                <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">{t("Welcome")}</h2>
+                <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
                 <p className="text-neutral-500 text-sm font-montserrat">
-                    {t("Don't have an account?")}{" "}
+                    Don&apos;t have an account?{" "}
                     <Link
                         href={`/sign-up?role=${encodeURIComponent(userType)}`}
                         className="text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors"
                     >
-                        {t("Create Account")}
+                        Create Account
                     </Link>
                 </p>
                 {errorMsg && (
@@ -187,11 +193,11 @@ function SignInPageContent() {
             <form
                 noValidate
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
             >
                 <div className="flex flex-col gap-2">
                     <label htmlFor="sign-in-email" className="text-sm font-medium text-neutral-900 font-montserrat">
-                        {t("Email Address")}
+                        Email Address
                     </label>
                     <input
                         id="sign-in-email"
@@ -220,7 +226,7 @@ function SignInPageContent() {
 
                 <div className="flex flex-col gap-2">
                     <label htmlFor="sign-in-password" className="text-sm font-medium text-neutral-900 font-montserrat">
-                        {t("Password")}
+                        Password
                     </label>
                     <div className="relative">
                         <input
@@ -241,7 +247,7 @@ function SignInPageContent() {
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] cursor-pointer transition-all duration-200 hover:scale-110 active:scale-90"
-                            aria-label={showPassword ? t("Hide password") : t("Show password")}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                             {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
                         </button>
@@ -254,27 +260,27 @@ function SignInPageContent() {
                 </div>
 
                 <div className="flex justify-end -mt-1">
-                        <Link
-                            href="/forgot-password"
-                            className="text-sm text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors"
-                        >
-                            {t("Forgot Password?")}
-                        </Link>
+                    <Link
+                        href="/forgot-password"
+                        className="text-sm text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors"
+                    >
+                        Forgot Password?
+                    </Link>
                 </div>
 
                 <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
-                    {isLoading ? <LoadingSpinner /> : t("Login")}
+                    {isLoading ? <LoadingSpinner /> : "Login"}
                 </button>
             </form>
 
             <p className="text-center text-xs text-neutral-500 mt-8 font-montserrat leading-relaxed px-1">
-                {t("By clicking Login you agree to GloFi Estates")}{" "}
+                By clicking Login you agree to GloFi Estates{" "}
                 <Link href="/terms" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
-                    {t("Terms & Conditions")}
+                    Terms &amp; Conditions
                 </Link>{" "}
-                {t("and")}{" "}
+                and{" "}
                 <Link href="/privacy-policy" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
-                    {t("Privacy Policy")}
+                    Privacy Policy
                 </Link>
                 .
             </p>

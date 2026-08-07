@@ -7,8 +7,6 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import Avatar from "@/components/ui/Avatar";
 import { useLogoutMutation } from "@/store/api/authApi";
 import { removeCookie } from "@/utils/cookieUtils";
-import { useI18n } from "@/providers/LocaleProvider";
-import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 import {
     CloseIcon,
     MarketplaceIcon,
@@ -27,33 +25,33 @@ import {
 } from "@/components/VectorImages";
 
 const NAV_ITEMS = [
-    { href: "/dashboard/investor/marketplace", icon: MarketplaceIcon, labelKey: "Marketplace" },
-    { href: "/dashboard/investor/secondary-marketplace", icon: SecondaryMarketplaceIcon, labelKey: "Secondary Marketplace" },
-    { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, labelKey: "Portfolio" },
-    { href: "/dashboard/investor/transactions", icon: TransactionsIcon, labelKey: "Transactions" },
-    { href: "/dashboard/investor/rewards", icon: DollarIcon, labelKey: "Rewards" },
-    { href: "/dashboard/investor/account", icon: AccountIcon, labelKey: "Account" },
-    { href: "/dashboard/investor/support", icon: SupportIcon, labelKey: "Support" },
+    { href: "/dashboard/investor/marketplace", icon: MarketplaceIcon, label: "Marketplace" },
+    { href: "/dashboard/investor/secondary-marketplace", icon: SecondaryMarketplaceIcon, label: "Secondary Marketplace" },
+    { href: "/dashboard/investor/portfolio", icon: PortfolioIcon, label: "Portfolio" },
+    { href: "/dashboard/investor/transactions", icon: TransactionsIcon, label: "Transactions" },
+    { href: "/dashboard/investor/rewards", icon: DollarIcon, label: "Rewards" },
+    { href: "/dashboard/investor/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/investor/support", icon: SupportIcon, label: "Support" },
 ];
 
 const PARTNER_NAV_ITEMS = [
-    { href: "/dashboard/partner/overview", icon: OverviewIcon, labelKey: "Overview" },
-    { href: "/dashboard/partner/properties", icon: PropertyIcon, labelKey: "Properties" },
+    { href: "/dashboard/partner/overview", icon: OverviewIcon, label: "Overview" },
+    { href: "/dashboard/partner/properties", icon: PropertyIcon, label: "Properties" },
     // { href: "/dashboard/partner/leads", icon: LeadsIcon, label: "Leads & AI" },
 
-    { href: "/dashboard/partner/finance", icon: FinancialIcon, labelKey: "Finance" },
-    { href: "/dashboard/partner/account", icon: AccountIcon, labelKey: "Account" },
-    { href: "/dashboard/partner/support", icon: SupportIcon, labelKey: "Support" },
+    { href: "/dashboard/partner/finance", icon: FinancialIcon, label: "Finance" },
+    { href: "/dashboard/partner/account", icon: AccountIcon, label: "Account" },
+    { href: "/dashboard/partner/support", icon: SupportIcon, label: "Support" },
 ];
 
 const AGENT_NAV_ITEMS = [
-    { href: "/dashboard/agent/overview", icon: OverviewIcon, labelKey: "Overview" },
-    { href: "/dashboard/agent/leads", icon: LeadsIcon, labelKey: "Leads & CRM" },
-    { href: "/dashboard/agent/followups", icon: FinancialIcon, labelKey: "Follow-ups" },
-    { href: "/dashboard/agent/referrals", icon: PropertyIcon, labelKey: "Asset Sharing" },
-    { href: "/dashboard/agent/transactions", icon: AccountIcon, labelKey: "Transactions" },
-    { href: "/dashboard/agent/earnings", icon: DollarIcon, labelKey: "Earnings" },
-    { href: "/dashboard/agent/profile", icon: ProfileIcon, labelKey: "Profile" },
+    { href: "/dashboard/agent/overview", icon: OverviewIcon, label: "Overview" },
+    { href: "/dashboard/agent/leads", icon: LeadsIcon, label: "Leads & CRM" },
+    { href: "/dashboard/agent/followups", icon: FinancialIcon, label: "Follow-ups" },
+    { href: "/dashboard/agent/referrals", icon: PropertyIcon, label: "Asset Sharing" },
+    { href: "/dashboard/agent/transactions", icon: AccountIcon, label: "Transactions" },
+    { href: "/dashboard/agent/earnings", icon: DollarIcon, label: "Earnings" },
+    { href: "/dashboard/agent/profile", icon: ProfileIcon, label: "Profile" },
 ];
 
 const drawerVariants: Variants = {
@@ -90,12 +88,11 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     const activeNavItems = isPartner ? PARTNER_NAV_ITEMS : isAgent ? AGENT_NAV_ITEMS : NAV_ITEMS;
     const [logout] = useLogoutMutation();
     const { data: profileData } = useGetProfileQuery();
-    const { t } = useI18n();
 
     const profile = profileData?.agentProfile || profileData?.partnerProfile || profileData?.investorProfile || {};
-    const fullName = profileData?.fullName || profile.fullName || profileData?.name || t("Guest");
+    const fullName = profileData?.fullName || profile.fullName || profileData?.name || profile.name || "Guest";
     const avatarUrl = profileData?.avatarUrl || profile.avatarUrl || "";
-    const role = profileData?.role ? t(profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? t("Developer") : isAgent ? t("Agent") : t("Investor"));
+    const role = profileData?.role ? (profileData.role.charAt(0) + profileData.role.slice(1).toLowerCase()) : (isPartner ? "Developer" : isAgent ? "Agent" : "Investor");
 
     const handleLogout = async () => {
         try {
@@ -108,7 +105,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
             localStorage.removeItem("access_token");
             removeCookie("isLoggedIn");
             removeCookie("access_token");
-            localStorage.setItem("toastMessage", t("Logged out successfully"));
+            localStorage.setItem("toastMessage", "Logged out successfully");
             window.location.href = "/sign-in?clear=true";
             onClose();
         }
@@ -149,7 +146,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                             <button
                                 onClick={onClose}
                                 className="p-2 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--header-text)] hover:bg-[var(--sidebar-active-bg)] transition-colors bg-transparent border-0 cursor-pointer"
-                                aria-label={t("Close menu")}
+                                aria-label="Close menu"
                             >
                                 <CloseIcon className="w-5 h-5" />
                             </button>
@@ -162,7 +159,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 
                             >
                                 <span className="text-[10px] font-medium text-[var(--panel-chip-text)] tracking-[0.15em] uppercase border border-[var(--panel-chip-border)] font-montserrat bg-[var(--panel-chip-bg)] rounded-full px-3 py-1 inline-block">
-                                    {isPartner ? t("Developer Panel") : isAgent ? t("Agent Panel") : t("Investor Panel")}
+                                    {isPartner ? "Developer Panel" : isAgent ? "Agent Panel" : "Investor Panel"}
                                 </span>
                             </motion.div>
                             {activeNavItems.map((item, i) => {
@@ -184,7 +181,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                                                 }`}
                                         >
                                             <item.icon className="w-5 h-5" />
-                                            <span className="text-sm font-medium">{t(item.labelKey)}</span>
+                                            <span className="text-sm font-medium">{item.label}</span>
                                         </Link>
                                     </motion.div>
                                 );
@@ -193,9 +190,6 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 
                         {/* Footer */}
                         <div className="px-4 pb-6 pt-3 border-t border-[var(--color-border-subtle)] sm:px-5">
-                            <div className="mb-4">
-                                <LanguageSwitcher variant="mobile" className="w-full" />
-                            </div>
                             <motion.div
                                 custom={NAV_ITEMS.length}
                                 variants={itemVariants}
@@ -207,7 +201,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                                     className="flex items-center gap-3 px-4 py-3 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-status-error)] hover:bg-[var(--color-status-error-bg)] transition-colors cursor-pointer w-full border-0 bg-transparent"
                                 >
                                     <SignOutIcon className="w-5 h-5" />
-                                    <span className="text-sm font-medium">{t("Sign Out")}</span>
+                                    <span className="text-sm font-medium">Sign Out</span>
                                 </button>
                             </motion.div>
                         </div>

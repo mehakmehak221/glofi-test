@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const hostname = request.nextUrl.hostname;
+
+  if (process.env.NODE_ENV === "production" && hostname === "glofiestates.com") {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.hostname = "www.glofiestates.com";
+    return NextResponse.redirect(redirectUrl);
+  }
 
   const accessToken = request.cookies.get("access_token")?.value;
   const isLoggedIn = request.cookies.get("isLoggedIn")?.value;
@@ -20,12 +27,16 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-
   if (hasForceClear) {
     const response = NextResponse.next();
     response.cookies.delete("access_token");
     response.cookies.delete("isLoggedIn");
     return response;
+  }
+
+  const isDashboardPage = pathname.startsWith("/dashboard");
+  if (isDashboardPage && !isAuthenticated) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
   return NextResponse.next();
@@ -36,5 +47,7 @@ export const config = {
     "/sign-in",
     "/sign-up",
     "/forgot-password",
+    "/dashboard",
+    "/dashboard/:path*",
   ],
 };

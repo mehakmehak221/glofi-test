@@ -37,6 +37,7 @@ export type PaymentModalAsset = {
     fractions: number;
     assetId?: string;
     listingId?: string;
+    couponCode?: string;
 };
 
 type PaymentModalProps = {
@@ -96,6 +97,7 @@ export default function PaymentModal({ isOpen, onClose, flow, asset, onSuccess }
                     fractions,
                     paymentMethod,
                     currency,
+                    ...(asset.couponCode ? { couponCode: asset.couponCode } : {}),
                 }).unwrap()) as Record<string, unknown>;
             } else {
                 const listingId = asset.listingId;

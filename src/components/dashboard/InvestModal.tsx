@@ -15,19 +15,33 @@ const modalVariants = {
     exit: { opacity: 0, scale: 0.95, y: 20 },
 } satisfies import("framer-motion").Variants;
 
-export default function InvestModal({ isOpen, onClose, property, onVerifyPay, isLoading = false, purchaseMode = "fractional", initialQuantity }) {
+export default function InvestModal({
+    isOpen,
+    onClose,
+    property,
+    onVerifyPay,
+    isLoading = false,
+    purchaseMode = "fractional",
+    initialQuantity,
+    discountAmount = 0,
+    couponCode = "",
+}) {
     const [quantity, setQuantity] = useState(1);
 
     const isWholePurchase = property.saleType === 'WHOLE' || purchaseMode === 'whole';
 
     useEffect(() => {
-        if (isOpen && property) {
-            if (initialQuantity !== undefined) {
-                setQuantity(initialQuantity);
-            } else {
-                setQuantity(isWholePurchase ? (property.availableFractions || property.totalFractions || 1) : 1);
-            }
-        }
+        if (!isOpen || !property) return;
+
+        const nextQuantity = initialQuantity !== undefined
+            ? initialQuantity
+            : (isWholePurchase ? (property.availableFractions || property.totalFractions || 1) : 1);
+
+        const timer = window.setTimeout(() => {
+            setQuantity(nextQuantity);
+        }, 0);
+
+        return () => window.clearTimeout(timer);
     }, [isOpen, property, isWholePurchase, initialQuantity]);
 
     const { data: kycData } = useGetKycStatusQuery(undefined, { skip: !isOpen });
@@ -35,8 +49,10 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
 
     const price = Number(property.fractionPrice) || 0;
     const subtotal = quantity * price;
-    const fee = subtotal * 0.02;
-    const total = subtotal + fee;
+    const safeDiscount = Math.max(0, Math.min(Number(discountAmount) || 0, subtotal));
+    const netSubtotal = Math.max(0, subtotal - safeDiscount);
+    const fee = netSubtotal * 0.02;
+    const total = netSubtotal + fee;
 
     const formatCurrency = (val) => {
         const num = Number(val) || 0;
@@ -120,6 +136,14 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                                 <span className="text-[var(--color-text-muted)] font-medium">{quantity} × {formatCurrency(price)}</span>
                                 <span className="text-[var(--header-text)] font-extrabold">{formatCurrency(subtotal)}</span>
                             </div>
+                            {safeDiscount > 0 ? (
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-[var(--color-text-muted)] font-medium">
+                                        Coupon discount{couponCode ? ` (${couponCode})` : ""}
+                                    </span>
+                                    <span className="text-[var(--sidebar-active-text)] font-extrabold">- {formatCurrency(safeDiscount)}</span>
+                                </div>
+                            ) : null}
                             <div className="flex items-center justify-between text-sm">
                                 <span className="text-[var(--color-text-muted)] font-medium">Fee (2%)</span>
                                 <span className="text-[var(--header-text)] font-extrabold">{formatCurrency(fee)}</span>
@@ -169,7 +193,7 @@ export default function InvestModal({ isOpen, onClose, property, onVerifyPay, is
                         <motion.button
                             whileHover={!isLoading ? { scale: 1.02 } : {}}
                             whileTap={!isLoading ? { scale: 0.98 } : {}}
-                            onClick={() => !isLoading && onVerifyPay(quantity, total)}
+                            onClick={() => !isLoading && onVerifyPay(quantity, total, safeDiscount)}
                             disabled={isLoading}
                             className="w-full py-4 rounded-md bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 shadow-glow-primary disabled:opacity-50 disabled:cursor-not-allowed"
                         >

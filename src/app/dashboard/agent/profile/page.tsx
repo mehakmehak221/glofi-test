@@ -207,7 +207,7 @@ export default function AgentProfilePage() {
                                                 const response = await uploadFile({ file, folder: "avatars" }).unwrap();
                                                 const key = response.key || response.url || response.signedUrl?.split('?')[0];
                                                 if (key) {
-                                                    await updateProfile({ avatarUrl: key }).unwrap();
+                                                    await updateProfile({ avatarUrl: key, role: "AGENT" }).unwrap();
                                                     refetchAgentMe();
                                                 }
                                             } catch (err: any) {

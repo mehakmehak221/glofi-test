@@ -181,11 +181,9 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                 <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2 font-montserrat">
                                     {isVerified ? "Verified" : isRejected ? "Verification Rejected" : "In Review"}
                                 </h2>
-                                {(isVerified || isPending) && (
+                                {isVerified && (
                                     <p className="text-sm text-[var(--foreground)]/50 mb-6 font-montserrat px-4 leading-relaxed">
-                                        {isVerified
-                                            ? "Your identity and credentials have been successfully verified."
-                                            : "Our compliance team is reviewing your documents. This typically takes 24-48 hours."}
+                                        Your identity and credentials have been successfully verified.
                                     </p>
                                 )}
                                 {isRejected && (

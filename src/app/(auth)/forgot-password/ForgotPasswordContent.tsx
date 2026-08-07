@@ -19,7 +19,13 @@ import {
 } from "@/store/api/authApi";
 import { 
     passwordMeetsSignUpStrength, 
-    getSignUpPasswordCriteria 
+    getSignUpPasswordCriteria,
+    EMAIL_PATTERN,
+    EMAIL_FORMAT_ERROR,
+    FIELD_ERROR_CLASSES,
+    collectApiErrorLines,
+    coerceFirstStringMessage,
+    isMachineEmailValidationMessage
 } from "@/utils/authFormErrors";
 
 type Step = "EMAIL" | "OTP" | "RESET" | "SUCCESS";
@@ -35,66 +41,135 @@ export default function ForgotPasswordPage() {
     const [errorMsg, setErrorMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
 
+    // Field-specific validation error states
+    const [emailError, setEmailError] = useState("");
+    const [otpError, setOtpError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
     const [forgotPassword, { isLoading: isForgotLoading }] = useForgotPasswordMutation();
     const [verifyOtp, { isLoading: isVerifyLoading }] = useVerifyForgotPasswordOtpMutation();
     const [resetPassword, { isLoading: isResetLoading }] = useResetPasswordMutation();
 
     useEffect(() => {
-        if (errorMsg) {
+        if (errorMsg || emailError || otpError || passwordError || confirmPasswordError) {
             const firstError = document.querySelector('[role="alert"]');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: "smooth", block: "center" });
             }
         }
-    }, [errorMsg]);
+    }, [errorMsg, emailError, otpError, passwordError, confirmPasswordError]);
 
     const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMsg("");
+        setEmailError("");
+        
+        const trimmedEmail = email.trim();
+        if (!trimmedEmail) {
+            setEmailError("Please enter your email address.");
+            return;
+        }
+        if (!EMAIL_PATTERN.test(trimmedEmail)) {
+            setEmailError(EMAIL_FORMAT_ERROR);
+            return;
+        }
+
         try {
-            await forgotPassword({ email }).unwrap();
+            await forgotPassword({ email: trimmedEmail }).unwrap();
             setSuccessMsg("OTP sent successfully to your email.");
             setStep("OTP");
         } catch (err: any) {
             setSuccessMsg("");
-            setErrorMsg(err?.data?.message || "Failed to send OTP. Please try again.");
+            const errorBody = err?.data;
+            const message = errorBody?.message ?? errorBody?.error ?? err?.message;
+            const validationLines = collectApiErrorLines(errorBody, message);
+            const flatMessage = validationLines.join("\n\n") || coerceFirstStringMessage(errorBody) || (typeof message === "string" ? message : "");
+            
+            if (isMachineEmailValidationMessage(flatMessage)) {
+                setEmailError(EMAIL_FORMAT_ERROR);
+            } else {
+                setErrorMsg(flatMessage || "Failed to send OTP. Please try again.");
+            }
         }
     };
 
     const handleOtpSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMsg("");
+        setOtpError("");
+        
+        const trimmedOtp = otp.trim();
+        if (!trimmedOtp) {
+            setOtpError("Please enter the 6-digit OTP code.");
+            return;
+        }
+        if (!/^\d{6}$/.test(trimmedOtp)) {
+            setOtpError("Please enter a valid 6-digit OTP.");
+            return;
+        }
+
         try {
-            await verifyOtp({ email, otp }).unwrap();
+            await verifyOtp({ email: email.trim(), otp: trimmedOtp }).unwrap();
             setStep("RESET");
             setSuccessMsg("");
         } catch (err: any) {
             setSuccessMsg("");
-            setErrorMsg(err?.data?.message || "Invalid OTP. Please try again.");
+            const errorBody = err?.data;
+            const message = errorBody?.message ?? errorBody?.error ?? err?.message;
+            const validationLines = collectApiErrorLines(errorBody, message);
+            const flatMessage = validationLines.join("\n\n") || coerceFirstStringMessage(errorBody) || (typeof message === "string" ? message : "");
+            
+            if (flatMessage.toLowerCase().includes("otp") || flatMessage.toLowerCase().includes("code") || flatMessage.toLowerCase().includes("invalid")) {
+                setOtpError(flatMessage || "Invalid OTP. Please try again.");
+            } else {
+                setErrorMsg(flatMessage || "Invalid OTP. Please try again.");
+            }
         }
     };
 
     const handleResetSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMsg("");
+        setPasswordError("");
+        setConfirmPasswordError("");
         setSuccessMsg("");
         
-        if (password !== confirmPassword) {
-            setErrorMsg("Passwords do not match.");
-            return;
+        let hasError = false;
+        
+        if (!password) {
+            setPasswordError("Please enter a password.");
+            hasError = true;
+        } else if (!passwordMeetsSignUpStrength(password)) {
+            setPasswordError("Password must meet all requirements below.");
+            hasError = true;
+        }
+ 
+        if (!confirmPassword) {
+            setConfirmPasswordError("Please confirm your password.");
+            hasError = true;
+        } else if (password !== confirmPassword) {
+            setConfirmPasswordError("Passwords do not match.");
+            hasError = true;
         }
 
-        if (!passwordMeetsSignUpStrength(password)) {
-            setErrorMsg("Password must meet all requirements below.");
-            return;
-        }
+        if (hasError) return;
 
         try {
-            await resetPassword({ email, otp, newPassword: password }).unwrap();
+            await resetPassword({ email: email.trim(), otp: otp.trim(), newPassword: password }).unwrap();
             setStep("SUCCESS");
         } catch (err: any) {
             setSuccessMsg("");
-            setErrorMsg(err?.data?.message || "Failed to reset password. Please try again.");
+            const errorBody = err?.data;
+            const message = errorBody?.message ?? errorBody?.error ?? err?.message;
+            const validationLines = collectApiErrorLines(errorBody, message);
+            const flatMessage = validationLines.join("\n\n") || coerceFirstStringMessage(errorBody) || (typeof message === "string" ? message : "");
+            
+            if (flatMessage.toLowerCase().includes("password")) {
+                setPasswordError(flatMessage || "Failed to reset password. Please try again.");
+            } else {
+                setErrorMsg(flatMessage || "Failed to reset password. Please try again.");
+            }
         }
     };
 
@@ -113,6 +188,12 @@ export default function ForgotPasswordPage() {
             ) : (
                 <button
                     onClick={() => {
+                        setErrorMsg("");
+                        setSuccessMsg("");
+                        setEmailError("");
+                        setOtpError("");
+                        setPasswordError("");
+                        setConfirmPasswordError("");
                         if (step === "OTP") setStep("EMAIL");
                         if (step === "RESET") setStep("OTP");
                     }}
@@ -167,15 +248,22 @@ export default function ForgotPasswordPage() {
             <div className="font-montserrat">
                 {step === "EMAIL" && (
                     <form onSubmit={handleEmailSubmit} className="flex flex-col gap-4">
-                        <div className="relative">
+                        <div className="relative flex flex-col gap-2">
                             <input
                                 type="email"
                                 value={email}
-                                onChange={(e) => { setEmail(e.target.value); setErrorMsg(""); }}
+                                onChange={(e) => { setEmail(e.target.value); setErrorMsg(""); setEmailError(""); }}
                                 placeholder="Email address"
                                 required
-                                className="premium-input w-full"
+                                aria-invalid={Boolean(emailError)}
+                                aria-describedby={emailError ? "forgot-email-error" : undefined}
+                                className={`premium-input w-full ${emailError ? "border-red-500/60 focus:border-red-400" : ""}`}
                             />
+                            {emailError ? (
+                                <p id="forgot-email-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                    {emailError}
+                                </p>
+                            ) : null}
                         </div>
                         <button
                             type="submit"
@@ -189,16 +277,28 @@ export default function ForgotPasswordPage() {
 
                 {step === "OTP" && (
                     <form onSubmit={handleOtpSubmit} className="flex flex-col gap-4">
-                        <div className="relative">
+                        <div className="relative flex flex-col gap-2">
                             <input
                                 type="text"
                                 value={otp}
-                                onChange={(e) => { setOtp(e.target.value); setErrorMsg(""); }}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+                                    setOtp(val);
+                                    setErrorMsg("");
+                                    setOtpError("");
+                                }}
                                 placeholder="6-digit OTP"
                                 required
                                 maxLength={6}
-                                className="premium-input w-full text-center tracking-[0.5em] text-xl"
+                                aria-invalid={Boolean(otpError)}
+                                aria-describedby={otpError ? "forgot-otp-error" : undefined}
+                                className={`premium-input w-full text-center tracking-[0.5em] text-xl ${otpError ? "border-red-500/60 focus:border-red-400" : ""}`}
                             />
+                            {otpError ? (
+                                <p id="forgot-otp-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                    {otpError}
+                                </p>
+                            ) : null}
                         </div>
                         <button
                             type="submit"
@@ -220,22 +320,31 @@ export default function ForgotPasswordPage() {
 
                 {step === "RESET" && (
                     <form onSubmit={handleResetSubmit} className="flex flex-col gap-4">
-                        <div className="relative">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                value={password}
-                                onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); }}
-                                placeholder="New Password"
-                                required
-                                className="premium-input w-full pr-12"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] cursor-pointer transition-all duration-200 hover:scale-110 active:scale-90"
-                            >
-                                {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
-                            </button>
+                        <div className="relative flex flex-col gap-2">
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); setPasswordError(""); }}
+                                    placeholder="New Password"
+                                    required
+                                    aria-invalid={Boolean(passwordError)}
+                                    aria-describedby={passwordError ? "forgot-password-error" : undefined}
+                                    className={`premium-input w-full pr-12 ${passwordError ? "border-red-500/60 focus:border-red-400" : ""}`}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] cursor-pointer transition-all duration-200 hover:scale-110 active:scale-90"
+                                >
+                                    {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                                </button>
+                            </div>
+                            {passwordError ? (
+                                <p id="forgot-password-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                    {passwordError}
+                                </p>
+                            ) : null}
                         </div>
                         <ul
                             id="reset-password-requirements"
@@ -252,15 +361,22 @@ export default function ForgotPasswordPage() {
                                 </li>
                             ))}
                         </ul>
-                        <div className="relative">
+                        <div className="relative flex flex-col gap-2">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 value={confirmPassword}
-                                onChange={(e) => { setConfirmPassword(e.target.value); setErrorMsg(""); }}
+                                onChange={(e) => { setConfirmPassword(e.target.value); setErrorMsg(""); setConfirmPasswordError(""); }}
                                 placeholder="Confirm New Password"
                                 required
-                                className="premium-input w-full"
+                                aria-invalid={Boolean(confirmPasswordError)}
+                                aria-describedby={confirmPasswordError ? "forgot-confirm-password-error" : undefined}
+                                className={`premium-input w-full ${confirmPasswordError ? "border-red-500/60 focus:border-red-400" : ""}`}
                             />
+                            {confirmPasswordError ? (
+                                <p id="forgot-confirm-password-error" className={FIELD_ERROR_CLASSES} role="alert">
+                                    {confirmPasswordError}
+                                </p>
+                            ) : null}
                         </div>
                         <button
                             type="submit"

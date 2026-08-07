@@ -19,6 +19,7 @@ import {
     useVerifyPhoneOtpMutation,
     useVerifyRegistrationOtpMutation,
 } from "@/store/api/authApi";
+import { setCookie } from "@/utils/cookieUtils";
 import {
     applySignUpApiErrors,
     FIELD_ERROR_CLASSES,
@@ -28,8 +29,6 @@ import {
     normalizeOtpInput,
     validateSignUpFields,
 } from "@/utils/authFormErrors";
-import { extractAccessToken, persistAuthSession } from "@/utils/authSession";
-import { useI18n } from "@/providers/LocaleProvider";
 
 const SIGNUP_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SignupRole = (typeof SIGNUP_ROLES)[number];
@@ -44,7 +43,6 @@ function parseRoleQuery(raw: string | null): SignupRole | null {
 function SignUpPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { t } = useI18n();
     const roleParam = searchParams.get("role");
     const [userType, setUserType] = useState<SignupRole>(() => parseRoleQuery(roleParam) ?? "Investor");
     const [step, setStep] = useState<SignUpStep>("DETAILS");
@@ -142,38 +140,36 @@ function SignUpPageContent() {
             }
             recaptchaVerifierRef.current = null;
         }
-        const mount = document.getElementById("recaptcha-mount");
-        if (mount) {
-            mount.innerHTML = "";
+        if (typeof document !== "undefined") {
+            const mount = document.getElementById("recaptcha-mount");
+            if (mount) {
+                mount.innerHTML = '<div id="recaptcha-container"></div>';
+            }
         }
     };
 
-    const createRecaptchaVerifier = () => {
+    const createRecaptchaVerifier = async (size: "invisible" | "normal" = "invisible") => {
         if (!firebaseAuth) {
             throw new Error("Firebase Auth is not configured.");
         }
 
         clearRecaptcha();
 
-        recaptchaAttemptRef.current += 1;
-        const containerId = `recaptcha-container-${recaptchaAttemptRef.current}`;
-        const mount = document.getElementById("recaptcha-mount");
+        const containerId = "recaptcha-container";
+        const mount = document.getElementById(containerId);
         if (!mount) {
             throw new Error("reCAPTCHA mount point is missing.");
         }
 
-        const container = document.createElement("div");
-        container.id = containerId;
-        mount.appendChild(container);
-
-        const verifier = new RecaptchaVerifier(firebaseAuth, containerId, {
-            size: "invisible",
+        const verifier = new RecaptchaVerifier(firebaseAuth, mount, {
+            size,
             callback: () => { },
             "expired-callback": () => {
                 clearRecaptcha();
             },
         });
 
+        await verifier.render();
         recaptchaVerifierRef.current = verifier;
         return verifier;
     };
@@ -218,20 +214,28 @@ function SignUpPageContent() {
     };
 
     const completeRegistration = (result: Record<string, unknown>) => {
-        const token = extractAccessToken(result);
+        console.log("Registration complete result:", result);
+        const token =
+            (result?.accessToken as string | undefined) ||
+            (result?.token as string | undefined) ||
+            ((result?.data as Record<string, unknown> | undefined)?.accessToken as string | undefined) ||
+            ((result?.data as Record<string, unknown> | undefined)?.token as string | undefined) ||
+            ((result?.agent as Record<string, unknown> | undefined)?.token as string | undefined) ||
+            ((result?.user as Record<string, unknown> | undefined)?.accessToken as string | undefined);
 
         if (token) {
-            clearRecaptcha();
-            const role =
-                ((result?.agent as Record<string, unknown> | undefined)?.role as string | undefined) ||
-                (result?.role as string | undefined) ||
-                userType.toUpperCase();
-            persistAuthSession(token, role);
-            localStorage.setItem("toastMessage", "Registration successful!");
-            router.push("/onboarding");
-        } else {
-            router.push(`/sign-in?message=Registration successful. Please sign in.&role=${encodeURIComponent(userType)}`);
+            setCookie("access_token", token);
+            localStorage.setItem("access_token", token);
         }
+        localStorage.setItem("isLoggedIn", "true");
+        setCookie("isLoggedIn", "true");
+        const role =
+            ((result?.agent as Record<string, unknown> | undefined)?.role as string | undefined) ||
+            (result?.role as string | undefined) ||
+            userType.toUpperCase();
+        localStorage.setItem("userType", role);
+        localStorage.setItem("toastMessage", "Registration successful!");
+        router.push("/onboarding");
     };
 
 
@@ -243,8 +247,12 @@ function SignUpPageContent() {
 
     const isRecoverableFirebasePhoneError = (err: unknown) => {
         const code = (err as { code?: string })?.code;
-
-        return code === "auth/quota-exceeded";
+        return (
+            code === "auth/invalid-app-credential" ||
+            code === "auth/captcha-check-failed" ||
+            code === "auth/missing-app-credential" ||
+            code === "auth/quota-exceeded"
+        );
     };
 
     const sendEmailOtp = async (transitionToOtpStep = true) => {
@@ -273,45 +281,47 @@ function SignUpPageContent() {
         }
     };
 
+    // ---------------------------------------------------------------------------
+    // Step 2a: Fetch phone from backend & trigger Firebase SMS
+    // ---------------------------------------------------------------------------
     const initiatePhoneVerification = async () => {
         if (!firebaseAuth) return;
-
-        // Clear any stale errors before starting phone verification
-        setErrorMsg(""); setSuccessMsg(""); setPhoneCodeError("");
 
         await ensureFirebasePhoneAuthReady();
 
         const trimmedEmail = form.email.trim();
         console.log("Initiating phone verification for email:", trimmedEmail, "and phone:", form.phone.trim());
 
-
+        // Get phone number from backend
         const phoneData = await sendPhoneOtp({ email: trimmedEmail, phone: form.phone.trim() }).unwrap();
-        console.log("Received phone number from backend:", phoneData);
-        if (!phoneData.success) throw new Error("Could not retrieve phone number");
+        console.log("Received phone number response from backend:", phoneData);
+        const phoneToVerify = phoneData?.phone?.trim() || form.phone.trim();
+        if (!phoneToVerify) throw new Error("Could not retrieve phone number");
 
-        console.log("Triggering Firebase SMS via signInWithPhoneNumber for:", phoneData.phone);
+        // Trigger Firebase SMS with a fresh reCAPTCHA verifier each attempt
+        console.log("Triggering Firebase SMS via signInWithPhoneNumber for:", phoneToVerify);
         try {
-            const verifier = createRecaptchaVerifier();
-            const result = await signInWithPhoneNumber(firebaseAuth, phoneData.phone, verifier);
+            const verifier = await createRecaptchaVerifier();
+            const result = await signInWithPhoneNumber(firebaseAuth, phoneToVerify, verifier);
             console.log("Firebase signInWithPhoneNumber success result:", result);
             setConfirmationResult(result);
             setPhoneCode("");
             setPhoneCodeError("");
-            setSuccessMsg(`We sent a verification SMS to ${phoneData.phone}.`);
+            setSuccessMsg(`We sent a verification SMS to ${phoneToVerify}.`);
             setStep("PHONE_OTP");
         } catch (firebaseErr) {
-            clearRecaptcha();
             console.error("Firebase signInWithPhoneNumber failed:", firebaseErr);
             throw firebaseErr;
         }
     };
 
-
+    // ---------------------------------------------------------------------------
+    // Step 2b: Verify SMS code with Firebase → send token to backend
+    // ---------------------------------------------------------------------------
     const verifyPhoneCode = async () => {
         if (!confirmationResult) throw new Error("No confirmation result — please resend.");
 
-        const trimmedCode = phoneCode.trim();
-        const credential = await confirmationResult.confirm(trimmedCode);
+        const credential = await confirmationResult.confirm(phoneCode);
         const firebaseIdToken = await credential.user.getIdToken();
 
         await verifyPhoneOtp({ email: form.email.trim(), firebaseIdToken }).unwrap();
@@ -329,7 +339,7 @@ function SignUpPageContent() {
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
-                applySignUpApiErrors(apiErr, t, {
+                applySignUpApiErrors(apiErr, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
@@ -366,8 +376,6 @@ function SignUpPageContent() {
         if (n || em || ph || p || cp || r || ex || ref) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
 
         try {
-            const canUseFirebasePhone = Boolean(isFirebasePhoneAuthEnabled && firebaseAuth);
-
             if (userType === "Agent") {
                 const trimmedName = form.name.trim();
                 const trimmedEmail = form.email.trim();
@@ -380,38 +388,39 @@ function SignUpPageContent() {
                 return;
             }
 
-            if (canUseFirebasePhone) {
-                await sendEmailOtp(false);
+            // For Investor / Developer:
+            // 1. Create PendingRegistration record on backend
+            await sendEmailOtp(false);
+
+            // 2. Trigger Phone SMS via Firebase
+            if (isFirebasePhoneAuthEnabled) {
                 await initiatePhoneVerification();
             } else {
-                await sendEmailOtp(true);
+                proceedToEmailOtpStep();
             }
         } catch (err: unknown) {
             console.error("handleDetailsSubmit caught error:", err);
             const apiErr = err as { status?: number; data?: { message?: string; retryAfterSeconds?: number } };
-            const firebaseCode = (err as { code?: string })?.code;
+            console.error("apiErr details:", apiErr);
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
-            } else if (firebaseCode === "auth/unauthorized-domain") {
-                setErrorMsg("Phone verification is not configured for this domain. Please contact support.");
-            } else if (firebaseCode === "auth/quota-exceeded" || firebaseCode === "auth/operation-not-allowed") {
-                setErrorMsg("SMS verification is temporarily unavailable. Please try again later.");
-            } else if (firebaseCode === "auth/too-many-requests") {
-                setErrorMsg("Too many attempts. This phone number has been temporarily blocked by Firebase due to too many request attempts. Please try again in a few minutes.");
             } else {
-                const friendlyMsg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
-                applySignUpApiErrors(apiErr, t, {
+                applySignUpApiErrors(apiErr, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
-                if (!nameError && !emailError && !phoneError && !passwordError && !confirmPasswordError && !reraError && !expiryError && !referralError) {
-                    setErrorMsg(friendlyMsg || "Failed to initiate phone verification. Please try again.");
+                const friendlyMsg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
+                if (friendlyMsg) {
+                    setErrorMsg(friendlyMsg);
                 }
             }
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
     };
 
+    // ---------------------------------------------------------------------------
+    // PHONE_OTP form submit → verify code → send Email OTP → move to OTP step
+    // ---------------------------------------------------------------------------
     const handlePhoneOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMsg(""); setPhoneCodeError(""); setSuccessMsg("");
@@ -425,28 +434,14 @@ function SignUpPageContent() {
 
         try {
             await verifyPhoneCode();
+            setStep("OTP");
+            setSuccessMsg(`We sent a 6-digit verification code to ${form.email.trim()}.`);
             clearRecaptcha();
-            proceedToEmailOtpStep(`Phone verified. Enter the verification code sent to ${form.email.trim()}.`);
         } catch (err: unknown) {
-            const firebaseCode = (err as { code?: string })?.code;
             const apiErr = err as { status?: number; data?: { message?: string } };
             const msg = (apiErr?.data?.message) || (err instanceof Error ? err.message : "");
-
-            // Firebase-specific code error handling
-            if (
-                firebaseCode === "auth/invalid-verification-code" ||
-                firebaseCode === "auth/missing-verification-code" ||
-                msg.toLowerCase().includes("invalid") ||
-                msg.toLowerCase().includes("otp")
-            ) {
-                setPhoneCodeError("Wrong code. Please check the SMS and try again.");
-            } else if (
-                firebaseCode === "auth/code-expired" ||
-                msg.toLowerCase().includes("expired")
-            ) {
-                setPhoneCodeError("This code has expired. Please request a new SMS.");
-            } else if (firebaseCode === "auth/too-many-requests") {
-                setErrorMsg("Too many attempts. Please wait a moment and try again.");
+            if (msg.toLowerCase().includes("otp") || msg.toLowerCase().includes("invalid") || msg.toLowerCase().includes("expired")) {
+                setPhoneCodeError("Invalid or expired SMS code. Please try again.");
             } else {
                 setErrorMsg(msg || "Phone verification failed. Please try again.");
             }
@@ -474,7 +469,7 @@ function SignUpPageContent() {
             const result = await verifyRegistrationOtp({ email: form.email.trim(), otp: normalizedOtp }).unwrap();
             completeRegistration(result);
         } catch (err: unknown) {
-            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, t, {
+            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, {
                 setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                 setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
             });
@@ -482,6 +477,9 @@ function SignUpPageContent() {
         }
     };
 
+    // ---------------------------------------------------------------------------
+    // Render
+    // ---------------------------------------------------------------------------
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -492,33 +490,13 @@ function SignUpPageContent() {
             {/* Invisible reCAPTCHA mount point */}
             <div id="recaptcha-mount" />
 
-            {step === "DETAILS" ? (
-                <Link
-                    href="/"
-                    className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group font-montserrat"
-                >
-                    <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform" />
-                    Back to home
-                </Link>
-            ) : (
-                <button
-                    type="button"
-                    onClick={() => {
-                        if (step === "OTP" && confirmationResult) {
-                            setStep("PHONE_OTP");
-                            setOtp(""); setOtpError(""); setSuccessMsg(""); setErrorMsg("");
-                        } else {
-                            setStep("DETAILS");
-                            setOtp(""); setOtpError(""); setPhoneCode(""); setPhoneCodeError(""); setSuccessMsg(""); setErrorMsg("");
-                            clearRecaptcha();
-                        }
-                    }}
-                    className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group border-0 bg-transparent cursor-pointer font-montserrat p-0 align-baseline"
-                >
-                    <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform" />
-                    Back to previous screen
-                </button>
-            )}
+            <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
+            >
+                <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
+                Back to home
+            </Link>
 
             <div className="mb-8">
                 <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
@@ -552,12 +530,10 @@ function SignUpPageContent() {
                 )}
             </div>
 
-            {step === "DETAILS" && (
-                <motion.div className="mb-4 space-y-4">
-                    <UserTypeToggle value={userType} onChange={handleUserTypeChange} />
-                    <RoleInsightCallout role={userType} />
-                </motion.div>
-            )}
+            <motion.div className="mb-4 space-y-4">
+                <UserTypeToggle value={userType} onChange={handleUserTypeChange} />
+                <RoleInsightCallout role={userType} />
+            </motion.div>
 
             {/* ---------------------------------------------------------------- */}
             {/* Step: PHONE_OTP — Firebase SMS verification                      */}
@@ -566,7 +542,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handlePhoneOtpSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <div className="flex flex-col gap-1">
                         <p className="text-sm font-semibold text-neutral-900">Phone Verification</p>
@@ -633,7 +609,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handleOtpSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <p className="text-sm text-neutral-500 leading-relaxed">
                         Enter the verification code sent to{" "}
@@ -697,7 +673,7 @@ function SignUpPageContent() {
                 <form
                     noValidate
                     onSubmit={handleDetailsSubmit}
-                    className="flex flex-col gap-4 font-montserrat rounded-md border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
+                    className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-name" className="text-sm font-medium text-neutral-900 font-montserrat">
@@ -748,7 +724,7 @@ function SignUpPageContent() {
                         </label>
                         <PhoneInput
                             id="sign-up-phone"
-                            placeholder=" 1234567890"
+                            placeholder="+91 1234567890"
                             defaultCountry="IN"
                             value={form.phone}
                             onChange={(val) => {

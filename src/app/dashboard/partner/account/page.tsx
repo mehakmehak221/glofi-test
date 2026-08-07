@@ -51,6 +51,7 @@ export default function PartnerAccountPage() {
                 fullName,
                 country,
                 avatarUrl: avatarKeyRef.current,
+                role: "PARTNER",
             }).unwrap();
             setStatusMsg({ type: "success", text: t("Profile updated successfully!") });
             setTimeout(() => setStatusMsg(null), 5000);
