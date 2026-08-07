@@ -14,7 +14,9 @@ export function proxy(request: NextRequest) {
     pathname.startsWith("/sign-up") ||
     pathname.startsWith("/forgot-password");
 
-  if (isAuthPage && isAuthenticated) {
+  const hasForceClear = request.nextUrl.searchParams.has("clear") || request.nextUrl.searchParams.has("expired");
+
+  if (isAuthPage && isAuthenticated && !hasForceClear) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

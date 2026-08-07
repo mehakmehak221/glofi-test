@@ -85,7 +85,7 @@ const baseQueryWithAuth: BaseQueryFn<
               localStorage.removeItem('access_token');
               localStorage.removeItem('isLoggedIn');
               localStorage.removeItem('userType');
-              window.location.href = '/sign-in';
+              window.location.href = '/sign-in?expired=true';
               setTimeout(() => { isHandlingAuthError = false; }, 3000);
             }
           }

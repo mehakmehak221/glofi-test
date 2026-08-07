@@ -55,7 +55,7 @@ export default function AgentSidebar() {
             removeCookie("isLoggedIn");
             removeCookie("access_token");
             localStorage.setItem("toastMessage", t("Logged out successfully"));
-            router.push("/sign-in");
+            window.location.href = "/sign-in?clear=true";
         }
     };
 

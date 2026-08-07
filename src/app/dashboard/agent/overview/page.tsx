@@ -80,7 +80,7 @@ export default function AgentOverviewPage() {
         {
             label: t("Referrals"),
             value: dashboardData?.referralsCount?.toString() || "0",
-            delta: "+3 this month",
+            delta: `+3 ${t("this month")}`,
             icon: PeopleIcon,
             iconColor: "text-purple-500",
         },
@@ -109,7 +109,7 @@ export default function AgentOverviewPage() {
         return (
             <div className={`flex items-center gap-2 text-[11px] font-bold ${colorClass} uppercase tracking-wider`}>
                 <Icon className="w-3.5 h-3.5" />
-                {type}: {s}
+                {type}: {t(s)}
             </div>
         );
     };

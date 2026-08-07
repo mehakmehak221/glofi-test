@@ -129,7 +129,7 @@ export default function TransactionsPage() {
                                             <td className="px-5 py-4 text-sm text-[var(--color-text-muted)]">{formatDate(tx.createdAt || tx.date)}</td>
                                             <td className="px-5 py-4">
                                                 <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeColor(tx.type)}`}>
-                                                    {tx.type}
+                                                    {t(tx.type)}
                                                 </span>
                                             </td>
                                             <td className="px-5 py-4 text-sm text-[var(--header-text)] font-medium">
@@ -139,11 +139,11 @@ export default function TransactionsPage() {
                                                 {formatAmount(tx.amount, tx.currency)}
                                             </td>
                                             <td className="px-5 py-4 text-sm text-[var(--color-text-muted)]">
-                                                {tx.paymentMethod || tx.method || "-"}
+                                                {t(tx.paymentMethod || tx.method || "-")}
                                             </td>
                                             <td className="px-5 py-4">
                                                 <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(tx.status)}`}>
-                                                    {tx.status?.toUpperCase() === "COMPLETED" ? "✓" : "◎"} {tx.status}
+                                                    {tx.status?.toUpperCase() === "COMPLETED" ? "✓" : "◎"} {t(tx.status)}
                                                 </span>
                                             </td>
                                         </motion.tr>

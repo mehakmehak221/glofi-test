@@ -174,7 +174,7 @@ export default function PortfolioPage() {
                         {stat.change && (
                             <p className="text-xs text-[var(--color-primary-500)] flex items-center gap-1.5 font-semibold">
                                 <TrendingUpIcon className="w-3.5 h-3.5" />
-                                {stat.change}
+                                {t(stat.change)}
                             </p>
                         )}
                     </motion.div>

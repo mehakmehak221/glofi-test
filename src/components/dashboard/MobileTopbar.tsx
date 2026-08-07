@@ -36,7 +36,7 @@ export default function MobileTopbar() {
                         height={32}
                         className="h-8 w-auto object-contain flex-shrink-0"
                     />
-                   
+
                 </Link>
 
                 <div className="flex items-center gap-2">
@@ -60,7 +60,7 @@ export default function MobileTopbar() {
                         </button>
                     )}
 
-            
+
 
                     <button
                         onClick={() => setDrawerOpen(true)}

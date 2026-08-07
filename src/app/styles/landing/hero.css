@@ -1,5 +1,5 @@
 @layer base {
-  /* ---------- Hero Section (Figma) ---------- */
+
   .hero-section {
     position: relative;
     width: 100%;
@@ -149,10 +149,11 @@
   }
 
   [data-locale="hi"] .hero-headline__white,
-  [data-locale="mar"] .hero-headline__white,
+  [data-locale="mr"] .hero-headline__white,
   [data-locale="gu"] .hero-headline__white,
   [data-locale="bn"] .hero-headline__white,
-  :lang(hi) .hero-headline__white {
+  :lang(hi) .hero-headline__white,
+  :lang(mr) .hero-headline__white {
     white-space: normal;
     word-break: break-word;
     font-size: 0.85em;

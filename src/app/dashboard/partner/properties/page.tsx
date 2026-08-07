@@ -600,18 +600,18 @@ export default function PartnerPropertiesPage() {
                             <section className="w-full rounded-md border border-[var(--sidebar-border)] bg-[var(--card-surface)] p-6">
                                 <div className="flex items-center justify-between gap-3 mb-5">
                                     <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">Performance</p>
-                                        <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">Share report</h2>
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text)] opacity-60">{t("Performance")}</p>
+                                        <h2 className="mt-2 text-xl font-bold text-[var(--foreground)] font-montserrat">{t("Share report")}</h2>
                                     </div>
                                     <ChartLineIcon className="h-5 w-5 text-[var(--sidebar-text)] opacity-50" />
                                 </div>
 
                                 <div className="rounded-2xl border border-[var(--sidebar-border)] bg-[var(--background)]/75 p-4 mb-4">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">Selected Asset</p>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--sidebar-text)] opacity-60">{t("Selected Asset")}</p>
                                     <div className="mt-2 flex items-start justify-between gap-3">
                                         <div className="min-w-0">
                                             <p className="truncate text-sm font-bold text-[var(--foreground)] font-montserrat">
-                                                {shareReport?.asset?.title || sharedAssets.find((item) => String(item.assetId) === String(selectedShareReportAssetId))?.asset?.title || "Asset report"}
+                                                {shareReport?.asset?.title || sharedAssets.find((item) => String(item.assetId) === String(selectedShareReportAssetId))?.asset?.title || t("Asset report")}
                                             </p>
                                             <p className="mt-1 text-xs text-[var(--sidebar-text)] opacity-60">
                                                 {shareReport?.asset?.location || sharedAssets.find((item) => String(item.assetId) === String(selectedShareReportAssetId))?.asset?.location || "No location"}
