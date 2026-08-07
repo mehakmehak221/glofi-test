@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import AuthLeftPanel from "@/components/auth/AuthLeftPanel";
-import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -17,9 +16,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
                 className="flex min-h-[100dvh] flex-col items-center justify-start bg-white px-6 py-8 sm:py-10 lg:min-h-0 lg:h-full lg:max-h-full lg:overflow-y-auto lg:px-12 xl:px-20"
             >
                 <div className="w-full max-w-md pb-8 pt-2 sm:pb-10 lg:pb-12 lg:pt-6">
-                    <div className="mb-5 flex justify-end lg:hidden">
-                        <LanguageSwitcher variant="mobile" />
-                    </div>
                     {children}
                 </div>
             </div>

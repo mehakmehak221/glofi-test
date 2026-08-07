@@ -20,6 +20,14 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+
+  if (hasForceClear) {
+    const response = NextResponse.next();
+    response.cookies.delete("access_token");
+    response.cookies.delete("isLoggedIn");
+    return response;
+  }
+
   return NextResponse.next();
 }
 

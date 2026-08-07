@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+
 import { createTranslator, getServerLocale } from "@/lib/i18n/server";
 
 export default async function AuthLeftPanel() {
@@ -31,7 +31,7 @@ export default async function AuthLeftPanel() {
             </Link>
 
           </div>
-          <LanguageSwitcher />
+
         </div>
 
         <div>
