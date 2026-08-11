@@ -7,6 +7,7 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import Avatar from "@/components/ui/Avatar";
 import { useLogoutMutation } from "@/store/api/authApi";
 import { removeCookie } from "@/utils/cookieUtils";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 import {
     CloseIcon,
     MarketplaceIcon,
@@ -189,7 +190,10 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                         </nav>
 
                         {/* Footer */}
-                        <div className="px-4 pb-6 pt-3 border-t border-[var(--color-border-subtle)] sm:px-5">
+                        <div className="px-4 pb-6 pt-3 border-t border-[var(--color-border-subtle)] sm:px-5 flex flex-col gap-3">
+                            <div className="px-4 flex justify-start">
+                                <LanguageSwitcher variant="dashboard" />
+                            </div>
                             <motion.div
                                 custom={NAV_ITEMS.length}
                                 variants={itemVariants}

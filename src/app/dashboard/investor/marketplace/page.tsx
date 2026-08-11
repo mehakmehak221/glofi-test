@@ -279,7 +279,7 @@ export default function MarketplacePage() {
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="max-w-6xl mx-auto mb-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-5 sm:p-6 shadow-sm backdrop-blur-md"
+                className="max-w-6xl mx-auto mb-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-5 sm:p-6 shadow-sm backdrop-blur-md relative z-20"
             >
                 {/* Category tabs */}
                 <div className="flex flex-wrap gap-2 mb-4 relative z-10">

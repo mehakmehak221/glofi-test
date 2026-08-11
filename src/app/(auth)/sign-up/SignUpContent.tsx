@@ -339,7 +339,7 @@ function SignUpPageContent() {
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
-                applySignUpApiErrors(apiErr, {
+                applySignUpApiErrors(apiErr, undefined, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
@@ -405,7 +405,7 @@ function SignUpPageContent() {
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
-                applySignUpApiErrors(apiErr, {
+                applySignUpApiErrors(apiErr, undefined, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
@@ -469,7 +469,7 @@ function SignUpPageContent() {
             const result = await verifyRegistrationOtp({ email: form.email.trim(), otp: normalizedOtp }).unwrap();
             completeRegistration(result);
         } catch (err: unknown) {
-            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, {
+            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, undefined, {
                 setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                 setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
             });

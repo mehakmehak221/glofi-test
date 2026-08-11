@@ -6,7 +6,7 @@ import { SUPPORTED_LOCALES, type Locale } from "@/lib/i18n/config";
 import { useI18n } from "@/providers/LocaleProvider";
 
 type LanguageSwitcherProps = {
-  variant?: "desktop" | "mobile";
+  variant?: "desktop" | "mobile" | "dashboard";
   className?: string;
 };
 
@@ -19,6 +19,7 @@ export default function LanguageSwitcher({
   const rootRef = useRef<HTMLDivElement>(null);
 
   const isMobile = variant === "mobile";
+  const isDashboard = variant === "dashboard";
 
   const handleSelect = (nextLocale: Locale) => {
     if (nextLocale === locale) {
@@ -42,36 +43,52 @@ export default function LanguageSwitcher({
   }, []);
 
   return (
-    <div ref={rootRef} className={`relative ${className}`}>
+    <div ref={rootRef} className={`relative ${isDashboard ? "" : className}`}>
       <button
         type="button"
-        className={`navbar__lang ${isMobile ? "navbar__lang--mobile" : ""} inline-flex items-center justify-between gap-2 rounded-full border border-[rgba(0,32,53,0.12)] bg-white/80 px-3 py-2 shadow-sm backdrop-blur-md transition-colors hover:border-[rgba(0,32,53,0.22)]`}
+        className={
+          isDashboard
+            ? `inline-flex items-center justify-between gap-2 rounded-full border border-[var(--search-border)] bg-[var(--search-bg)] px-3 py-2 shadow-sm transition-colors hover:border-[var(--sidebar-active-text)]/40 text-[var(--header-text)] ${className}`
+            : `navbar__lang ${isMobile ? "navbar__lang--mobile" : ""} inline-flex items-center justify-between gap-2 rounded-full border border-[rgba(0,32,53,0.12)] bg-white/80 px-3 py-2 shadow-sm backdrop-blur-md transition-colors hover:border-[rgba(0,32,53,0.22)] ${className}`
+        }
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={`${t("Select a language")}: ${labels[locale]}`}
         title={`${t("Select a language")}: ${labels[locale]}`}
         onClick={() => setOpen((prev) => !prev)}
       >
-        <Globe className="w-4 h-4 shrink-0 text-[#5B8FA8]" />
-        <span className="navbar__lang-label text-sm font-medium text-[#0f172a]">
+        <Globe className={`w-4 h-4 shrink-0 ${isDashboard ? "text-[var(--sidebar-active-text)]" : "text-[#5B8FA8]"}`} />
+        <span className={isDashboard ? "text-sm font-medium text-[var(--header-text)]" : "navbar__lang-label text-sm font-medium text-[#0f172a]"}>
           {labels[locale]}
         </span>
-        <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${open ? "rotate-180" : ""} ${isDashboard ? "text-[var(--header-text)] opacity-60" : ""}`} />
       </button>
 
       {open && (
-        <div className={`absolute ${isMobile ? "left-0 right-0 mt-2" : "right-0 mt-2"} z-50 overflow-hidden rounded-2xl border border-[rgba(0,32,53,0.12)] bg-white shadow-xl`}>
+        <div className={
+          isDashboard
+            ? `absolute right-0 mt-2 z-50 overflow-hidden rounded-2xl border border-[var(--sidebar-border)] bg-[var(--sidebar-bg)] shadow-xl min-w-[140px]`
+            : `absolute ${isMobile ? "left-0 right-0 mt-2" : "right-0 mt-2"} z-50 overflow-hidden rounded-2xl border border-[rgba(0,32,53,0.12)] bg-white shadow-xl`
+        }>
           <div className="flex flex-col p-1">
             {SUPPORTED_LOCALES.map((option) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => handleSelect(option)}
-                className={`rounded-xl px-4 py-2 text-left text-sm transition-colors ${
-                  option === locale
-                    ? "bg-[rgba(2,95,92,0.08)] text-[#025f5c] font-semibold"
-                    : "text-[#1A1F1C] hover:bg-[rgba(0,0,0,0.04)]"
-                }`}
+                className={
+                  isDashboard
+                    ? `rounded-xl px-4 py-2 text-left text-sm transition-colors ${
+                        option === locale
+                          ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] font-semibold"
+                          : "text-[var(--sidebar-text)] hover:bg-[var(--sidebar-active-bg)] hover:text-[var(--sidebar-text-hover)]"
+                      }`
+                    : `rounded-xl px-4 py-2 text-left text-sm transition-colors ${
+                        option === locale
+                          ? "bg-[rgba(2,95,92,0.08)] text-[#025f5c] font-semibold"
+                          : "text-[#1A1F1C] hover:bg-[rgba(0,0,0,0.04)]"
+                      }`
+                }
               >
                 {labels[option]}
               </button>
