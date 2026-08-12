@@ -8,7 +8,7 @@ export default async function AuthLeftPanel() {
   const t = createTranslator(locale);
 
   return (
-    <div className="auth-left-panel relative hidden min-h-0 overflow-hidden bg-[var(--color-bg-dark-alt)] lg:flex lg:h-full">
+    <div className="auth-left-panel relative hidden min-h-0 bg-[var(--color-bg-dark-alt)] lg:flex lg:h-full" style={{overflow: 'hidden'}}>
 
       <div className="absolute inset-0 z-0">
         <div
@@ -34,13 +34,11 @@ export default async function AuthLeftPanel() {
 
         </div>
 
-        <div>
-          <h1 className="text-auth-gradient font-bold text-4xl xl:text-5xl leading-[1.1] tracking-tight mb-6 font-montserrat">
-            {t("OWN ANY REAL ESTATE,")}
-            <br />
-            {t("Fraction by Fraction..")}
+        <div className="min-w-0">
+          <h1 className="auth-panel-heading text-auth-gradient font-bold leading-[1.25] tracking-tight mb-6 font-montserrat">
+            {t("OWN ANY REAL ESTATE,")}{" "}{t("Fraction by Fraction..")}
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-md leading-relaxed max-w-md font-medium font-montserrat">
+          <p className="auth-panel-desc text-[var(--color-text-secondary)] leading-relaxed font-medium font-montserrat">
             {t("Institutional-grade properties, digitally simplified. Invest, manage, and grow all in one platform.")}
           </p>
         </div>

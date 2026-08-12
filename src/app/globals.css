@@ -195,6 +195,7 @@ body[data-locale="gu"] {
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
+
 body[data-locale="bn"] {
   --font-montserrat: var(--font-bengali-base), var(--font-montserrat-base), ui-sans-serif, system-ui, sans-serif;
   --font-poppins: var(--font-bengali-base), var(--font-poppins-base), ui-sans-serif, system-ui, sans-serif;
@@ -203,8 +204,34 @@ body[data-locale="bn"] {
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
+.auth-panel-heading {
+  font-size: clamp(2.25rem, 4.5vw, 3rem);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+}
+
+.auth-panel-desc {
+  font-size: clamp(0.875rem, 1.6vw, 1rem);
+  max-width: 90%;
+}
+
+body[data-locale="hi"] .auth-panel-heading,
+body[data-locale="mr"] .auth-panel-heading,
+body[data-locale="bn"] .auth-panel-heading {
+  font-size: clamp(1.5rem, 3.25vw, 2.1rem);
+  line-height: 1.35;
+}
+
+body[data-locale="hi"] .auth-panel-desc,
+body[data-locale="mr"] .auth-panel-desc,
+body[data-locale="bn"] .auth-panel-desc {
+  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+}
+
 .light {
-  /* Semantic Theme Variables - LIGHT */
+
   --header-bg: #FFFFFF;
   --header-text: #1A1F1C;
   --header-border: #E5E7EB;
