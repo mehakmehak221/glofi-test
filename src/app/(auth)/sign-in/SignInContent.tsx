@@ -11,6 +11,7 @@ import { ChevronLeftIcon, EyeOpenIcon, EyeClosedIcon, LoadingSpinner } from "@/c
 import { useLoginMutation } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
 import { applySignInApiErrors, FIELD_ERROR_CLASSES, validateSignInFields } from "@/utils/authFormErrors";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const SIGNIN_ROLES = ["Investor", "Developer", "Agent"] as const;
 type SigninRole = (typeof SIGNIN_ROLES)[number];
@@ -23,6 +24,7 @@ function parseRoleQuery(raw: string | null): SigninRole | null {
 
 function SignInPageContent() {
     const router = useRouter();
+    const { t } = useI18n();
     const searchParams = useSearchParams();
     const roleParam = searchParams.get("role");
     const [userType, setUserType] = useState<string>(() => parseRoleQuery(roleParam) ?? "Investor");
@@ -151,19 +153,19 @@ function SignInPageContent() {
                 className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
             >
                 <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
-                Back to home
+                {t("Back to home")}
             </Link>
 
 
             <div className="mb-8">
-                <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
+                <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">{t("Welcome")}</h2>
                 <p className="text-neutral-500 text-sm font-montserrat">
-                    Don&apos;t have an account?{" "}
+                    {t("Don't have an account?")}{" "}
                     <Link
                         href={`/sign-up?role=${encodeURIComponent(userType)}`}
                         className="text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors"
                     >
-                        Create Account
+                        {t("Create Account")}
                     </Link>
                 </p>
                 {errorMsg && (
@@ -197,7 +199,7 @@ function SignInPageContent() {
             >
                 <div className="flex flex-col gap-2">
                     <label htmlFor="sign-in-email" className="text-sm font-medium text-neutral-900 font-montserrat">
-                        Email Address
+                        {t("Email Address")}
                     </label>
                     <input
                         id="sign-in-email"
@@ -226,7 +228,7 @@ function SignInPageContent() {
 
                 <div className="flex flex-col gap-2">
                     <label htmlFor="sign-in-password" className="text-sm font-medium text-neutral-900 font-montserrat">
-                        Password
+                        {t("Password")}
                     </label>
                     <div className="relative">
                         <input
@@ -264,23 +266,23 @@ function SignInPageContent() {
                         href="/forgot-password"
                         className="text-sm text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors"
                     >
-                        Forgot Password?
+                        {t("Forgot Password?")}
                     </Link>
                 </div>
 
                 <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
-                    {isLoading ? <LoadingSpinner /> : "Login"}
+                    {isLoading ? <LoadingSpinner /> : t("Login")}
                 </button>
             </form>
 
             <p className="text-center text-xs text-neutral-500 mt-8 font-montserrat leading-relaxed px-1">
-                By clicking Login you agree to GloFi Estates{" "}
+                {t("By clicking Login you agree to GloFi Estates")}{" "}
                 <Link href="/terms" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
-                    Terms &amp; Conditions
+                    {t("Terms & Conditions")}
                 </Link>{" "}
-                and{" "}
+                {t("and")}{" "}
                 <Link href="/privacy-policy" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
-                    Privacy Policy
+                    {t("Privacy Policy")}
                 </Link>
                 .
             </p>

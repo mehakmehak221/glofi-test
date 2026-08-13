@@ -6,12 +6,14 @@ import { usePathname } from "next/navigation";
 import { MoonIcon, SunIcon } from "@/components/VectorImages";
 import { useGetProfileQuery } from "@/store/api/authApi";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import { useI18n } from "@/providers/LocaleProvider";
 
 export default function DashboardHeader() {
     const [mounted, setMounted] = useState(false);
     const [isLight, setIsLight] = useState(false);
     const pathname = usePathname();
     const { data: profileData } = useGetProfileQuery();
+    const { t } = useI18n();
 
     useEffect(() => {
         setTimeout(() => {
@@ -79,7 +81,7 @@ export default function DashboardHeader() {
                     <Avatar src={avatarUrl} name={fullName} size="sm" />
                     <div className="flex flex-col">
                         <span className="text-sm font-semibold text-[var(--header-text)] leading-tight">{fullName}</span>
-                        <span className="text-[10px] text-[var(--header-text)] opacity-60 uppercase tracking-wider">{displayRole}</span>
+                        <span className="text-[10px] text-[var(--header-text)] opacity-60 uppercase tracking-wider">{t(displayRole)}</span>
                     </div>
                 </div>
             </div>

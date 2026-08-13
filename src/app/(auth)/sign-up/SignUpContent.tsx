@@ -20,6 +20,7 @@ import {
     useVerifyRegistrationOtpMutation,
 } from "@/store/api/authApi";
 import { setCookie } from "@/utils/cookieUtils";
+import { useI18n } from "@/providers/LocaleProvider";
 import {
     applySignUpApiErrors,
     FIELD_ERROR_CLASSES,
@@ -42,6 +43,7 @@ function parseRoleQuery(raw: string | null): SignupRole | null {
 
 function SignUpPageContent() {
     const router = useRouter();
+    const { t } = useI18n();
     const searchParams = useSearchParams();
     const roleParam = searchParams.get("role");
     const [userType, setUserType] = useState<SignupRole>(() => parseRoleQuery(roleParam) ?? "Investor");
@@ -495,15 +497,15 @@ function SignUpPageContent() {
                 className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
             >
                 <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
-                Back to home
+                {t("Back to home")}
             </Link>
 
             <div className="mb-8">
-                <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">Welcome</h2>
+                <h2 className="text-neutral-900 font-bold text-3xl mb-2 font-montserrat">{t("Welcome")}</h2>
                 <p className="text-neutral-500 text-sm font-montserrat">
-                    Already have an account?{" "}
+                    {t("Already have an account?")}{" "}
                     <Link href={`/sign-in?role=${encodeURIComponent(userType)}`} className="text-[var(--color-primary-500)] font-semibold hover:text-[var(--color-primary-600)] transition-colors">
-                        Sign in
+                        {t("Sign in")}
                     </Link>
                 </p>
                 {errorMsg && (

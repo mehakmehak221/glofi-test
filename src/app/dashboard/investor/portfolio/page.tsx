@@ -362,6 +362,7 @@ function SecondaryListingCard({ item, onDelete }) {
 }
 
 function AssetCard({ asset, onResale }) {
+    const { t } = useI18n();
     const totalFractions = asset.totalFractions || 100;
 
     const handleOpenCertificate = () => {
@@ -438,7 +439,7 @@ function AssetCard({ asset, onResale }) {
                                     className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold border border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 transition-all cursor-pointer group/btn"
                                 >
                                     <DocumentIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
-                                    Certificate
+                                    {t("Certificate")}
                                 </motion.button>
                                 <motion.button
                                     onClick={handleOpenCertificate}
@@ -447,12 +448,12 @@ function AssetCard({ asset, onResale }) {
                                     className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-[var(--field-surface)] text-[var(--sidebar-active-text)] text-[11px] font-bold hover:text-[var(--header-text)] transition-all border border-[var(--sidebar-border)] cursor-pointer group/btn"
                                 >
                                     <DownloadIcon className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
-                                    Download
+                                    {t("Download")}
                                 </motion.button>
                             </>
                         ) : (
                             <span className="text-xs text-[var(--color-text-muted)] font-semibold italic bg-[var(--field-surface)] px-4 py-2 rounded-md border border-[var(--sidebar-border)]">
-                                Offline Agreement & Certificate
+                                {t("Offline Agreement & Certificate")}
                             </span>
                         )}
                         {!asset.isResale && asset.saleType !== 'WHOLE' && (
@@ -463,7 +464,7 @@ function AssetCard({ asset, onResale }) {
                                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[11px] font-bold border-0 cursor-pointer hover:opacity-90 transition-all"
                             >
                                 <ResaleIcon className="w-4 h-4" />
-                                Resell
+                                {t("Resell")}
                             </motion.button>
                         )}
                     </div>

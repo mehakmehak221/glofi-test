@@ -13,6 +13,7 @@ import {
     staggerContainer,
     useLandingMotion,
 } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 const BLOG_SOURCE_PROFILE = 'https://medium.com/@laxmi_83890';
 
@@ -37,13 +38,14 @@ function BlogPostMedia({ post, className = '' }: { post: BlogPost; className?: s
 }
 
 function FeaturedPost({ post }: { post: BlogPost }) {
+    const { t } = useI18n();
     return (
         <motion.article className="blog-archive__featured" variants={fadeUpSubtle}>
             <Link href={`/blog/${post.slug}`} className="blog-archive__featured-link">
                 <div className="blog-archive__featured-media">
                     <BlogPostMedia post={post} />
                     <div className="blog-archive__featured-overlay" aria-hidden />
-                    <span className="blog-archive__featured-badge">Featured</span>
+                    <span className="blog-archive__featured-badge">{t('Featured')}</span>
                 </div>
                 <div className="blog-archive__featured-body">
                     <div className="blog-archive__featured-meta">
@@ -55,7 +57,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
                     <h2 className="blog-archive__featured-title">{post.title}</h2>
                     <p className="blog-archive__featured-excerpt">{post.excerpt}</p>
                     <span className="blog-archive__read-btn">
-                        Read full article
+                        {t('Read full article')}
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
                             <path
                                 d="M4 14L14 4M14 4H7M14 4V11"
@@ -74,6 +76,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
 
 export default function BlogPageContent({ posts }: BlogPageContentProps) {
     const { viewProps } = useLandingMotion();
+    const { t } = useI18n();
     const [featured, ...rest] = posts;
 
     return (
@@ -89,9 +92,9 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                         transition={{ duration: 0.5, ease: LANDING_EASE }}
                         aria-label="Breadcrumb"
                     >
-                        <Link href="/">Home</Link>
+                        <Link href="/">{t('Home')}</Link>
                         <span aria-hidden>/</span>
-                        <span>Blog</span>
+                        <span>{t('Blog')}</span>
                     </motion.nav>
 
                     <motion.div
@@ -100,17 +103,16 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.65, ease: LANDING_EASE, delay: 0.08 }}
                     >
-                        <p className="blog-archive__eyebrow">GloFi Insights</p>
+                        <p className="blog-archive__eyebrow">{t('GloFi Insights')}</p>
                         <h1 className="blog-archive__title">
-                            Ideas shaping the future of real estate
+                            {t('Ideas shaping the future of real estate')}
                         </h1>
                         <p className="blog-archive__subtitle">
-                            Deep dives on PropTech, fractional investing, and building wealth through
-                            institutional-grade assets.
+                            {t('Deep dives on PropTech, fractional investing, and building wealth through institutional-grade assets.')}
                         </p>
                         <div className="blog-archive__hero-meta">
                             <span className="blog-archive__pill">
-                                {posts.length} {posts.length === 1 ? 'article' : 'articles'}
+                                {posts.length} {posts.length === 1 ? t('article') : t('articles')}
                             </span>
                        
                         </div>
@@ -122,9 +124,9 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                 <div className="blog-archive__content-inner">
                     {posts.length === 0 ? (
                         <div className="blog-archive__empty">
-                            <p>No articles published yet.</p>
+                            <p>{t('No articles published yet.')}</p>
                             <a href={BLOG_SOURCE_PROFILE} target="_blank" rel="noopener noreferrer">
-                                Follow our blog
+                                {t('Follow our blog')}
                             </a>
                         </div>
                     ) : (
@@ -133,9 +135,9 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
 
                             <motion.div className="blog-archive__grid-wrap" variants={fadeUp}>
                                 <div className="blog-archive__list-header">
-                                    <h2 className="blog-archive__list-title">All articles</h2>
+                                    <h2 className="blog-archive__list-title">{t('All articles')}</h2>
                                     <span className="blog-archive__list-count">
-                                        {posts.length} {posts.length === 1 ? 'story' : 'stories'}
+                                        {posts.length} {posts.length === 1 ? t('story') : t('stories')}
                                     </span>
                                 </div>
                                 <BlogGrid posts={rest.length > 0 ? rest : posts} />
@@ -146,8 +148,8 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                     <motion.aside className="blog-archive__cta" {...viewProps} variants={fadeUp}>
                         <div className="blog-archive__cta-glow" aria-hidden />
                         <div className="blog-archive__cta-content">
-                            <p className="blog-archive__cta-label">Stay in the loop</p>
-                            <h2 className="blog-archive__cta-title">Get every new post</h2>
+                            <p className="blog-archive__cta-label">{t('Stay in the loop')}</p>
+                            <h2 className="blog-archive__cta-title">{t('Get every new post')}</h2>
                           
                             <a
                                 href={BLOG_SOURCE_PROFILE}
@@ -155,7 +157,7 @@ export default function BlogPageContent({ posts }: BlogPageContentProps) {
                                 rel="noopener noreferrer"
                                 className="blog-archive__cta-btn"
                             >
-                                Follow GloFi Blog
+                                {t('Follow GloFi Blog')}
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
                                     <path
                                         d="M4 14L14 4M14 4H7M14 4V11"

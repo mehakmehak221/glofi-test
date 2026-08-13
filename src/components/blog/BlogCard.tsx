@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BlogPost } from '@/types/blog';
 import BlogPostPlaceholder from '@/components/blog/BlogPostPlaceholder';
+import { useI18n } from '@/providers/LocaleProvider';
 
 type BlogCardProps = {
     post: BlogPost;
@@ -9,6 +10,7 @@ type BlogCardProps = {
 };
 
 export default function BlogCard({ post, className = '' }: BlogCardProps) {
+    const { t } = useI18n();
     return (
         <article className={`blog-card group ${className}`.trim()}>
             <Link href={`/blog/${post.slug}`} className="blog-card__link">
@@ -32,7 +34,7 @@ export default function BlogCard({ post, className = '' }: BlogCardProps) {
                     <h3 className="blog-card__title">{post.title}</h3>
                     <p className="blog-card__excerpt">{post.excerpt}</p>
                     <span className="blog-card__cta">
-                        Read article
+                        {t('Read article')}
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                             <path
                                 d="M4 12L12 4M12 4H6M12 4V10"
@@ -55,10 +57,11 @@ type BlogGridProps = {
 };
 
 export function BlogGrid({ posts, className = '' }: BlogGridProps) {
+    const { t } = useI18n();
     if (posts.length === 0) {
         return (
             <p className="blog-section__empty">
-                No articles yet. Check back soon.
+                {t('No articles yet. Check back soon.')}
             </p>
         );
     }

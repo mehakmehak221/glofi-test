@@ -4,21 +4,22 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-    ChevronLeftIcon, 
-    LoadingSpinner, 
-    ArrowRightIcon, 
-    EyeOpenIcon, 
+import {
+    ChevronLeftIcon,
+    LoadingSpinner,
+    ArrowRightIcon,
+    EyeOpenIcon,
     EyeClosedIcon,
     CheckIcon
 } from "@/components/VectorImages";
-import { 
-    useForgotPasswordMutation, 
-    useVerifyForgotPasswordOtpMutation, 
-    useResetPasswordMutation 
+import { useI18n } from "@/providers/LocaleProvider";
+import {
+    useForgotPasswordMutation,
+    useVerifyForgotPasswordOtpMutation,
+    useResetPasswordMutation
 } from "@/store/api/authApi";
-import { 
-    passwordMeetsSignUpStrength, 
+import {
+    passwordMeetsSignUpStrength,
     getSignUpPasswordCriteria,
     EMAIL_PATTERN,
     EMAIL_FORMAT_ERROR,
@@ -32,6 +33,7 @@ type Step = "EMAIL" | "OTP" | "RESET" | "SUCCESS";
 
 export default function ForgotPasswordPage() {
     const router = useRouter();
+    const { t } = useI18n();
     const [step, setStep] = useState<Step>("EMAIL");
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
@@ -64,7 +66,7 @@ export default function ForgotPasswordPage() {
         e.preventDefault();
         setErrorMsg("");
         setEmailError("");
-        
+
         const trimmedEmail = email.trim();
         if (!trimmedEmail) {
             setEmailError("Please enter your email address.");
@@ -85,7 +87,7 @@ export default function ForgotPasswordPage() {
             const message = errorBody?.message ?? errorBody?.error ?? err?.message;
             const validationLines = collectApiErrorLines(errorBody, message);
             const flatMessage = validationLines.join("\n\n") || coerceFirstStringMessage(errorBody) || (typeof message === "string" ? message : "");
-            
+
             if (isMachineEmailValidationMessage(flatMessage)) {
                 setEmailError(EMAIL_FORMAT_ERROR);
             } else {
@@ -98,7 +100,7 @@ export default function ForgotPasswordPage() {
         e.preventDefault();
         setErrorMsg("");
         setOtpError("");
-        
+
         const trimmedOtp = otp.trim();
         if (!trimmedOtp) {
             setOtpError("Please enter the 6-digit OTP code.");
@@ -119,7 +121,7 @@ export default function ForgotPasswordPage() {
             const message = errorBody?.message ?? errorBody?.error ?? err?.message;
             const validationLines = collectApiErrorLines(errorBody, message);
             const flatMessage = validationLines.join("\n\n") || coerceFirstStringMessage(errorBody) || (typeof message === "string" ? message : "");
-            
+
             if (flatMessage.toLowerCase().includes("otp") || flatMessage.toLowerCase().includes("code") || flatMessage.toLowerCase().includes("invalid")) {
                 setOtpError(flatMessage || "Invalid OTP. Please try again.");
             } else {
@@ -134,9 +136,9 @@ export default function ForgotPasswordPage() {
         setPasswordError("");
         setConfirmPasswordError("");
         setSuccessMsg("");
-        
+
         let hasError = false;
-        
+
         if (!password) {
             setPasswordError("Please enter a password.");
             hasError = true;
@@ -144,7 +146,7 @@ export default function ForgotPasswordPage() {
             setPasswordError("Password must meet all requirements below.");
             hasError = true;
         }
- 
+
         if (!confirmPassword) {
             setConfirmPasswordError("Please confirm your password.");
             hasError = true;
@@ -164,7 +166,7 @@ export default function ForgotPasswordPage() {
             const message = errorBody?.message ?? errorBody?.error ?? err?.message;
             const validationLines = collectApiErrorLines(errorBody, message);
             const flatMessage = validationLines.join("\n\n") || coerceFirstStringMessage(errorBody) || (typeof message === "string" ? message : "");
-            
+
             if (flatMessage.toLowerCase().includes("password")) {
                 setPasswordError(flatMessage || "Failed to reset password. Please try again.");
             } else {
@@ -183,7 +185,7 @@ export default function ForgotPasswordPage() {
                     className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group"
                 >
                     <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
-                    Back to Sign In
+                    {t("Back to Sign In")}
                 </Link>
             ) : (
                 <button
@@ -200,22 +202,22 @@ export default function ForgotPasswordPage() {
                     className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 text-sm transition-colors mb-8 group bg-transparent border-none cursor-pointer p-0"
                 >
                     <ChevronLeftIcon className="group-hover:-translate-x-0.5 transition-transform font-montserrat" />
-                    Back
+                    {t("Back")}
                 </button>
             )}
 
             <div className="mb-8">
                 <h2 className="text-neutral-900 font-bold text-3xl mb-1.5 font-montserrat">
-                    {step === "EMAIL" && "Forgot Password"}
-                    {step === "OTP" && "Verify OTP"}
-                    {step === "RESET" && "Reset Password"}
-                    {step === "SUCCESS" && "Password Reset"}
+                    {step === "EMAIL" && t("Forgot Password")}
+                    {step === "OTP" && t("Verify OTP")}
+                    {step === "RESET" && t("Reset Password")}
+                    {step === "SUCCESS" && t("Password Reset")}
                 </h2>
                 <p className="text-neutral-500 text-sm font-montserrat">
-                    {step === "EMAIL" && "Enter your email to receive a password reset code"}
-                    {step === "OTP" && `Enter the 6-digit code sent to ${email}`}
-                    {step === "RESET" && "Create a new secure password for your account"}
-                    {step === "SUCCESS" && "Your password has been reset successfully"}
+                    {step === "EMAIL" && t("Enter your email to receive a password reset code")}
+                    {step === "OTP" && t("Enter the 6-digit code sent to {email}", { email })}
+                    {step === "RESET" && t("Create a new secure password for your account")}
+                    {step === "SUCCESS" && t("Your password has been reset successfully")}
                 </p>
 
                 <AnimatePresence mode="wait">
@@ -253,7 +255,7 @@ export default function ForgotPasswordPage() {
                                 type="email"
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value); setErrorMsg(""); setEmailError(""); }}
-                                placeholder="Email address"
+                                placeholder={t("Email address")}
                                 required
                                 aria-invalid={Boolean(emailError)}
                                 aria-describedby={emailError ? "forgot-email-error" : undefined}
@@ -270,7 +272,7 @@ export default function ForgotPasswordPage() {
                             disabled={isLoading}
                             className="btn-primary w-full mt-2"
                         >
-                            {isLoading ? <LoadingSpinner /> : <>Send Reset Code <ArrowRightIcon /></>}
+                            {isLoading ? <LoadingSpinner /> : <>{t("Send Reset Code")} <ArrowRightIcon /></>}
                         </button>
                     </form>
                 )}
@@ -287,7 +289,7 @@ export default function ForgotPasswordPage() {
                                     setErrorMsg("");
                                     setOtpError("");
                                 }}
-                                placeholder="6-digit OTP"
+                                placeholder={t("6-digit OTP")}
                                 required
                                 maxLength={6}
                                 aria-invalid={Boolean(otpError)}
@@ -305,15 +307,15 @@ export default function ForgotPasswordPage() {
                             disabled={isLoading}
                             className="btn-primary w-full mt-2"
                         >
-                            {isLoading ? <LoadingSpinner /> : <>Verify OTP <ArrowRightIcon /></>}
+                            {isLoading ? <LoadingSpinner /> : <>{t("Verify OTP")} <ArrowRightIcon /></>}
                         </button>
-                        <button 
+                        <button
                             type="button"
                             onClick={handleEmailSubmit}
                             disabled={isLoading}
                             className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors text-center"
                         >
-                            Didn&apos;t receive a code? Resend
+                            {t("Didn't receive a code? Resend")}
                         </button>
                     </form>
                 )}
@@ -326,7 +328,7 @@ export default function ForgotPasswordPage() {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => { setPassword(e.target.value); setErrorMsg(""); setPasswordError(""); }}
-                                    placeholder="New Password"
+                                    placeholder={t("New Password")}
                                     required
                                     aria-invalid={Boolean(passwordError)}
                                     aria-describedby={passwordError ? "forgot-password-error" : undefined}
@@ -366,7 +368,7 @@ export default function ForgotPasswordPage() {
                                 type={showPassword ? "text" : "password"}
                                 value={confirmPassword}
                                 onChange={(e) => { setConfirmPassword(e.target.value); setErrorMsg(""); setConfirmPasswordError(""); }}
-                                placeholder="Confirm New Password"
+                                placeholder={t("Confirm New Password")}
                                 required
                                 aria-invalid={Boolean(confirmPasswordError)}
                                 aria-describedby={confirmPasswordError ? "forgot-confirm-password-error" : undefined}
@@ -383,7 +385,7 @@ export default function ForgotPasswordPage() {
                             disabled={isLoading}
                             className="btn-primary w-full mt-2"
                         >
-                            {isLoading ? <LoadingSpinner /> : <>Reset Password <ArrowRightIcon /></>}
+                            {isLoading ? <LoadingSpinner /> : <>{t("Reset Password")} <ArrowRightIcon /></>}
                         </button>
                     </form>
                 )}
@@ -397,7 +399,7 @@ export default function ForgotPasswordPage() {
                             onClick={() => router.push("/sign-in")}
                             className="btn-primary w-full"
                         >
-                            Go to Sign In <ArrowRightIcon />
+                            {t("Go to Sign In")} <ArrowRightIcon />
                         </button>
                     </div>
                 )}

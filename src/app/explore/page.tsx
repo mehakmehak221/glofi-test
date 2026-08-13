@@ -12,6 +12,7 @@ import { MapPinIcon, TrendingUpIcon, VerifiedIcon, SecondaryMarketplaceIcon, Sha
 import Link from "next/link";
 
 import { useCurrency } from "@/providers/CurrencyProvider";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const DROPDOWN_STYLES = `
   .dropdown-scroll::-webkit-scrollbar {
@@ -140,6 +141,7 @@ const cardVariants: Variants = {
 
 export default function ExplorePage() {
     const { formatPrice, currency } = useCurrency();
+    const { t } = useI18n();
     const [activeCategory, setActiveCategory] = useState("All");
     const [countryFilter, setCountryFilter] = useState("");
     const [stateFilter, setStateFilter] = useState("");
@@ -171,7 +173,7 @@ export default function ExplorePage() {
                 <div className="flex flex-col gap-6 mb-8 bg-white p-6 sm:p-8 rounded-md border border-neutral-200/60 shadow-sm relative z-20">
                     <div className="flex flex-col gap-4">
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter bg-gradient-to-r from-[#00B28F] to-[#00DAAF] bg-clip-text text-transparent">
-                            Discover Assets
+                            {t("Discover Assets")}
                         </h1>
                         <p className="text-sm sm:text-base text-neutral-500 max-w-xl font-medium leading-relaxed mb-0.5">
                             Institutional-grade real estate. Digitally simplified.
@@ -451,7 +453,7 @@ export default function ExplorePage() {
                                                     prefetch={false}
                                                     className="relative z-[3] block pointer-events-auto w-full py-3.5 rounded-md border-[1.5px] border-[#006D5B] bg-transparent text-neutral-900 hover:bg-[#006D5B] hover:text-white text-sm font-extrabold uppercase tracking-wide text-center transition-all duration-300 active:scale-[0.99]"
                                                 >
-                                                    View Details
+                                                    {t("View Details")}
                                                 </Link>
                                             </div>
                                         </div>

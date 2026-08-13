@@ -7,6 +7,7 @@ import { BlogGrid } from '@/components/blog/BlogCard';
 import BlogPostPlaceholder from '@/components/blog/BlogPostPlaceholder';
 import BlogArticleProse from '@/components/blog/BlogArticleProse';
 import { fadeUp, fadeUpSubtle, LANDING_EASE, useLandingMotion } from '@/lib/landingAnimations';
+import { useI18n } from '@/providers/LocaleProvider';
 
 type BlogArticleContentProps = {
     post: BlogPost;
@@ -15,6 +16,7 @@ type BlogArticleContentProps = {
 
 export default function BlogArticleContent({ post, relatedPosts }: BlogArticleContentProps) {
     const { viewProps } = useLandingMotion();
+    const { t } = useI18n();
 
     return (
         <main className="blog-article">
@@ -28,11 +30,11 @@ export default function BlogArticleContent({ post, relatedPosts }: BlogArticleCo
                         transition={{ duration: 0.45, ease: LANDING_EASE }}
                         aria-label="Breadcrumb"
                     >
-                        <Link href="/">Home</Link>
+                        <Link href="/">{t('Home')}</Link>
                         <span aria-hidden>/</span>
-                        <Link href="/blog">Blog</Link>
+                        <Link href="/blog">{t('Blog')}</Link>
                         <span aria-hidden>/</span>
-                        <span className="blog-article__breadcrumb-current">Article</span>
+                        <span className="blog-article__breadcrumb-current">{t('Article')}</span>
                     </motion.nav>
 
                     <motion.div
@@ -42,14 +44,14 @@ export default function BlogArticleContent({ post, relatedPosts }: BlogArticleCo
                         transition={{ duration: 0.6, ease: LANDING_EASE, delay: 0.06 }}
                     >
                         <div className="blog-article__meta-row">
-                            <span className="blog-article__category">GloFi Insights</span>
+                            <span className="blog-article__category">{t('GloFi Insights')}</span>
                             {post.pubDate ? (
                                 <time className="blog-article__date">{post.pubDate}</time>
                             ) : null}
                             <span className="blog-article__reading-time">{post.readingTime}</span>
                         </div>
                         <h1 className="blog-article__title">{post.title}</h1>
-                        <p className="blog-article__author">By {post.author}</p>
+                        <p className="blog-article__author">{t('By')} {post.author}</p>
                     </motion.div>
                 </div>
             </section>
@@ -85,7 +87,7 @@ export default function BlogArticleContent({ post, relatedPosts }: BlogArticleCo
                                 rel="noopener noreferrer"
                                 className="blog-article__medium-btn"
                             >
-                                Read post
+                                {t('Read post')}
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                                     <path
                                         d="M4 12L12 4M12 4H6M12 4V10"
@@ -97,7 +99,7 @@ export default function BlogArticleContent({ post, relatedPosts }: BlogArticleCo
                                 </svg>
                             </a>
                             <Link href="/blog" className="blog-article__back-btn">
-                                Back to all articles
+                                {t('Back to all articles')}
                             </Link>
                         </div>
                     </motion.article>
@@ -108,29 +110,29 @@ export default function BlogArticleContent({ post, relatedPosts }: BlogArticleCo
                         variants={fadeUp}
                     >
                         <div className="blog-article__sidebar-card">
-                            <p className="blog-article__sidebar-label">About this article</p>
+                            <p className="blog-article__sidebar-label">{t('About this article')}</p>
                             <p className="blog-article__sidebar-text">{post.excerpt}</p>
                             <div className="blog-article__sidebar-stats">
                                 <div>
                                     <span className="blog-article__sidebar-stat-value">{post.readingTime}</span>
-                                    <span className="blog-article__sidebar-stat-label">Reading time</span>
+                                    <span className="blog-article__sidebar-stat-label">{t('Reading time')}</span>
                                 </div>
                                 {post.pubDate ? (
                                     <div>
                                         <span className="blog-article__sidebar-stat-value">{post.pubDate}</span>
-                                        <span className="blog-article__sidebar-stat-label">Published</span>
+                                        <span className="blog-article__sidebar-stat-label">{t('Published')}</span>
                                     </div>
                                 ) : null}
                             </div>
                         </div>
 
                         <div className="blog-article__sidebar-card blog-article__sidebar-card--accent">
-                            <p className="blog-article__sidebar-label">Start investing</p>
+                            <p className="blog-article__sidebar-label">{t('Start investing')}</p>
                             <p className="blog-article__sidebar-text">
-                                Explore fractional real estate opportunities on GloFi Estates.
+                                {t('Explore fractional real estate opportunities on GloFi Estates.')}
                             </p>
                             <Link href="/sign-in" className="blog-article__sidebar-cta">
-                                Get started
+                                {t('Get started')}
                             </Link>
                         </div>
                     </motion.aside>
