@@ -220,6 +220,7 @@ const hi: MessageTable = {
   "Didn't receive?": "नहीं मिला?",
   Discount: "छूट",
   "Discover Assets": "संपत्तियाँ खोजें",
+  "Acquire complete institutional assets as a single whole transaction.": "एकल पूर्ण लेनदेन के रूप में संपूर्ण संस्थागत संपत्ति प्राप्त करें।",
   "Discover Curated, High-Quality Properties Across Pan India With Detailed Insights And Analytics.": "पूरे भारत में चुनी हुई उच्च गुणवत्ता की संपत्तियां देखें, विस्तृत जानकारी और विश्लेषण के साथ।",
   "Document Front/Full": "दस्तावेज़ फ्रंट/पूरा",
   "Document Type": "दस्तावेज़ प्रकार",
@@ -704,7 +705,7 @@ const hi: MessageTable = {
   "No leads match your active filters or you haven't been assigned any leads yet.": "आपके सक्रिय फ़िल्टर से मेल खाती कोई लीड नहीं है या आपको अभी तक कोई लीड आवंटित नहीं की गई है।",
   "Lead Info": "लीड जानकारी",
   "Last Activity": "अंतिम गतिविधि",
-  Actions: "क्रियाएं",
+  Actions: "कार्रवाई",
   "Edit Lead": "लीड संपादित करें",
   "Delete Lead": "लीड हटाएं",
   NORMAL: "सामान्य",
@@ -716,7 +717,6 @@ const hi: MessageTable = {
   CLOSED: "बंद",
   LOST: "खो गया",
 
-  // Agent Transactions
 
   "Loading transactions...": "लेन-देन लोड हो रहे हैं...",
   "Total Volume": "कुल मात्रा",
@@ -727,7 +727,6 @@ const hi: MessageTable = {
   "No transactions available yet.": "अभी तक कोई लेन-देन उपलब्ध नहीं है।",
   SUCCESS: "सफल",
 
-  // Sidebar agent links
   "Leads & CRM": "लीड्स और CRM",
   "Follow-ups": "फॉलो-अप",
   "Asset Sharing": "एसेट शेयरिंग",
@@ -778,7 +777,6 @@ const hi: MessageTable = {
   View: "देखें",
   "Need support?": "सहायता चाहिए?",
 
-  // Support / SupportTicketComposer
   "Raise a Ticket": "टिकट दर्ज करें",
   "Tell us exactly what is blocked and we'll route it to the right team.": "हमें बताएं कि क्या अवरुद्ध है और हम इसे सही टीम तक पहुंचाएंगे।",
   "Fill in your issue, choose a category, and submit the form. There is no read/list workflow on this page anymore.": "अपनी समस्या भरें, एक श्रेणी चुनें और फॉर्म सबमिट करें।",
@@ -830,6 +828,8 @@ const hi: MessageTable = {
   "Resell": "पुनर्विक्रय",
   "Edit Listing": "सूची संपादित करें",
   "Offline Agreement & Certificate": "ऑफ़लाइन समझौता और प्रमाणपत्र",
+  "Sponsor": "प्रायोजक",
+  "Sponsor Panel": "प्रायोजक पैनल",
 };
 
 const mr: MessageTable = {
@@ -941,6 +941,8 @@ const mr: MessageTable = {
   "Only Top Properties": "फक्त सर्वोत्तम मालमत्ता",
   "INSTITUTIONAL GRADE": "संस्थात्मक दर्जा",
   "Discover Assets": "मालमत्ता शोधा",
+  "Institutional-grade real estate. Invest fractionally from": "संस्थात्मक-दर्जाची रिअल इस्टेट. भागांमध्ये गुंतवणूक करा",
+  "Acquire complete institutional assets as a single whole transaction.": "एकल संपूर्ण व्यवहार म्हणून संपूर्ण संस्थात्मक मालमत्ता मिळवा.",
   "Institutional-grade real estate. Invest fractionally from ₹10,000.": "संस्थात्मक-दर्जाची रिअल इस्टेट. ₹१०,००० पासून भागांमध्ये गुंतवणूक करा.",
   "Fractional Real Estate": "फ्रॅक्शनल रिअल इस्टेट",
   "Whole Properties": "पूर्ण मालमत्ता",
@@ -1349,7 +1351,11 @@ const gu: MessageTable = {
   "Accept All": "બધા સ્વીકારો",
   "Select a language": "ભાષા પસંદ કરો",
   "Create Your Account": "તમારું ખાતું બનાવો",
-  "Sign Up Securely, Complete KYC Verification And Set Up Your Investor Profile.": "સુરક્ષિત રીતે સાઇન અપ કરો, KYC ચકાસણી પૂર્ણ કરો અને તમારું રોકાણકાર પ્રોફાઇલ સેટ કરો."
+  "Sign Up Securely, Complete KYC Verification And Set Up Your Investor Profile.": "સુરક્ષિત રીતે સાઇન અપ કરો, KYC ચકાસણી પૂર્ણ કરો અને તમારું રોકાણકાર પ્રોફાઇલ સેટ કરો.",
+  "Fractionalize your property. Reach qualified investors, and raise capital faster.": "तुमच्या मालमत्तेचे अपूर्णांक मालकीत रूपांतर करा. पात्र गुंतवणूकदारांपर्यंत पोहोचा आणि जलद भांडवल उभे करा.",
+  "Connect investors with premium properties and earn on every transaction.": "गुंतवणूकदारांना प्रीमियम मालमत्तांशी जोडा आणि प्रत्येक व्यवहारावर कमवा.",
+  "Sponsor": "प्रायोजक",
+  "Sponsor Panel": "प्रायोजक पॅनेल",
 };
 
 const bn: MessageTable = {
@@ -1397,6 +1403,8 @@ const bn: MessageTable = {
   "Only Top Properties": "শুধুমাত্র সেরা সম্পত্তি",
   "INSTITUTIONAL GRADE": "প্রাতিষ্ঠানিক মান",
   "Discover Assets": "সম্পত্তি খুঁজুন",
+  "Institutional-grade real estate. Invest fractionally from": "প্রাতিষ্ঠানিক-মানের রিয়েল এস্টেট। আংশিক বিনিয়োগ করুন",
+  "Acquire complete institutional assets as a single whole transaction.": "একক সম্পূর্ণ লেনদেন হিসাবে সম্পূর্ণ প্রাতিষ্ঠানিক সম্পদ অর্জন করুন।",
   "Institutional-grade real estate. Invest fractionally from ₹10,000.": "প্রাতিষ্ঠানিক-মানের রিয়েল এস্টেট। ₹১০,০০০ থেকে আংশিক বিনিয়োগ করুন।",
   "Fractional Real Estate": "আংশিক রিয়েল এস্টেট",
   "Whole Properties": "সম্পূর্ণ সম্পত্তি",
@@ -1822,6 +1830,11 @@ const bn: MessageTable = {
   "Your Other Properties": "আপনার অন্যান্য সম্পত্তি",
   "Wallet": "ওয়ালেট",
   "View Details": "বিস্তারিত দেখুন",
+  "Fractionalize your property. Reach qualified investors, and raise capital faster.": "আপনার সম্পত্তি ভগ্নাংশ মালিকানায় রূপান্তর করুন। যোগ্য বিনিয়োগকারীদের কাছে পৌঁছান এবং দ্রুত মূলধন সংগ্রহ করুন।",
+  "Connect investors with premium properties and earn on every transaction.": "প্রিমিয়াম সম্পত্তির সাথে বিনিয়োগকারীদের সংযুক্ত করুন এবং প্রতিটি লেনদেনে উপার্জন করুন।",
+  "Agent Panel": "এজেন্ট প্যানেল",
+  "Sponsor": "স্পন্সর",
+  "Sponsor Panel": "স্পন্সর প্যানেল",
 };
 
 export const MESSAGES: Record<Locale, MessageTable> = {

@@ -176,12 +176,12 @@ export default function ExplorePage() {
                             {t("Discover Assets")}
                         </h1>
                         <p className="text-sm sm:text-base text-neutral-500 max-w-xl font-medium leading-relaxed mb-0.5">
-                            Institutional-grade real estate. Digitally simplified.
+                            {t("Institutional-grade assets. Digitally simplified.")}
                         </p>
                         <p className="text-sm text-neutral-500 font-medium">
                             {saleTypeFilter === "FRACTIONAL"
-                                ? `Invest fractionally starting from ${currency.symbol}15,000.`
-                                : "Acquire complete institutional assets as a single whole transaction."}
+                                ? `${t("Institutional-grade real estate. Invest fractionally from")} ${currency.symbol}15,000.`
+                                : t("Acquire complete institutional assets as a single whole transaction.")}
                         </p>
                     </div>
 
