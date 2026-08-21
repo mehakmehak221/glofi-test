@@ -81,7 +81,7 @@ export default function PortfolioPage() {
         { label: t("Invested"), value: formatNumber(portfolioData?.totalInvested), change: "+₹0 this month", icon: DollarIcon },
         { label: t("Current Value"), value: formatNumber(portfolioData?.currentValue), change: "+0% overall", icon: TrendingUpIcon },
         { label: t("ROI"), value: `${portfolioData?.roi || 0}%`, change: "+0% this quarter", icon: TopArrow },
-        { label: t("Assets Owned"), value: portfolioData?.assetsOwned || assetsList.length || 0, change: t("Verified assets"), icon: Asset },
+        { label: t("Assets Owned"), value: portfolioData?.assetsOwned || assetsList.length || 0, change: "Verified assets", icon: Asset },
     ];
 
     const assets = assetsList.map(inv => {

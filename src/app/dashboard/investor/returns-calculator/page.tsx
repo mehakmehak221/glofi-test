@@ -170,8 +170,8 @@ export default function ReturnsCalculatorPage() {
                 type="number"
                 value={Math.round(totalReturnPercent)}
                 onChange={(e) => handlePercentChange(e.target.value)}
-                className="bg-[var(--background)] border border-[var(--dashboard-border)] rounded-lg outline-none text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tighter py-1.5 px-3 focus:border-[var(--color-primary-300)] transition-colors"
-                style={{ width: `${Math.max(2, String(Math.round(totalReturnPercent)).length) + 2.5}ch` }}
+                className="bg-[var(--background)] border border-[var(--dashboard-border)] rounded-lg outline-none text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tighter py-1.5 px-2 focus:border-[var(--color-primary-300)] transition-colors"
+                style={{ width: `${Math.max(2, String(Math.round(totalReturnPercent)).length) + 4.5}ch` }}
               />
               <span className="text-xl font-black text-[var(--color-text-muted)]">%</span>
             </div>

@@ -48,8 +48,8 @@ function CampaignCard({ campaign }: { campaign: RewardCampaign }) {
     <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-[var(--foreground)]">{campaign.name}</p>
-          <p className="text-xs text-[var(--color-text-muted)] mt-1">{campaign.description || campaign.type}</p>
+          <p className="text-sm font-semibold text-[var(--foreground)]">{t(campaign.name)}</p>
+          <p className="text-xs text-[var(--color-text-muted)] mt-1">{t(campaign.description || "") || t(campaign.type)}</p>
         </div>
         <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${campaign.isActive ? "border-emerald-500/20 text-emerald-400 bg-emerald-500/10" : "border-neutral-500/20 text-neutral-400 bg-neutral-500/10"}`}>
           {campaign.isActive ? t("Active") : t("Inactive")}
@@ -74,7 +74,7 @@ function RewardRow({ reward }: { reward: UserReward }) {
   return (
     <div className="rounded-md border border-[var(--sidebar-border)] bg-[var(--background)] p-4 flex items-start justify-between gap-4">
       <div>
-        <p className="text-sm font-semibold text-[var(--foreground)]">{reward.campaign?.name || t("Reward")}</p>
+        <p className="text-sm font-semibold text-[var(--foreground)]">{t(reward.campaign?.name || "") || t("Reward")}</p>
         <p className="text-xs text-[var(--color-text-muted)] mt-1">{t("Credited")} {formatDate(reward.creditedAt)}</p>
       </div>
       <div className="text-right">

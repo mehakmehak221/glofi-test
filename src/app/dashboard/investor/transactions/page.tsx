@@ -168,14 +168,14 @@ export default function TransactionsPage() {
                             >
                                 <div className="flex items-center justify-between mb-3">
                                     <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeColor(tx.type)}`}>
-                                        {tx.type}
+                                        {t(tx.type)}
                                     </span>
                                     <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(tx.status)}`}>
-                                        {tx.status?.toUpperCase() === "COMPLETED" ? "✓" : "◎"} {tx.status}
+                                        {tx.status?.toUpperCase() === "COMPLETED" ? "✓" : "◎"} {t(tx.status)}
                                     </span>
                                 </div>
                                 <h3 className="text-base font-bold text-[var(--header-text)] mb-4">
-                                    {tx.asset?.title || tx.assetTitle || tx.asset || "-"}
+                                    {t(tx.asset?.title || tx.assetTitle || tx.asset || "-")}
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4 text-xs bg-[var(--sidebar-active-bg)]/30 rounded-lg p-3">
                                     <div>
