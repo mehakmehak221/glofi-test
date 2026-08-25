@@ -447,6 +447,22 @@ export const mr: MessageTable = {
   "Verification code": "सत्यापन कोड",
   "Verify & Create Account": "सत्यापित करा आणि खाते तयार करा",
   "Didn't receive a code? Resend": "कोड मिळाला नाही? पुन्हा पाठवा",
+  "Back to Sign In": "साइन इन वर परत जा",
+  "Back": "परत",
+  "Verify OTP": "ओटीपी सत्यापित करा",
+  "Reset Password": "पासवर्ड रीसेट करा",
+  "Password Reset": "पासवर्ड रीसेट झाला",
+  "Enter your email to receive a password reset code": "पासवर्ड रीसेट कोड मिळवण्यासाठी तुमचा ईमेल प्रविष्ट करा",
+  "Enter the 6-digit code sent to {email}": "{email} वर पाठवलेला 6-अंकी कोड प्रविष्ट करा",
+  "Create a new secure password for your account": "तुमच्या खात्यासाठी एक नवीन सुरक्षित पासवर्ड तयार करा",
+  "Your password has been reset successfully": "तुमचा पासवर्ड यशस्वीरित्या रीसेट करण्यात आला आहे",
+  "Email address": "ईमेल पत्ता",
+  "Send Reset Code": "रीसेट कोड पाठवा",
+  "6-digit OTP": "6-अंकी ओटीपी",
+  "New Password": "नवीन पासवर्ड",
+  "Confirm New Password": "नवीन पासवर्डची पुष्टी करा",
+  "Go to Sign In": "साइन इन वर जा",
   "By clicking Create Account you agree to GloFi Estates": "खाते तयार करा वर क्लिक करून आपण GloFi Estates शी सहमत आहात",
 };
+
 

@@ -868,6 +868,19 @@ export const hi: MessageTable = {
   "Verification code": "सत्यापन कोड",
   "Verify & Create Account": "सत्यापित करें और खाता बनाएं",
   "Didn't receive a code? Resend": "कोड नहीं मिला? फिर से भेजें",
+  "Back": "वापस",
+  "Verify OTP": "ओटीपी सत्यापित करें",
+  "Password Reset": "पासवर्ड रीसेट हो गया",
+  "Enter your email to receive a password reset code": "पासवर्ड रीसेट कोड प्राप्त करने के लिए अपना ईमेल दर्ज करें",
+  "Enter the 6-digit code sent to {email}": "{email} पर भेजा गया 6-अंकीय कोड दर्ज करें",
+  "Create a new secure password for your account": "अपने अकाउंट के लिए एक नया सुरक्षित पासवर्ड बनाएं",
+  "Your password has been reset successfully": "आपका पासवर्ड सफलतापूर्वक रीसेट कर दिया गया है",
+  "Email address": "ईमेल पता",
+  "Send Reset Code": "रीसेट कोड भेजें",
+  "6-digit OTP": "6-अंकीय ओटीपी",
+  "Confirm New Password": "नए पासवर्ड की पुष्टि करें",
+  "Go to Sign In": "साइन इन पर जाएं",
   "By clicking Create Account you agree to GloFi Estates": "खाता बनाएं पर क्लिक करके आप GloFi Estates से सहमत होते हैं",
 };
+
 
