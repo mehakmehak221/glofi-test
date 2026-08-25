@@ -287,7 +287,7 @@ export const bn: MessageTable = {
   "Invite & Earn": "আমন্ত্রণ করুন এবং উপার্জন করুন",
   "Issued At": "ইস্যু করার তারিখ",
   "Join": "যোগ দিন",
-  "KYC": "কেওয়াইসি (KYC)",
+  "KYC": "কেওয়াইসি (KYC)",
   "KYC STARTED": "KYC শুরু হয়েছে",
   "KYC-verified investing with structured ownership, secure transactions, and transparent reporting.": "KYC-সত্যায়িত বিনিয়োগ, কাঠামোবদ্ধ মালিকানা, নিরাপদ লেনদেন এবং স্বচ্ছ রিপোর্টিংসহ।",
   "LAND_PARCEL": "জমির অংশ",
