@@ -7,6 +7,7 @@ export const bn: MessageTable = {
   "+3 This Week": "+৩ এই সপ্তাহে",
   "+8.5% Overall": "+৮.৫% সামগ্রিক",
   "+₹0 this month": "+₹০ এই মাসে",
+  "/ Fraction": "/ অংশ",
   "1 day ago": "১ দিন আগে",
   "1. Generate": "1. তৈরি করুন",
   "100% TRUSTED PLATFORM": "১০০% বিশ্বস্ত প্ল্যাটফর্ম",
