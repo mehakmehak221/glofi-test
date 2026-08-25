@@ -569,4 +569,7 @@ export const mr: MessageTable = {
   "{count} live": "{count} सक्रिय",
   "{invests} invests": "{invests} गुंतवणूक",
   "₹62.1 Lacs": "₹६२.१ लाख",
+  "Stay in the loop": "अपडेट राहा",
+  "Get every new post": "प्रत्येक नवीन पोस्ट मिळवा",
+  "Follow GloFi Blog": "GloFi ब्लॉग फॉलो करा",
 };

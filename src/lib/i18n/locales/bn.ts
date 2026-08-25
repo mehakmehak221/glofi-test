@@ -626,4 +626,7 @@ export const bn: MessageTable = {
   "{count} assets": "{count}টি সম্পদ",
   "{count} live": "{count} সক্রিয়",
   "{invests} invests": "{invests} বিনিয়োগ",
+  "Stay in the loop": "আপডেট থাকুন",
+  "Get every new post": "প্রতিটি নতুন পোস্ট পান",
+  "Follow GloFi Blog": "GloFi ব্লগ অনুসরণ করুন",
 };
