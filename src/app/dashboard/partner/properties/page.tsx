@@ -130,7 +130,7 @@ function PropertyCard({ property, index, onDelete, onSubmitForReview, onEdit, on
                     {property.category && (
                         <div className="absolute bottom-4 left-4">
                             <span className="rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-black shadow-sm">
-                                {t(property.category.replace(/_/g, " "))}
+                                {t(property.category)}
                             </span>
                         </div>
                     )}
@@ -552,8 +552,8 @@ export default function PartnerPropertiesPage() {
                                                 tabIndex={0}
                                                 onClick={() => setSelectedReportAssetId(item.assetId)}
                                                 className={`w-full cursor-pointer rounded-2xl border p-3 text-left transition ${String(selectedShareReportAssetId) === String(item.assetId)
-                                                        ? "border-[var(--color-primary-300)]/30 bg-[var(--color-primary-300)]/8"
-                                                        : "border-[var(--sidebar-border)] bg-[var(--background)]/70 hover:border-[var(--color-primary-300)]/20"
+                                                    ? "border-[var(--color-primary-300)]/30 bg-[var(--color-primary-300)]/8"
+                                                    : "border-[var(--sidebar-border)] bg-[var(--background)]/70 hover:border-[var(--color-primary-300)]/20"
                                                     }`}
                                             >
                                                 <div className="flex items-start justify-between gap-3">
