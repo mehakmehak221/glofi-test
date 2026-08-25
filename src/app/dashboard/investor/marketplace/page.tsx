@@ -73,8 +73,8 @@ function FilterDropdown({
             <button
                 onClick={() => setOpen((p) => !p)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold border transition-all cursor-pointer ${value
-                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
-                        : "bg-[var(--field-surface)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
+                    ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-[var(--sidebar-active-text)]/30"
+                    : "bg-[var(--field-surface)] text-[var(--color-text-muted)] border-[var(--sidebar-border)] hover:border-[var(--sidebar-active-text)]/30 hover:text-[var(--header-text)]"
                     }`}
             >
                 {selected ? selected.label : placeholder}
@@ -100,8 +100,8 @@ function FilterDropdown({
                                 key={opt.value}
                                 onClick={() => { onChange(opt.value); setOpen(false); }}
                                 className={`w-full text-left px-4 py-2.5 text-xs font-semibold transition-colors cursor-pointer border-0 ${value === opt.value
-                                        ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]"
-                                        : "text-[var(--color-text-muted)] hover:bg-[var(--sidebar-bg)] hover:text-[var(--header-text)]"
+                                    ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)]"
+                                    : "text-[var(--color-text-muted)] hover:bg-[var(--sidebar-bg)] hover:text-[var(--header-text)]"
                                     }`}
                             >
                                 {opt.label}
@@ -159,7 +159,7 @@ export default function MarketplacePage() {
     });
 
     const rawAssets = assetsData?.data || [];
-    
+
     // Client-side search filtering
     let assets = [...rawAssets];
     if (debouncedSearch) {
@@ -179,10 +179,10 @@ export default function MarketplacePage() {
     // Client-side sorting
     assets.sort((a, b) => {
         const { value: sortField, order: sortOrder } = sortOpt;
-        
+
         let valA: any = a[sortField];
         let valB: any = b[sortField];
-        
+
         if (sortField === "expectedYield") {
             const yieldA = parseFloat(a.expectedYield || 0) +
                 parseFloat(a.expectedAnnualRent || 0) +
@@ -256,8 +256,8 @@ export default function MarketplacePage() {
                                 key={type}
                                 onClick={() => setSaleTypeFilter(type)}
                                 className={`relative px-6 py-2.5 rounded-md text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${isSelected
-                                        ? "text-[var(--sidebar-active-text)]"
-                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
+                                    ? "text-[var(--sidebar-active-text)]"
+                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
                                     }`}
                             >
                                 {isSelected && (
@@ -290,8 +290,8 @@ export default function MarketplacePage() {
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
                                 className={`relative px-4 py-1.5 rounded-md text-xs font-semibold transition-colors duration-200 cursor-pointer border-0 bg-transparent ${isSelected
-                                        ? "text-[var(--sidebar-active-text)]"
-                                        : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
+                                    ? "text-[var(--sidebar-active-text)]"
+                                    : "text-[var(--color-text-muted)] hover:text-[var(--header-text)]"
                                     }`}
                             >
                                 {isSelected && (
@@ -364,8 +364,8 @@ export default function MarketplacePage() {
                     )}
 
                     {!isLoading && (
-                        <span className="ml-auto text-[11px] text-[var(--color-text-muted)] font-medium">
-                            {assets.length} asset{assets.length !== 1 ? "s" : ""}
+                        <span className="text-xs font-semibold text-[var(--color-text-muted)]">
+                            {t(assets.length === 1 ? "{count} asset" : "{count} assets", { count: assets.length })}
                         </span>
                     )}
                 </div>

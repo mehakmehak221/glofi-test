@@ -31,6 +31,7 @@ const DROPDOWN_STYLES = `
 `;
 
 function PillDropdown({ label, options, value, onChange, placeholder, disabled = false }) {
+    const { t } = useI18n();
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -57,7 +58,7 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
                 className={`flex justify-between items-center bg-neutral-50 border border-neutral-200/80 rounded-md px-4 py-1.5 text-xs font-Montserrat cursor-pointer transition-all min-w-[150px] ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-neutral-300'} ${isOpen ? 'border-[#00DAAF] shadow-sm' : ''}`}
             >
                 <span className={value ? "text-neutral-900 font-medium" : "text-neutral-400"}>
-                     {value || placeholder}
+                    {value || placeholder}
                 </span>
                 <svg className={`w-3 h-3 text-neutral-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -76,7 +77,7 @@ function PillDropdown({ label, options, value, onChange, placeholder, disabled =
                             <input
                                 type="text"
                                 autoFocus
-                                placeholder="Search..."
+                                placeholder={t("Search...")}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full bg-neutral-50 border border-neutral-200 rounded-md px-3 py-1.5 text-[10px] text-neutral-800 focus:outline-none focus:border-[#00DAAF]/50 font-Montserrat"
@@ -194,11 +195,10 @@ export default function ExplorePage() {
                                     <button
                                         key={type}
                                         onClick={() => setSaleTypeFilter(type)}
-                                        className={`relative px-5 py-2 rounded-md text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${
-                                            isSelected
-                                                ? "text-[#00B28F]"
-                                                : "text-neutral-500 hover:text-neutral-900"
-                                        }`}
+                                        className={`relative px-5 py-2 rounded-md text-xs font-bold transition-colors duration-300 cursor-pointer border-0 bg-transparent z-10 ${isSelected
+                                            ? "text-[#00B28F]"
+                                            : "text-neutral-500 hover:text-neutral-900"
+                                            }`}
                                     >
                                         {isSelected && (
                                             <motion.div
@@ -207,7 +207,7 @@ export default function ExplorePage() {
                                                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                             />
                                         )}
-                                        {type === "FRACTIONAL" ? "Fractional Real Estate" : "Whole Properties"}
+                                        {type === "FRACTIONAL" ? t("Fractional Real Estate") : t("Whole Properties")}
                                     </button>
                                 );
                             })}
@@ -225,14 +225,14 @@ export default function ExplorePage() {
                                         : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300 hover:bg-neutral-100"
                                         }`}
                                 >
-                                    {cat}
+                                    {t(cat)}
                                 </button>
                             ))}
                         </div>
 
                         <div className="flex flex-wrap gap-6 items-center border-t border-neutral-100 pt-5">
                             <PillDropdown
-                                label="Country"
+                                label={t("Country")}
                                 options={Country.getAllCountries()}
                                 value={countryFilter}
                                 onChange={(opt) => {
@@ -242,10 +242,10 @@ export default function ExplorePage() {
                                     setCityFilter("");
                                     setStateIsoCode("");
                                 }}
-                                placeholder="Select Country"
+                                placeholder={t("Select Country")}
                             />
                             <PillDropdown
-                                label="State"
+                                label={t("State")}
                                 options={countryIsoCode ? State.getStatesOfCountry(countryIsoCode) : []}
                                 value={stateFilter}
                                 onChange={(opt) => {
@@ -253,17 +253,17 @@ export default function ExplorePage() {
                                     setStateFilter(opt.name);
                                     setCityFilter("");
                                 }}
-                                placeholder="Select State"
+                                placeholder={t("Select State")}
                                 disabled={!countryIsoCode}
                             />
                             <PillDropdown
-                                label="City"
+                                label={t("City")}
                                 options={(countryIsoCode && stateIsoCode) ? City.getCitiesOfState(countryIsoCode, stateIsoCode) : []}
                                 value={cityFilter}
                                 onChange={(opt) => {
                                     setCityFilter(opt.name);
                                 }}
-                                placeholder="Select City"
+                                placeholder={t("Select City")}
                                 disabled={!stateIsoCode}
                             />
                             {(countryFilter || stateFilter || cityFilter) && (
@@ -277,7 +277,7 @@ export default function ExplorePage() {
                                     }}
                                     className="text-xs font-bold text-neutral-400 hover:text-neutral-600 transition-colors py-2 px-3 hover:bg-neutral-50 rounded-md"
                                 >
-                                    Clear Filters
+                                    {t("Clear Filters")}
                                 </button>
                             )}
                         </div>

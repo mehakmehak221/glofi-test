@@ -111,10 +111,9 @@ function SignInPageContent() {
             localStorage.setItem("isLoggedIn", "true");
             setCookie("isLoggedIn", "true");
 
-            localStorage.setItem("toastMessage", "Login successful!");
+            localStorage.setItem("toastMessage", t("Login successful!"));
 
-            // Use window.location.href to do a full page navigation so the proxy
-            // picks up the freshly set cookie on the new request
+
             window.location.href = "/dashboard";
         } catch (err: any) {
             const errorBody = err?.data;
@@ -131,7 +130,7 @@ function SignInPageContent() {
                     2
                 )
             );
-            applySignInApiErrors(err, undefined, {
+            applySignInApiErrors(err, t, {
                 setEmailError,
                 setPasswordError,
                 setErrorMsg,

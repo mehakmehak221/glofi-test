@@ -236,7 +236,7 @@ function SignUpPageContent() {
             (result?.role as string | undefined) ||
             userType.toUpperCase();
         localStorage.setItem("userType", role);
-        localStorage.setItem("toastMessage", "Registration successful!");
+        localStorage.setItem("toastMessage", t("Registration successful!"));
         router.push("/onboarding");
     };
 
@@ -341,7 +341,7 @@ function SignUpPageContent() {
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
-                applySignUpApiErrors(apiErr, undefined, {
+                applySignUpApiErrors(apiErr, t, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
@@ -407,7 +407,7 @@ function SignUpPageContent() {
             if (apiErr?.status === 429) {
                 setErrorMsg(formatResendCooldownMessage(apiErr.data?.retryAfterSeconds));
             } else {
-                applySignUpApiErrors(apiErr, undefined, {
+                applySignUpApiErrors(apiErr, t, {
                     setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                     setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
                 });
@@ -469,7 +469,7 @@ function SignUpPageContent() {
             const result = await verifyRegistrationOtp({ email: form.email.trim(), otp: normalizedOtp }).unwrap();
             completeRegistration(result);
         } catch (err: unknown) {
-            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, undefined, {
+            applySignUpApiErrors(err as { status?: number; data?: unknown; message?: string }, t, {
                 setNameError, setEmailError, setPhoneError, setPasswordError, setReraError,
                 setExpiryError, setReferralError, setConfirmPasswordError, setOtpError, setErrorMsg,
             });

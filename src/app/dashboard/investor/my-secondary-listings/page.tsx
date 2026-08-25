@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResaleIcon, EyeOpenIcon } from "@/components/VectorImages";
 import { useGetMySecondaryListingsQuery, useDeleteSecondaryListingMutation } from "@/store/api/secondaryMarketApi";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -17,6 +18,7 @@ const itemVariants = {
 };
 
 export default function MySecondaryListingsPage() {
+    const { t } = useI18n();
     const { data: listingsResponse, isLoading } = useGetMySecondaryListingsQuery();
     const [deleteListing] = useDeleteSecondaryListingMutation();
     const [toast, setToast] = useState({ show: false, message: "", type: "success" });
@@ -114,7 +116,7 @@ export default function MySecondaryListingsPage() {
                                                                     item.status === "APPROVED" || item.status === "LISTED" ? "bg-[var(--color-status-success-bg)] text-[var(--color-status-success)] border-[var(--color-status-success-border)]" :
                                                                         "bg-[var(--color-status-error-bg)] text-[var(--color-status-error)] border-[var(--color-status-error-border)]"
                                                                     }`}>
-                                                                    {item.status?.replace('_', ' ')}
+                                                                    {t(item.status)}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -124,15 +126,15 @@ export default function MySecondaryListingsPage() {
 
                                                         <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-4 sm:gap-6 lg:gap-8 w-full mt-2">
                                                             <div>
-                                                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Fractions Listed</p>
+                                                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Fractions Listed")}</p>
                                                                 <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{item.fractionsListed || item.fractions}</p>
                                                             </div>
                                                             <div>
-                                                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Price Per Fraction</p>
+                                                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Price Per Fraction")}</p>
                                                                 <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">₹{Number(item.askPrice || item.pricePerFraction || 0).toLocaleString()}</p>
                                                             </div>
                                                             <div>
-                                                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Total Expected</p>
+                                                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Total Expected")}</p>
                                                                 <p className="text-xs sm:text-sm font-bold text-[var(--sidebar-active-text)]">
                                                                     ₹{((item.fractionsListed || item.fractions || 0) * (item.askPrice || item.pricePerFraction || 0)).toLocaleString()}
                                                                 </p>
@@ -148,7 +150,7 @@ export default function MySecondaryListingsPage() {
                                                         whileTap={{ scale: 0.98 }}
                                                         className="flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-md bg-red-500/10 text-red-500 text-[11px] font-bold hover:bg-red-500/20 transition-all border border-red-500/20 cursor-pointer"
                                                     >
-                                                        Delete Listing
+                                                        {t("Delete Listing")}
                                                     </motion.button>
                                                 </div>
                                             </div>
@@ -162,8 +164,8 @@ export default function MySecondaryListingsPage() {
                                 className="bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-md p-12 flex flex-col items-center justify-center text-center"
                             >
                                 <ResaleIcon className="w-12 h-12 text-[var(--color-text-muted)]/20 mb-4" />
-                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">No active listings</h3>
-                                <p className="text-sm text-[var(--color-text-muted)]">You don&apos;t have any properties currently listed for resale</p>
+                                <h3 className="text-lg font-bold text-[var(--header-text)] mb-1">{t("No active listings")}</h3>
+                                <p className="text-sm text-[var(--color-text-muted)]">{t("You don't have any properties currently listed for resale")}</p>
                             </motion.div>
                         )}
                     </motion.div>

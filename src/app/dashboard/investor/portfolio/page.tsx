@@ -390,7 +390,7 @@ function AssetCard({ asset, onResale }) {
                     />
                     {asset.isResale && (
                         <div className="absolute top-3 left-3 px-2 py-1 rounded-full bg-[var(--btn-cta-bg)] text-[var(--btn-cta-text)] text-[9px] font-bold uppercase tracking-wider">
-                            On Sale
+                            {t("On Sale")}
                         </div>
                     )}
                 </div>
@@ -404,26 +404,26 @@ function AssetCard({ asset, onResale }) {
                                     ? "bg-[var(--color-status-warning-bg)] text-[var(--color-status-warning)] border-[var(--color-status-warning-border)]"
                                     : "bg-[var(--color-status-info-bg)] text-[var(--color-status-info)] border-[var(--color-status-info-border)]"
                                     }`}>
-                                    {asset.status.replace("_", " ")}
+                                    {t(asset.status)}
                                 </div>
                             )}
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 items-center gap-4 sm:gap-6 lg:gap-8 w-full">
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Fractions</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Fractions")}</p>
                                 <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{asset.fractions}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Invested</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Invested")}</p>
                                 <p className="text-xs sm:text-sm font-bold text-[var(--header-text)]">{asset.invested}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">Value</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Value")}</p>
                                 <p className="text-sm font-bold text-[var(--color-primary-500)]">{asset.value}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">ROI</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("ROI")}</p>
                                 <p className="text-sm font-bold text-[var(--color-primary-500)]">{asset.roi}</p>
                             </div>
                         </div>

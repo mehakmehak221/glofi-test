@@ -28,9 +28,11 @@ import { useGetUserCouponsQuery, useValidateCouponMutation } from "@/store/api/r
 import { API_URL } from "@/constants";
 
 import { useCurrency } from "@/providers/CurrencyProvider";
+import { useI18n } from "@/providers/LocaleProvider";
 
 export default function PropertyDetailPage() {
     const { formatPrice, currency } = useCurrency();
+    const { t } = useI18n();
     const params = useParams();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -421,7 +423,7 @@ export default function PropertyDetailPage() {
                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 mb-6 shadow-sm">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 sm:divide-x sm:divide-[var(--sidebar-border)]/65 text-left sm:text-center items-stretch">
                             <div className="min-w-0 rounded-xl sm:rounded-none p-3 sm:p-0">
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Valuation</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">{t("Valuation")}</p>
                                 <div className="relative group inline-block w-full">
                                     <p className="text-sm sm:text-base font-bold text-[var(--header-text)] break-words leading-tight px-1 cursor-default">{formatPrice(property.valuation, true)}</p>
                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden group-hover:block pointer-events-none">
@@ -433,7 +435,7 @@ export default function PropertyDetailPage() {
                                 </div>
                             </div>
                             <div className="min-w-0 rounded-xl sm:rounded-none p-3 sm:p-0">
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">{property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">{property.saleType === 'WHOLE' ? t('Whole Price') : t('Per Fraction')}</p>
                                 <div className="relative group inline-block w-full">
                                     <p className="text-sm sm:text-base font-bold text-[var(--header-text)] break-words leading-tight px-1 cursor-default">
                                         {formatPrice(fractionPrice, true)}
@@ -447,7 +449,7 @@ export default function PropertyDetailPage() {
                                 </div>
                             </div>
                             <div className="min-w-0 rounded-xl sm:rounded-none p-3 sm:p-0">
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">Potential Annual Return</p>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-semibold">{t("Potential Annual Return")}</p>
                                 <p className="text-sm sm:text-base font-bold text-[var(--sidebar-active-text)] break-words leading-tight">
                                     {(
                                         parseFloat(property.expectedYield || 0) +
@@ -464,8 +466,8 @@ export default function PropertyDetailPage() {
                     {/* Funding Progress Card */}
                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 mb-6 shadow-sm">
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
-                            <span className="text-[11px] font-bold uppercase tracking-[1.5px] text-[var(--color-text-muted)]">Funding Progress</span>
-                            <span className="text-sm font-bold text-[var(--sidebar-active-text)]">{fundedPercentage}% funded</span>
+                            <span className="text-[11px] font-bold uppercase tracking-[1.5px] text-[var(--color-text-muted)]">{t("Funding Progress")}</span>
+                            <span className="text-sm font-bold text-[var(--sidebar-active-text)]">{t("{percent}% funded", { percent: fundedPercentage })}</span>
                         </div>
                         <div className="w-full h-2.5 bg-[var(--card-surface)] border border-[var(--sidebar-border)] rounded-full overflow-hidden mb-4">
                             <motion.div
@@ -476,7 +478,7 @@ export default function PropertyDetailPage() {
                             />
                         </div>
                         <div className="flex justify-between items-center text-[13px] font-bold">
-                            <span className="text-[var(--color-text-muted)]">{property.availableFractions?.toLocaleString()} fractions remaining</span>
+                            <span className="text-[var(--color-text-muted)]">{t("{count} fractions remaining", { count: property.availableFractions?.toLocaleString() })}</span>
                             <span className="text-[var(--sidebar-active-text)]">
                                 {(
                                     parseFloat(property.expectedYield || 0) +
@@ -484,7 +486,7 @@ export default function PropertyDetailPage() {
                                     parseFloat(property.rentalGrowthRate || 0) +
                                     parseFloat(property.expectedAppreciationRate || 0) -
                                     parseFloat(property.operatingCostRate || 0)
-                                ).toFixed(1)}% p.a.
+                                ).toFixed(1)}% {t("p.a.")}
                             </span>
                         </div>
                     </div>
@@ -492,9 +494,9 @@ export default function PropertyDetailPage() {
                     {/* Top Segmented Tab Control */}
                     <div className="flex bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-full p-1 mb-6 shadow-sm overflow-hidden">
                         {[
-                            { id: "overview", label: "Overview" },
-                            { id: "projection", label: "Projection" },
-                            { id: "financial", label: "Financial" }
+                            { id: "overview", label: t("Overview") },
+                            { id: "projection", label: t("Projection") },
+                            { id: "financial", label: t("Financial") }
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -522,7 +524,7 @@ export default function PropertyDetailPage() {
 
                                 {property.images && property.images.length > 0 && (
                                     <div className="mb-6">
-                                        <h3 className="text-sm font-bold text-[var(--header-text)] mb-4 px-1">Images</h3>
+                                        <h3 className="text-sm font-bold text-[var(--header-text)] mb-4 px-1">{t("Images")}</h3>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 px-1">
                                             {property.images.map((img, idx) => (
                                                 <div
@@ -549,7 +551,7 @@ export default function PropertyDetailPage() {
                                 )}
 
                                 <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-5 sm:p-6 mb-6 shadow-sm">
-                                    <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3">About this property</h3>
+                                    <h3 className="text-[15px] font-bold text-[var(--header-text)] mb-3">{t("About this property")}</h3>
                                     <div className={`text-[13px] text-[var(--color-text-muted)] leading-relaxed font-montserrat tracking-tight ${!isDescExpanded ? "line-clamp-4" : ""}`}>
                                         {property.description}
                                     </div>
@@ -558,17 +560,17 @@ export default function PropertyDetailPage() {
                                             onClick={() => setIsDescExpanded(!isDescExpanded)}
                                             className="text-[var(--sidebar-active-text)] font-bold text-[13px] mt-2 hover:underline focus:outline-none"
                                         >
-                                            {isDescExpanded ? "View less" : "View more"}
+                                            {isDescExpanded ? t("View less") : t("View more")}
                                         </button>
                                     )}
 
                                     <div className="mt-6 border-t border-[var(--sidebar-border)]/60 pt-5 flex flex-wrap gap-x-8 gap-y-4">
                                         <div>
-                                            <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 font-semibold block mb-0.5">Total Fractions</span>
+                                            <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 font-semibold block mb-0.5">{t("Total Fractions")}</span>
                                             <span className="text-sm font-bold text-[var(--header-text)]">{property.totalFractions?.toLocaleString()}</span>
                                         </div>
                                         <div>
-                                            <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 font-semibold block mb-0.5">Available Fractions</span>
+                                            <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]/60 font-semibold block mb-0.5">{t("Available Fractions")}</span>
                                             <span className="text-sm font-bold text-[var(--header-text)]">{property.availableFractions?.toLocaleString()}</span>
                                         </div>
                                     </div>
@@ -980,27 +982,27 @@ export default function PropertyDetailPage() {
                                     </div>
                                     <div className="h-px bg-[var(--sidebar-border)]/50 my-1" />
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xs font-bold text-[var(--header-text)]">Total Investment</span>
+                                        <span className="text-xs font-bold text-[var(--header-text)]">{t("Total Investment")}</span>
                                         <span className="text-base font-black text-[var(--sidebar-active-text)]">
                                             {formatPrice(fractionPrice * investQuantity, true)}
                                         </span>
                                     </div>
                                 </div>
-                            </div>
+                             </div>
 
                             <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
 
                                 {couponsLoading ? (
                                     <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--color-text-muted)]">
-                                        Loading active coupons...
+                                        {t("Loading active coupons...")}
                                     </div>
                                 ) : couponsError ? (
                                     <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs text-red-400">
-                                        Failed to load active coupons.
+                                        {t("Failed to load active coupons.")}
                                     </div>
                                 ) : activeCoupons.length === 0 ? (
                                     <div className="rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--color-text-muted)]">
-                                        No active coupons available right now.
+                                        {t("No active coupons available right now.")}
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 gap-3">
@@ -1020,7 +1022,7 @@ export default function PropertyDetailPage() {
                                                             {formatCouponValue(coupon)}
                                                         </p>
                                                         <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
-                                                            Min investment {formatPrice(Number(coupon.minimumInvestment || 0))} · Expires {coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString("en-IN") : "—"}
+                                                            {t("Min investment {amount}", { amount: formatPrice(Number(coupon.minimumInvestment || 0)) })} · {t("Expires")} {coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString("en-IN") : "—"}
                                                         </p>
                                                     </div>
                                                     <div className="flex flex-wrap gap-2">
@@ -1029,17 +1031,17 @@ export default function PropertyDetailPage() {
                                                             onClick={() => handleApplyCoupon(coupon.code)}
                                                             className="inline-flex h-10 items-center justify-center rounded-xl bg-[var(--color-primary-300)] px-4 text-xs font-bold uppercase tracking-wider text-black"
                                                         >
-                                                            Apply
+                                                            {t("Apply")}
                                                         </button>
                                                         <button
                                                             type="button"
                                                             onClick={async () => {
                                                                 await navigator.clipboard.writeText(coupon.code);
                                                                 showToast(`Copied ${coupon.code}`);
-                                                            }}
+                                                             }}
                                                             className="inline-flex h-10 items-center justify-center rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-xs font-bold uppercase tracking-wider text-[var(--foreground)]"
                                                         >
-                                                            Copy
+                                                            {t("Copy")}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -1051,10 +1053,10 @@ export default function PropertyDetailPage() {
 
                             <div ref={couponSectionRef} className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
                                 <div className="flex items-center justify-between gap-3 mb-3">
-                                    <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Validate Coupon</h3>
+                                    <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">{t("Validate Coupon")}</h3>
                                     {couponValidationState ? (
                                         <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${couponValidationState.isValid ? "border-emerald-500/20 text-emerald-500 bg-emerald-500/10" : "border-red-500/20 text-red-400 bg-red-500/10"}`}>
-                                            {couponValidationState.isValid ? "Valid" : "Invalid"}
+                                            {couponValidationState.isValid ? t("Valid") : t("Invalid")}
                                         </span>
                                     ) : null}
                                 </div>
@@ -1063,7 +1065,7 @@ export default function PropertyDetailPage() {
                                     <input
                                         value={couponCode}
                                         onChange={(e) => setCouponCode(e.target.value)}
-                                        placeholder="Coupon code"
+                                        placeholder={t("Coupon code")}
                                         className="w-full h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)]"
                                     />
                                     <input
@@ -1072,7 +1074,7 @@ export default function PropertyDetailPage() {
                                         type="text"
                                         inputMode="numeric"
                                         pattern="[0-9]*"
-                                        placeholder="Investment amount"
+                                        placeholder={t("Investment amount")}
                                         className="w-full h-11 rounded-xl border border-[var(--sidebar-border)] bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none focus:border-[var(--color-primary-300)] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     />
                                     <input
@@ -1089,16 +1091,16 @@ export default function PropertyDetailPage() {
                                     {couponValidationState ? (
                                         <div className="rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] px-4 py-3 text-xs text-[var(--foreground)]">
                                             <p className="font-semibold">
-                                                {couponValidationState.isValid ? "Coupon valid" : "Coupon invalid"}
+                                                {couponValidationState.isValid ? t("Coupon valid") : t("Coupon invalid")}
                                             </p>
                                             <p className="mt-1 text-[var(--color-text-muted)]">
                                                 {couponValidationState.coupon?.code
                                                     ? `${couponValidationState.coupon.code} · ${couponValidationState.coupon.type}`
-                                                    : couponValidationState.message || "Validation completed."}
+                                                    : couponValidationState.message || t("Validation completed.")}
                                             </p>
                                             {typeof couponValidationState.discountAmount === "number" ? (
                                                 <p className="mt-2 font-bold">
-                                                    Discount: {formatPrice(couponValidationState.discountAmount)}
+                                                    {t("Discount:")} {formatPrice(couponValidationState.discountAmount)}
                                                 </p>
                                             ) : null}
                                         </div>
@@ -1108,7 +1110,7 @@ export default function PropertyDetailPage() {
                                         disabled={validatingCoupon}
                                         className="w-full h-11 rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-xs uppercase tracking-wider border-0 disabled:opacity-50"
                                     >
-                                        {validatingCoupon ? "Validating..." : "Validate Coupon"}
+                                        {validatingCoupon ? t("Validating...") : t("Validate Coupon")}
                                     </button>
                                 </form>
                             </div>
@@ -1118,7 +1120,7 @@ export default function PropertyDetailPage() {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                 </svg>
                                 <span className="text-xs font-bold text-[var(--sidebar-active-text)] text-center">
-                                    Estimated Returns ({annualReturnPercent.toFixed(1)}% p.a.)
+                                    {t("Estimated Returns ({rate}% p.a.)", { rate: annualReturnPercent.toFixed(1) })}
                                 </span>
                             </div>
 
@@ -1129,7 +1131,7 @@ export default function PropertyDetailPage() {
                                     onClick={handleInvestNow}
                                     className="w-full py-4 rounded-xl bg-[var(--color-primary-300)] text-black font-bold text-sm border-0 transition-all cursor-pointer select-none hover:opacity-90 shadow-glow-primary"
                                 >
-                                    Invest Now
+                                    {t("Invest Now")}
                                 </button>
                             </div>
                         </div>
