@@ -775,6 +775,7 @@ export const hi: MessageTable = {
   "Total Earnings": "कुल कमाई",
   "Total Expected": "कुल अपेक्षित",
   "Total Investments": "कुल निवेश",
+  "Total Leads": "कुल लीड्स",
   "Total Links": "कुल लिंक्स",
   "Total Paid": "कुल भुगतान",
   "Total Profit": "कुल लाभ",
