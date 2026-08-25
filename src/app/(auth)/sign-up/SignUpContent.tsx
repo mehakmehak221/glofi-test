@@ -451,9 +451,7 @@ function SignUpPageContent() {
         }
     };
 
-    // ---------------------------------------------------------------------------
-    // OTP (email) form submit
-    // ---------------------------------------------------------------------------
+
     const handleOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMsg(""); setOtpError(""); setSuccessMsg("");
@@ -537,9 +535,7 @@ function SignUpPageContent() {
                 <RoleInsightCallout role={userType} />
             </motion.div>
 
-            {/* ---------------------------------------------------------------- */}
-            {/* Step: PHONE_OTP — Firebase SMS verification                      */}
-            {/* ---------------------------------------------------------------- */}
+
             {step === "PHONE_OTP" ? (
                 <form
                     noValidate
@@ -547,14 +543,14 @@ function SignUpPageContent() {
                     className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <div className="flex flex-col gap-1">
-                        <p className="text-sm font-semibold text-neutral-900">Phone Verification</p>
+                        <p className="text-sm font-semibold text-neutral-900">{t("Phone Verification")}</p>
                         <p className="text-sm text-neutral-500 leading-relaxed">
-                            Enter the SMS code sent to your registered phone number.
+                            {t("Enter the SMS code sent to your registered phone number.")}
                         </p>
                     </div>
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-phone-code" className="text-sm font-medium text-neutral-900 font-montserrat">
-                            SMS Code
+                            {t("SMS Code")}
                         </label>
                         <input
                             id="sign-up-phone-code"
@@ -580,7 +576,7 @@ function SignUpPageContent() {
                         ) : null}
                     </div>
                     <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
-                        {isLoading ? <LoadingSpinner /> : "Verify Phone"}
+                        {isLoading ? <LoadingSpinner /> : t("Verify Phone")}
                     </button>
                     <button
                         type="button"
@@ -588,7 +584,7 @@ function SignUpPageContent() {
                         disabled={isLoading}
                         className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors text-center disabled:opacity-50"
                     >
-                        Didn&apos;t receive an SMS? Resend
+                        {t("Didn't receive an SMS? Resend")}
                     </button>
                     <button
                         type="button"
@@ -600,7 +596,7 @@ function SignUpPageContent() {
                         disabled={isLoading}
                         className="text-sm text-[var(--color-primary-500)] hover:text-[var(--color-primary-600)] transition-colors text-center disabled:opacity-50"
                     >
-                        Back to account details
+                        {t("Back to account details")}
                     </button>
                 </form>
 
@@ -614,12 +610,12 @@ function SignUpPageContent() {
                     className="flex flex-col gap-4 font-montserrat rounded-2xl border border-neutral-200 bg-white shadow-sm p-5 sm:p-6"
                 >
                     <p className="text-sm text-neutral-500 leading-relaxed">
-                        Enter the verification code sent to{" "}
+                        {t("Enter the verification code sent to")}{" "}
                         <span className="text-neutral-900 font-medium">{form.email.trim()}</span>
                     </p>
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-otp" className="text-sm font-medium text-neutral-900 font-montserrat">
-                            Verification code
+                            {t("Verification code")}
                         </label>
                         <input
                             id="sign-up-otp"
@@ -645,7 +641,7 @@ function SignUpPageContent() {
                         ) : null}
                     </div>
                     <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
-                        {isLoading ? <LoadingSpinner /> : "Verify & Create Account"}
+                        {isLoading ? <LoadingSpinner /> : t("Verify & Create Account")}
                     </button>
                     <button
                         type="button"
@@ -653,7 +649,7 @@ function SignUpPageContent() {
                         disabled={isLoading}
                         className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors text-center disabled:opacity-50"
                     >
-                        Didn&apos;t receive a code? Resend
+                        {t("Didn't receive a code? Resend")}
                     </button>
                     <button
                         type="button"
@@ -664,7 +660,7 @@ function SignUpPageContent() {
                         disabled={isLoading}
                         className="text-sm text-[var(--color-primary-500)] hover:text-[var(--color-primary-600)] transition-colors text-center disabled:opacity-50"
                     >
-                        Back to account details
+                        {t("Back to account details")}
                     </button>
                 </form>
 
@@ -679,7 +675,7 @@ function SignUpPageContent() {
                 >
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-name" className="text-sm font-medium text-neutral-900 font-montserrat">
-                            Full Name
+                            {t("Full Name")}
                         </label>
                         <input
                             id="sign-up-name"
@@ -699,7 +695,7 @@ function SignUpPageContent() {
 
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-email" className="text-sm font-medium text-neutral-900 font-montserrat">
-                            Email Address
+                            {t("Email Address")}
                         </label>
                         <input
                             id="sign-up-email"
@@ -722,7 +718,7 @@ function SignUpPageContent() {
 
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-phone" className="text-sm font-medium text-neutral-900 font-montserrat">
-                            Phone Number
+                            {t("Phone Number")}
                         </label>
                         <PhoneInput
                             id="sign-up-phone"
@@ -743,7 +739,7 @@ function SignUpPageContent() {
 
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-password" className="text-sm font-medium text-neutral-900 font-montserrat">
-                            Password
+                            {t("Password")}
                         </label>
                         <div className="relative">
                             <input
@@ -775,7 +771,7 @@ function SignUpPageContent() {
                             aria-label="Password requirements"
                             aria-live="polite"
                         >
-                            {getSignUpPasswordCriteria(form.password).map(({ id, label, met }) => (
+                            {getSignUpPasswordCriteria(form.password, t).map(({ id, label, met }) => (
                                 <li key={id} className={`flex items-start gap-2 ${met ? "text-emerald-400/95" : ""}`}>
                                     <span className="mt-0.5 w-3.5 shrink-0 text-center" aria-hidden>{met ? "✓" : "○"}</span>
                                     <span>{label}</span>
@@ -789,7 +785,7 @@ function SignUpPageContent() {
 
                     <div className="flex flex-col gap-2">
                         <label htmlFor="sign-up-confirm-password" className="text-sm font-medium text-neutral-900 font-montserrat">
-                            Confirm Password
+                            {t("Confirm Password")}
                         </label>
                         <div className="relative">
                             <input
@@ -820,7 +816,7 @@ function SignUpPageContent() {
                         <>
                             <div className="flex flex-col gap-2">
                                 <label htmlFor="sign-up-rera" className="text-sm font-medium text-neutral-900 font-montserrat">
-                                    RERA Number <span className="text-neutral-500 font-normal">(Optional)</span>
+                                    {t("RERA Number")} <span className="text-neutral-500 font-normal">({t("Optional")})</span>
                                 </label>
                                 <input
                                     id="sign-up-rera"
@@ -838,7 +834,7 @@ function SignUpPageContent() {
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label htmlFor="sign-up-rera-expiry" className="text-sm font-medium text-neutral-900 font-montserrat">
-                                    RERA Expiry Date <span className="text-neutral-500 font-normal">(Optional)</span>
+                                    {t("RERA Expiry Date")} <span className="text-neutral-500 font-normal">({t("Optional")})</span>
                                 </label>
                                 <input
                                     id="sign-up-rera-expiry"
@@ -857,14 +853,14 @@ function SignUpPageContent() {
                     ) : (
                         <div className="flex flex-col gap-2">
                             <label htmlFor="sign-up-referral" className="text-sm font-medium text-neutral-900 font-montserrat">
-                                Referral Code <span className="text-neutral-500 font-normal">(Optional)</span>
+                                {t("Referral Code")} <span className="text-neutral-500 font-normal">({t("Optional")})</span>
                             </label>
                             <input
                                 id="sign-up-referral"
                                 type="text"
                                 value={form.referredByCode}
                                 onChange={set("referredByCode")}
-                                placeholder="Enter code if you have one"
+                                placeholder={t("Enter code if you have one")}
                                 aria-invalid={Boolean(referralError)}
                                 aria-describedby={referralError ? "sign-up-referral-error" : undefined}
                                 className={`premium-input w-full ${referralError ? "border-red-500/60 focus:border-red-400" : ""}`}
@@ -876,19 +872,19 @@ function SignUpPageContent() {
                     )}
 
                     <button type="submit" disabled={isLoading} className="btn-primary w-full mt-1 justify-center font-bold">
-                        {isLoading ? <LoadingSpinner /> : userType === "Agent" ? "Create Account" : "Continue"}
+                        {isLoading ? <LoadingSpinner /> : userType === "Agent" ? t("Create Account") : t("Continue")}
                     </button>
                 </form>
             )}
 
             <p className="text-center text-xs text-neutral-500 mt-8 font-montserrat leading-relaxed px-1">
-                By clicking Create Account you agree to GloFi Estates{" "}
+                {t("By clicking Create Account you agree to GloFi Estates")}{" "}
                 <Link href="/terms" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
-                    Terms &amp; Conditions
+                    {t("Terms & Conditions")}
                 </Link>{" "}
-                and{" "}
+                {t("and")}{" "}
                 <Link href="/privacy-policy" className="text-neutral-600 hover:text-neutral-900 underline-offset-2 hover:underline">
-                    Privacy Policy
+                    {t("Privacy Policy")}
                 </Link>
                 .
             </p>
