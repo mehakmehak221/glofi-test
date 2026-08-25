@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import { CreateLeadDto } from '@/types/crm';
 import { X, UserPlus, Phone, Mail, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useI18n } from '@/providers/LocaleProvider';
 
 interface CreateLeadModalProps {
   isOpen: boolean;
@@ -104,6 +105,7 @@ const INITIAL_FORM: CreateLeadDto = {
 const INITIAL_TOUCHED: TouchedFields = { name: false, phone: false, email: false };
 
 export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClose, onSubmit }) => {
+  const { t } = useI18n();
   const [formData, setFormData] = useState<CreateLeadDto>(INITIAL_FORM);
   const [touched, setTouched] = useState<TouchedFields>(INITIAL_TOUCHED);
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({});
@@ -176,7 +178,7 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
       setFieldErrors({});
       onClose();
     } catch (err: any) {
-      setSubmitError(err.message || 'Failed to create lead. Please try again.');
+      setSubmitError(err.message || t('Failed to create lead. Please try again.'));
     } finally {
       setIsSubmitting(false);
     }
@@ -199,8 +201,8 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
               <UserPlus className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[var(--foreground)]">Create New Lead</h3>
-              <p className="text-xs text-[var(--sidebar-text)] opacity-60">Add a new prospective client to your pipeline</p>
+              <h3 className="text-base font-bold text-[var(--foreground)]">{t("Create New Lead")}</h3>
+              <p className="text-xs text-[var(--sidebar-text)] opacity-60">{t("Add a new prospective client to your pipeline")}</p>
             </div>
           </div>
           <button
@@ -224,12 +226,12 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
           {/* Full Name */}
           <div>
             <label className="block text-xs font-bold text-[var(--sidebar-text)] opacity-80 mb-1.5 uppercase tracking-wider">
-              Full Name <span className="text-rose-400">*</span>
+              {t("Full Name")} <span className="text-rose-400">*</span>
             </label>
             <div className="relative">
               <input
                 type="text"
-                placeholder="e.g. Jane Doe"
+                placeholder={t("e.g. Jane Doe")}
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 onBlur={() => handleBlur('name')}
@@ -247,7 +249,7 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
             {/* Phone */}
             <div>
               <label className="block text-xs font-bold text-[var(--sidebar-text)] opacity-80 mb-1.5 uppercase tracking-wider">
-                Phone Number <span className="text-rose-400">*</span>
+                {t("Phone Number")} <span className="text-rose-400">*</span>
               </label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--sidebar-text)] opacity-50 pointer-events-none" />
@@ -273,8 +275,8 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
             {/* Email */}
             <div>
               <label className="block text-xs font-bold text-[var(--sidebar-text)] opacity-80 mb-1.5 uppercase tracking-wider">
-                Email Address
-                <span className="ml-1.5 text-[var(--sidebar-text)] opacity-40 font-normal normal-case tracking-normal">(optional)</span>
+                {t("Email Address")}
+                <span className="ml-1.5 text-[var(--sidebar-text)] opacity-40 font-normal normal-case tracking-normal">{t("(optional)")}</span>
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--sidebar-text)] opacity-50 pointer-events-none" />
@@ -302,25 +304,25 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-[var(--sidebar-text)] opacity-80 mb-1.5 uppercase tracking-wider">
-                Lead Source
+                {t("Lead Source")}
               </label>
               <select
                 value={formData.source}
                 onChange={(e) => handleChange('source', e.target.value)}
                 className="w-full px-3 py-2.5 rounded-md bg-[var(--background)] border border-[var(--sidebar-border)] text-xs font-medium text-[var(--foreground)] focus:outline-none focus:border-[var(--color-primary-300)] transition-colors"
               >
-                <option value="Website">Website</option>
-                <option value="LinkedIn">LinkedIn</option>
-                <option value="Referral">Referral</option>
-                <option value="Event">Event</option>
-                <option value="Direct">Direct</option>
-                <option value="WhatsApp">WhatsApp</option>
+                <option value="Website">{t("Website")}</option>
+                <option value="LinkedIn">{t("LinkedIn")}</option>
+                <option value="Referral">{t("Referral")}</option>
+                <option value="Event">{t("Event")}</option>
+                <option value="Direct">{t("Direct")}</option>
+                <option value="WhatsApp">{t("WhatsApp")}</option>
               </select>
             </div>
 
             <div>
               <label className="block text-xs font-bold text-[var(--sidebar-text)] opacity-80 mb-1.5 uppercase tracking-wider">
-                Priority
+                {t("Priority")}
               </label>
               <select
                 value={formData.priority}
@@ -329,9 +331,9 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
                 }
                 className="w-full px-3 py-2.5 rounded-md bg-[var(--background)] border border-[var(--sidebar-border)] text-xs font-medium text-[var(--foreground)] focus:outline-none focus:border-[var(--color-primary-300)] transition-colors"
               >
-                <option value="HIGH">High Priority</option>
-                <option value="MEDIUM">Medium Priority</option>
-                <option value="LOW">Low Priority</option>
+                <option value="HIGH">{t("High Priority")}</option>
+                <option value="MEDIUM">{t("Medium Priority")}</option>
+                <option value="LOW">{t("Low Priority")}</option>
               </select>
             </div>
           </div>
@@ -343,14 +345,14 @@ export const CreateLeadModal: React.FC<CreateLeadModalProps> = ({ isOpen, onClos
               onClick={handleClose}
               className="px-4 py-2.5 rounded-md text-xs font-bold text-[var(--sidebar-text)] hover:text-[var(--foreground)] hover:bg-[var(--color-primary-300)]/5 transition-colors cursor-pointer"
             >
-              Cancel
+              {t("Cancel")}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
               className="px-5 py-2.5 rounded-md bg-[var(--color-primary-300)] hover:bg-[var(--color-primary-300)]/90 text-[#050505] text-xs font-bold shadow-[var(--shadow-btn)] flex items-center gap-2 transition-all cursor-pointer disabled:opacity-60"
             >
-              {isSubmitting ? 'Creating...' : 'Create Lead'}
+              {isSubmitting ? t('Creating...') : t('Create Lead')}
             </button>
           </div>
         </form>
