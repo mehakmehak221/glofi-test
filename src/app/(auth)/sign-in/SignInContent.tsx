@@ -69,7 +69,7 @@ function SignInPageContent() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrorMsg("");
-        const { emailError: nextEmailErr, passwordError: nextPassErr } = validateSignInFields(email, password);
+        const { emailError: nextEmailErr, passwordError: nextPassErr } = validateSignInFields(email, password, undefined, t);
         setEmailError(nextEmailErr);
         setPasswordError(nextPassErr);
         if (nextEmailErr || nextPassErr) {
