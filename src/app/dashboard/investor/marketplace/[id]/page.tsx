@@ -201,9 +201,9 @@ export default function PropertyDetailPage() {
     const fundedPercentage = Math.round(((property.totalFractions - property.availableFractions) / property.totalFractions) * 100);
 
     const documents = [
-        { name: "Ownership Proof / Backing Document", url: property.titleDeedUrl },
-        { name: "Valuation Report", url: property.valuationReportUrl },
-        { name: "Legal Opinion", url: property.legalOpinionUrl },
+        { name: t("Ownership Proof / Backing Document"), url: property.titleDeedUrl },
+        { name: t("Valuation Report"), url: property.valuationReportUrl },
+        { name: t("Legal Opinion"), url: property.legalOpinionUrl },
     ].filter(doc => doc.url);
 
     const handleInvestNow = () => {
@@ -578,7 +578,7 @@ export default function PropertyDetailPage() {
 
                                 {documents.length > 0 && (
                                     <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-[24px] p-4 sm:p-6 mb-6 shadow-sm">
-                                        <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">Documents</h3>
+                                        <h3 className="text-sm font-bold text-[var(--header-text)] mb-4">{t("Documents")}</h3>
                                         <div className="space-y-3">
                                             {documents.map((doc) => {
                                                 const isPdf = doc.url.toLowerCase().endsWith('.pdf');
@@ -604,13 +604,13 @@ export default function PropertyDetailPage() {
                                                             </div>
                                                             <div className="min-w-0 flex-1">
                                                                 <h4 className="text-sm font-bold text-[var(--header-text)] truncate max-w-full md:max-w-[260px] lg:max-w-[350px]">{doc.name}</h4>
-                                                                <p className="text-[11px] text-[var(--color-text-muted)] font-medium mt-0.5">{fileType.toLowerCase()} document</p>
+                                                                <p className="text-[11px] text-[var(--color-text-muted)] font-medium mt-0.5">{t(fileType.toLowerCase() + " document")}</p>
                                                             </div>
                                                         </div>
 
                                                         <div className="flex flex-wrap items-center gap-2 md:flex-nowrap md:justify-end md:shrink-0">
                                                             <span className="px-2.5 py-1 rounded-md text-[9px] font-black tracking-widest bg-[var(--badge-bg)] text-[var(--sidebar-active-text)] border border-[var(--sidebar-active-text)]/20 shadow-sm whitespace-nowrap">
-                                                                {fileType}
+                                                                {t(fileType)}
                                                             </span>
 
 
@@ -620,7 +620,7 @@ export default function PropertyDetailPage() {
                                                                 rel="noopener noreferrer"
                                                                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold text-[var(--sidebar-active-text)] bg-[var(--sidebar-active-bg)] hover:bg-[var(--sidebar-active-bg)]/80 hover:underline transition-colors no-underline border border-[var(--sidebar-active-text)]/10 whitespace-nowrap"
                                                             >
-                                                                VIEW
+                                                                {t("VIEW")}
                                                                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                                                 </svg>
@@ -885,7 +885,7 @@ export default function PropertyDetailPage() {
                     <div
                         className="rounded-[24px] p-5 sm:p-6 bg-[var(--card-surface)] border border-[var(--sidebar-border)] shadow-xl"
                     >
-                        <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">{property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}</p>
+                        <p className="text-[10px] uppercase tracking-[2px] text-[var(--color-text-muted)]/60 mb-1 font-semibold ">{property.saleType === 'WHOLE' ? t('Whole Price') : t('Per Fraction')}</p>
                         <p className="text-md sm:text-3xl font-bold text-[var(--header-text)] mb-5">
                             {formatPrice(fractionPrice, true)}
                         </p>
@@ -917,10 +917,10 @@ export default function PropertyDetailPage() {
                             {property.saleType !== 'WHOLE' && (property.totalFractions || 1) > 1 && (
                                 <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
                                     <div className="flex justify-between items-center mb-2">
-                                        <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">Select Fractions</h3>
+                                        <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)]">{t("Select Fractions")}</h3>
                                     </div>
                                     <p className="text-[11px] text-[var(--color-text-muted)] font-medium mb-4">
-                                        Available: {property.availableFractions?.toLocaleString() || "20,000"} fractions
+                                        {t("Available: {count} fractions", { count: property.availableFractions?.toLocaleString() || "20,000" })}
                                     </p>
 
                                     <div className="relative mb-5 flex items-center">
@@ -958,7 +958,7 @@ export default function PropertyDetailPage() {
                                     </div>
 
                                     <div className="flex justify-between items-center border-t border-[var(--sidebar-border)]/65 pt-3 mt-3">
-                                        <span className="text-xs font-semibold text-[var(--color-text-muted)]">Fractions selected</span>
+                                        <span className="text-xs font-semibold text-[var(--color-text-muted)]">{t("Fractions selected")}</span>
                                         <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-[var(--color-primary-300)]/15 text-[var(--sidebar-active-text)] border border-[var(--color-primary-300)]/20 shadow-sm">
                                             {investQuantity}
                                         </span>
@@ -968,16 +968,16 @@ export default function PropertyDetailPage() {
 
 
                             <div className="bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] rounded-2xl p-4 sm:p-5 shadow-sm">
-                                <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)] mb-4">Investment Summary</h3>
+                                <h3 className="text-sm sm:text-base font-bold text-[var(--header-text)] mb-4">{t("Investment Summary")}</h3>
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center text-xs">
-                                        <span className="text-[var(--color-text-muted)] font-medium">{property.saleType === 'WHOLE' ? 'Whole Price' : 'Price per fraction'}</span>
+                                        <span className="text-[var(--color-text-muted)] font-medium">{property.saleType === 'WHOLE' ? t('Whole Price') : t('Price per fraction')}</span>
                                         <span className="text-[var(--header-text)] font-semibold">
                                             {formatPrice(fractionPrice)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs">
-                                        <span className="text-[var(--color-text-muted)] font-medium">Fractions</span>
+                                        <span className="text-[var(--color-text-muted)] font-medium">{t("Fractions")}</span>
                                         <span className="text-[var(--header-text)] font-semibold">× {investQuantity}</span>
                                     </div>
                                     <div className="h-px bg-[var(--sidebar-border)]/50 my-1" />
