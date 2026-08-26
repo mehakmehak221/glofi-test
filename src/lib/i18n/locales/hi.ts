@@ -925,4 +925,13 @@ export const hi: MessageTable = {
   "{count} asset": "{count} संपत्ति",
   "{count} assets": "{count} संपत्तियां",
   "₹62.1 Lacs": "₹62.1 लाख",
+  "Not available": "उपलब्ध नहीं",
+  "UPI": "UPI",
+  "SECONDARY_MARKET": "द्वितीयक बाजार",
+  "{percent}% funded": "{percent}% वित्त पोषित",
+  "{count} fractions remaining": "{count} हिस्से बचे हैं",
+  "p.a.": "प्रति वर्ष",
+  "Projection": "प्रोजेक्शन",
+  "Financial": "वित्तीय",
+  "Images": "छवियां"
 };

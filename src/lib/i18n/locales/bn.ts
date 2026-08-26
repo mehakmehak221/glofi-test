@@ -629,4 +629,12 @@ export const bn: MessageTable = {
   "Stay in the loop": "আপডেট থাকুন",
   "Get every new post": "প্রতিটি নতুন পোস্ট পান",
   "Follow GloFi Blog": "GloFi ব্লগ অনুসরণ করুন",
+  "UPI": "UPI",
+  "SECONDARY_MARKET": "সেকেন্ডারি মার্কেট",
+  "{percent}% funded": "{percent}% অর্থায়ন করা হয়েছে",
+  "{count} fractions remaining": "{count} ভগ্নাংশ বাকি",
+  "p.a.": "বার্ষিক",
+  "Projection": "অনুমিত হিসাব",
+  "Financial": "আর্থিক",
+  "Images": "ছবি",
 };

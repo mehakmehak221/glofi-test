@@ -188,7 +188,7 @@ export default function TransactionsPage() {
                                     </div>
                                     <div className="col-span-2">
                                         <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mb-1 font-bold">{t("Method")}</p>
-                                        <p className="text-[var(--header-text)] font-bold">{tx.paymentMethod || tx.method || "-"}</p>
+                                        <p className="text-[var(--header-text)] font-bold">{t(tx.paymentMethod || tx.method || "-")}</p>
                                     </div>
                                 </div>
                             </motion.div>

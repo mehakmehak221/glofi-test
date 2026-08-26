@@ -473,7 +473,7 @@ export default function AccountPage() {
                             <div className="flex items-center bg-[var(--field-surface)] border border-[var(--sidebar-border)] rounded-full p-1 sm:p-1.5 mb-6 sm:mb-10 w-full max-w-[800px]">
                                 <input
                                     readOnly
-                                    value={profileData?.referralCode ? `Glofi.com/ref/${profileData.referralCode}` : "Not available"}
+                                    value={profileData?.referralCode ? `Glofi.com/ref/${profileData.referralCode}` : t("Not available")}
                                     className="flex-1 min-w-0 bg-transparent border-0 text-[var(--color-text-muted)] text-[11px] sm:text-sm px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 focus:outline-none placeholder-[var(--color-text-muted)]/20 font-mono tracking-wide"
                                 />
                                 <button
