@@ -558,7 +558,7 @@ export default function AgentReferralsPage() {
                     <label className="block text-xs font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60 mb-2">{t("Destination URL *")}</label>
                     <input
                       type="url"
-                      placeholder="e.g. https://glofi.com/properties/dubai-skyline"
+                      placeholder={t("e.g. https://glofi.com/properties/dubai-skyline")}
                       value={createDestUrl}
                       onChange={(e) => setCreateDestUrl(e.target.value)}
                       className="w-full rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] focus:border-[var(--color-primary-300)] focus:outline-none"
@@ -568,7 +568,7 @@ export default function AgentReferralsPage() {
                     <label className="block text-xs font-bold uppercase tracking-wider text-[var(--sidebar-text)] opacity-60 mb-2">{t("Custom Code (Optional)")}</label>
                     <input
                       type="text"
-                      placeholder="e.g. MYDUBAI2026"
+                      placeholder={t("e.g. MYDUBAI2026")}
                       value={createCustomCode}
                       onChange={(e) => setCreateCustomCode(e.target.value)}
                       className="w-full rounded-lg border border-[var(--sidebar-border)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] focus:border-[var(--color-primary-300)] focus:outline-none"

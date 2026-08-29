@@ -69,17 +69,17 @@ export default function ForgotPasswordPage() {
 
         const trimmedEmail = email.trim();
         if (!trimmedEmail) {
-            setEmailError("Please enter your email address.");
+            setEmailError(t("Please enter your email address."));
             return;
         }
         if (!EMAIL_PATTERN.test(trimmedEmail)) {
-            setEmailError(EMAIL_FORMAT_ERROR);
+            setEmailError(t(EMAIL_FORMAT_ERROR));
             return;
         }
 
         try {
             await forgotPassword({ email: trimmedEmail }).unwrap();
-            setSuccessMsg("OTP sent successfully to your email.");
+            setSuccessMsg(t("OTP sent successfully to your email."));
             setStep("OTP");
         } catch (err: any) {
             setSuccessMsg("");
@@ -89,9 +89,9 @@ export default function ForgotPasswordPage() {
             const flatMessage = validationLines.join("\n\n") || coerceFirstStringMessage(errorBody) || (typeof message === "string" ? message : "");
 
             if (isMachineEmailValidationMessage(flatMessage)) {
-                setEmailError(EMAIL_FORMAT_ERROR);
+                setEmailError(t(EMAIL_FORMAT_ERROR));
             } else {
-                setErrorMsg(flatMessage || "Failed to send OTP. Please try again.");
+                setErrorMsg(t(flatMessage) || t("Failed to send OTP. Please try again."));
             }
         }
     };
@@ -103,11 +103,11 @@ export default function ForgotPasswordPage() {
 
         const trimmedOtp = otp.trim();
         if (!trimmedOtp) {
-            setOtpError("Please enter the 6-digit OTP code.");
+            setOtpError(t("Please enter the 6-digit OTP code."));
             return;
         }
         if (!/^\d{6}$/.test(trimmedOtp)) {
-            setOtpError("Please enter a valid 6-digit OTP.");
+            setOtpError(t("Please enter a valid 6-digit OTP."));
             return;
         }
 
@@ -123,9 +123,9 @@ export default function ForgotPasswordPage() {
             const flatMessage = validationLines.join("\n\n") || coerceFirstStringMessage(errorBody) || (typeof message === "string" ? message : "");
 
             if (flatMessage.toLowerCase().includes("otp") || flatMessage.toLowerCase().includes("code") || flatMessage.toLowerCase().includes("invalid")) {
-                setOtpError(flatMessage || "Invalid OTP. Please try again.");
+                setOtpError(t(flatMessage) || t("Invalid OTP. Please try again."));
             } else {
-                setErrorMsg(flatMessage || "Invalid OTP. Please try again.");
+                setErrorMsg(t(flatMessage) || t("Invalid OTP. Please try again."));
             }
         }
     };
