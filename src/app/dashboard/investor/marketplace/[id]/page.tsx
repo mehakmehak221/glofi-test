@@ -374,7 +374,7 @@ export default function PropertyDetailPage() {
 
 
                         <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FFFFFF] text-[#111111] border border-white/40 shadow-md z-10">
-                            {property.category?.replace(/_/g, ' ')}
+                            {t(property.category?.replace(/_/g, ' ') || "")}
                         </span>
 
 
@@ -385,7 +385,7 @@ export default function PropertyDetailPage() {
                                     ? 'bg-[#FF5C5C] text-[#FF5C5C]'
                                     : 'bg-[#E8940C] text-[#E8940C]'
                                 }`} />
-                            {property.riskRating} RISK
+                            {t("{risk} RISK", { risk: t(property.riskRating || "") })}
                         </span>
                     </div >
 
@@ -407,7 +407,7 @@ export default function PropertyDetailPage() {
                                 className="flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--sidebar-bg)] border border-[var(--sidebar-border)] text-sm font-semibold text-[var(--header-text)] hover:bg-[var(--card-surface)] transition-all cursor-pointer shadow-sm"
                             >
                                 <ShareIcon className="w-4 h-4 text-[var(--sidebar-active-text)]" />
-                                Share
+                                {t("Share")}
                             </button>
                             <PropertyShareModal
                                 isOpen={isShareDropdownOpen}

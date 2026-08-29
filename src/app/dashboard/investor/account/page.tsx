@@ -186,7 +186,7 @@ export default function AccountPage() {
                                         </div>
                                         <div className="flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] opacity-60">
                                             <AlertCircle className="w-3.5 h-3.5 text-[#00DAAF]" />
-                                            <span>JPG, PNG — max 2 MB</span>
+                                            <span>{t("JPG, PNG — max 2 MB")}</span>
                                         </div>
                                     </div>
 
@@ -356,31 +356,31 @@ export default function AccountPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-5 xl:max-w-[70rem]">
                             <div className="rounded-md p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-500)] shadow-glow-primary">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">INR BALANCE</p>
+                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">{t("INR BALANCE")}</p>
                                 <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">₹{profileData?.usdBalance || "0.00"}</p>
                                 <div className="flex gap-2">
-                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--sidebar-border)]">Deposit</button>
-                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--sidebar-border)] transition-colors cursor-pointer">Withdraw</button>
+                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--sidebar-border)]">{t("Deposit")}</button>
+                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--sidebar-border)] transition-colors cursor-pointer">{t("Withdraw")}</button>
                                 </div>
                             </div>
 
                             <div className="rounded-md p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-700)] shadow-glow-primary">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">AED BALANCE</p>
+                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">{t("AED BALANCE")}</p>
                                 <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">AED {profileData?.aedBalance || "0.00"}</p>
                                 <div className="flex gap-2">
-                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--sidebar-border)]">Deposit</button>
-                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--sidebar-border)] transition-colors cursor-pointer">Withdraw</button>
+                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--sidebar-border)]">{t("Deposit")}</button>
+                                    <button className="px-3 py-1 bg-[var(--card-surface)] text-[var(--header-text)] text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--sidebar-border)] transition-colors cursor-pointer">{t("Withdraw")}</button>
                                 </div>
                             </div>
 
                             <div className="rounded-md p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[var(--background)] to-[var(--color-primary-300)] shadow-glow-primary">
                                 <div className="absolute right-0 top-0 w-40 h-40 bg-[var(--background)]/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">CRYPTO</p>
+                                <p className="text-[11px] sm:text-[14px] uppercase tracking-[1.5px] font-normal text-[var(--color-text-muted)] mb-1.5 sm:mb-2.5">{t("CRYPTO")}</p>
                                 <p className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold text-[var(--header-text)] mb-5 sm:mb-8">{profileData?.cryptoBalance || "0.00"} ETH</p>
                                 <div className="flex gap-2">
-                                    <button className="px-3 py-1 bg-[var(--color-bg-surface-subtle)] text-white text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--color-border-subtle)]">Deposit</button>
-                                    <button className="px-3 py-1 bg-[var(--color-bg-surface-subtle)] text-white text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--color-border-subtle)] transition-colors cursor-pointer">Withdraw</button>
+                                    <button className="px-3 py-1 bg-[var(--color-bg-surface-subtle)] text-white text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full transition-colors cursor-pointer border border-[var(--color-border-subtle)]">{t("Deposit")}</button>
+                                    <button className="px-3 py-1 bg-[var(--color-bg-surface-subtle)] text-white text-[10px] sm:text-[11px] font-normal tracking-wide rounded-full border border-[var(--color-border-subtle)] transition-colors cursor-pointer">{t("Withdraw")}</button>
                                 </div>
                             </div>
                         </div>

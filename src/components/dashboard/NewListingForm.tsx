@@ -14,6 +14,7 @@ import { validateFileUpload, unwrapAssetResponse, type UpdateAssetPayload } from
 import { Country, State, City } from "country-state-city";
 import KYBModal from "./KYBModal";
 import KYCModal from "./KYCModal";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const DROPDOWN_STYLES = `
   .dropdown-scroll::-webkit-scrollbar {
@@ -43,6 +44,7 @@ const DROPDOWN_STYLES = `
 `;
 
 function LocationDropdown({ label, options, value, onChange, placeholder, disabled = false, required = false }) {
+    const { t } = useI18n();
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const dropdownRef = useRef(null);
@@ -64,11 +66,11 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
     return (
         <div className={`flex flex-col gap-2 relative ${isOpen ? 'z-30' : 'z-10'}`} ref={dropdownRef}>
             <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                {label}
+                {t(label)}
                 {required ? (
-                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                    <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>
                 ) : (
-                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
+                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>
                 )}
             </label>
             <div
@@ -76,7 +78,7 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
                 className={`flex justify-between items-center bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm font-montserrat cursor-pointer transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[var(--foreground)]/50'} ${isOpen ? 'border-[var(--foreground)] ring-1 ring-[var(--foreground)]/50' : ''}`}
             >
                 <span className={value ? "text-[var(--foreground)]" : "text-[var(--sidebar-text)]/30"}>
-                    {value || placeholder}
+                    {value || t(placeholder)}
                 </span>
                 <svg className={`w-4 h-4 text-[var(--sidebar-text)]/50 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -95,7 +97,7 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
                             <input
                                 type="text"
                                 autoFocus
-                                placeholder="Search..."
+                                placeholder={t("Search...")}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-lg px-3 py-2 text-xs text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 font-montserrat"
@@ -118,7 +120,7 @@ function LocationDropdown({ label, options, value, onChange, placeholder, disabl
                                 ))
                             ) : (
                                 <div className="px-4 py-3 text-xs text-[var(--sidebar-text)]/50 font-montserrat text-center italic">
-                                    No results found
+                                    {t("No results found")}
                                 </div>
                             )}
                         </div>
@@ -218,6 +220,7 @@ function formDataToUpdatePayload(formData: ReturnType<typeof assetToFormData>): 
 }
 
 const UploadArea = ({ label, onUpload, value, isUploading, required = false, optional = false }) => {
+    const { t } = useI18n();
     const fileInputRef = useRef(null);
 
     const handleFileChange = async (e) => {
@@ -255,9 +258,9 @@ const UploadArea = ({ label, onUpload, value, isUploading, required = false, opt
             </div>
             <span className="text-[10px] lg:text-[9px] font-medium text-[var(--sidebar-text)] opacity-60 text-center uppercase tracking-wider font-montserrat flex flex-col items-center gap-1">
                 <span className="flex items-center gap-1.5">
-                    {isUploading ? 'Uploading...' : label}
-                    {!isUploading && required && <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>}
-                    {!isUploading && optional && <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>}
+                    {isUploading ? t('Uploading...') : t(label)}
+                    {!isUploading && required && <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>}
+                    {!isUploading && optional && <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>}
                 </span>
             </span>
             {value && (
@@ -270,6 +273,7 @@ const UploadArea = ({ label, onUpload, value, isUploading, required = false, opt
 };
 
 export default function NewListingForm({ onBack, editId, initialProperty = null }) {
+    const { t } = useI18n();
     const [formData, setFormData] = useState({
         title: "",
         location: "",
@@ -427,13 +431,13 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
             >
                 <div className="flex items-center justify-between mb-8">
                     <h1 className="text-xl lg:text-2xl font-semibold text-[var(--foreground)] font-montserrat tracking-tight">
-                        {editId ? "Edit Property" : "New Property"}
+                        {editId ? t("Edit Property") : t("New Property")}
                     </h1>
                     <button
                         onClick={onBack}
                         className="flex items-center gap-2 bg-[var(--sidebar-active-bg)] hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98] text-[var(--sidebar-active-text)] px-4 py-2 rounded-md text-sm font-medium font-montserrat transition-all cursor-pointer"
                     >
-                        Back to List
+                        {t("Back to List")}
                     </button>
                 </div>
 
@@ -443,7 +447,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                     </div>
                 ) : isAssetLoadError && editId && !initialProperty ? (
                     <div className="rounded-md border border-red-500/20 bg-red-500/10 p-6 text-center text-red-500 text-sm font-montserrat">
-                        Could not load property details. Go back and try again.
+                        {t("Could not load property details. Go back and try again.")}
                     </div>
                 ) : !editId && !isKycStatusLoading && !isKybStatusLoading && (kycStatus?.status !== 'VERIFIED' || (kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED')) ? (
                     <div className="bg-[var(--form-surface)] border border-[var(--foreground)]/20 rounded-md p-8 sm:p-14 flex flex-col items-center text-center gap-6">
@@ -451,9 +455,9 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             <BusinessPropertyIcon className="w-7 h-7 text-[var(--color-status-warning)]" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-2">Verification Required</h2>
+                            <h2 className="text-xl font-bold text-[var(--foreground)] font-montserrat mb-2">{t("Verification Required")}</h2>
                             <p className="text-sm text-[var(--sidebar-text)] opacity-70 font-montserrat max-w-sm mx-auto leading-relaxed">
-                                Both KYC and KYB verification must be approved before you can create a new property listing.
+                                {t("Both KYC and KYB verification must be approved before you can create a new property listing.")}
                             </p>
                         </div>
                         <div className="flex flex-wrap gap-3 justify-center">
@@ -463,7 +467,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                     ? 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
                                     : 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'
                                 }`}>
-                                KYC: {kycStatus?.status || 'NOT SUBMITTED'}
+                                KYC: {kycStatus?.status ? t(kycStatus.status) : t('NOT SUBMITTED')}
                             </div>
                             <div className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-[10px] font-bold uppercase font-montserrat ${kybStatus?.status === 'APPROVED' || kybStatus?.status === 'VERIFIED'
                                 ? 'bg-[var(--color-status-success-bg)] border-[var(--color-status-success-border)] text-[var(--color-status-success)]'
@@ -471,7 +475,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                     ? 'bg-[var(--color-status-warning-bg)] border-[var(--color-status-warning-border)] text-[var(--color-status-warning)]'
                                     : 'bg-[var(--color-status-error-bg)] border-[var(--color-status-error-border)] text-[var(--color-status-error)]'
                                 }`}>
-                                KYB: {kybStatus?.status || 'NOT SUBMITTED'}
+                                KYB: {kybStatus?.status ? t(kybStatus.status) : t('NOT SUBMITTED')}
                             </div>
                         </div>
                         <div className="flex flex-wrap gap-3 justify-center">
@@ -480,7 +484,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                     onClick={() => setShowKycModal(true)}
                                     className="px-6 py-2.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-sm font-bold font-montserrat transition-all cursor-pointer hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98]"
                                 >
-                                    Complete KYC
+                                    {t("Complete KYC")}
                                 </button>
                             )}
                             {kybStatus?.status !== 'APPROVED' && kybStatus?.status !== 'VERIFIED' && (
@@ -488,7 +492,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                     onClick={() => setShowKybModal(true)}
                                     className="px-6 py-2.5 rounded-md bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] text-sm font-bold font-montserrat transition-all cursor-pointer hover:bg-[var(--sidebar-active-text)]/20 hover:scale-[1.02] active:scale-[0.98]"
                                 >
-                                    Complete KYB
+                                    {t("Complete KYB")}
                                 </button>
                             )}
                         </div>
@@ -515,18 +519,18 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                         <div className="flex items-center gap-4 mb-6 text-[10px] font-montserrat">
                             <span className="flex items-center gap-1 text-[var(--sidebar-text)]/60">
                                 <span className="text-red-500 text-[11px] leading-none">*</span>
-                                <span>Required</span>
+                                <span>{t("Required")}</span>
                             </span>
                             <span className="flex items-center gap-1 text-[var(--sidebar-text)]/50">
-                                <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
+                                <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>
                             </span>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Title
-                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                    {t("Title")}
+                                    <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -538,8 +542,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Location
-                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                    {t("Location")}
+                                    <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -586,8 +590,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             />
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Category
-                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                    {t("Category")}
+                                    <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>
                                 </label>
                                 <select
                                     value={formData.category}
@@ -596,29 +600,29 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                 >
                                     {CATEGORIES.map((cat) => (
                                         <option key={cat.value} value={cat.value} className="bg-[var(--form-surface)] text-[var(--foreground)]">
-                                            {cat.label}
+                                            {t(cat.label)}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Sale Type
-                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                    {t("Sale Type")}
+                                    <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>
                                 </label>
                                 <select
                                     value={formData.saleType}
                                     onChange={(e) => setFormData({ ...formData, saleType: e.target.value })}
                                     className="bg-[var(--field-surface)] border border-[var(--foreground)]/20 rounded-md px-4 py-3.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--foreground)] focus:ring-1 focus:ring-[var(--foreground)]/50 transition-colors font-montserrat cursor-pointer"
                                 >
-                                    <option value="FRACTIONAL" className="bg-[var(--form-surface)] text-[var(--foreground)]">Fractional</option>
-                                    <option value="WHOLE" className="bg-[var(--form-surface)] text-[var(--foreground)]">Whole</option>
+                                    <option value="FRACTIONAL" className="bg-[var(--form-surface)] text-[var(--foreground)]">{t("Fractional")}</option>
+                                    <option value="WHOLE" className="bg-[var(--form-surface)] text-[var(--foreground)]">{t("Whole")}</option>
                                 </select>
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Valuation
-                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                    {t("Valuation")}
+                                    <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>
                                 </label>
                                 <input
                                     type="number"
@@ -630,8 +634,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Total Fractions
-                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                    {t("Total Fractions")}
+                                    <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>
                                 </label>
                                 <input
                                     type="number"
@@ -643,8 +647,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Annual Yield (%)
-                                    <span className="text-red-500 text-[11px] leading-none" title="Required">*</span>
+                                    {t("Annual Yield (%)")}
+                                    <span className="text-red-500 text-[11px] leading-none" title={t("Required")}>*</span>
                                 </label>
                                 <input
                                     type="number"
@@ -656,8 +660,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Expected Annual Rent
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
+                                    {t("Expected Annual Rent")}
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>
                                 </label>
                                 <input
                                     type="number"
@@ -669,8 +673,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Rental Growth Rate (%)
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
+                                    {t("Rental Growth Rate (%)")}
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>
                                 </label>
                                 <input
                                     type="number"
@@ -682,8 +686,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Expected Appreciation Rate (%)
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
+                                    {t("Expected Appreciation Rate (%)")}
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>
                                 </label>
                                 <input
                                     type="number"
@@ -695,8 +699,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Operating Cost Rate (%)
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
+                                    {t("Operating Cost Rate (%)")}
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>
                                 </label>
                                 <input
                                     type="number"
@@ -708,8 +712,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Holding Period (Years)
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
+                                    {t("Holding Period (Years)")}
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>
                                 </label>
                                 <input
                                     type="number"
@@ -721,8 +725,8 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             </div>
                             <div className="flex flex-col gap-2 md:col-span-2">
                                 <label className="text-[10px] font-semibold text-[var(--foreground)] tracking-widest uppercase font-montserrat flex items-center gap-1.5">
-                                    Description
-                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">optional</span>
+                                    {t("Description")}
+                                    <span className="text-[8px] font-normal normal-case tracking-normal text-[var(--sidebar-text)]/70 border border-[var(--foreground)]/30 bg-[var(--sidebar-text)]/5 rounded px-1.5 py-0.5 font-montserrat">{t("optional")}</span>
                                 </label>
                                 <textarea
                                     rows={5}
@@ -747,7 +751,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                                         </svg>
                                     </div>
                                     <span className="text-[12px] font-semibold text-[var(--foreground)] tracking-wide font-montserrat">
-                                        Is your asset RERA verified?
+                                        {t("Is your asset RERA verified?")}
                                     </span>
                                 </label>
                             </div>
@@ -791,7 +795,7 @@ export default function NewListingForm({ onBack, editId, initialProperty = null 
                             whileTap={{ scale: 0.98 }}
                             className="w-full sm:w-auto bg-[var(--sidebar-active-text)] text-[var(--background)] font-bold text-sm px-8 py-3.5 rounded-md transition-all cursor-pointer font-montserrat min-w-[200px] flex items-center justify-center hover:shadow-glow-primary"
                         >
-                            {isSubmitting ? <LoadingSpinner /> : editId ? "Update Property" : "Save as Draft"}
+                            {isSubmitting ? <LoadingSpinner /> : editId ? t("Update Property") : t("Save as Draft")}
                         </motion.button>
                     </div>
                 )}

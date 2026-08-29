@@ -49,7 +49,7 @@ export default function AgentDashboardLayout({ children }: { children: React.Rea
                                         )}
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">{t("Agent Verification: {status}", { status: kycData.status.replace("_", " ") })}</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">{t("Agent Verification: {status}", { status: t(kycData.status.replace("_", " ")) })}</p>
                                         <p className="text-[11px] opacity-80 leading-relaxed max-w-2xl">
                                             {kycData.status === "UNDER_REVIEW"
                                                 ? t("Your agent verification is currently being processed. This typically takes 24-48 hours.")

@@ -80,7 +80,7 @@ export default function DashboardLayout({ children }) {
                                         )}
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">{t("Identity Verification: {status}", { status: kycData.status.replace("_", " ") })}</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider mb-0.5">{t("Identity Verification: {status}", { status: t(kycData.status.replace("_", " ")) })}</p>
                                         <p className="text-[11px] opacity-80 leading-relaxed max-w-2xl">
                                             {kycData.status === "UNDER_REVIEW"
                                                 ? t("Your identity verification is currently being processed. You can't make investments until approved.")

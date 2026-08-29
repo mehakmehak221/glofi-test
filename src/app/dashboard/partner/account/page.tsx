@@ -167,7 +167,7 @@ export default function PartnerAccountPage() {
                                         </div>
                                         <div className="flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] opacity-60">
                                             <AlertCircle className="w-3.5 h-3.5 text-[#00DAAF]" />
-                                            <span>JPG, PNG — max 2 MB</span>
+                                            <span>{t("JPG, PNG — max 2 MB")}</span>
                                         </div>
                                     </div>
 
