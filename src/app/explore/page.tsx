@@ -361,8 +361,8 @@ export default function ExplorePage() {
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
 
-                                                <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold capitalize bg-white text-[#111111] shadow-md z-10 tracking-wide">
-                                                    {property.category.replace(/_/g, ' ').toLowerCase()}
+                                                <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold bg-white text-[#111] shadow-md z-10 tracking-wide">
+                                                    {t(property.category.toUpperCase())}
                                                 </span>
 
                                                 <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
@@ -372,7 +372,7 @@ export default function ExplorePage() {
                                                             ? 'bg-[#FF5C5C] text-[#FF5C5C]'
                                                             : 'bg-[#E8940C] text-[#E8940C]'
                                                         }`} />
-                                                    {riskLevel} RISK
+                                                    {t("{risk} RISK", { risk: t(riskLevel) })}
                                                 </span>
 
                                                 <button
@@ -408,12 +408,12 @@ export default function ExplorePage() {
                                                 <div className="bg-[#F9FAFB] border border-neutral-200/80 rounded-md p-4 mb-6 shadow-sm">
                                                     <div className="grid grid-cols-3 divide-x divide-neutral-200/65 text-center items-center">
                                                         <div>
-                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">Valuation</p>
+                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">{t("Valuation")}</p>
                                                             <p className="text-[15px] font-extrabold text-neutral-900">{formatPrice(property.valuation, true)}</p>
                                                         </div>
                                                         <div>
                                                             <p className="text-[10px] font-bold text-neutral-400 mb-1">
-                                                                {property.saleType === 'WHOLE' ? 'Whole Price' : 'Per Fraction'}
+                                                                {property.saleType === 'WHOLE' ? t("Whole Price") : t("Per Fraction")}
                                                             </p>
                                                             <p className="text-[15px] font-extrabold text-neutral-900">
                                                                 {formatPrice(
@@ -425,7 +425,7 @@ export default function ExplorePage() {
                                                             </p>
                                                         </div>
                                                         <div>
-                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">Potential Annual Return</p>
+                                                            <p className="text-[10px] font-bold text-neutral-400 mb-1">{t("Potential Annual Return")}</p>
                                                             <p className="text-[15px] font-extrabold text-[#00B28F]">{formattedYield}%</p>
                                                         </div>
                                                     </div>
@@ -434,8 +434,8 @@ export default function ExplorePage() {
                                                 {/* Funding Progress */}
                                                 <div className="mb-6">
                                                     <div className="flex justify-between items-center mb-2 text-[12px] font-bold text-neutral-400">
-                                                        <span>{fundedPercentage}% funded</span>
-                                                        <span>{property.availableFractions?.toLocaleString()} left</span>
+                                                        <span>{t("{percent}% funded", { percent: fundedPercentage })}</span>
+                                                        <span>{t("{count} left", { count: property.availableFractions?.toLocaleString() })}</span>
                                                     </div>
                                                     <div className="w-full h-2.5 bg-[#00DAAF]/20 rounded-full overflow-hidden">
                                                         <motion.div

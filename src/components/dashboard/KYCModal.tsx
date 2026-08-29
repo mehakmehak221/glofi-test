@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSubmitKycMutation, useGetKycStatusQuery, useSetupAgentKycMutation } from "@/store/api/kycApi";
 import { useUploadFileMutation } from "@/store/api/fileApi";
 import { useGetProfileQuery } from "@/store/api/authApi";
+import { useI18n } from "@/providers/LocaleProvider";
 
 const overlayVariants = {
     hidden: { opacity: 0 },
@@ -28,6 +29,7 @@ const TYPE_MAP = {
 };
 
 export default function KYCModal({ isOpen, onClose, onSubmit }) {
+    const { t } = useI18n();
     const [step, setStep] = useState(1);
     const [activeTab, setActiveTab] = useState("Passport");
     const [isReverifying, setIsReverifying] = useState(false);
@@ -82,12 +84,12 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
 
     const handleFormSubmit = async () => {
         if (!idDocKey || !selfieKey || !addressKey) {
-            alert("Please upload all required identity documents.");
+            alert(t("Please upload all required identity documents."));
             return;
         }
 
         if (isAgent && (!reraNumber || !expiryDate || !reraDocKey)) {
-            alert("Please provide all RERA details.");
+            alert(t("Please provide all RERA details."));
             return;
         }
 
@@ -114,7 +116,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
             if (onSubmit) onSubmit();
         } catch (err) {
             console.error('Submission failed:', err);
-            alert(err?.data?.message || "Verification submission failed. Please check your data.");
+            alert(err?.data?.message || t("Verification submission failed. Please check your data."));
         }
     };
 
@@ -143,7 +145,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                         <div className="flex items-center justify-between mb-8">
                             <div className="flex items-center gap-2.5 text-[11px] uppercase tracking-[1.5px] text-[#00FFCC] font-bold font-montserrat">
                                 <div className="w-2 h-2 rounded-full bg-[#00FFCC] animate-pulse" />
-                                <span>{isAgent ? "Agent Verification" : "KYC Verification"}</span>
+                                <span>{isAgent ? t("Agent Verification") : t("KYC Verification")}</span>
                             </div>
                             <button
                                 onClick={onClose}
@@ -179,18 +181,18 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                     )}
                                 </div>
                                 <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2 font-montserrat">
-                                    {isVerified ? "Verified" : isRejected ? "Verification Rejected" : "In Review"}
+                                    {isVerified ? t("Verified") : isRejected ? t("Verification Rejected") : t("In Review")}
                                 </h2>
                                 {isVerified && (
                                     <p className="text-sm text-[var(--foreground)]/50 mb-6 font-montserrat px-4 leading-relaxed">
-                                        Your identity and credentials have been successfully verified.
+                                        {t("Your identity and credentials have been successfully verified.")}
                                     </p>
                                 )}
                                 {isRejected && (
                                     <div className="mb-8 p-4 rounded-xl bg-[var(--color-status-error-bg)] border border-[var(--color-status-error-border)] text-left max-w-md mx-auto">
-                                        <p className="text-[10px] font-extrabold text-[var(--color-status-error)] uppercase tracking-widest mb-1.5 font-montserrat">Reason for Rejection</p>
+                                        <p className="text-[10px] font-extrabold text-[var(--color-status-error)] uppercase tracking-widest mb-1.5 font-montserrat">{t("Reason for Rejection")}</p>
                                         <p className="text-xs text-[var(--color-status-error)] leading-relaxed font-montserrat font-semibold">
-                                            {kycStatus?.rejectedNote && kycStatus.rejectedNote.toLowerCase() !== "na" ? kycStatus.rejectedNote : "Your document submission was rejected. Please re-upload your identity proof and check that your RERA registration details match exactly."}
+                                            {kycStatus?.rejectedNote && kycStatus.rejectedNote.toLowerCase() !== "na" ? kycStatus.rejectedNote : t("Your document submission was rejected. Please re-upload your identity proof and check that your RERA registration details match exactly.")}
                                         </p>
                                     </div>
                                 )}
@@ -201,14 +203,14 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                             className="flex-1 rounded-xl border border-[var(--foreground)]/10 text-[var(--foreground)] font-bold text-sm hover:bg-[var(--foreground)]/5 transition-all cursor-pointer bg-transparent"
                                             style={{ height: '72px' }}
                                         >
-                                            Return to Dashboard
+                                            {t("Return to Dashboard")}
                                         </button>
                                         <button
                                             onClick={() => setIsReverifying(true)}
                                             className="flex-[2] rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 font-montserrat"
                                             style={{ height: '72px' }}
                                         >
-                                            Resubmit Documents
+                                            {t("Resubmit Documents")}
                                         </button>
                                     </div>
                                 ) : (
@@ -217,17 +219,17 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                         className="w-full rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90"
                                         style={{ height: '72px' }}
                                     >
-                                        Return to Dashboard
+                                        {t("Return to Dashboard")}
                                     </button>
                                 )}
                             </div>
                         ) : (
                             <>
                                 <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2 font-montserrat">
-                                    {step === 1 ? "Identity Verification" : "RERA Details"}
+                                    {step === 1 ? t("Identity Verification") : t("RERA Details")}
                                 </h2>
                                 <p className="text-sm text-[var(--foreground)]/50 mb-8 font-montserrat">
-                                    {step === 1 ? "Upload your government-issued documents for verification." : "Provide your real estate licensing information."}
+                                    {step === 1 ? t("Upload your government-issued documents for verification.") : t("Provide your real estate licensing information.")}
                                 </p>
 
                                 <div className="space-y-6">
@@ -246,7 +248,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                             : "bg-[var(--foreground)]/[0.03] text-[var(--foreground)]/40 border-transparent hover:border-[var(--foreground)]/10"
                                                             }`}
                                                     >
-                                                        {tab}
+                                                        {t(tab)}
                                                     </button>
                                                 ))}
                                             </div>
@@ -259,11 +261,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                             {idDocKey ? <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> : <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>}
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Document — Front</p>
-                                                            <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">Clear photo of front side</p>
+                                                            <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">{t("Document — Front")}</p>
+                                                            <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">{t("Clear photo of front side")}</p>
                                                         </div>
                                                     </div>
-                                                    {idDocKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}
+                                                    {idDocKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">{t("UPLOADED")}</span>}
                                                 </div>
                                             </label>
 
@@ -275,11 +277,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                             {addressKey ? <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> : <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>}
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Address Proof</p>
-                                                            <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">Utility Bill or Bank Statement</p>
+                                                            <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">{t("Address Proof")}</p>
+                                                            <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">{t("Utility Bill or Bank Statement")}</p>
                                                         </div>
                                                     </div>
-                                                    {addressKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}
+                                                    {addressKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">{t("UPLOADED")}</span>}
                                                 </div>
                                             </label>
 
@@ -291,11 +293,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                             {selfieKey ? <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> : <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>}
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">Selfie Verification</p>
-                                                            <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">Upload a photo holding your ID next to your face (Click to Upload)</p>
+                                                            <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">{t("Selfie Verification")}</p>
+                                                            <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">{t("Upload a photo holding your ID next to your face (Click to Upload)")}</p>
                                                         </div>
                                                     </div>
-                                                    {selfieKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}
+                                                    {selfieKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">{t("UPLOADED")}</span>}
                                                 </div>
                                             </label>
 
@@ -305,14 +307,14 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                 className="w-full rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 disabled:opacity-50 mt-4"
                                                 style={{ height: '72px' }}
                                             >
-                                                {isAgent ? "Next: RERA Details" : (isSubmitting ? "Submitting..." : "Complete Verification")}
+                                                {isAgent ? t("Next: RERA Details") : (isSubmitting ? t("Submitting...") : t("Complete Verification"))}
                                             </button>
                                         </>
                                     ) : (
                                         <>
                                             <div className="space-y-4">
                                                 <div className="space-y-2">
-                                                    <label className="text-[11px] font-bold text-[var(--foreground)]/40 uppercase tracking-widest ml-1">RERA Number</label>
+                                                    <label className="text-[11px] font-bold text-[var(--foreground)]/40 uppercase tracking-widest ml-1">{t("RERA Number")}</label>
                                                     <input
                                                         type="text" placeholder="RERA-MH-2024-001234"
                                                         value={reraNumber} onChange={e => setReraNumber(e.target.value)}
@@ -321,7 +323,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <label className="text-[11px] font-bold text-[var(--foreground)]/40 uppercase tracking-widest ml-1">License Expiry Date</label>
+                                                    <label className="text-[11px] font-bold text-[var(--foreground)]/40 uppercase tracking-widest ml-1">{t("License Expiry Date")}</label>
                                                     <input
                                                         type="date"
                                                         value={expiryDate} onChange={e => setExpiryDate(e.target.value)}
@@ -337,11 +339,11 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                                 {reraDocKey ? <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg> : <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>}
                                                             </div>
                                                             <div>
-                                                                <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">RERA Certificate</p>
-                                                                <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">Upload PDF or JPEG</p>
+                                                                <p className="text-sm font-bold text-[var(--foreground)] mb-0.5 font-montserrat">{t("RERA Certificate")}</p>
+                                                                <p className="text-[11px] text-[var(--foreground)]/40 font-montserrat">{t("Upload PDF or JPEG")}</p>
                                                             </div>
                                                         </div>
-                                                        {reraDocKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">UPLOADED</span>}
+                                                        {reraDocKey && <span className="text-[10px] font-bold text-[#00FFCC] bg-[#00FFCC]/10 px-3 py-1 rounded-full">{t("UPLOADED")}</span>}
                                                     </div>
                                                 </label>
                                             </div>
@@ -352,7 +354,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                     className="flex-1 rounded-xl border border-[var(--foreground)]/10 text-[var(--foreground)] font-bold text-sm hover:bg-[var(--foreground)]/5 transition-all"
                                                     style={{ height: '72px' }}
                                                 >
-                                                    Back
+                                                    {t("Back")}
                                                 </button>
                                                 <button
                                                     onClick={handleFormSubmit}
@@ -360,7 +362,7 @@ export default function KYCModal({ isOpen, onClose, onSubmit }) {
                                                     className="flex-[2] rounded-xl bg-[#00FFCC] text-black font-bold text-sm cursor-pointer border-0 transition-all hover:opacity-90 disabled:opacity-50"
                                                     style={{ height: '72px' }}
                                                 >
-                                                    {isSubmitting ? "Submitting..." : "Complete Verification"}
+                                                    {isSubmitting ? t("Submitting...") : t("Complete Verification")}
                                                 </button>
                                             </div>
                                         </>

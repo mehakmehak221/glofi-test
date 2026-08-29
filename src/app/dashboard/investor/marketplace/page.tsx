@@ -454,13 +454,13 @@ export default function MarketplacePage() {
                                             />
                                             <div className="absolute inset-0" style={{ background: "var(--marketplace-card-overlay)" }} />
 
-                                            <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold capitalize bg-white text-[#111] shadow-md z-10 tracking-wide">
-                                                {property.category?.replace(/_/g, " ").toLowerCase()}
+                                            <span className="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-full text-[11px] font-bold bg-white text-[#111] shadow-md z-10 tracking-wide">
+                                                {t(property.category?.replace(/_/g, " ").toUpperCase() || "")}
                                             </span>
 
                                             <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/50 text-white border border-white/10 backdrop-blur-md shadow-sm z-10">
                                                 <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_8px_currentColor] ${riskColor}`} />
-                                                {property.riskRating} {t("RISK")}
+                                                {t("{risk} RISK", { risk: t(property.riskRating || "") })}
                                             </span>
 
                                             <button

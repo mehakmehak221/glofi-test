@@ -369,7 +369,7 @@ function DetailModal({ id, onClose, onBuy }) {
                                     >
                                         {t("Coming Soon")}
                                     </button>
-                                    <p className="text-[10px] text-center text-[var(--color-text-muted)] uppercase font-bold tracking-[0.2em]">{t("Transaction secured by Glofy Escrow")}</p>
+                                    <p className="text-[10px] text-center text-[var(--color-text-muted)] uppercase font-bold tracking-[0.2em]">{t("Transaction secured by Glofi Escrow")}</p>
                                 </div>
                             </div>
                         </div>

@@ -374,7 +374,7 @@ export default function PropertyDetailPage() {
 
 
                         <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FFFFFF] text-[#111111] border border-white/40 shadow-md z-10">
-                            {t(property.category?.replace(/_/g, ' ') || "")}
+                            {t(property.category?.toUpperCase() || "")}
                         </span>
 
 
