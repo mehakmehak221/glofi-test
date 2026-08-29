@@ -704,7 +704,7 @@ export const bn: MessageTable = {
   "Track and withdraw your agent rewards.": "আপনার এজেন্ট পুরস্কার ট্র্যাক করুন এবং উত্তোলন করুন।",
   "Track rewards, validate coupons, and see current promotional campaigns.": "পুরস্কার ট্র্যাক করুন, কুপন যাচাই করুন এবং বর্তমান প্রচারমূলক প্রচারণা দেখুন।",
   "Transaction": "লেনদেন",
-  "Transaction secured by Glofi Escrow": "লেনদেন Glofi Escrow দ্বারা সুরক্ষিত",
+  "Transaction secured by Glofi Escrow": "লেনদেন গ্লোফি এস্ক্রো দ্বারা সুরক্ষিত",
   "Transactions": "লেনদেন",
   "Type": "ধরণ",
   "UNDER REVIEW": "পর্যালোচনার অধীনে",

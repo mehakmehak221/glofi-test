@@ -665,7 +665,7 @@ export const mr: MessageTable = {
   "Track and withdraw your agent rewards.": "तुमच्या एजंट पुरस्कारांचा मागोवा घ्या आणि ते काढा.",
   "Track rewards, validate coupons, and see current promotional campaigns.": "पुरस्कारांचा मागोवा घ्या, कूपन सत्यापित करा आणि वर्तमान प्रचारक मोहीम पहा.",
   "Transaction": "व्यवहार",
-  "Transaction secured by Glofi Escrow": "Glofi Escrow द्वारे सुरक्षित व्यवहार",
+  "Transaction secured by Glofi Escrow": "ग्लोफी एस्क्रो द्वारे सुरक्षित व्यवहार",
   "Transactions": "व्यवहार",
   "Type": "प्रकार",
   "UNDER REVIEW": "पुनरावलोकनाधीन",
